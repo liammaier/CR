@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<head>
+
+    <title>Chapter 8</title>
+
+</head>
+
+<body>
+
+    <div id="FLU" class="container fit">
+
+        <section class="intro section" data-number="0" data-name="Chapter 8 Introduction">
+            <img src="/contents/fluency/images/sidepic.png"/>
+
+            <div class="content">
+                <h1><span class="first-sentence">Representing Information Digitally</span></h1>
+                <h2>Bits and the "Why" of Bytes</h2>
+                <h3>learning objectives</h3>
+                <ul class="learning-objectives">
+                    <li>Explain the link between patterns, symbols, and information</li>
+                    <li>Compare two different encoding methods</li>
+                    <li>Determine possible PandA encodings using a physical phenomenon</li>
+                    <li>Give a bit sequence code for ASCII; decode</li>
+                    <li>Explain how structure tags (metadata) encode the <em>Oxford English Dictionary</em></li>
+                </ul>
+            </div> <!-- /content -->
+        </section> <!-- /intro1 -->
+
+        <div class="pagebreak pageNumber"></div>
+
+        <div class="intro"> <!-- intro2 -->
+
+            <div class="content">
+
+                <blockquote>
+                    Ancora imparo ("I am still learning")
+                    <p class="citation">- Michaelangelo, Motto</p>
+                </blockquote>
+
+                <div class="intro-text">
+                    <p><strong>Most People</strong> know that computers and networks record and the information in <em>bits</em> and <em>bytes</em>. From basic English, you can guess that bits probably represent little pieces of information. But what are bytes? And why is "byte" spelled with a <em>y</em>? In this chapter we confirm that bits do little pieces of information, we define bytes, and, by the end, we explain the mysterious <em>y</em>. But the chapter is much more fundamental than the concepts. It describes how bits and bytes &dash; the atoms and molecules of information &dash; combine to form our virtual world of computation, information, and communication. (Multimedia is covered in Chapter 11.) We even explain how information exists when there is nothing, as when Sherlock Holmes solves the mystery using the information that "the dog didn't bark in the night."</p>
+                    <p>The first goal of this chapter is to establish that digitizing doesn't require digits &dash; any set of symbols will do. You will learn how pattern sequences create symbols, and discover that symbols can represent information. The next goal is to learn the fundamental patterns on which all information technology is built: the presence and absence of a phenomenon. Called the PandA encoding here, this meeting of the physical and logical worlds forms the foundation of information technology. We then define bits, bytes, and ASCII. Finally, we describe the digitization of the <em>Oxford English Dictionary</em> to show how metadata is added to content so computers can help us use it.</p>
+                </div>
+            </div> <!-- /content -->
+
+            <img src="/contents/fluency/images/sidepic.png">
+        </div> <!-- /intro2 -->
+
+        <div class="pagebreak pageNumber">225</div>
+
+        <div class="page"> <!-- page1 -->
+
+            <section class="section" data-number="1" data-name="Digitizing Discrete Information"> <!-- section1 -->
+
+                <h2>Digitizing Discrete Information</h2>
+                <p><span class="first-sentence">The dictionary definition of <em>digitize</em> is to represent information with digits. In normal conversation, <em>digit</em> means the ten Arabic numerals 0 through 9. Thus, digitizing uses whole numbers to stand for things. This familiar process represents Americans by Social Security numbers, telephone accounts by phone numbers, and books by ISBN numbers. Such digital representations have probably been used since numerals were invented. But this sense of <em>digitize</em> is much too narrow for the digital world of IT.</p>
+
+                <div class="fluency-bit"><strong class="fluency-bit-title">Digital Man.</strong>The first person to apply the term <em>digital</em> to computers was George Stibitz, a Bell Labs mathematician. While consulting for the U.S. military, he observed that "pulsed" computing devices would be better described as digital because they represent information in discrete (that is, separate) units.</div>
+
+                <section class="subsection" data-number="2" data-name="Limitation of Digits">
+                    <h3>Limitation of Digits</h3>
+                    <p><span class="first-sentence">A limitation of the dictionary definition of <em>digitize</em> is that it calls for the use of the ten digits, which produces a whole number.</span> But in most cases the property of being numeric is unimportant and of little use. Numbers quantify things and let us do arithmetic, but Social Security numbers, phone numbers, and ISBN numbers are not quantities. You are not better than someone else is if you have a larger telephone number. So, when we don't need numbers, we don't need to use digits. But what else can we use to digitize?</p>
+                </section>
+
+                <section class="subsection" data-number="3" data-name="Alternative Representations">
+                    <h3>Alternative Representations</h3>
+                    <p><span class="first-sentence">Digitizing in computing can use almost any symbols.</span> For example, the North American telephone number 888 555 1212 could be represented as *** %%% !@!@. This encoding, rather than using {1, 2, 3, 4, 5, 6, 7, 8, 9, 0}, uses the symbol set {!, @, #, $, %, ^, &, *, (, )}. These symbols are simply the uppercase digit characters on a keyboard. If we use the symbol set { } the phone number is represented as: . This could be called <em>player encoding</em> because it uses the standard symbols from music players. These symbols work just as well as the digits as long as the telephone keypad is relabeled, as shown in Figure 8.1. The reason the encoding works is that a phone number's digits simple tell us which sequence of keys to press. Any ten distinct symbols will work as long as the keypad is labeled properly</p>
+                </section>
+
+                <section class="subsection" data-number="4" data-name="Symbols, Briefly">
+                    <h3>Symbols Briefly</h3>
+                    <p><span class="first-sentence">One practical advantage of digits over other less familiar symbols is that digits have short names.</span> Imagine speaking your phone number as "asterisk, asterisk, exclamation point, closing parenthesis, exclamation point..." In fact, as IT</p>
+
+                    <div class="pagebreak pageNumber">226</div>
+
+                    <figure>
+                        <img src="/contents/fluency/images/figure8.1.png">
+                        <figcaption><span class="figureId">Figure 8.1</span> Three symbol assignments for a telephone keypad</figcaption>
+                    </figure>
+                    <p>has adopted these symbols, the names are getting shorter. For example, computer professionals often say exclamation point as <em>bang</em> and asterisk as <em>star</em>. Instead of saying "eight, eight, eight, five, five, five, one, two, one, two" we could say "star, star, star, per, per, per, bang, at, bang, at," which is just as brief. So, the advantage of brevity is not limited to digits.</p>
+                </section>
+
+                <section class="subsection" data-number="5" data-name="Ordering Symbots">
+                    <h3>Ordering Symbots</h3>
+                    <p><span class="first-sentence">One other advantage of digits for encoding information like telephone numbers is that the items can be listed in numerical order.</span> This feature is rarely used for the kinds of information discussed here; for example, telephone books are ordered by the name of the person rather than by the number. But sometimes ordering items is useful.</p>
+                    <p>To place information in order by using symbols (other than digits), we need to agree on an ordering for the basic symbols. This is called a <strong>collating sequence</strong>. In the same way that the digits are ordered</p>
+                    <p>0 &lt; 1 &lt; 2 &lt; 3 &lt; 4 &lt; 5 &lt; 6 &lt; 7 &lt; 8 &lt; 9</p>
+                    <p>the player symbols could be ordered</p>
+                    <p><small><strong>||</strong> &lt; &#9658; &lt; &#9660; &lt;</small> &#9668; <small>&lt; &#9658;&#9658; &lt;</small> &#9689; <small>&lt;</small> &#9668;&#9668; <small>&lt; &#9658;&#9658;| &lt; &#9650; &lt; |</small>&#9668;&#9668; </p>
+                    <p>Then, two coded phone numbers can be ordered based on which has the smaller first symbol, or if the first symbol matches, then on which has the smaller second symbol, or if the first two symbols match, which has the smaller third symbol, and so on. For example,</p>
+                    <p><small>&#9650; <strong>||</strong>    <strong>||</strong> &#9689;&#9689;&#9689; &#9658;&#9660;&#9658;&#9660; &lt; &#9650;&#9650;&#9650; </small>&#9689;&#9689;&#9689; <small>&#9658;&#9660;&#9658;&#9660;</small></p>
+                    <p>Today, <strong>digitizing</strong> means representing information by symbols—not just the ten digit symbols. But which symbols would be best? Before answering that question, we should consider how the choice of symbols interacts with the things being encoded.</p>
+                </section>
+
+                <div class="pagebreak pageNumber">227</div>
+
+            </section> <!-- /section1 -->
+
+            <section class="section" data-number="6" data-name="Fundamental Information Representation"> <!-- section2 -->
+                <h2>Fundamental Information Representation</h2>
+                <p><span class="first-sentence">The fundamental patterns used in IT come into play when the physical world meets the logical world. </span>In the physical world, the most fundamental form of information is the presence or absence of a physical phenomenon.</p>
+                <ul>
+                    <li>Does matter occupy a particular place in space and time, or not?</li>
+                    <li>Is light detected at a particular place and time, or not?</li>
+                    <li>Is magnetism sensed at a particular place and time, or not?</li>
+                </ul>
+
+                <p>The same goes for pressure, charge, flow, and so on. In many cases, the phenomena have a continuous range of values (discussed in Chapter 11). For example, light and color have a smooth range of intensities</p>
+
+                <figure>
+                    <img src="/contents/fluency/images/extra8.1.png">
+                </figure>
+
+                <p>while others like clicking and drumming are discrete.</p>
+
+                <figure>
+                    <img src="/contents/fluency/images/extra8.2.png">
+                </figure>
+
+                <p>From a digital information point of view, the amount of a phenomenon is not important as long as it is reliably detected &dash; whether there is some information or none; whether it is present or absent.</p>
+                <p>In the logical world, which is the world of thinking and reasoning, the concepts of <em>true</em> and <em>false</em> are important. Propositions such as "Rain implies wet streets" can be expressed and combined with other propositions such as "The streets are not wet" to draw conclusions such as "It is not raining." Logic is the foundation of reasoning, and it is also the foundation of computing. <em>By associating "true" with the presence of a phenomenon and "false" with its absence, we can use the physical world to implement the logical world. This produces information technology</em>. This section describes that association.</p>
+
+
+                <section class="subsection" data-number="7" data-name="The PandA Representation">
+                 <h3>The PandA Representation</h3>
+                 <p><span class="first-sentence"><strong>PandA</strong> is the name we use for the two fundamental patterns of digital information based on the presence and absence of a phenomenon.</span> PandA is the mnemonic for <strong>"Presence and Absence."</strong> A key property of the PandA representation is that it is black and white; that is, the phenomenon is either present or it is not; the logic is either <em>true</em> or <em>false</em>. Such a formulation is said to be <strong>discrete</strong>, meaning "distinct" or "separable"; it is not possible to transform one value into the other by continuous gradations. There is no gray.</p>
+                 <p><span class="paragraph-header">A binary system.</span> The PandA encoding has just two patterns &dash; Present and Absent &dash; making it a <strong>binary system</strong>. The names Present and Absent are not essential to our use in digitization, so we often associate other words with them that suggest the discrete, black-and-white nature of the two patterns (see</p>
+
+                 <div class="pagebreak pageNumber">228</div>
+
+                 <p>Table 8.1). The assignment of these names to the two patterns is also arbitrary: There is no law that says that in all cases <em>On</em> means "Present" and <em>Off</em> means "Absent." We could agree to assign the names the other way around; engineers deep into a circuit design often do. As long as all of the information encoders and decoders agree, any assignment works. The associations given in Table 8.1 seem reasonable, however, and they are probably the most common. But the entries are only names for the two fundamental patterns.</p>
+
+                 <div class="table large">
+
+                    <div class="small-table">
+
+                        <div class="small-table-title"><span class="tableNum">Table 8.1</span> Possible interpretations of two PandA patterns</div>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Present</th>
+                                    <th>Absent</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                 <td>True</td>
+                                 <td>False</td>
+                             </tr>
+                             <tr>
+                                <td>1</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>On</td>
+                                <td>Off</td>
+                            </tr>
+                            <tr>
+                                <td>Yes</td>
+                                <td>No</td>
+                            </tr>
+                            <tr>
+                                <td>+</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Black</td>
+                                <td>White</td>
+                            </tr>
+                            <tr>
+                                <td>For</td>
+                                <td>Against</td>
+                            </tr>
+                            <tr>
+                                <td>Yang</td>
+                                <td>Yin</td>
+                            </tr>
+                            <tr>
+                                <td>X</td>
+                                <td>Y</td>
+                            </tr>
+                            <tr>
+                                <td>. . .</td>
+                                <td>. . .</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> <!-- /small-table -->
+            </div> <!-- /table large -->
+
+            <p><span class="paragraph-header">Bits from symbols.</span> In the PandA representation, the unit is a specific place (in space and time), where the presence or absence of the phenomenon can be set and detected. The PandA unit is known as a <strong>bit</strong>, which can assume either of the two PandA patterns, Present or Absent. <em>Bit</em> is a contraction for "binary digit." (The term <em>bit</em> was originally adopted because early computer designers interpreted the two patterns as 1 and 0, the digits of the binary number system; they are more economical to say and write than "present" and "absent," so we continue to use them.) Though bit sequences can be interpreted as binary numbers, the key idea is that groups of bits form <strong>symbols</strong>. Encoding numbers is a particularly useful application of symbols, but the idea is more general.</p>
+
+            <div class="fluency-bit"><strong class="fluency-bit-title">Coincidence?</strong> Though <em>bit</em> means "small piece" in English, the term actually derives from a contraction of <em>binary</em> and <em>digit</em>. Of course, bits represent small pieces of information, suggesting the choice may not have been a coincidence</div>
+
+            <div class="pagebreak pageNumber">229</div>
+
+            <div class="fluency-bit"><strong class="fluency-bit-title"> Encoding Bits on a CD-ROM.</strong> The compact disc read-only memory (CD-ROM) is the technology of the familiar audio CD applied to storing programs and data. Developed jointly by the Phillips and Sony Corporations, the CD was originally intended only for recorded audio and video. But the two companies engineered the technology so cleverly that CDs are almost error free, making them perfect for storing data and software. Here's how CDs work.
+                <p>CDs are made of clear plastic that is forced into a round mold, something like a round waffle iron, having a smooth bottom and a bumpy top. When the plastic hardens and is removed from the mold, the topside bumpy pattern is covered with aluminum to make it shiny. A protective layer is put over the aluminum and the "label" is printed on the top.</p>
+
+                <figure>
+                    <img src="/contents/fluency/images/extra8.3.png">
+                </figure>
+
+                <p>The bumps encode the information. Because they are read from the bottom of the CD, the bumps are called <em>pits</em>. The region between the pits is called the <em>land</em>. A laser beam is focused up through the CD onto the pitted surface. The beam reflects off of the aluminum and back to a sensor that detects whether the beam is striking a pit, a land, or a diagonal in between.</p>
+                <p>The pits are arranged in a line that begins at the <em>inner</em> edge of the CD and spirals out to the <em>outer</em> edge. (Notice that inside-out is the opposite of vinyl records.) The first part of the spiral is used for calibrating the laser reading device, then comes an index (track list) for locating specific positions on the CD, and finally the actual information (music or software) is stored in binary.</p>
+
+                <figure>
+                    <img src="/contents/fluency/images/extra8.4.png">
+                </figure>
+
+                <p>In addition to CDs and DVDs, which are manufactured with the information already stored on them—it's a pattern in the mold—there are CD Recordable (CD-R) discs and CD Rewriteable (CD-RW) discs. Both types are blank to begin with and use somewhat different materials. CD-R disks can be written to once and only read thereafter; CD-RW disks can be written to and rewritten to.</p>
+            </div>
+
+            <div class="pagebreak pageNumber">230</div>
+
+            <div class="fluency-bit"><strong class="fluency-bit-title">Positive Presence.</strong> The use of physical phenomena to represent information sometimes poses problems because there might be more than two alternatives. For example, a magnetic material might not be magnetized at all, or it can have positive polarity or negative polarity; that is, there are three possibilities. In such situations, engineers adopt one state such as positive polarity to mean "present" and all other states to mean "absent."</div>
+
+        <section class="subsection" data-number="8" data-name="Bits in Computer Memory">
+
+            <h3>Bits in Computer Memory</h3>
+            <p><span class="first-sentence">Memory is arranged inside a computer in a very long sequence of bits.</span> That is, places where the physical phenomenon encoding the information can be set and detected.</p>
+            <p><span class="paragraph-header">Astrology: sidewalk memory.</span> To illustrate how memory works, imagine a sidewalk made of a strip of concrete with lines (expansion joints) across it forming squares, and suppose it has been swept clean. We agree that a stone on a sidewalk square corresponds to 1 and the absence of a stone corresponds to 0. This makes the sidewalk a sequence of bits (see Figure 8.2.) Sidewalk memory can encode information just like computer memory &dash; it's just not as economical with space!</p>
+
+            <figure>
+                <img src="/contents/fluency/images/figure8.2.png">
+                <figcaption><span class="figureId">Figure 8.2</span> Sidewalk sections as a sequence of bits (1010 0010)</figcaption>
+            </figure>
+
+            <p>The bits can be set to write information into the memory, and they can be sensed to read the information out of the memory. To write a 1, the phenomenon must be made to be present; for example, put a stone on a sidewalk square. To write a 0, the phenomenon must be made to be absent; for example, sweep the sidewalk square clean. To determine what information is stored at a specific position, check whether the phenomenon is present or absent. So, if a stone is on a square, the phenomenon is present (1); otherwise, it is absent (0).</p>
+            <p><span class="paragraph-header">Alternative PandA encodings.</span> There is no limit to the number of ways to encode two states using physical phenomena, of course. Remaining in the</p>
+
+            <div class="pagebreak pageNumber">231</div>
+
+            <p>world of sidewalks, we can use stones on all squares, but use white stones and black stones for the two states. We can choose black as present and not black as absent. Or, we can use multiple stones of two colors per square, saying that more white stones than black means 1 and more black stones than white means 0. (We must take care that the total number of stones on each sidewalk square is always an odd number.) Or we can place a stone in the center of the square for one state and off center for the other state. And so forth. These are all PandA encodings, provided the "phenomenon" is chosen properly: presence of black, presence of majority of white, and presence of a centered stone.</p>
+
+            <div class="fluency-bit"><strong class="fluency-bit-title">No Barking.</strong> Sherlock Holmes uses one bit of information to solve the disappearance of a prize racehorse in the story "Silver Blaze." In the vicinity of the sta- ble during the night (place and time), the phenomenon (barking watchdog) was not detected (absent), implying to Holmes the dog knew the thief, who had to be Simpson, the owner. Holmes reasons that barking "present" implies the thief is not known to the household; barking "absent" implies the opposite. There is information present even though the phenomenon is absent.</div>
+
+            <p><span class="paragraph-header">Combining bit patterns.</span> The two bit patterns alone give us a limited resource for digitizing information. That is, we can represent things with only two values: votes <em>(aye, nay)</em>, personality types <em>(A, B)</em>, baseball games <em>(won, loss)</em>. Usually the two patterns must be combined into sequences to create enough symbols to encode the intended information. When there are <em>p</em> = 2 patterns as there are in the PandA representation, arranging them into <em>n</em>-length sequences, creates 2<sup><em>n</em></sup> symbols. Table 8.2 relates the length of the bit sequence to the number of possible symbols. The 16 symbols of <em>n</em> = 4 length bit sequences are shown in Table 8.3.</p>
+            <div class="table large">
+
+                <div class="small-table">
+
+                    <div class="small-table-title"><span class="tableNum">Table 8.2</span> Number of symbols when the number of possible patterns is two</div>
+
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><em>n</em></th>
+                                <th>2<sup><em>n</em></sup></th>
+                                <th>Symbols</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2<sup>1</sup></td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>2<sup>2</sup></td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>2<sup>3</sup></td>
+                                <td>8</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>2<sup>4</sup></td>
+                                <td>16</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>2<sup>5</sup></td>
+                                <td>32</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>2<sup>6</sup></td>
+                                <td>64</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>2<sup>7</sup></td>
+                                <td>128</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>2<sup>8</sup></td>
+                                <td>256</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>2<sup>9</sup></td>
+                                <td>512</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>2<sup>10</sup></td>
+                                <td>1,024</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> <!-- /small-table -->
+            </div> <!-- /table large -->
+
+            <div class="pagebreak pageNumber">232</div>
+
+            <div class="table large">
+
+                <div class="small-table">
+
+                    <div class="small-table-title"><span class="tableNum">Table 8.3</span> Sixteen symbols of the 4-bit PandA representation</div>
+
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Binary</th>
+                                <th>Physical Bits</th>
+                                <th>Hex</th>
+                                <th>Symbol</th>
+                                <th>Binary</th>
+                                <th>Physical Bits</th>
+                                <th>Hex</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>AAAA</td>
+                                <td>0000</td>
+                                <td>pic</td>
+                                <td>0</td>
+                                <td>PAAA</td>
+                                <td>1000</td>
+                                <td>pic</td>
+                                <td>8</td>
+                            </tr>
+
+                            <tr>
+                                <td>AAAP</td>
+                                <td>0001</td>
+                                <td>pic</td>
+                                <td>1</td>
+                                <td>PAAP</td>
+                                <td>1001</td>
+                                <td>pic</td>
+                                <td>9</td>
+                            </tr>
+
+                            <tr>
+                                <td>AAPA</td>
+                                <td>0010</td>
+                                <td>pic</td>
+                                <td>2</td>
+                                <td>PAPA</td>
+                                <td>1010</td>
+                                <td>pic</td>
+                                <td>A</td>
+                            </tr>
+
+                            <tr>
+                                <td>AAPP</td>
+                                <td>0011</td>
+                                <td>pic</td>
+                                <td>3</td>
+                                <td>PAPP</td>
+                                <td>1011</td>
+                                <td>pic</td>
+                                <td>B</td>
+                            </tr>
+
+                            <tr>
+                                <td>APAA</td>
+                                <td>0100</td>
+                                <td>pic</td>
+                                <td>4</td>
+                                <td>PPAA</td>
+                                <td>1100</td>
+                                <td>pic</td>
+                                <td>C</td>
+                            </tr>
+
+                            <tr>
+                                <td>APAP</td>
+                                <td>0101</td>
+                                <td>pic</td>
+                                <td>5</td>
+                                <td>PPAP</td>
+                                <td>1101</td>
+                                <td>pic</td>
+                                <td>D</td>
+                            </tr>
+
+                            <tr>
+                                <td>APPA</td>
+                                <td>0110</td>
+                                <td>pic</td>
+                                <td>6</td>
+                                <td>PPPA</td>
+                                <td>1110</td>
+                                <td>pic</td>
+                                <td>E</td>
+                            </tr>
+
+                            <tr>
+                                <td>APPP</td>
+                                <td>0111</td>
+                                <td>pic</td>
+                                <td>7</td>
+                                <td>PPPP</td>
+                                <td>1111</td>
+                                <td>pic</td>
+                                <td>F</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> <!-- /small-table -->
+            </div> <!-- /table large -->
+
+            <p>The PandA encoding is the fundamental representation of information. By grouping bits together, we can produce enough symbols to represent any number of values. By creating symbols using the two PandA patterns, we can record and transform information using resources from the physical world. Information and computation are abstract concepts without physical form, but with the miracle of IT they can become real. Our lives are simplified when machines and networks do the work.</p>
+        </section>
+    </section> <!-- /section 2 -->
+
+    <section class="section" data-number="9" data-name="Hex Explained">
+        <h2>Hex Explained</h2>
+        <p><span class="first-sentence">Before using PandA to represent text, let's solve a mysetery from Chapter 4.</span> Recall that when we specified colors in HTML, we said that one form a color specification could take was using hex digits, as in #FF8E2A for pumpkin color. These <strong>hex digits</strong>, short for hexadecimal digits, are base-16 numbers. We didn't explain hex at the time, but cited <code>www.w3schools.com/css/css_colorsfull.asp</code> as a source where color and numbers could be correlated.</p>
+
+        <div class="pagebreak pageNumber">233</div>
+
+        <p>The reason for using hexadecimal is as follows. When we specify an RGB color or other encoding using bits, we must give the bits in order. The bit sequence might be given in O's and rs, as in</p>
+        <p><code>color : #1111111110011000111000101010</code> <span class="paragraph-header"><em>Illegal Style Definition</em></span></p>
+        <p>but writing so many O's and 1's is tedious and error prone. Computer profes- sionals long ago realized that they needed a better way to write bit sequences, so they began to use hexadecimal digits.</p>
+
+        <section class="subsection" data-number="10" data-name="The 16 Hex Digits">
+            <h3>The 16 Hex Digits</h3>
+            <p><span class="first-sentence">The digits of the <strong>hexidecimal</strong> numbering system are <code>0, 1, ..., 9, A, B, C, D, E, F</code>.</span> Because there are 16 digits &dash; maybe we should call them <em>hexits</em> &dash; they can be represented perfectly by the 16 symbols of 4-bit sequences. In Table 8.3, the binary and hex are given for each value. So bit sequence <code>0000</code> is hex <code>0</code>, bit sequence <code>0001</code> is hex <code>1</code>, and so forth, up to the bit sequence <code>1111</code>, which is hex <code>F</code>. (This is simply a numeric interpretation of the bits, which will be explained in Chapter 11.)</p>
+        </section>
+
+        <section class="subsection" data-number="11" data-name="Changing Hex Digits to Bits and Back Again">
+            <h3>Changing Hex Digits to Bits and Back Again</h3>
+            <p><span class="first-sentence">Because each hex digit corresponds to a 4-bit sequence, and vice versa, we can translate between hex and binary easily: given hex, write the associated groups of 4 bits.</span> Given a sequence of bits, group them into sequences of four, and write the corresponding hex digit. Therefore,</p>
+            <p><code>0010 1011 1010 1101 = 2BAD</code></p>
+            <p>and</p>
+            <p><code>FAB4 = 1111 1010 1011 0100</code></p>
+            <p>So, in HTML when we specify the color white as <code>#FFFFFF</code>, we effectively set each bit of the RGB specification bits to 1.</p>
+
+            <div class="try-it">
+                <p><strong>8.1 What's the Beef?</strong> What is <code>ABE8 BEEF</code> as a bit sequence? To find the answer, use Table 8.3.</p>
+            </div>
+        </section>
+    </section><!-- /section 3 -->
+
+    <section class="section" data-number="12" data-name="Digitizing Text">
+        <h2>Digitizing Text</h2>
+        <p><span class="first-sentence">The two earliest uses of the PandA representation &dash; or binary representaion &dash; were to encode numbers and keyboard characters.</span> These two applications are still extremely important, but now representations for sound, images, video, and other types of information are almost as important. In this section we talk about how text is encoded; we'll discuss how the other forms of information are encoded in Chapter 11.</p>
+
+        <div class="pagebreak pageNumber">234</div>
+
+        <p>Remember that the number of bits determines the number of symbols available for representing values: <em>n</em> bits in sequence yield 2<sup><em>n</em></sup> symbols. And, as you've learned, the more characters you want encoded, the more symbols you need. Roman letters, Arabic numerals, and about a dozen punctuation characters are about the minimum needed to digitize English text. We would also like to have uppercase and lowercase letters, and the basic arithmetic symbols like +, *, /, and =. But, where should the line be drawn? Should characters not required for English but useful in other languages, like German (&ouml;), French (&eacute;), Spanish (&ntilde;), and Norwegian (&oslash;), be included? What about Czech, Greek, Arabic, Thai, or Cantonese? Should other languages' punctuation be included, like French (&laquo; &raquo;) and Spanish (&iquest;)? Should arithmetic symbols include degrees (&deg;), pi (&pi;), relational symbols (&le;), equivalence (&equiv;), and for all (&forall;)? What about business symbols: &cent;, &pound;, &yen;, &copy;, and &reg;? What about unprintable characters like backspace and new line? Should there be a symbol for smiley faces (&#9786;)? Some of these questions are easier to answer than others. We want to keep the list small so that we use fewer bits, but not being able to represent critical characters would be a mistake.</p>
+
+        <section class="subsection" data-number="13" data-name="Assigning Symbols">
+            <h3>Assigning Symbols</h3>
+            <p><span class="first-sentence">The 26 uppercase and 26 lowercase Roman letters, the 10 Arabic numerals, a basic set of 20 punctuation characters (including blank), 10 useful arithmetic characters, and 3 nonprintable characters (new line, tab, and backspace) can be represented with 95 symbols.</span> Such a set is enough for English and is accessible using the keys on a basic computer keyboard. To represent 95 distinct symbols, we need 7 bits because 6 bits gives only 2<sup>6</sup> = 64 symbols. Seven bits give 2<sup>7</sup> = 128 symbols, which is more than we need for the 95 different characters. Some special control characters, used for data transmission and other engineering purposes, must also be represented. They are assigned to the remaining 33 of the 7-bit symbols.</p>
+            <p>An early and still widely used 7-bit code for the characters is <strong>ASCII</strong>,
+                pronounced AS&middot;key. ASCII stands for American Standard Code for Information Interchange. The advantages of a "standard" are many: computer parts built by different manufacturers can be connected, programs can create data and store it so that different programs can process it later, and so forth. In all cases, there must be an agreement as to which character is associated with which symbol (bit sequence).</p>
+            </section>
+
+            <section class="subsection" data-number="14" data-name="Extended ASCII: An 8-bit Code">
+                <h3>Extended ASCII: An 8-bit Code</h3>
+                <p><span class="first-sentence">As the name implies, ASCII was developed in the United States. By the mid- 1960s, it became clear that 7-bit ASCII was not enough because it could not fully represent text from languages other than English.</span> So IBM, the dominant computer manufacturer at the time, decided to use the next larger set of symbols, the 8-bit symbols, as the standard for character representation. Eight bits produce 28 = 256 symbols, enough to encode English and the Western</p>
+
+                <div class="pagebreak pageNumber">235</div>
+
+                <p>European languages, their punctuation characters, and a large set of other useful characters. The larger, improved encoding was originally called Extended ASCII, as shown in Figure 8.3; today it is known by the curious name of <strong>ISO-8859-1</strong>. The original ASCII is the "first half" of Extended ASCII; that is, 7-bit ASCII is the 8-bit ASCII representation with the leftmost bit set to 0. Though Extended ASCII does not handle all natural languages, it does handle many languages that derived from the Latin alphabet; the ASCII of Figure 8.3 is also known as <em>Latin-1</em>. Handling other languages is solved in two ways: recoding the second half of Extended ASCII for the language's other characters, and using the multi-byte Unicode representation.</p>
+
+                <figure>
+                    <img src="/contents/fluency/images/figure8.3.png">
+                    <figcaption><span class="figureId">Figure 8.3</span> ASCII, the American Standard Code for Information Interchange</figcaption>
+                    <p><small><em>Note</em>: The original 7-bit ASCII is the top half of the table; the whole table is known as Extended ASCII (ISO-8859-1). The 8-bit symbol for a letter is the four row bits followed by the four column bits (e.g., A = 0100 0001, while z = 0111 1010). Characters shown as two small letters are control symbols used to encode nonprintable information (e.g., &#9224; = 0000 1000 is backspace). The bottom half of the table represents characters needed by Western European languages, such as Icelandic's eth (&#7895;) and thorn (&thorn;).</small></p>
+                </figure>
+
+                <div class="pagebreak pageNumber">236</div>
+
+                <p>IBM's move to 8 bits was bold because it added the extra bit at a time when computer memory and storage were extremely expensive. IBM gave 8-bit sequences a special name, <strong>byte</strong>, and adopted it as a standard unit for computer memory. (Octet is used as a synonym for byte.) Bytes are still the standard unit of memory, and their "8-ness" is noticeable in many places. For example, recent computers are "32-bit machines" &dash; not 30-bit or 35-bit &dash; so their data paths (the part that processes most instructions) can handle 4 bytes at a time.</p>
+
+                <div class="fluency-bit"><strong class="fluency-bit-title">The Ultimate.</strong> Although ASCII and its variations are widely used, the more complete solution is a representation, called <em>Unicode</em>. It uses more than one byte (up to four) to encode about 100,000 symbols, enough for <em>all</em> languages. The actual encoding into bytes is given by the Unicode Translation Format or UTF-8.</div>
+            </section>
+
+            <section class="subsection" data-number="15" data-name="ASCU Coding of Phone Numbers">
+                <h3>ASCU Coding of Phone Numbers</h3>
+                <p><span class="first-sentence">Let's return to the phone number <strong>888 555 1212</strong>, whose representation con- cerned us at the start of the chapter</span>. How would a computer represent this phone number in its memory? Remember, this is not really a number, but rather, it is a keying sequence for a telephone's keypad represented by numerals; it is not necessary, or even desirable, to represent the phone number as a numerical quantity. Because each of the numerals has a representation in ASCII, we can express the phone number by encoding each digit with a byte. The encoding is easy: Find each numeral in Figure 8.3 and write down the bit sequence from its row, followed by the bit sequence from its column. So the phone number 888 555 1212 in ASCII is</p>
+                <p><code>0011 1000 0011 1000 0011 1000</code></p>
+                <p><code>0011 0101 0011 0101 0011 0101</code></p>
+                <p><code>0011 0001 0011 0010 0011 0001 0011 0010</code></p>
+                <p>You can use Figure 8.3 to check this encoding. This is exactly how computers represent phone numbers. The encoding seems somewhat redundant because each byte has the same left half: 0011. The left halves are repeated because all of the numerals are located on the 0011 row of the ASCII table. If only phone numbers had to be represented, fewer bits could be used, of course. But there is little reason to be so economical, so we adopt the standard ASCII.</p>
+                <p>Notice that we have run all of the digits of the phone number together, even though when we write them for ourselves we usually put spaces between the area code and exchange code, and between the exchange code and the num- ber. The computer doesn't care, but it might matter to users. It's easy to add these spaces and other punctuation.</p>
+
+                <div class="fluency-bit"><strong class="fluency-bit-title">Two Bits, Four Bits.</strong> The term <em>byte</em> has motivated some people to call 4 bits &dash; that is, half a byte &dash; a <em>nibble</em>.</div>
+
+                <div class="pagebreak pageNumber">237</div>
+
+                <div class="try-it">
+                    <p><strong>8.2 Numbers as Letters</strong> Encode the phone number (888) 555-1212 in ASCII, including the punctuation. (Notice that there is a space before the first 5.)</p>
+                    <p>To find the answer, locate each character in Figure 8.3 and write the four bits at the left of the row and the four bits at the top of the column. For example, the open parenthesis &dash;&dash;(&dash;&dash; is in the third row and corresponds to 0010 1000.</p>
+                </div>
+            </section>
+
+            <section class="subsection" data-number="16" data-name="NATO Broadcast Alphabet">
+                <h2>NATO Broadcast Alphabet</h2>
+                <p><span class="first-sentence">Finally, although we usually try to be efficient (e.g., use the shortest symbol sequences) to minimize the amount of memory needed to store and transmit information, not all letter representations should be short</span>. The code for the letters used in radio communication is purposely inefficient in this sense, so they are distinctive when spoken amid noise. The NATO broadcast alphabet, shown in Table 8.4, encodes letters as words; that is, the words are the symbols, replacing the standard spoken names for the letters. For example, <em>Mike</em> and <em>November</em> eeplace "em" and "en," which can be hard to tell apart. This longer encoding improves the chances letters will be recognized when spoken under less-than-ideal conditions. The digits keep their usual names, except nine, which is frequently replaced by <em>niner</em>.</p>
+
+                <div class="table large">
+
+                    <div class="small-table">
+
+                        <div class="small-table-title"><span class="tableNum">Table 8.4</span> NATO broadcast alphabet designed not to be minimal</div>
+
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td>A Alpha</td>
+                                    <td>H Hotel</td>
+                                    <td>O Oscar</td>
+                                    <td>V Victor</td>
+                                </tr>
+                                <tr>
+                                    <td>B Bravo</td>
+                                    <td>I India</td>
+                                    <td>P Papa</td>
+                                    <td>W Whisky</td>
+                                </tr>
+                                <tr>
+                                    <td>C Charlie</td>
+                                    <td>J Juliet</td>
+                                    <td>Q Quebec</td>
+                                    <td>X X-ray</td>
+                                </tr>
+                                <tr>
+                                    <td>D Delta</td>
+                                    <td>K Kilo</td>
+                                    <td>R Romeo</td>
+                                    <td>Y Yankee</td>
+                                </tr>
+                                <tr>
+                                    <td>E Echo</td>
+                                    <td>L Lima</td>
+                                    <td>S Sierra</td>
+                                    <td>Z Zulu</td>
+                                </tr>
+                                <tr>
+                                    <td>F Foxtrot</td>
+                                    <td>M Mike</td>
+                                    <td>T Tango</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>G Golf</td>
+                                    <td>N November</td>
+                                    <td>U Uniform</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> <!-- /small-table -->
+                </div> <!-- /table large -->
+
+                <div class="fluency-bit"><strong class="fluency-bit-title">It's Greek to Me</strong>. There are dozens of phonetic alphabets for English and many other languages. The NATO alphabet, used for air traffic control, begins with "alpha:' raising the question, "What is the first letter of the Greek phonetic alphabet?" Alexandros.</div>
+
+            </section>
+        </section><!-- /section 4 -->
+
+        <section class="section" data-number="17" data-name="The Oxford English Dictionary">
+            <h2>The <em>Oxford English Dictionary</em></h2>
+            <p><span class="first-sentence">Representations like ASCII encode text directly, 8 bits per letter. But most documents have more than just text.</span> For example, one might need to format</p>
+
+            <div class="pagebreak pageNumber">238</div>
+
+            <p>information, such as font, font size, justification, and so on. We could add formatting characters to ASCII, but this is a poor idea for several reasons. The most serious problem is that it mixes the content (i.e., the text) with the description of its form. The descriptive information (<strong>metadata</strong>) specifies the content's formatting or structure, and it should be kept separate from the text. So, we specify metadata by using tags, as we have seen in the searching discussion (see Chapter 2) and HTML (see Chapter 4). Tags use the same character representation as the content itself, which simplifies the encoding, and they are much more versatile. In this section, we illustrate how tags encode the structure of a document, by describing the digitization of the <em>Oxford English Dictionary</em>.</p>
+
+            <section class="subsection" data-number="18" data-name="Using Tags to Encode">
+                <h3>Using Tags to Encode</h3>
+                <p><span class="first-sentence">The <em>Oxford English Dictionary</em> (<em>OED</em>) is the definitive reference for every English word's meaning, etymology, and usage.</span> Because it is comprehensive, the <em>OED</em> is truly monumental. The printed version is 20 volumes, weighs 150 pounds, and fills 4 feet of shelf space. In 1857, the Philological Society of London established the goal of producing a complete list of all English words. They expected that the completed dictionary would comprise 6,400 pages in four volumes. By 1884, with the list completed only up to <em>ant</em>, it became clear to James Murray, the lexicographer in charge, that the effort was much more ambitious than they originally thought. The first edition, completed in 1928, long after Murray's death, filled 15,490 pages and contained 252,200 entries. In 1984, the conversion of the <em>OED</em> to digital form began.</p>
+                <p>Now imagine that you have typed in the entire <em>OED</em> as a long sequence of ASCII characters from A through the end of the definition for <em>zyxt</em>, the last word in English. That task would take one person about 120 years. The result would be a digitized dictionary, but in the form of a very long sequence of ASCII characters. Would a computer be able to help us use it?</p>
+                <p>Suppose we want to find the definition for the verb <em>set</em>, which is notable for having the longest entry in the <em>OED</em>. The searching software &dash; as described in Chapter 2 &dash; would look for <em>s-e-t</em> and find it thousands of times. This is because <em>set</em> is part of many words, like clo<em>set</em>, hor<em>set</em>ail, and <em>set</em>tle, and <em>set</em> is used in many definitions, for example, "<em>match point</em> in tennis is the final score ending the present game, <em>set</em>, match."</p>
+                <p>We can solve the first problem &dash; avoiding <em>s-e-t</em> within words &dash; by ignoring all occurrences that do not have a punctuation character or space before and after the <em>s-e-t</em>. The software can do that. But how does it find the definition for set among the thousands of true occurrences of the word set in other definitions? The software processing the text file, unable to understand the dictionary's contents, would have no clue which one it is.</p>
+                <p>People use a number of cues to find information in the dictionary, such as alphabetic order and the fact that a new definition begins on a new line, and the defined word is printed in bold. Though we could insert HTML-like tags</p>
+
+                <div class="pagebreak pageNumber">239</div>
+
+                <p>for new lines or boldface type, a better solution is to use the tags to describe the <em>structure</em> of the dictionary's content. That is, incorporate metadata.</p>
+            </section>
+
+            <section class="subsection" data-number="19" data-name="Structure Tags">
+                <h3>Structure Tags</h3>
+                <p><span class="first-sentence">A special set of tags was developed to specify the <em>OED</em>'s <em>structure</em>.</span> For example, <code>&lt;hw&gt;</code> is the <em>OED</em>'s tag for <em>headword</em>, the word being defined. As usual, because tags surround the text like parentheses, there is a closing <em>headword</em> tag, <code>&lt;/hw&gt;</code>. Thus, the place in the <em>OED</em> where the verb <em>set</em> is defined appears in the tagged text file of the dictionary as</p>
+                <p><code>&lt;hw&gt;set&lt;/hw&gt;</code></p>
+                <p>Other tags label the pronunciation <code>&lt;pr&gt;</code>, the phonetic notations <code>&lt;ph&gt;</code>, the parts of speech <code>&lt;ps&gt;</code>, the homonym number <code>&lt;hm&gt;</code> for headwords that sound the same, and so forth. There are also tags to group items, such as <code>&lt;e&gt;</code> to surround an entire entry and <code>&lt;hg&gt;</code> to surround a head group (that is, all of the information at the start of a definition). In the <em>OED</em> the first entry for the verb <em>set</em> begins</p>
+                <p><strong>set</strong> (s&epsilon;t), <em>v</em><sup>1</sup></p>
+                <p>giving the word being defined, the pronunciation, the part of speech (verb), and the homonym number (1). We expect it must be tagged as</p>
+                <p><code>&lt;e&gt;&lt;hg&gt;&lt;hw&gt;set&lt;/hw&gt;&lt;pr&gt;&lt;ph&gt;s&epsilont&lt;/ph&gt;&lt;/pr&gt;</code>,</p>
+                <p><code>&lt;ps&gt;v&lt;/ps&gt;.&lt;hm&gt;1&lt;/hm&gt;&lt;/hg&gt;</code></p>
+                <p>Notice the use of the escape code (<code>&epsilon</code> for the epsilon character in the pronunciation, which is similar to the use of <code>&</code> for accented letters in HTML (Chapter 4). Also, the <code>&lt;/e&gt;</code> is not shown because it must be at the very end of the entry.</p>
+                <p>With the structure tags in the dictionary, software can find the definition of hte verb <em>set</em> easily: Search for occurances of <code>&lt;hw&gt;set&lt;/hw&gt;</code>, which indicate a definition for set, check within its head group for <code>&lt;ps&gt;v&lt;/ps&gt;</code>, which indicates that it is a verb form of set being defined, and the print out (formatted) all of the text within the <code>&lt;e&gt;</code> and <code>&lt;/e&gt;</code> tags.</p>
+                <p>Of course, the tags do not print. They are included only to specify the structure, so the computer knows what part of the dictionary it is looking at. But in fact, structure tags are very useful for formatting. For example, the boldface type used for headwords can be automatically applied when the dictionary is printed based on the <code>&lt;hw&gt;</code> tag. In a similar way, the italic typeface can be applied in the part of speech. The parentheses surrounding the pronunciation and the superscript of the homonym number are also generated automatically. Thus, knowing the structure makes it possible to generate the formatting information.</p>
+                <p>The opposite is not true. That is, formatting tags do not usually tell us enough about a document to allow us to know its structure. In the <em>OED</em> example, though boldface is used for headwords, it is also used for other</p>
+
+                <div class="pagebreak pageNumber">240</div>
+
+                <p>purposes, which means that just because a word is boldface does not mean it is a headword. In fact, because some formatting information, like italics, has both structural and nonstructural occurances, the <em>OED</em> digitization includes some formatting information with the structural information. The structure is more important, but more complex documents use both types as tags.</p>
+            </section>
+
+            <section class="subsection" data-number="20" data-name="Sample OED Entry">
+                <h3>Sample <em>OED</em> Entry</h3>
+                <p><span class="first-sentence">Figure 8.4 shows the entry for <em>byte</em>, together with its representation, as it actually appears in the file of the online <em>OED</em>.</span> At first the form looks very cluttered, but if you compare it with the printed form, you can make sense of the tags. The tags specify the role of each word of the dictionary. So, for example, to find the first time the word <em>byte</em> was used in print, the software searches <code>&lt;hw&gt;byte&lt;/hw&gt;</code>, then looks for the quote date tags, <code>&lt;qd&gt;</code> and <code>&lt;/qd&gt;</code>, to find that the first use of the word was in 1964. Structure tags help the software help the user.</p>
+
+                <figure>
+                    <img src="/contents/fluency/images/figure8.4.png">
+                    <figcaption><span class="figureId">Figure 8.4</span> The OED entry for the word byte (top panel), together with the representation of the entry in its digitized form with tags (bottom panel).</figcaption>
+                </figure>
+
+                <div class="pagebreak pageNumber">241</div>
+
+                <p>Because the tag characters are included with the content characters, they increase the size of the file compared with plain text. The entry for <em>byte</em> is 841 characters, but the tagged codes is 1204 characters, almost a 50 percent increase.</p>
+            </section>
+
+            <section class="subsection" data-number="21" data-name="Why Byte?">
+                <h3>Why "Byte"?</h3>
+                <p><span class="first-sentence">As informative as the <em>OED</em> definition is, it doesn't answer that nagging question: Why is <em>byte</em> spelled with a <em>y</em>?</span> To understand the charming nature of the answer, we need to know that computer memory is subject to errors (a zero changing to a one, or a one to a zero), caused by such things as cosmic rays. Really. It doesn't happen often, but often enough to worry computer engineers, who build special circuitry to detect and correct memory errors. They often add extra bits to the memory to help detect errors &dash; for example, a ninth bit per byte can detect errors using parity.</p>
+                <p><strong>Parity</strong> refers to whether a number is even or odd. To encode bytes using <strong>even parity</strong>, we use the normal byte encoding, for example, <em>1010 0010</em>, and then count the number of 1's in the byte. If there is an even number of 1's, we set the ninth bit to 0; if there is an odd number, we set the ninth bit to 1, for example, <em>1010 0010 1</em>. The result is that all 9-bit groups have even parity, either because they were even to begin with and the 0 didn't change that, or they were odd to begin with, but the 1 made them even. Any single bit error in a group causes its parity to become odd, allowing the hardware to detect that an error has occurred, although it can't detect which bit is wrong.</p>
+                <p>So, why is <em>byte</em> spelled with a <em>y</em>? The answer comes from Werner Buchholz, the inventor of the word and the concept. In the late 1950s, Buchholz was the project manager and architect for the IBM supercomputer, called Stretch. For that machine, he explained to me, "We needed a word for a quantity of mem- ory between a bit and a word." (A "word" of computer memory is typically the amount required to represent computer instructions; on modern computers, a word is 32 bits.) Buchholz continued, "It seemed that after 'bit' comes 'bite.' But we changed the T to a 'y' so that a typist couldn't accidentally change 'byte' into 'bit' by the single error of dropping the 'e'." No single letter change to <em>byte</em> can create <em>bit</em> and vice versa. Buchholz and his engineers were so concerned with memory errors that he invented an <em>error&dash;detecting name</em> for the memory unit!</p>
+            </section>
+        </section> <!-- /section 5 -->
+
+        <section class="section" data-number="22" data-name="Summary">
+            <h2>Summary</h2>
+            <p><span class="first-sentence">We began the chapter by learning that digitizing doesn't require digits &dash; any symbols will do.</span> We explored:</p>
+
+            <ul>
+                <li>PandA encoding, which is based on Presence and Absence of a physical phenomenon. THeir patterns are discrete; they form the basic unit of a bit. Their names (most often 1 and 0) can be any pair of opposite terms.</li>
+            </ul>
+            <div class="pagebreak pageNumber">242</div>
+            <ul>
+                <li>7-bit ASCII, an early assignment of bit sequences (symbols) to keyboard characters. Extended or 8-bit ASCII is the standard.</li>
+                <li>How documents like the <em>Oxford English Dictionary</em> are digitized. We learned that tags associate metadata with every part of the <em>OED</em>. Using that data, a computer can easily help us find words and other information.</li>
+                <li>The mystery of the <em>y</em> in <em>byte</em></li>
+            </ul>
+        </section>
+    </div> <!-- /page -->
+
+    <section id="conclusion" class="section" data-number="23" data-name="Try It Solutions">
+        <div class="content">
+
+            <h2>Try It Solutions</h2>
+
+            <ol id="try-it-solutions">
+                <li class="eight-one"><span class="first-sentence">1010 1011 1110 1000 1011 1110 1110 1111</span><br/>ABE 8 BEEF</li>
+                <li class="eight-two">0010 1000 0011 1000 0011 1000 0011 1000 0010 1001<br/>0010 0000 0011 0101 0011 0101 0011 0101 0010 1101<br/>0011 0001 0011 0010 0011 0001 0011 0010</li>
+            </ol>
+
+            <h2>Review Questions</h2>
+            <section id="multiple-choice" class="section" data-number="24" data-name="Multiple Choice">
+                <h3>Multiple Choice</h3>
+                <ol>
+                    <li><span class="first-sentence">A good example of a collating sequence that you learned in school is</span>
+                        <ol>
+                            <li>PandA</li>
+                            <li>i before e</li>
+                            <li>ABCs</li>
+                            <li>all of the above</li>
+                        </ol>
+                    </li>
+                    <li>How many characters could be represented by two dice?
+                        <ol>
+                            <li>12</li>
+                            <li>16</li>
+                            <li>36</li>
+                            <li>256</li>
+                        </ol>
+                    </li>
+                    <li>Which of the following doesn't need to be quantified?
+                        <ol>
+                            <li>ZIP codes</li>
+                            <li>locker numbers</li>
+                            <li>ID numbers</li>
+                            <li>all of the above</li>
+                        </ol>
+                    </li>
+                    <li>What is the correct interpretation for **!!@@?
+                        <ol>
+                            <li>star, star, one, one, two, two</li>
+                            <li>as, as, bang, bang, hit, hit</li>
+                            <li>star, star, bang, bang, at, at</li>
+                            <li>star, star, hit, hit, bang, bang</li>
+                        </ol>
+                    </li>
+                    <li>Which of these is not digital?
+                        <ol>
+                            <li>a clock with hands</li>
+                            <li>a calendar</li>
+                            <li>a checkbook balance</li>
+                            <li>a television channel</li>
+                        </ol>
+                    </li>
+                    <li>PandA is a combination of
+                        <ol>
+                            <li>true and false</li>
+                            <li>one and off</li>
+                            <li>yes and no</li>
+                            <li>all of the above</li>
+                        </ol>
+                    </li>
+                    <li>Finish this: I like cats. Fluffy is a cat. Therefore
+                        <ol>
+                            <li>Fluffy is not a dog</li>
+                            <li>I don't like dogs</li>
+                            <li>Cats don't like dogs</li>
+                            <li>I like Fluffy</li>
+                        </ol>
+                    </li>
+                    <li>A binary system
+                        <ol>
+                            <li>consists of only two possible items</li>
+                            <li>uses discrete data</li>
+                            <li>can be represented by PandA</li>
+                            <li>all of the above</li>
+                        </ol>
+                    </li>
+                    <li>The medium used for storing data on a CD is made from
+                        <ol>
+                            <li>iron</li>
+                            <li>plastic</li>
+                            <li>magnesium</li>
+                            <li>light</li>
+                        </ol>
+                    </li>
+                    <li>On the computer, the word PandA is represented by
+                        <ol>
+                            <li>1 and 0</li>
+                            <li>0 and 1</li>
+                            <li>bytes</li>
+                            <li>off and on</li>
+                        </ol>
+                    </li>
+                </ol>
+            </section> <!-- /multiple-choice -->
+
+            <section id="short-answer" class="section" data-number="25" data-name="Short Answer">
+                <h3>Short Answer</h3>
+
+                <ol>
+                    <li class="review-question"><span class="first-sentence">If bits are to atoms, bytes are to _______.</span></li>
+                    <li class="review-question">To _______ is to represent information with digits.</li>
+                    <li class="review-question">PandA is short for _______.</li>
+                    <li class="review-question">When data are _______, they are separate and distinct and cannot be transformed into another value by gradations</li>
+                    <li class="review-question">A(n) _______ is an agreed upon order for basic symbols.</li>
+                    <li class="review-question">_______ bits are needed to represent a space in ASCII.</li>
+                    <li class="review-question">Four bits is often called a(n) _______.</li>
+                    <li class="review-question">All of the values in a PandA formulation are _______.</li>
+                    <li class="review-question">_______ is short for binary digit.</li>
+                    <li class="review-question">The _______ of a bit is its storage pattern in the physical world.</li>
+                    <li class="review-question">_______ is short for hexidecimal.</li>
+                    <li class="review-question">Base&dash;16 is also called _______.</li>
+                    <li class="review-question">Letters, numbers, and symbols are represented on the computer using the _______.</li>
+                    <li class="review-question">All computer systems share a(n) _______ set of symbols used to represent characters.</li>
+                </ol>
+            </section>
+
+            <section id="exercises" class="section" data-number="26" data-name="Exercises">
+                <h3>Exercises</h3>
+
+                <ol>
+                    <li><span class="first-sentence">Make a list of numbers you use that are not treated as numbers.</span> (For example, you do not perform math on them)</li>
+                    <li>What is a bit and how was the word created?</li>
+                    <li>What does PandA stand for and what does PandA name?</li>
+                    <li>Come up with a list of ten different PandA encodings.</li>
+                    <li>What North American telephone number is: </li>
+                    <li>Encode (800) 555-0012 in ASCII, including punctuation.</li>
+                    <li>You bought a mosaic coffee table in Santorini, Greece, last summer called "Animals of Atlantis." While listening to a boring story about your friend's visit home, you notice the table is eight tiles across, which could be the bits of a byte. What ASCII message did the Greeks encode, using the obvious PandA encoding?</li>
+                    <li>The Hawaiian alphabet has 18 symbols. Discuss the symbols you would use for their character set and how many bits would be needed for it.</li>
+                    <li>Translate the following hexadecimal into binary and then into English. <br/> <code>68 65 78 61 64 65 63 69 6D 61 6C</code> </li>
+                    <li>Change the letters of the sentence "THE APPLE LOGO HAS A BYTE MISSING" into NATO broadcast code (ignore spaces in all cases) and then represent the result with ASCII. How many bytes are required for each?</li>
+                    <li>Explain the idea of PandA encoding. Give five PandA encodings that could apply in a cafeteria.</li>
+                    <li>In recalling a childhood memory of walking to school with a friend who came from a different direction, a grandparent noted that the children needed a way to know if the other person had already reached the ren- dezvous point and gone on, or had not yet reached it and needed to be waited for. The recalled solution was: "If I get here first, I will put this rock on that fence post. If you get here first, you knock it off." Is it a PandA solution? Why or why not? Does it work?</li>
+                    <li>You have discovered the following string of binary ASCII code; figure out what they mean. <br/> 01010111 01100001 01111001 00100000 01110100 01101111 00100000 01100111 01101111 00100001</li>
+                </ol>
+            </section>
+        </div>
+
+    </section> <!-- /conclusion -->
+
+</div> <!-- /container -->
+
+</body>
+</html>

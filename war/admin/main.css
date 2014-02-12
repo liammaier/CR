@@ -1,0 +1,8 @@
+/* Stylesheet applied to all pages */
+
+body {
+	position: fixed;
+	top: 45px;
+	padding: 20px;
+	background-image: url('../images/statistics_bg.png');
+}

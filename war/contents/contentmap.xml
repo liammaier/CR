@@ -1,0 +1,317 @@
+<contents>
+
+<!-- TEMPLATE
+	<resource type="" id="" name="" description="">
+		<chapter id="" name = "" description =""></chapter>
+	</resource>
+-->
+	<resource type="book" id="backtoschool" name="Back To School" description="Guide to Academic Success After Traumatic Brain Injury">
+		<chapter id="backtoschool" name = "Back To School" description ="Guide to Academic Success After Traumatic Brain Injury"></chapter>
+	</resource>
+	<resource type="book" id="dissertation" name="Griffith's Dissertation" description="">
+		<chapter id="Chapter01" name = "Chapter01" description =""></chapter>
+		<chapter id="Chapter02" name = "Chapter02" description =""></chapter>
+		<chapter id="Chapter03" name = "Chapter03" description =""></chapter>
+		<chapter id="Chapter04" name = "Chapter04" description =""></chapter>
+		<chapter id="Chapter05" name = "Chapter05" description =""></chapter>
+		<chapter id="AppendixA" name = "AppendixA" description =""></chapter>
+		<chapter id="AppendixB" name = "AppendixB" description =""></chapter>
+		<chapter id="AppendixC" name = "AppendixC" description =""></chapter>
+		<chapter id="AppendixD" name = "AppendixD" description =""></chapter>
+		<chapter id="References" name = "References" description =""></chapter>
+	</resource>
+	<resource type="book" id="crpublications" name="CR Publications" description="">
+		<chapter id="crpublications" name = "CR Publications" description =""></chapter>
+	</resource>
+	<resource type="book" id="crteam" name="Meet the Team" description="">
+		<chapter id="crteam" name = "Meet the Team" description =""></chapter>
+	</resource>
+	<resource type="book" id="strategicstudent" name="Strategic Student" description="">
+		<chapter id="introduction" name = "Introduction" description =""></chapter>
+		<chapter id="Chapter1" name = "Chapter1" description =""></chapter>
+		<chapter id="Chapter2" name = "Chapter2" description =""></chapter>
+		<chapter id="Chapter3" name = "Chapter3" description =""></chapter>
+		<chapter id="Chapter4" name = "Chapter4" description =""></chapter>
+		<chapter id="Chapter5" name = "Chapter5" description =""></chapter>
+		<chapter id="Chapter6" name = "Chapter6" description =""></chapter>
+		<chapter id="Chapter7" name = "Chapter7" description =""></chapter>
+		<chapter id="Chapter8" name = "Chapter8" description =""></chapter>
+		<chapter id="Chapter9" name = "Chapter9" description =""></chapter>
+		<chapter id="Chapter10" name = "Chapter10" description =""></chapter>
+		<chapter id="Conclusion" name = "Conclusion" description =""></chapter>
+
+	</resource>
+	<resource type="book" id="nsf" name="NSF Climate Change" description="">
+		<chapter id="NSFChapter00" name = "Introduction" description ="Introduction"></chapter>
+		<chapter id="NSFChapter01" name = "Sky" description ="Chapter 1"></chapter>
+		<chapter id="NSFChapter02" name = "Sea" description ="Chapter 2"></chapter>
+		<chapter id="NSFChapter03" name = "Ice" description ="Chapter 3"></chapter>
+		<chapter id="NSFChapter04" name = "Land" description ="Chapter 4"></chapter>
+		<chapter id="NSFChapter05" name = "Life" description ="Chapter 5"></chapter>
+		<chapter id="NSFChapter06" name = "People" description ="Chapter 6"></chapter>
+	</resource>
+	<resource type="book" id="tesol" name="TESOL" description="">
+		<chapter id="chapter1" name = "Introduction" description ="Chapter 1"></chapter>
+		<chapter id="chapter2" name = "Theoretical and Research Bases for the Technology Standards" description ="Chapter 2"></chapter>
+		<chapter id="chapter3" name = "Technology Standards for Language Learners" description ="Chapter 3"></chapter>
+		<chapter id="chapter4" name = "Technology Standards for Language Learners" description ="Chapter 4"></chapter>
+		<chapter id="chapter5" name = "Integration" description ="Chapter 5"></chapter>
+		<chapter id="chapter6" name = "Administrators and the Technology Standards" description ="Chapter 6"></chapter>
+		<chapter id="chapter7" name = "The Relationship of the TESOL Technology Standars to Other Standards" description ="Chapter 7"></chapter>
+		<chapter id="chapter8" name = "Online Teaching and Learning With the Technology Standards" description ="Chapter 8"></chapter>
+		<chapter id="chapter9" name = "Checklists for Self-Assessment and Program Assessment" description ="Chapter 9"></chapter>
+	</resource>
+	
+	<resource type="book" id="sciencefoundation" name="National Science Foundation" description="">
+		<chapter id="article01infectiousdiseases" name = "Infectious Diseases Spreading" description =""></chapter>
+		<chapter id="article02medicalmystery" name = "Medical Mystery Solved" description =""></chapter>
+		<chapter id="article03frogstrout" name = "Frogs VS. Trout" description =""></chapter>
+		<chapter id="article04deerdisease" name = "Deer Susceptible to Disease" description =""></chapter>
+		<chapter id="article05lymedisease" name = "Lyme Disease on the Rise" description =""></chapter>
+	</resource>
+
+	<resource type="book" id="goalmodeling" name="Goal Modeling" description="">
+		<chapter id="chap8rev-goalmodeling" name = "Chapter 8" description ="Modeling System Objectives with Goal Diagrams"></chapter>
+	</resource>
+
+	<resource type="book" id="teemss2" name="TEEMSS2" description="">
+		<chapter id="unit1_investigation1" name = "Exploring Sound" description ="Unit 1 - Sound 1"></chapter>
+		<chapter id="unit1_investigation2" name = "Making and hearing sounds" description ="Unit 1 - Sound"></chapter>
+		<chapter id="unit2_investigation1" name = "Batteries and conductors" description ="Unit 2 - Electricity"></chapter>
+		<chapter id="unit2_investigation2" name = "Electric circuits" description ="Unit 2 - Electricity"></chapter>
+		<chapter id="unit3_investigation1" name = "Feeling and measuring temperature" description ="Unit 3 - Sensing"></chapter>
+		<chapter id="unit3_investigation2" name = "Hunting with light" description ="Unit 3 - Sensing"></chapter>
+		<chapter id="unit4_investigation1" name = "Observing clouds" description ="Unit 4 - Weather"></chapter>
+		<chapter id="unit4_investigation2" name = "Weather station" description ="Unit 4 - Weather"></chapter>
+		<chapter id="unit5_investigation1" name = "Egg playground" description ="Unit 5 - Design a playground"></chapter>
+		<chapter id="unit5_investigation2" name = "More egg playground" description ="Unit 5 - Design a playground"></chapter>
+		<chapter id="unit6_investigation1" name = "Temperature of mixing water" description ="Unit 6 - Water and air temperature"></chapter>
+		<chapter id="unit6_investigation2" name = "Temperature of mixing air" description ="Unit 6 - Water and air temperature"></chapter>
+		<chapter id="unit7_investigation1" name = "Levers, pulleys, and inclined planes, Oh My!" description ="Unit 7 - Levers and machines"></chapter>
+		<chapter id="unit7_investigation2" name = "Compound gadgets" description ="Unit 7 - Levers and machines"></chapter>
+		<chapter id="unit8_investigation1" name = "Breath of life" description ="Unit 8 - Monitoring a living plant"></chapter>
+		<chapter id="unit8_investigation2" name = "Daily cycle" description ="Unit 8 - Monitoring a living plant"></chapter>
+		<chapter id="unit9_investigation1" name = "Daily cycle: day and night" description ="Unit 9 - Seasons"></chapter>
+		<chapter id="unit9_investigation2" name = "Yearly cycle: seasons" description ="Unit 9 - Seasons"></chapter>
+		<chapter id="unit10_investigation1" name = "How does a greenhouse work?" description ="Unit 10 - Design a greenhouse"></chapter>
+		<chapter id="unit10_investigation2" name = "Build your own greenhouse" description ="Unit 10 - Design a greenhouse"></chapter>
+		<chapter id="unit11_investigation1" name = "Exploring air pressure" description ="Unit 11 - Air pressur"></chapter>
+		<chapter id="unit11_investigation2" name = "Air pressure and the lungs" description ="Unit 11 - Air pressur"></chapter>
+		<chapter id="unit12_investigation1" name = "Understanding motion" description ="Unit 12 - Motion"></chapter>
+		<chapter id="unit12_investigation2" name = "Displaying changing velocity" description ="Unit 12 - Motion"></chapter>
+		<chapter id="unit13_investigation1" name = "Populations" description ="Unit 13 - Adaptation"></chapter>
+		<chapter id="unit13_investigation2" name = "Selection" description ="Unit 13 - Adaptation"></chapter>
+		<chapter id="unit14_investigation1" name = "The earth's water" description ="Unit 14 - Water Cycle"></chapter>
+		<chapter id="unit14_investigation2" name = "Water in the air" description ="Unit 14 - Water Cycle"></chapter>
+		<chapter id="unit15_investigation1" name = "The measurement challenge" description ="Unit 15 - Design a measurement"></chapter>
+		<chapter id="unit15_investigation2" name = "Measurement Olympics" description ="Unit 15 - Design a measurement"></chapter>
+	</resource>
+
+	<resource type="book" id="mindtools" name="Mind Tools" description="">
+		<chapter id="mindtoolspart1section1" name = "Leadership" description ="Section 1"></chapter>
+		<chapter id="mindtoolspart1section2" name = "Problem Solving" description ="Section 2"></chapter>
+		<chapter id="mindtoolspart1section3" name = "Decision Making" description ="Section 3"></chapter>
+		<chapter id="mindtoolspart1section4" name = "Project Management" description ="Section 4"></chapter>
+		<chapter id="mindtoolspart1section5" name = "Practical Creativity" description ="Section 5"></chapter>
+		<chapter id="mindtoolspart2section6" name = "Time Management" description ="Section 6"></chapter>
+		<chapter id="mindtoolspart2section7" name = "Stress Management" description ="Section 7"></chapter>
+		<chapter id="mindtoolspart2section8" name = "Information Skills" description ="Section 8"></chapter>
+		<chapter id="mindtoolspart2section9" name = "Communication Skills" description ="Section 9"></chapter>
+		<chapter id="mindtoolspart2section10" name = "Career Skills" description ="Section 10"></chapter>
+	</resource>
+
+	<resource type="book" id="nytimes" name="New York Times Articles" description="">
+		<chapter id="technology_onlinepasswords" name = "Online Passowords" description ="DAVID POGUE"></chapter>
+		<chapter id="science_cougars" name = "Cougers" description ="GUY GUGLIOTTA"></chapter>
+		<chapter id="health_hearingloss" name = "Hearing Loss" description ="NICHOLAS BAKALAR"></chapter>
+		<chapter id="technology_facebookhashtags" name = "Facebook Hashtags" description ="VINDU GOEL"></chapter>
+		<chapter id="science_russianspacecenter" name = "Russian Space Center" description ="ANDREW E. KRAMER"></chapter>
+		<chapter id="health_hpvvaccine" name = "HPV Vaccine" description ="SABRINA TAVERNISE"></chapter>
+		<chapter id="health_workplaceperks" name = "Workplace Perks" description ="MOLLY YOUNG"></chapter>
+		<chapter id="science_cancerinrodents" name = "Cancer in Rodents" description ="CARL ZIMMER"></chapter>
+		<chapter id="technology_3dprinting" name = "3D Printing" description ="AMY O'LEARY"></chapter>
+		<chapter id="health_runninginjuries" name = "Running Injuries" description ="GRETCHEN REYNOLDS"></chapter>
+		<chapter id="science_ancientgenomes" name = "Ancient Genomes" description ="NICHOLAS WADE"></chapter>
+		<chapter id="science_baseballpitchers" name = "Baseball Pitchers" description ="JAMES GORMAN"></chapter>
+		<chapter id="health_nursepractitioners" name = "Nurse Practitioners" description ="PAULINE CHEN, M.D."></chapter>
+		<chapter id="science_beacherosion" name = "Beach Erosion" description ="JIM RUTENBERG"></chapter>
+		<chapter id="science_cancertherapy" name = "Cancer Therapy" description ="CARL ZIMMER"></chapter>
+		<chapter id="science_nuclearwaste" name = "Nuclear Waste" description ="MATTHEW L. WALD"></chapter>
+		<chapter id="health_copd" name = "COPD" description ="PAULA SPAN"></chapter>
+		<chapter id="technology_audiobooks" name = "Audio Books" description ="LESLIE KAUFMAN"></chapter>
+		<chapter id="technology_stealthwear" name = "Stealth Wear" description ="JENNA WORTHAM"></chapter>
+		<chapter id="technology_socialmedia" name = "Social Media" description ="NICK BILTON"></chapter>
+	</resource>
+
+	<resource type="book" id="climatechange" name="Climate Change" description="National Science Foundation">
+		<chapter id="climatechangech00" name = "Introduction" description ="Introduction"></chapter>
+		<chapter id="climatechangech01" name = "Sky" description ="Chapter 1"></chapter>
+		<chapter id="climatechangech02" name = "Sea" description ="Chapter 2"></chapter>
+		<chapter id="climatechangech03" name = "Ice" description ="Chapter 3"></chapter>
+		<chapter id="climatechangech04" name = "Land" description ="Chapter 4"></chapter>
+		<chapter id="climatechangech05" name = "Life" description ="Chapter 5"></chapter>
+		<chapter id="climatechangech06" name = "People" description ="Chapter 6"></chapter>
+	</resource>
+	
+	<resource type="book" id="fusion" name="Fusion Math Intervention for Grade 1" description="Kathleen Jungjohann & Christian T. Doabler">
+		<chapter id="fusion1" name = "Lesson 1" description =""></chapter>
+	</resource>
+	
+	<resource type="book" id="dmv" name="DMV Manual" description="Oregon Drivers Manual">
+		<chapter id="dmv" name = "Manual" description ="Oregon Drivers Manual"></chapter>
+	</resource>
+
+	<resource type="book" id="appinventor" name="App Inventor" description="Wolber">
+		<chapter id="appinventor_chapter0" name = "Preface" description ="Chapter 0"></chapter>
+		<chapter id="appinventor_chapter1" name = "Hello Purr" description ="Chapter 1"></chapter>
+		<chapter id="appinventor_chapter2" name = "PaintPot" description ="Chapter 2"></chapter>
+		<chapter id="appinventor_chapter3" name = "MoleMash" description ="Chapter 3"></chapter>
+		<chapter id="appinventor_chapter4" name = "No Texting While Driving" description ="Chapter 4"></chapter>
+		<chapter id="appinventor_chapter5" name = "Ladybug Chase" description ="Chapter 5"></chapter>
+		<chapter id="appinventor_chapter6" name = "Paris Map Tour" description ="Chapter 6"></chapter>
+		<chapter id="appinventor_chapter7" name = "Android, Where's My Car?" description ="Chapter 7"></chapter>
+		<chapter id="appinventor_chapter8" name = "Presidents Quiz" description ="Chapter 8"></chapter>
+		<chapter id="appinventor_chapter9" name = "Xylophone" description ="Chapter 9"></chapter>
+		<chapter id="appinventor_chapter10" name = "MakeQuiz and TakeQuiz" description ="Chapter 10"></chapter>
+		<chapter id="appinventor_chapter11" name = "Broadcast Hub" description ="Chapter 11"></chapter>
+		<chapter id="appinventor_chapter12" name = "NXT Remote Control" description ="Chapter 12"></chapter>
+		<chapter id="appinventor_chapter13" name = "Amazon at the Bookstore" description ="Chapter 13"></chapter>
+		<chapter id="appinventor_chapter14" name = "Understanding an App's Architecture" description ="Chapter 14"></chapter>
+		<chapter id="appinventor_chapter15" name = "Engineering and Debugging an App" description ="Chapter 15"></chapter>
+		<chapter id="appinventor_chapter16" name = "Programming Your App's Memory" description ="Chapter 16"></chapter>
+		<chapter id="appinventor_chapter17" name = "Creating Animated Apps" description ="Chapter 17"></chapter>
+		<chapter id="appinventor_chapter18" name = "Programming Your App to Make Decisions: Conditional Blocks" description ="Chapter 18"></chapter>
+		<chapter id="appinventor_chapter19" name = "Programming Lists of Data" description ="Chapter 19"></chapter>
+		<chapter id="appinventor_chapter20" name = "Repeating Blocks: Iteration" description ="Chapter 20"></chapter>
+		<chapter id="appinventor_chapter21" name = "Defining Procedures: Reusing Blocks" description ="Chapter 21"></chapter>
+		<chapter id="appinventor_chapter22" name = "Working with Databases" description ="Chapter 22"></chapter>
+		<chapter id="appinventor_chapter23" name = "Reading and Responding to Sensors" description ="Chapter 23"></chapter>
+		<chapter id="appinventor_chapter24" name = "Communicating with Web APIs" description ="Chapter 24"></chapter>
+	</resource>
+	
+	<resource type="book" id="organizeyourlife" name="Organize Your Life" description="Michelle Ranae Wild">
+		<chapter id="organizeyourlife1" name = "Making Cognitive Connections" description ="Chapter 1"></chapter>
+		<chapter id="organizeyourlife2" name = "iOS 5 Device Basics" description ="Chapter 2"></chapter>
+		<chapter id="organizeyourlife3" name = "More iOS 5 Basics " description ="Chapter 3"></chapter>
+		<chapter id="organizeyourlife4" name = "The Clock App" description ="Chapter 4"></chapter>
+		<chapter id="organizeyourlife5" name = "The Calendar App Overview" description ="Chapter 5"></chapter>
+		<chapter id="organizeyourlife6" name = "The Calendar App " description ="Chapter 6"></chapter>
+		<chapter id="organizeyourlife7" name = "More About the Calendar App" description ="Chapter 7"></chapter>
+		<chapter id="organizeyourlife8" name = "The Contacts App" description ="Chapter 8"></chapter>
+		<chapter id="organizeyourlife9" name = "The Reminders App" description ="Chapter 9"></chapter>
+		<chapter id="organizeyourlife10" name = "The Notes App" description ="Chapter 10"></chapter>
+		<chapter id="organizeyourlife11" name = "The Voice Memo App" description ="Chapter 11"></chapter>
+		<chapter id="organizeyourlife12" name = "Mail and Messages Apps" description ="Chapter 12"></chapter>
+		<chapter id="organizeyourlife13" name = "Camera & Photos Apps" description ="Chapter 13"></chapter>
+		<chapter id="organizeyourlife14" name = "Maps & Safari" description ="Chapter 14"></chapter>
+		<chapter id="organizeyourlife15" name = "Weather, Stocks, Calculator, Compass, & YouTube" description ="Chapter 15"></chapter>
+		<chapter id="organizeyourlife16" name = "The App Store, iTunes, iBooks, and Newsstand" description ="Chapter 16"></chapter>
+		<chapter id="organizeyourlife17" name = "Synchronization via iTunes" description ="Chapter 17"></chapter>
+		<chapter id="organizeyourlife18" name = "Phone & FaceTime" description ="Chapter 18"></chapter>
+	</resource>
+	
+	<resource type="book" id="regularexpressions" name="Introducing Regular Expressions" description="Michael Fitzgerald">
+		<chapter id="chapter0" name = "Preface" description ="Preface"></chapter>
+		<chapter id="chapter1" name = "What is a regular expression?" description ="Chapter 1"></chapter>
+		<chapter id="chapter2" name = "Simple pattern matching" description ="Chapter 2"></chapter>
+		<chapter id="chapter3" name = "Boundaries" description ="Chapter 3"></chapter>
+		<chapter id="chapter4" name = "Alternation, groups, and backreferences" description ="Chapter 4"></chapter>
+		<chapter id="chapter5" name = "Character classes" description ="Chapter 5"></chapter>
+		<chapter id="chapter6" name = "Matching unicode and other characters" description ="Chapter 6"></chapter>
+		<chapter id="chapter7" name = "Quantifiers" description ="Chapter 7"></chapter>
+		<chapter id="chapter8" name = "Lookarounds" description ="Chapter 8"></chapter>
+		<chapter id="chapter9" name = "Marking up a document with HTML" description ="Chapter 9"></chapter>
+		<chapter id="chapter10" name = "The end of the beginning" description ="Chapter 10"></chapter>
+	</resource>
+	
+	<resource type="book" id="chazan" name="Archaeology and Prehistory" description="Chazan">
+		<chapter id="chazan7" name = "Towers, villages, and longhouses" description ="Chapter 7"></chapter>
+		<chapter id="chazan10" name = "Complexity without the state" description ="Chapter 10"></chapter>
+		<chapter id="chazanpart3" name = "Perspectives on agriculture" description ="Part 3"></chapter>
+		<chapter id="chazanpart4" name = "The development of social complexity" description ="Part 4"></chapter>
+	</resource>
+	
+	<resource type="book" id="paula" name="Pauline's Articles" description="">
+		<chapter id="paula1" name = "Collaboration for Military Transition Students from Combat to College: It Takes a Community" description ="Sandra E. Burnett (Santa Monica College) & John Segoria (California State University San Marcos)"></chapter>
+		<chapter id="paula2" name = "Deserving Design: The New Generation of Student Veterans" description ="Cheryl Branker (North Carolina State University)"></chapter>
+	</resource>
+	
+	<resource type="book" id="dibels" name="Dynamic Idicators of Basic Early Literacy Skills" description="">
+		<chapter id="section_1_letter_naming_fluency" name = "Initial Sound Fluency" description =""></chapter>
+		<chapter id="section_2_initial_sound_fluency" name = "Initial Sound Fluency" description =""></chapter>
+		<chapter id="section_3_phoneme_segmentation_fluency" name = "Phoneme Segmentation Fluency" description =""></chapter>
+		<chapter id="section_4_nonesense_word_fluency" name = "Nonsense Word Fluency" description =""></chapter>
+		<chapter id="section_5_dibels_oral_reading_fluency_and_retell_fluency" name = "Oral Reading Fluency and Retell Fluency" description =""></chapter>
+		<chapter id="section_6_word_use_fluency" name = "Word Use Fluency" description =""></chapter>
+		<chapter id="section_7_dibels_approved_accommodations" name = "Approved Accommodations" description =""></chapter>
+		<chapter id="section_8_dibels_instructional_recommendations" name = "Instructional Recommendations: Intensive, Strategic, and Benchmark" description =""></chapter>
+		<chapter id="section_9_references" name = "References" description =""></chapter>
+	</resource>
+	
+	<resource type="book" id="fluency" name="Fluency with Information Technology" description="Lawrence Snyder">
+		<chapter id="chapter3" name = "The Basics of Networking" description ="Chapter 3"></chapter>
+		<chapter id="chapter5" name = "Locating Information on the WWW" description ="Chapter 5"></chapter>
+		<chapter id="chapter8" name = "Representing Information Digitally" description ="Chapter 8"></chapter>
+		<chapter id="chapter11" name = "Representing Multimedia Digitally" description ="Chapter 11"></chapter>
+		<chapter id="chapter13" name = "Privacy and Digital Security" description ="Chapter 13"></chapter>
+		<chapter id="chapter16" name = "Introduction to Database Concepts" description ="Chapter 16"></chapter>
+		<chapter id="chapter17" name = "A Case Study in Database Organization" description ="Chapter 17"></chapter>
+		<chapter id="chapter18" name = "Fundamental Concepts Expressed in JavaScript" description ="Chapter 18"></chapter>
+	</resource>
+	
+	<resource type="book" id="concurrency" name="Concurrency State Models & Java Programming" description="Jeff Magee and Jeff Kramer">
+		<chapter id="preface" name = "Preface" description ="Preface"></chapter>
+		<chapter id="chapter1" name = "Introduction" description ="Chapter 1"></chapter>
+		<chapter id="chapter2" name = "Processes and Threads" description ="Chapter 2"></chapter>
+		<chapter id="chapter3" name = "Concurrent Execution" description ="Chapter 3"></chapter>
+		<chapter id="chapter4" name = "Shared Objects and Mutual Exclusion" description ="Chapter 4"></chapter>
+		<chapter id="chapter5" name = "Monitors and Condition Synchronization" description ="Chapter 5"></chapter>
+		<chapter id="chapter6" name = "Deadlock" description ="Chapter 6"></chapter>
+		<chapter id="chapter7" name = "Safety and Liveness Properties" description ="Chapter 7"></chapter>
+		<chapter id="chapter8" name = "Model-Based Design" description ="Chapter 8"></chapter>
+		<chapter id="chapter9" name = "Dynamic Systems" description ="Chapter 9"></chapter>
+		<chapter id="chapter10" name = "Message Passing" description ="Chapter 10"></chapter>
+		<chapter id="chapter11" name = "Concurrent Architectures" description ="Chapter 11"></chapter>
+		<chapter id="chapter12" name = "Timed Systems" description ="Chapter 12"></chapter>
+		<chapter id="chapter13" name = "Program Verification" description ="Chapter 13"></chapter>
+		<chapter id="chapter14" name = "Logical Properties" description ="Chapter 14"></chapter>
+		<chapter id="appendixa" name = "Quick Reference" description ="Appendix A"></chapter>
+		<chapter id="appendixb" name = "Language Specification" description ="Appendix B"></chapter>
+		<chapter id="appendixc" name = "Semantics" description ="Appendix C"></chapter>
+		<chapter id="appendixd" name = "UML Class Diagrams" description ="Appendix D"></chapter>		
+	</resource>
+		
+	<resource type="book" id="html5" name="Head First HTML5 Programming" description="Eric Freeman & Elisabeth Robson (OREILY)">
+		<chapter id="ch01" name = "Getting to know HTML5: Welcome to Webville" description ="Chapter 1"></chapter>
+		<chapter id="ch02" name = "Introducing JavaScript and the Dom: A Little Code" description ="Chapter 2"></chapter>
+		<chapter id="ch03" name = "Events, Handlers and All That Jazz: A Little Interactivity" description ="Chapter 3"></chapter>
+		<chapter id="ch04" name = "JavaScript Functions and Objects: Serious JavaScript" description ="Chapter 4"></chapter>
+		<chapter id="ch05" name = "Making your HTML Location Aware: Geolocation" description ="Chapter 5"></chapter>
+		<chapter id="ch06" name = "Talking to The Web: Extroverted Apps" description ="Chapter 6"></chapter>
+		<chapter id="ch07" name = "Brining Out Your Inner Artist: Canvas" description ="Chapter 7"></chapter>
+		<chapter id="ch08" name = "Not Your Father's TV: Video... With Special Guest Star 'Canvas' " description ="Chapter 8"></chapter>
+		<chapter id="ch09" name = "Storing Things Locally: Web Storage" description ="Chapter 9"></chapter>
+		<chapter id="ch10" name = "Putting JavaScript to Work: Web Workers" description ="Chapter 10"></chapter>
+	</resource>
+	
+ 	<resource type="book" id="languagearticles" name="Language Articles" description="">
+		<chapter id="07-02_kayser" name = "Creating Meaningful Web Pages:" description ="Amy Kayser"></chapter>
+		<chapter id="07-02_marco" name = "Internet Content-based Activities" description ="Maria Jose Luzon Marco"></chapter>
+		<chapter id="08_2_salsbury_and_crummer" name = "Using Teacher-Developed Corpora in the CBI Classroom" description ="Tom Salsbury and Crista Crummer"></chapter>
+		<chapter id="09_1_tuksinvarajarn_and_todd" name = "The E-pet: Enhancing Motivation in E-portfolios" description ="Ananya Tuksinvarajarn and Richard Watson Todd"></chapter>
+		<chapter id="10_1_tardy" name = "Writing for the World: Wikipedia as an Introduction to Academic Writing" description ="Christine M. Tardy"></chapter>
+		<chapter id="10_3_mendez" name = "How to Set Up Oral Homework: A Case of Limited Technology" description ="Elba Mendez"></chapter>
+		<chapter id="10_3_reinders" name = "Twenty Ideas for Using Mobile Phones in the Language Classroom" description ="Hayo Reinders"></chapter>
+		<chapter id="11_2_boas" name = "Process Writing and the Internet: Blogs and Ning Networks in the Classroom" description ="Isabela Villas Boas"></chapter>
+		<chapter id="11_3_horn" name = "The Future Is Now: Preparing a New Generation of CBI Teachers" description ="Bradley Horn"></chapter>
+		<chapter id="11_3_petrie_and_avery" name = "Identifying Our Approaches to Language Learning Technologies: Improving Professional Development" description ="Gina Mikel Petrie and Lisa Avery"></chapter>
+		<chapter id="12_1_reilly" name = "Understanding and Teaching Generation Y" description ="Peter Reilly"></chapter>
+		<chapter id="12_1_yassaei" name = "Using Original Video and Sound Effects to Teach English" description ="Shahla Yassaei"></chapter>
+	</resource> 
+
+	
+	
+	
+	<!-- <resource type="article" id="googlebooksearch" name="Google's Book Search: A Disaster for Scholars" description="By Geoffrey Nunberg"></resource> -->
+	
+</contents>

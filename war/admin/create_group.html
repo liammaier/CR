@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en-US">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<link rel="stylesheet" type="text/css" href="/public/css/bootstrap.min.css">
+		
+		<script type="text/javascript">
+		changeHighlighted("AdminPanel");
+		</script>
+		
+		<title>Create a new group</title>
+	</head>
+	<body>
+		Add a new group
+		<form action="/admin/createGroup" method="post" >
+			Group name: <input type="text" name="group" /> <br>
+			Group Description: <input type="text" name="groupDescription" /> <br>
+			Leader's email (optional): <input type="text" name="leader" /> <br>
+			<input type="submit" value="Create group" />
+		</form>
+	</body>
+</html>

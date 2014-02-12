@@ -1,0 +1,129 @@
+<html>
+
+	<head>
+	
+		<title> User Options </title>
+		
+		<!-- Stylesheets -->
+		<link rel="stylesheet" type="text/css" href="/lib/bootstrap/css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="/basic/shared/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="options.css" />
+
+		<!-- Scripts -->
+		<script src="/lib/jquery-1.7.2.min.js"></script>
+		<script src="/lib/underscore-min.js"></script>
+		<script src="/lib/backbone-min.js"></script>
+		
+		<!-- <script src="/basic/options/option-models.js"></script> -->
+		<!-- <script src="/basic/options/option-views.js"></script> -->
+		
+		<script src="/lib/bootstrap/js/bootstrap-dropdown.js"></script>
+		<script src="/basic/shared/js/user-models.js"></script>
+		<script src="/basic/shared/js/userbar.js"></script>
+		
+		<script src="/basic/options/options.js"></script>
+	
+		
+	</head>
+
+	<body>
+		<!-- Back button -->
+		<input id="backBtn" type="button" class="btn" value="Back to Main Menu"/>
+	
+	
+		<div id="titleResourcesBar">
+			<center>
+				<h1 class="title inline">Options</h1>
+			</center>
+			<hr>
+			<br>
+			
+		</div>
+		
+		<form method="post" action="/submitoptions">
+			<div id="options">
+				<h2 style=""> Preview Strategies </h2>
+				<div id="preview" class="options">
+					<div class="option">
+						<input type="checkbox" class="option" id="previewsections" name="previewsections">
+						<div class="desc">
+							<div><h3> Preview Sections </h3></div>
+							<div><p class="description"> Read through the first sentence of each section in the chapter</p></div>
+						</div>
+					</div>
+					<div class="option">
+						<input type="checkbox" class="option"  id="previewfigures" name="previewfigures">
+						<div class="desc">
+							<h3> Preview Figures </h3>
+							<p class="description"> Skim through the chapter clicking on figures</p>
+						</div>
+					</div>
+				</div>
+ 				<h2 style=""> Reader Options</h2>
+				<div id="read" class="options">
+					<div class="option">
+						<select id="ttsspeed" name="ttsspeed">
+							<option value="slow">Slow</option>
+							<option value="medium">Medium</option>
+							<option value="fast">Fast</option>
+						</select>
+						<div class="desc">
+							<h3> TTS Speed </h3>
+							<p class="description"> The speed of the text to speech</p>
+						</div>
+					</div>
+					<div class="option">
+						<select id="ttsaccent" name="ttsaccent">
+							<option value="accent1">Accent</option>
+						</select>
+						<div class="desc">
+							<h3> TTS Accent </h3>
+							<p class="description"> The accent of the text to speech voice</p>
+						</div>
+					</div>
+					<div class="option">
+						<select id="ttspitch" name="ttspitch">
+							<option value="pitch1">Pitch</option>
+						</select>
+						<div class="desc">
+							<h3> TTS Pitch </h3>
+							<p class="description">The pitch of the text to speech voice</p>
+						</div>
+					</div>
+				</div> 
+				<h2 style=""> Review Strategies	</h2>
+				<div id="review" class="options">
+					<div class="option">
+						<input type="checkbox" class="option"  id="reviewsummaries" name="reviewsummaries" >
+						<div class="desc">
+							<h3>Review Summaries</h3>
+							<p class="description">Review the summaries you made while reading</p>
+						</div>
+					</div>
+					<div class="option">
+						<input type="checkbox" class="option"  id="reviewmultimedia" name="reviewmultimedia" >
+						<div class="desc">
+							<h3>Review Multimedia</h3>
+							<p class="description">While reading, save links, images, and videos to review at the end of the chapter</p>
+						</div>
+					</div>
+					<div class="option">
+						<input type="checkbox" class="option"  id="reviewheatmap" name="reviewheatmap" >
+						<div class="desc">
+							<h3>Review heatmap</h3>
+							<p class="description">Make highlight for each paragraph and compare to other people's highlights.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<input id="submitbtn" type="submit" class="btn btn-large" value="Submit">
+		</form>
+
+		<div id="spinnerbox">
+			<img src="/images/spinner.gif"/>
+		</div>
+
+
+	</body>
+
+</html>

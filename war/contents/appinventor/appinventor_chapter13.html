@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+	<head>
+		<title> App Inventor Chapter 13 </title>
+	</head>
+
+  <body>
+		
+		<div id="appinventor13" class="appinventor container"> 
+		
+		<div class="page">
+
+<!-- Page 203 -->
+
+		<div class="chapter_head">
+			CHAPTER 13
+		</div>
+
+		<section class="section" data-number="0" data-name="Amazon at the Bookstore">
+
+			<h2>Amazon at the Bookstore</h2>
+
+			<img class="rightImage" src="/contents/appinventor/images/ch13img01.png">
+
+			<div class="chapter_description">
+				<p>Say you’re browsing books at your favorite bookstore and want to know how much a book costs on 
+					Amazon.com. With the “Amazon at the Bookstore” 
+					app, you can scan a book or enter an ISBN, and the 
+					app will tell you the current lowest price of the book 
+					at Amazon.com. You can also search for books on a 
+					particular topic.</p>
+				
+				<p>“Amazon at the Bookstore” demonstrates how App 
+					Inventor can be used to create apps that talk to web 
+					services (aka APIs, or application programming interfaces). This app will get data from a
+					web service created by one of this book’s authors. By the 
+					end of this chapter, you’ll be able to create your own custom app for talking to Amazon.</p>
+				
+				<p>The application has a simple user interface that lets the user enter keywords or a book’s 
+					ISBN (international standard book number — a 10- or 13-digit code that uniquely identifies a book)
+					and then lists the title, ISBN, and lowest price for a new copy at Amazon. 
+					It also uses the <span class="normalFont python">BarcodeScanner</span> component so the user can scan
+					a book to trigger a search instead of entering text (technically, the scanner just inputs the book’s ISBN for 
+					you!).</p>
+
+		</section> <!-- Section 0, Amazon at the Bookstore -->
+
+		<section class="section" data-number="1" data-name="What You'll Learn">
+
+			<h3>What You'll Learn</h3>
+
+			<p>In this app (shown in Figure 13-1), you’ll learn: 
+
+			<ul>
+				<li>How to use a barcode scanner within an app.</li>
+				<li>How to access a web information source (Amazon’s API) through the <span class="python">TinyWebDB</span>
+					component.</li>
+				<li>How to process complex data returned from that web information source. In particular, you’ll learn
+					how to process a list of books in which each book is itself a list of three items (title, price, and ISBN).</li>
+			</ul>
+
+<!-- Page 204 -->
+
+			<div class="pagebreak">
+					<span class="pageNumber"> 204 </span> Chapter 13: Amazon at the Bookstore
+			</div>
+
+			<p>You’ll also be introduced to source code that you can use to create your own web 
+				service API with the Python programming language and Google’s App Engine.</p>
+
+			<figure>
+				<div class="centeredImage">
+					<img src="/contents/appinventor/images/ch13img02.png">
+				</div>
+				<figcaption>Figure 13-1. “Amazon at the Bookstore” running in the emulator</figcaption>
+			</figure>
+
+		</section> <!-- Section 1, What You'll Learn -->
+
+		<section class="section" data-number="2" data-name="What Is an API?">
+
+			<h3>What Is an API?</h3>
+
+			<p>Before we start designing our components and programming the app, let’s take a 
+				closer look at what an <em>application programmer interface (API)</em> is and how one works. 
+				An API is like a website, but instead of communicating with humans, it communicates 
+				with other computer programs. APIs are often called “server” programs because they 
+				typically serve information to “client” programs that actually interface with humans — like
+				an App Inventor app. If you’ve ever used a Facebook app on your phone, you’re 
+				using a client program that communicates with the Facebook API server.</p>
+			
+			<p>In this chapter, you’ll create an Android client app that communicates with an 
+				Amazon API. Your app will request book and ISBN information from the Amazon API, 
+				and the API will return up-to-date listings to your app. Your app will then present the 
+				book data to the user.</p>
+			
+			<p>The Amazon API you’ll use is specially configured for use with App Inventor. We won’t 
+				get into the gory details here, but it’s useful to know that, because of this configuration,
+				you can use the <span class="python">TinyWebDB</span> component to communicate with Amazon. The 
+				good news is, you already know how to do that! You’ll call <span class="pBlock">TinyWebDB.GetValue</span> to 
+				request information and then process the information returned in the <span class="pBlock">TinyWebDB.GotValue</span>
+				event handler, just as you do when you use a web database. (You can go 
+				back to the MakeText app in Chapter 10 to refresh your memory if needed.)</p>
+
+<!-- Page 205 -->
+
+			<div class="pagebreak">
+					<span class="pageNumber"> 205 </span> What Is an API?
+			</div>
+
+			<p>Before creating the app, you’ll need to understand the Amazon API’s <em>protocol</em>, which 
+				specifies the format for your request and the format of the data returned. Just as 
+				different cultures have different protocols (when you meet someone, do you shake 
+				hands, bow, or nod your head?), computers talking to one another have protocols 
+				as well.</p>
+
+			<p>The Amazon API you’ll be using here provides a web interface for exploring how the 
+				API works before you start using it. While the API is designed to talk to other computers,
+				this web interface allows you to see just how that communication will happen. 
+				Following these steps, you can try out what particular <span class="pBlock">GetValue</span> calls will return via 
+				the website, and know that the API interface will behave exactly the same when you 
+				ask it for data via the <span class="python">TinyWebDB</span> component in App Inventor:</p>
+
+			<ol>
+				<li>
+					<p>Open a browser and go to <em>http://aiamazonapi.appspot.com/</em>. You’ll see the 
+					website shown in Figure 13-2.</p>
+
+					<figure>
+						<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch13img03.png">
+						</div>
+						<figcaption>Figure 13-2. The web interface for the App Inventor Amazon API</figcaption>
+					</figure>
+				</li>
+				<li>
+					<p>The page allows you to try the one function you can call with this API: <span class="python">getvalue</span>. 
+						Enter a term (e.g., “baseball”) in the Tag field and then click “Get value.” The web 
+						page will display a listing of the top five books returned from Amazon, as shown 
+						in Figure 13-3.
+
+					<figure>
+						<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch13img04.png">
+						</div>
+						<figcaption>Figure 13-3. Making a call to the Amazon API to search for books related to the tag (or keyword) 
+							“baseball”</figcaption>
+					</figure>
+				</li>
+			</ol>
+
+<!-- Page 206 -->
+
+			<div class="pagebreak">
+					<span class="pageNumber"> 206 </span> Chapter 13: Amazon at the Bookstore
+			</div>
+			
+			<ol class="listFormatting">
+				<li>
+					<p>The value returned is a list of books, each one enclosed in brackets [like this] and 
+						providing the title, cost, and ISBN. If you look closely, you’ll see that each book is 
+						in fact represented as a sublist of another main list. The main list (about baseball) 
+						is enclosed in brackets, and each sublist (or book) is enclosed in its own set of 
+						brackets within the main brackets. So the return value from this API is actually a 
+						<em>list of lists</em>, with each sublist providing the information for one book. Let’s look at 
+						this a bit more closely.
+
+					<p>Each left bracket ([) in the data denotes the beginning of a list. The first left 
+						bracket of the result denotes the beginning of the outer list (the list of books). To 
+						its immediate right is the beginning of the first sublist, the first book:</p>
+
+					<p class="intendedText python">[“The Baseball Codes: Beanballs, Sign Stealing, and Bench-Clearing Brawls: The 
+						Unwritten Rules of America\’s Pastime”, ‘$12.98’, ‘0375424695’]</p>
+
+					<p>The sublist has three parts: a title, the lowest current price for the book at 
+						Amazon, and the book’s ISBN. When you get this information into your App 
+						Inventor app, you’ll be able to access each part using <span class="pBlock">select list item</span>, with index 
+						1 for the title, index 2 for the price, and index 3 for the ISBN. (To refresh your memory
+						on working with an index and lists, revisit the MakeQuiz app in Chapter 10.)</p>
+				</li>
+			</ol>
+
+			<ol start="3">
+				<li>Instead of searching by keyword, you can search for a book by entering an ISBN. 
+					To perform such a search, you enter a tag of the form “isbn:xxxxxxxxxxxxx,” as 
+					shown in Figure 13-4.
+
+					<p>The double brackets ([[) in the result [['"App Inventor"', '$21.93',
+						'1449397484']]denote that a list of lists is still returned, even though there is 
+						only one book. It may seem a bit strange now, but this will be important when 
+						we access the information for our app.</p>
+				</li>
+			</ol>
+
+			<figure>
+				<div class="centeredImage">
+					<img src="/contents/appinventor/images/ch13img05.png">
+				</div>
+				<figcaption>Figure 13-4. Querying the Amazon API by ISBN instead of keyword</figcaption>
+			</figure>
+
+		</section> <!-- Section 2, What Is an API? -->
+
+		<section class="section" data-number="3" data-name="Designing the Components">
+
+<!-- Page 207 -->
+
+			<div class="pagebreak">
+					<span class="pageNumber"> 207 </span> Designing the Components
+			</div>
+
+			<h3>Designing the Components</h3>
+
+			<p>The user interface for our Amazon book app is relatively simple: give it a <span class="python">Textbox</span>
+				for entering keywords or ISBNs, two buttons for starting the two types of searches 
+				(keyword or ISBN), and a third button for letting the user scan a book (we’ll get to 
+				that in a bit). Then, add a heading label and another label for listing the results that 
+				the Amazon API will return, and finally two non-visible components: <span class="python">TinyWebDB</span> and 
+				a <span class="python">BarcodeScanner</span>. Check your results against Figure 13-5.</p>
+
+			<figure>
+				<div class="centeredImage">
+					<img src="/contents/appinventor/images/ch13img06.png">
+				</div>
+				<figcaption>Figure 13-5. The Amazon at the Bookstore user interface shown in the Designer</figcaption>
+			</figure>
+
+			<p>Table 13-1 lists all the components you’ll need to build the UI shown in Figure 13-5.</p>
+
+<!-- Page 208 -->
+
+			<div class="pagebreak">
+					<span class="pageNumber"> 208 </span> Chapter 13: Amazon at the Bookstore
+			</div>
+
+			<p class="caption">Table 13-1.Component list for the “Amazon at the Bookstore” app</p>
+
+			<table>
+				<thead>
+					<tr>
+						<th>Component type</th>
+						<th>Palette group</th>
+						<th>What you'll name it</th>
+						<th>Purpose</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><span class="python">Textbox</span></td>
+						<td>Basic</td>
+						<td><span class="python">SearchTextBox</span></td>
+						<td>The user enters keywords or ISBN here.</td>
+					</tr>
+					<tr>
+						<td><span class="python">HorizontalArrangement</span></td>
+						<td>Screen Arrangements</td>
+						<td><span class="python">HorizontalArrangement1</span></td>
+						<td>Arrange the buttons in a line.</td>
+					</tr>
+					<tr>
+						<td><span class="python">Button</span></td>
+						<td>Basic</td>
+						<td><span class="python">KeywordSearchButton</span></td>
+						<td>Click to search by keyword.</td>
+					</tr>
+					<tr>
+						<td><span class="python">Button</span></td>
+						<td>Basic</td>
+						<td><span class="python">ISBNButton</span></td>
+						<td>Click to search by ISBN.</td>
+					</tr>
+					<tr>
+						<td><span class="python">Button</span></td>
+						<td>Basic</td>
+						<td><span class="python">ScanButton</span></td>
+						<td>Click to scan an ISBN from a book.</td>
+					</tr>
+					<tr>
+						<td><span class="python">Label</span></td>
+						<td>Basic</td>
+						<td><span class="python">Label1</span></td>
+						<td>The header “Search Results.”</td>
+					</tr>
+					<tr>
+						<td><span class="python">Label</span></td>
+						<td>Basic</td>
+						<td><span class="python">ResultsLabel</span></td>
+						<td>Where you’ll display the results.</td>
+					</tr>
+					<tr>
+						<td><span class="python">TinyWebDB</span></td>
+						<td>Not ready for prime time</td>
+						<td><span class="python">TinyWebDB1</span></td>
+						<td>Talk to Amazon.com.</td>
+					</tr>
+					<tr>
+						<td><span class="python">BarcodeScanner</span></td>
+						<td>Other stuff</td>
+						<td><span class="python">BarcodeScanner1</span></td>
+						<td>Scan barcodes.</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>Set the properties of the components in the following way:
+
+			<ol>
+				<li>Set the <span class="python">Hint</span> of the <span class="python">SearchTextBox</span>
+					to “Enter keywords or ISBN”.</li>
+				<li>Set the <span class="python">Text</span> properties of the buttons and labels as shown in Figure 13-5.</li>
+				<li>Set the <span class="python">ServiceURL</span> property of the <span class="python">TinyWebDB</span> component to
+					<em>http://aiamazonapi.appspot.com/</em>.</li>
+			</ol>
+
+		</section> <!-- Section 3, Designing the Components -->
+
+		<section class="section" data-number="4" data-name="Designing the Behavior">
+
+			<h3>Designing the Behavior</h3>
+
+			<p>For this app, you’ll specify the following behaviors in the Blocks Editor:
+
+			<p><em>Searching by keyword</em></p>
+
+			<p class="intendedText">The user enters some terms and clicks the <span class="python">KeywordSearchButton</span> to
+				invoke an Amazon search. You’ll call <span class="pBlock">TinyWebDB.GetValue</span> to make it happen.</span>
+
+			<p><em>Searching by ISBN</em></p>
+
+			<p class="intendedText">The user enters an ISBN and clicks the ISBNButton. You’ll package
+				the prefix “isbn:” with the number entered and run the Amazon search.</span>
+
+			<p><em>Barcode scanning</em></p>
+
+			<p class="intendedText">The user clicks a button and the scanner is launched. When the user
+				scans an ISBN from a book, your app will start the Amazon search.</span>
+
+			<p><em>Processing the list of books</em></p>
+
+			<p class="intendedText">At first, your app will display the data returned from Amazon in a
+				rudimentary way. Later, you’ll modify the blocks so that the app extracts the title, price,
+				and ISBN from each book returned and displays them in an organized way.</span>
+
+<!-- Page 209 -->
+
+			<div class="pagebreak">
+					<span class="pageNumber"> 209 </span> Designing the Behavior
+			</div>
+
+			<section class="subsection" data-number="5" data-name="Searching by Keyword">
+
+				<h4>Searching by Keyword</h4>
+
+				<p>When the user clicks the <span class="python">KeywordSearchButton</span>, you want to grab the text from the 
+					<span class="python">SearchTextbox</span> and send it as the tag in your request to the Amazon API. You’ll use 
+					the <span class="pBlock">TinyWebDB.GetValue</span> block to request the Amazon search.</p>
+
+				<p>When the results come back from Amazon, the <span class="pBlock">TinyWebDB.GotValue</span> event handler 
+					will be triggered. For now, let’s just display the result that is returned directly into 
+					the <span class="python">ResultsLabel</span>, as shown in Figure 13-6. Later, after you see that the data is indeed 
+					being retrieved, you can display the data in a more sophisticated fashion</p>
+
+				<figure>
+					<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch13img07.png">
+					</div>
+					<figcaption>Figure 13-6. Send the search request to the API and put results in the ResultsLabel</figcaption>
+				</figure>
+
+				<section class="subsection" data-number="6" data-name="How the blocks work">
+
+					<h5>How the blocks work</h5>
+
+					<p>When the user clicks the <span class="python">KeywordSearchButton</span>, the
+						<span class="pBlock">TinyWebDB1.GetValue</span> request 
+						is made. The tag sent with the request is the information the user entered in the 
+						<span class="python">SearchTextBox</span>.
+					
+					<p>If you completed the MakeQuiz app (Chapter 10), you know that <span class="pBlock">TinyWebDB.GetValue</span>
+						requests are not answered immediately. Instead, when the data arrives 
+						from the API, <span class="pBlock">TinyWebDB1.GotValue</span> is triggered. In
+						<span class="pBlock">GotValue</span>, the blocks check the 
+						value returned to see if it’s a list (it won’t be if the Amazon API is offline or there is no 
+						data for the keywords). If it is a list, the data is placed into the <span class="python">ResultsLabel</span>.</p>
+
+					<div class="test_your_app">
+						<img src="/contents/appinventor/images/test_phone.jpg">
+						
+						<p><span class="apptest_header">Test your app.</span>Enter a term in the search box and click Search By 
+							Keyword. You should get a listing similar to what is shown in Figure 
+							13-7. (It’s not terribly nice-looking, but we’ll deal with that shortly.)</p>
+
+						<div class="clear"></div>
+					</div>
+
+<!-- Page 210 -->
+
+					<div class="pagebreak">
+							<span class="pageNumber"> 210 </span> Chapter 13: Amazon at the Bookstore
+					</div>
+
+					<figure>
+						<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch13img08.png">
+						</div>
+						<figcaption>Figure 13-7. Keyword search result for “dogs”</figcaption>
+					</figure>
+
+				</section> <!-- Section 6, How the blocks work -->
+
+			</section> <!-- Section 5, Searching by Keyword -->
+
+			<section class="subsection" data-number="7" data-name="Searching by ISBN">
+
+				<h4>Searching by ISBN</h4>
+
+				<p>The code for searching by ISBN is similar, but in this case the Amazon API expects 
+					the tag to be in the form “isbn:xxxxxxxxxxxxx” (this is the <em>protocol</em> the API expects for 
+					searching by ISBN). You don’t want to force the user to know this protocol; the user 
+					should just be able to enter the ISBN in the text box and click Search by ISBN, and the 
+					app will add the “isbn:” prefix behind the scenes with <span class="pBlock">make text</span>. Figure 13-8 shows 
+					the blocks to do that.</p>
+
+				<figure>
+					<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch13img09.png">
+					</div>
+					<figcaption>Figure 13-8. Using make text to add the isbn: prefix</figcaption>
+				</figure>
+
+				<section class="subsection" data-number="8" data-name="How the blocks work">
+
+					<h5>How the blocks work</h5>
+
+					<p>The <span class="pBlock">make text</span> block concatenates the “isbn:” prefix with the information the user 
+						has input in the <span class="python">SearchTextBox</span> and sends the result as the tag to
+						<span class="pBlock">TinyWebDB.GetValue</span>.
+
+<!-- Page 211 -->
+
+					<div class="pagebreak">
+							<span class="pageNumber"> 211 </span> Designing the Behavior
+					</div>
+
+					<p>Just as with keyword search, the API sends back a list result for an ISBN search — in 
+						this case, a list of just the one item whose ISBN matches the user’s input exactly. 
+						Because the <span class="pBlock">TinyWebDB.GotValue</span> event handler is already set up to process a list of 
+						books (even a list with only one item), you won’t have to change your event handler 
+						to make this work.</p>
+
+					<div class="test_your_app">
+						<img src="/contents/appinventor/images/test_phone.jpg">
+						
+						<p><span class="apptest_header">Test your app.</span>Enter an ISBN (e.g., 9781449397487) in the 
+							<span class="normalFont python">SearchTextBox</span> and click the
+							<span class="normalFont python">ISBNButton</span>. Does the book information appear?</p>
+
+						<div class="clear"></div>
+					</div>
+
+				</section> <!-- Section 8, How the blocks work -->
+
+			</section> <!-- Section 7, Searching by ISBN -->
+
+			<section class="subsection" data-number="9" data-name="Don't Leave Your Users Hanging">
+
+				<h4>Don't Leave Your Users Hanging</h4>
+
+				<p>As we’ve seen in earlier chapters that work with TinyWebDB, when you call a web 
+					service (API) with <span class="pBlock">TinyWebDB.GetValue</span>, there can be a delay before the data arrives 
+					and <span class="pBlock">TinyWebDB.GotValue</span> is triggered. It is generally a good idea to let users know 
+					the request is being processed so they don’t worry that the app has hung. For this 
+					app, you can place a message in the <span class="python">ResultsLabel</span> each time you make the call to 
+					<span class="pBlock">TinyWebDB.GetValue</span>, as shown in Figure 13-9.</p>
+
+				<figure>
+					<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch13img10.png">
+					</div>
+					<figcaption>Figure 13-9. Adding a message to let the user know what is happening</figcaption>
+				</figure>
+
+				<section class="subsection" data-number="10" data-name="How the blocks work">
+
+					<h5>How the blocks work</h5>
+
+					<p>For both the keyword and ISBN searches, a “Searching Amazon…” message is placed 
+						in <span class="python">ResultsLabel</span> when the data is requested. Note that when
+						<span class="pBlock">GotValue</span> is triggered, 
+						this message is overwritten with the actual results from Amazon.</p>
+
+				</section> <!-- Section 10, How the blocks work -->
+
+			</section> <!-- Section 9, Don't Leave Your Users Hanging -->
+
+			<section class="subsection" data-number="11" data-name="Scanning a Book">
+
+				<h4>Scanning a Book</h4>
+
+				<p>Let’s face it: typing on a cell phone isn’t always the easiest thing, and you tend to 
+					make a mistake here and there. It would certainly be easier (and result in fewer 
+					mistakes) if a user could just launch your app and scan the barcode of the book she 
+					is interested in. This is another great built-in Android phone feature you can tap into 
+					easily with App Inventor.</p>
+
+<!-- Page 212 -->
+
+				<div class="pagebreak">
+						<span class="pageNumber"> 212 </span> Chapter 13: Amazon at the Bookstore
+				</div>
+
+				<p>The function <span class="pBlock">BarcodeScanner.DoScan</span> starts up the scanner. You’ll want to call this 
+					when the <span class="python">ScanButton</span> is clicked. The event handler
+					<span class="pBlock">BarcodeScanner.AfterScan</span>
+					is triggered once something has been scanned. It has an argument, <span class="python">result</span>, which 
+					contains the information that was scanned. In this case, you want to initiate an ISBN 
+					search using that result, as shown in Figure 13-10.</p>
+
+				<figure>
+					<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch13img11.png">
+					</div>
+					<figcaption>Figure 13-10. Blocks for initiating an ISBN search after a user scans</figcaption>
+				</figure>
+
+				<section class="subsection" data-number="12" data-name="How the blocks work">
+
+					<h5>How the blocks work</h5>
+
+					<p>When the user clicks the <span class="python">ScanButton</span>, <span class="pBlock">DoScan</span>
+						launches the scanner.
+						When something has been scanned,
+						<span class="pBlock">AfterScan</span> is triggered. The argument <span class="python">result</span> holds the 
+						result of the scan — in this case, a book’s ISBN. The user is notified that a request 
+						has been made, the result (the ISBN scanned) is placed in the <span class="python">SearchTextBox</span>, and 
+						<span class="pBlock">TinyWebDB.GetValue</span> is called to initiate the search. Once again, the
+						<span class="pBlock">TinyWebDB.GotValue</span> event
+						handler will process the book information returned.</p>
+
+					<div class="test_your_app">
+						<img src="/contents/appinventor/images/test_phone.jpg">
+						
+						<p class="twoLines"><span class="apptest_header">Test your app.</span>Click the
+							<span class="normalFont python">ScanButton</span> and scan the barcode of a 
+							book. Does the app display the book information?</p>
+
+						<div class="clear"></div>
+					</div>
+
+				</section> <!-- Section 12, How the blocks work -->
+
+			</section> <!-- Section 11, Scanning a Book -->
+
+			<section class="subsection" data-number="13" data-name="Improving the Display">
+
+<!-- Page 213 -->
+
+				<div class="pagebreak">
+						<span class="pageNumber"> 213 </span> Designing the Behavior
+				</div>
+
+				<h4>Improving the Display</h4>
+
+				<p>A client app like the one you’re creating can do whatever it wants with the data it 
+					receives — you could compare the price information with that of other online stores, 
+					or use the title information to search for similar books from another library.</p> 
+
+				<p>Almost always, you’ll want to get the API information loaded into variables that you 
+					can then process further. In the <span class="pBlock">TinyWebDB.GotValue</span> event handler you have so far, 
+					you just place all the information returned from Amazon into the <span class="python">ResultsLabel</span>.</p>
+
+				<p>Instead, let’s <em>process</em> (or do something to) the data by (1) putting the title, price, and 
+					ISBN of each book returned into separate variables, and (2) displaying those items in 
+					an orderly fashion. By now, you’re really getting the hang of creating variables and 
+					using them in your display, so try building out the variables you think you’ll need and 
+					the blocks to display each search result on its own separate line. Then compare what 
+					you’ve done with Figure 13-11.</p>
+
+				<section class="subsection" data-number="14" data-name="How the blocks work">
+
+					<h5>How the blocks work</h5>
+
+					<p>Four variables — <span class="python">resultList</span>, <span class="python">title</span>,
+						<span class="python">cost</span>, and <span class="python">isbn</span> — are defined to hold each piece 
+						of data as it is returned from the API. The result from the API, <span class="python">valueFromWebDB</span>, is 
+						placed into the variable <span class="python">resultList</span>. This app could have processed the argument 
+						<span class="python">valueFromWebDB</span> directly, but in general, you’ll put it in a variable in case
+						you want to process the data outside the event handler. (Event arguments like
+						<span class="python">valueFromWebDB</span> hold their value only within the event handler.)</p>
+
+					<p>A <span class="pBlock">foreach</span> loop is used to iterate through each item of the result.
+						Recall that the data returned from Amazon is a list of lists, with each sublist representing the information 
+						for a book. So the placeholder of the <span class="pBlock">foreach</span> is named
+						<span class="python">bookitem</span>, and it holds the current book information, a list, on each iteration.</p>
+
+					<p>Now we have to deal with the fact that the variable <span class="python">bookitem</span> is a list — the
+						first item is the title, the second, the price; and the third, the ISBN. Thus,
+						<span class="pBlock">select list item</span> blocks 
+						are used to extract these items and place them into their respective variables (<span class="python">title</span>, 
+						<span class="python">price</span>, and <span class="python">isbn</span>).</p>
+
+<!-- Page 214 -->
+
+					<div class="pagebreak">
+							<span class="pageNumber"> 214 </span> Chapter 13: Amazon at the Bookstore
+					</div>
+
+					<figure>
+						<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch13img12.png">
+						</div>
+						<figcaption>Figure 13-11. Extracting the title, cost, and ISBN of each book,
+							then displaying them on separate lines</figcaption>
+					</figure>
+
+					<p>Once the data has been organized this way, you can process it however you’d like. 
+						This app just uses the variables as part of a <span class="pBlock">make text</span> block that displays the title, 
+						price, and ISBN on separate lines.</p>
+
+					<div class="test_your_app">
+						<img src="/contents/appinventor/images/test_phone.jpg">
+						
+						<p clas="twoLines"><span class="apptest_header">Test your app.</span>Try another search and check out how the book 
+							information is displayed. It should look similar to Figure 13-12.</p>
+
+						<div class="clear"></div>
+					</div>
+
+<!-- Page 215 -->
+
+					<div class="pagebreak">
+							<span class="pageNumber"> 215 </span> Customizing the API
+					</div>
+
+					<figure>
+						<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch13img13.png">
+						</div>
+						<figcaption>Figure 13-12. The search listing displayed in a more sophisticated fashion</figcaption>
+					</figure>
+
+				</section> <!-- Section 14, How the blocks work -->
+
+			</section> <!-- Section 13, Improving the Display -->
+
+		</section> <!-- Section 4, Designing the Behavior -->
+
+		<section class="section" data-number="15" data-name="Customizing the API">
+				
+			<h3>Customizing the API</h3>
+
+			<p>The API you connected to, <em>http://aiamazonapi.appspot.com</em>, was created with the 
+				programming language Python and Google’s App Engine. App Engine lets you create 
+				and deploy websites and services (APIs) that live on Google’s servers. You only pay for 
+				App Engine if your site or API becomes very popular (meaning you’re using up a lot 
+				more of Google’s servers for it).</p>
+
+			<p>The API service used here provides only partial access to the full Amazon API and returns
+				a maximum of five books for any search. If you’d like to provide more flexibility — for example,
+				have it search for items other than books — you can download the source 
+				code from <em>http://appinventorapi.com/amazon/</em> and customize it.</p>
+
+			<p>Such customization does require knowledge of Python programming, so beware! 
+				But if you’ve been completing the App Inventor apps in this book, you might just 
+				be ready for the challenge. To get started learning Python, check out the online text 
+				<em>How to Think Like a Computer Scientist: Learning with Python</em> (<em>http://openbookproject.net//thinkCSpy/</em>)
+				and check out the section on App Inventor API building in Chapter 
+				24 of this book.</p>
+
+		</section> <!-- Section 15, Customizing the API -->
+
+		<section class="subsection" data-number="16" data-name="Variations">
+
+<!-- Page 216 -->
+
+			<div class="pagebreak">
+					<span class="pageNumber"> 216 </span> Chapter 13: Amazon at the Bookstore
+			</div>
+
+			<h3>Variations</h3>
+
+			<p>Once you get the app working, you might want to explore some variations. For 
+				example,</p>
+
+			<ul>
+				<li>As is, the app hangs if the search doesn’t return any books (for instance, when 
+					the user enters an invalid ISBN). Modify the blocks so that the app reports when 
+					there are no results.
+				<li>Modify the app so that it only displays books under $10.
+				<li>Modify the app so that after you scan a book, its lowest Amazon price is spoken 
+					out loud (use the <span class="python">TextToSpeech</span> component discussed in the “Android, Where’s 
+					My Car?” app in Chapter 7).
+				<li>Download the <em>http://aiamazonapi.appspot.comAPI</em> code from
+					<em>http://examples.oreilly.com/0636920016632/</em>
+					and modify it so that it returns more information. 
+					For example, you might have it return the Amazon URL of each book, display 
+					the URL along with each listed book, and let the user click the URL to open that 
+					page. As mentioned earlier, modifying the API requires Python programming 
+					and some knowledge of Google’s App Engine. For more information, check out 
+					Chapter 24.</li>
+			</ul>
+
+		</section> <!-- Section 16, Variations -->
+
+		<section class="sectioN" data-number="17" data-name="Summary">
+
+			<h3>Summary</h3>
+
+			<p>Here are some of the concepts we’ve covered with this app:</p>
+
+			<ul>
+				<li>You can access the Web from an app using <span class="python">TinyWebDB</span> and specially constructed 
+					APIs. You set the <span class="python">ServiceURL</span> of the <span class="python">TinyWebDB</span>
+					component to the API URL and 
+					then call <span class="pBlock">TinyWebDB.GetValue</span> to request the information. The data isn’t immediately
+					returned but can instead be accessed within the <span class="pBlock">TinyWebDB.GotValue</span> event handler.</li>
+				<li>The <span class="pBlock">BarcodeScanner.DoScan</span> function launches the scan. When the user scans 
+					a barcode, the <span class="pBlock">BarcodeScanner.AfterScan</span> event is triggered and the scanned 
+					data is placed in the argument <span class="python">result</span>.</li>
+				<li>In App Inventor, complex data is represented with lists and lists of lists. If you 
+					know the format of the data returned from an API, you can use <span class="pBlock">foreach</span> and 
+					<span class="pBlock">select list item</span> to extract the separate pieces of information into variables, and 
+					then perform whatever processing or display you’d like using those variables.</li>
+			</ul>
+
+		</section> <!-- Section 17, Summary -->
+
+	</body>
+</html>

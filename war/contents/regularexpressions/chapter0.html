@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Introducing Regular Expressions</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="regexp">
+
+		<div class="container">
+			
+			<section class="section" data-number="0" data-name="Preface">
+
+				<h1>Preface</h1>
+
+				<p><span class="first-sentence">This book shows you how to write regular expressions through examples.</span> Its goal is to
+				make learning regular expressions as easy as possible. In fact, this book demonstrates
+				nearly every concept it presents by way of example so you can easily imitate and try
+				them yourself.</p>
+
+				<p>Regular expressions help you find patterns in text strings. More precisely, they are
+				specially encoded text strings that match patterns in sets of strings, most often strings
+				that are found in documents or files.</p>
+
+				<p>Regular expressions began to emerge when mathematician Stephen Kleene wrote his
+				book <em>Introduction to Metamathematics</em> (New York, Van Nostrand), first published in
+				1952, though the concepts had been around since the early 1940s. They became more
+				widely available to computer scientists with the advent of the Unix operating system—
+				the work of Brian Kernighan, Dennis Ritchie, Ken Thompson, and others at AT&amp;T Bell
+				Labs—and its utilities, such as <em>sed</em> and <em>grep</em>, in the early 1970s.</p>
+
+				<p>The earliest appearance that I can find of regular expressions in a computer application
+				is in the QED editor. QED, short for Quick Editor, was written for the Berkeley Timesharing
+				System, which ran on the Scientific Data Systems SDS 940. Documented in
+				1970, it was a rewrite by Ken Thompson of a previous editor on MIT’s Compatible
+				Time-Sharing System and yielded one of the earliest if not first practical implementations
+				of regular expressions in computing. (<strong>Table A-1</strong> in <strong>Appendix</strong> documents the regex
+				features of QED.)</p>
+
+				<p>I’ll use a variety of tools to demonstrate the examples. You will, I hope, find most of
+				them usable and useful; others won’t be usable because they are not readily available
+				on your Windows system. You can skip the ones that aren’t practical for you or that
+				aren’t appealing. But I recommend that anyone who is serious about a career in computing
+				learn about regular expressions in a Unix-based environment. I have worked in
+				that environment for 25 years and still learn new things every day.</p>
+
+				<blockquote>“Those who don’t understand Unix are condemned to reinvent it, poorly.” —Henry
+				Spencer</blockquote>
+
+				<div class="pagebreak pageNumber right">vii</div>
+				
+				<p>Some of the tools I’ll show you are available online via a web browser, which will be
+				the easiest for most readers to use. Others you’ll use from a command or a shell prompt,
+				and a few you’ll run on the desktop. The tools, if you don’t have them, will be easy to
+				download. The majority are free or won’t cost you much money.</p>
+
+				<p>This book also goes light on jargon. I’ll share with you what the correct terms are when
+				necessary, but in small doses. I use this approach because over the years, I’ve found
+				that jargon can often create barriers. In other words, I’ll try not to overwhelm you with
+				the dry language that describes regular expressions. That is because the basic philosophy
+				of this book is this: Doing useful things can come before knowing everything about
+				a given subject.</p>
+
+				<p>There are lots of different implementations of regular expressions. You will find regular
+				expressions used in Unix command-line tools like vi (vim), grep, and sed, among others.
+				You will find regular expressions in programming languages like Perl (of course), Java,
+				JavaScript, C# or Ruby, and many more, and you will find them in declarative languages
+				like XSLT 2.0. You will also find them in applications like Notepad++, Oxygen,
+				or TextMate, among many others.</p>
+
+				<p>Most of these implementations have similarities and differences. I won’t cover all those
+				differences in this book, but I will touch on a good number of them. If I attempted to
+				document all the differences between all implementations, I’d have to be hospitalized.
+				I won’t get bogged down in these kinds of details in this book. You’re expecting an
+				introductory text, as advertised, and that is what you’ll get.</p>
+
+				<h2>Who Should Read This Book</h2>
+
+				<p>The audience for this book is people who haven't ever written a regular expression
+				before. If you are new to regular expressions or programming, this book is a good place
+				to start. In other words, I am writing for the reader who has heard of regular expressions
+				and is interested in them but who doesn’t really understand them yet. If that is you,
+				then this book is a good fit.</p>
+
+				<p>The order I’ll go in to cover the features of regex is from the simple to the complex. In
+				other words, we’ll go step by simple step.</p>
+
+				<p>Now, if you happen to already know something about regular expressions and how to
+				use them, or if you are an experienced programmer, this book may not be where you
+				want to start. This is a beginner’s book, for rank beginners who need some handholding.
+				If you have written some regular expressions before, and feel familiar with
+				them, you can start here if you want, but I’m planning to take it slower than you will
+				probably like.</p>
+
+				<div class="pagebreak pageNumber left">viii &#124; Preface</div>
+				
+				<p>I recommend several books to read after this one. First, try Jeff Friedl’s <em>Mastering Regular
+				Expressions, Third Edition</em> (see <span class="url">http://shop.oreilly.com/product/9781565922570
+				.do</span>). Friedl’s book gives regular expressions a thorough going over, and I highly recommend
+				it. I also recommend the <em>Regular</em> Expressions <em>Cookbook</em> (see <span class="url">http://shop.oreilly
+				.com/product/9780596520694.do</span>) by Jan Goyvaerts and Steven Levithan. Jan Goyvaerts
+				is the creator of RegexBuddy, a powerful desktop application (see <span class="url">http://www
+				.regexbuddy.com/</span>). Steven Levithan created RegexPal, an online regular expression
+				processor that you’ll use in the first chapter of this book (see <span class="url">http://www.regexpal.com</span>).</p>
+
+				<h2>What You Need to Use This Book</h2>
+
+				<p>To get the most out of this book, you’ll need access to tools available on Unix or Linux
+				operating systems, such as Darwin on the Mac, a variant of BSD (Berkeley Software
+				Distribution) on the Mac, or Cygwin on a Windows PC, which offers many GNU tools
+				in its distribution (see <span class="url">http://www.cygwin.com</span> and <span class="url">http://www.gnu.org</span>).</p>
+
+				<p>There will be plenty of examples for you to try out here. You can just read them if you
+				want, but to really learn, you’ll need to follow as many of them as you can, as the most
+				important kind of learning, I think, always comes from doing, not from standing on
+				the sidelines. You’ll be introduced to websites that will teach you what regular expressions
+				are by highlighting matched results, workhorse command line tools from the Unix
+				world, and desktop applications that analyze regular expressions or use them to perform
+				text search.</p>
+
+				<p>You will find examples from this book on Github at <span class="url">https://github.com/michaeljames
+				fitzgerald/Introducing-Regular-Expressions</span>. You will also find an archive of all the examples
+				and test files in this book for download from <span class="url">http://examples.oreilly.com/
+				9781449392680/examples.zip</span>. It would be best if you create a working directory or
+				folder on your computer and then download these files to that directory before you
+				dive into the book.</p>
+
+				<h2>Conventions Used in This Book</h2>
+
+				<p>The following typographical conventions are used in this book:</p>
+
+				<p><em>Italic</em></p>
+				<p class="indented">Indicates new terms, URLs, email addresses, filenames, file extensions, and so
+				forth.</p>
+
+				<p><code>Constant width</code></p>
+				<p class="indented">Used for program listings, as well as within paragraphs, to refer to program elements
+				such as expressions and command lines or any other programmatic
+				elements.</p>
+				
+				<div class="pagebreak pageNumber right">Preface &#124; ix</div>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+
+					This icon signifies a tip, suggestion, or a general note.
+				</div>
+				
+				<div class="clear"></div>
+
+				<h2>Using Code Examples</h2>
+
+				<p>This book is here to help you get your job done. In general, you may use the code in
+				this book in your programs and documentation. You do not need to contact us for
+				permission unless you’re reproducing a significant portion of the code. For example,
+				writing a program that uses several chunks of code from this book does not require
+				permission. Selling or distributing a CD-ROM of examples from O’Reilly books does
+				require permission. Answering a question by citing this book and quoting example
+				code does not require permission. Incorporating a significant amount of example code
+				from this book into your product’s documentation does require permission.</p>
+
+				<p>We appreciate, but do not require, attribution. An attribution usually includes the title,
+				author, publisher, and ISBN. For example: “<em>Introducing Regular Expressions</em> by Michael
+				Fitzgerald (O’Reilly). Copyright 2012 Michael Fitzgerald, 978-1-4493-9268-0.”</p>
+
+				<p>If you feel your use of code examples falls outside fair use or the permission given above,
+				feel free to contact O’Reilly at <em>permissions@oreilly.com</em>.</p>
+				
+				<h2>Safari&#174; Books Online</h2>
+
+				<img class="floatLeft1" src="/contents/regularexpressions/images/safari.png">
+
+				<p>Safari Books Online (<span class="url">www.safaribooksonline.com</span>) is an on-demand digital
+				library that delivers expert <strong>content</strong> in both book and video form from the
+				world’s leading authors in technology and business.</p>
+
+				<p>Technology professionals, software developers, web designers, and business and creative
+				professionals use Safari Books Online as their primary resource for research,
+				problem solving, learning, and certification training.</p>
+
+				<p>Safari Books Online offers a range of <strong>product mixes</strong> and pricing programs for <strong>organizations</strong>,
+				<strong>government agencies</strong>, and <strong>individuals</strong>. Subscribers have access to thousands
+				of books, training videos, and prepublication manuscripts in one fully searchable database
+				from publishers like O’Reilly Media, Prentice Hall Professional, Addison-Wesley
+				Professional, Microsoft Press, Sams, Que, Peachpit Press, Focal Press, Cisco Press, John
+				Wiley & Sons, Syngress, Morgan Kaufmann, IBM Redbooks, Packt, Adobe Press, FT
+				Press, Apress, Manning, New Riders, McGraw-Hill, Jones & Bartlett, Course
+				Technology, and dozens more. For more information about Safari Books Online, please
+				visit us online.</p>
+				
+				<div class="pagebreak pageNumber left">x &#124; Preface</div>
+				
+				<h2>How to Contact Us</h2>
+
+				<p>Please address comments and questions concerning this book to the publisher:</p>
+
+				<p class="indented">O’Reilly Media, Inc.<br/>
+				1005 Gravenstein Highway North<br/>
+				Sebastopol, CA 95472<br/>
+				800-998-9938 (in the United States or Canada)<br/>
+				707-829-0515 (international or local)<br/>
+				707-829-0104 (fax)</p>
+
+				<p>This book has a web page listing errata, examples, and any additional information. You
+				can access this page at:</p>
+
+				<p class="indented url">http://oreilly/intro_regex</p>
+
+				<p>To comment or to ask technical questions about this book, send email to:</p>
+
+				<p class="indented url">bookquestions@oreilly.com</p>
+
+				<p>For more information about O'Reilly books, courses, conferences, and news, see its
+				website at <span class="url">http://www.oreilly.com</span>.</p>
+
+				<p>Find O'Reilly on Facebook: <span class="url">http://facebook.com/oreilly</span></p>
+
+				<P>Follow O'Reilly on Twitter: <span class="url">http://twitter.com/oreillymedia</span></p>
+
+				<p>Watch O'Reilly on YouTube: <span class="url">http://www.youtube.com/oreillymedia</span></p>
+
+				<h2>Acknowledgements</h2>
+
+				<p>Once again, I want to express appreciation to my editor at O’Reilly, Simon St. Laurent,
+				a very patient man without whom this book would never have seen the light of day.
+				Thank you to Seara Patterson Coburn and Roger Zauner for your helpful reviews. And,
+				as always, I want to recognize the love of my life, Cristi, who is my <em>raison d’être</em>.</p>
+
+			</section>
+								
+		</div> <!--/container-->
+
+	</div> <!--/regexp-->
+</body>
+</html>

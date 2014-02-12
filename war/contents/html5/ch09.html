@@ -1,0 +1,3767 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+
+	<title>Chapter 9. Storing Things Locally: Web Storage</title>
+	
+	<META name="javascript" javascript="/contents/html5/html5.js">
+	
+
+</head>
+
+<body>
+	
+	<div id="html51" class="html5 container">
+
+		<section class="section" data-number="0" data-name="Storing Things Locally: Web Storage">
+
+			<div class="pagebreak pageNumber">413</div>
+
+			<h1>Chapter 9. Storing Things Locally: Web Storage</h1>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/413fig01.png" alt="" />
+			</figure>
+
+			<p><strong>Tired of stuffing your client data into that tiny closet cookie?</strong>
+				That was fun in the ‘90s, but we’ve got much bigger needs today with
+				web apps. What if we said we could get you five megabytes on every
+				user’s browser? You’d probably look at us like we were trying to sell
+				you a bridge in Brooklyn. Well, there’s no need to be skeptical—the
+				HTML5 Web Storage API does just that! In this chapter we’re going to
+				take you through everything you need to store any object locally on
+				your user’s device and to make use of it in your web experience.</p>
+
+		</section> <!-- Section 0 -->
+
+		<section class="section" data-number="1" data-name="How browser storage works (1995-2010)">
+
+<!-- Page 414 -->
+
+			<div class="pagebreak pageNumber">414</div>
+
+			<div class="right">
+				<p><strong>Behind the Scenes</strong></p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/common-09.png" alt="" />
+				</figure>
+			</div>
+
+			<h2>How browser storage works (1995 - 2010)</h2>
+
+			<p>Building a shopping cart? Need to store some user preferences for your site?
+				Or just need to stash some data that you need to be associated with
+				each user? That’s where browser storage comes in. Browser storage
+				gives us a way to persistently store data that we can use in
+				building a web experience.</p>
+
+			<p>Up until now there’s been one game in town—the browser
+				cookie—for storing information on the browser. Let’s see how cookies
+				work:</p>
+			
+			<ol>
+				<li>
+					<p>When your browser retrieves a web page, say from “pets-R-us.com,” the server can send a cookie
+						along with its response. Cookies contain one or more key and value pairs:</p>
+					
+					<figure>
+						<img src="/contents/html5/figs/web/414fig01.png"/>
+					</figure>
+				</li>
+			</ol>
+	
+<!-- Page 415 -->
+
+			<div class="pagebreak pageNumber">415</div>
+
+			<div>
+				<ol start="2">
+					<li>
+						<p>The next time the browser makes a
+							request to “pets-R-us.com,” it sends along any cookies that were
+							sent previously:</p>
+						
+						<figure>
+							<img src="/contents/html5/figs/web/415fig01.png" alt="" />
+						</figure>
+					</li>
+
+					<div class="linebreak"></div>
+
+					<li>
+						<p>The server can then use the cookie
+							to personalize the experience, in this case promoting relevant
+							items to the user, but there are many other ways cookies can be
+							used too.</p>
+						
+						<figure>
+							<img src="/contents/html5/figs/web/415fig02.png" />
+						</figure>
+					</li>
+				</ol>
+			</div>
+
+<!-- Page 416 -->
+
+			<div class="pagebreak pageNumber">416</div>
+
+			<div class="sidebar">
+				<div class="note">
+					<img src="/contents/html5/figs/web/brainpower.png">
+					
+					<p>Cookies have been with us a long time, but you might be
+						able to think of some ways they could be improved on.</p>
+
+					<p>Check all the items below that you think make cookies problematic:</p>
+					
+					<div class="informaltable">
+						<table style="border-collapse: collapse;">
+							<colgroup>
+								<col class="c1" />
+								<col class="c2" />
+							</colgroup>
+							<tbody>
+								<tr>
+									<td><img src="/contents/html5/figs/web/squer.png" alt="" /></td>
+									
+									<td>There’s only 4k to work with, my app needs more storage than that.</td>
+								</tr>
+								
+								<tr>
+									<td><img src="/contents/html5/figs/web/squer.png" alt="" /></td>
+									
+									<td>
+										<p>Sending the cookie back and forth every time seems really inefficient,
+											especially if I’m on a mobile device with not a lot of bandwidth.
+										</p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td><img src="/contents/html5/figs/web/squer.png" alt="" /></td>
+									
+									<td>They sound like a good way to transmit viruses and other malware to my browser.</td>
+								</tr>
+								
+								<tr>
+									<td><img src="/contents/html5/figs/web/squer.png" alt="" /></td>
+									
+									<td>I’ve heard the way the key/value pairs are done as part of the HTTP
+										request is a pain to deal with in code.
+									</td>
+								</tr>
+								
+								<tr>
+									<td><img src="/contents/html5/figs/web/squer.png" alt="" /></td>
+									
+									<td>Aren’t we potentially sending personal data back and forth every time we make a request?</td>
+								</tr>
+								
+								<tr>
+									<td><img src="/contents/html5/figs/web/squer.png" alt="" /></td>
+									
+									<td>They don’t seem well matched to all the client-side development we’ve been
+											doing. They seem to assume everything in happening in the server.
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div> <!-- /informaltable -->
+
+					<div class="blockquote">
+						<blockquote class="blockquote">
+							<p>For the record, and despite news reports to the contrary,
+								cookies are quite safe and not a haven for virus writers.</p>
+						</blockquote>
+					</div>
+				</div> <!-- /note -->
+			</div> <!-- /sidebar -->
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/416fig01.png" alt="" />
+			</figure>
+
+		</section> <!-- Section 1 -->
+
+		<section class="section" data-number="2" data-name="How HTML5 Web Storage works">
+
+<!-- Page 417 -->
+
+			<div class="pagebreak pageNumber">417</div>
+	
+			<h2 class="title">How HTML5 Web Storage works</h2>
+
+			<div class="right">
+				<p><strong>Behind the Scenes</strong></p>
+
+				<figure class="">
+					<img src="/contents/html5/figs/web/common-09.png" alt="" />
+				</figure>
+			</div>
+
+			<p>HTML5 gives us a nice, simple JavaScript API in the browser
+				for storing key/value pairs that are persistent. You’re not limited
+				to four stingy kilobytes of storage either; all browsers today will
+				gladly offer you five to ten megabytes of storage in every user’s
+				browser. HTML5’s local storage was also created with web apps (and
+				mobile apps!) in mind—local storage means your app can store data in
+				the browser to reduce the communication needed with the server.
+				Let’s check out how it works (and then we’ll jump head first into
+				the API):</p>
+			
+			<figure class="left">
+				<img src="/contents/html5/figs/web/417fig01a.png" alt="" />
+			</figure>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/417fig01b.png" alt="" />
+			</figure>
+
+		</section> <!-- Section 2 -->
+
+		<section class="section" data-number="3" data-name="Note to self...">
+
+<!-- Page 418 -->
+
+			<div class="pagebreak pageNumber">418</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/418fig01.png" alt="" />
+			</figure>
+			
+			<h2 class="title">Note to self...</h2>
+
+			<p><a class="indexterm" /><a class="indexterm" />
+				<a class="indexterm" /><a class="indexterm" />
+				Need a system for getting things
+				done? It’s hard to improve on the old Post-it note system (more
+				commonly known as <em>stickies</em>).
+				You know how it works: you jot down your “to do” item, stick it
+				somewhere, and once you’ve done the task, you throw the sticky in
+				the trash (or recycle it).</p>
+			
+			<p>How about we build one using HTML? Let’s see, we need a way to
+				store all those stickies, so we’re going to need a server, and some
+				cookies... oh, wait a second, back up the bus, we can do this with
+				the HTML5 Web Storage API!</p>
+			
+			<div class="note">
+				<p>The Web Storage API is simple, fun and instantly gratifying.
+					We promise!</p>
+			</div>
+			
+			<div class="sidebar">
+				<div class="left">
+					<img src="/contents/html5/figs/web/exercise.png">
+				</div>
+
+				<p>No fooling around, we’re going to jump right in and start using the
+					local store. To do that you should create a simple html page with
+					all the basics: a head, a body, and a script (or just use the
+					starter file <code class="literal">notetoself.html</code>
+					in the code examples). Follow along by typing the code into your
+					&lt;script&gt; element (typing it in helps it stick):</p>
+
+				<ol>
+					<li>
+						<p>There’s not much more to a sticky than the text you write on it, right?</p>
+					</li>
+				</ol>
+
+				<div class="note">
+					<p>We’re starting simple, but before you know it, we’ll have a whole Stickies app up and running.</p>
+				</div>
+
+				<div class="hiddencode">
+					<div class="informalfigure">
+						<img class="codeimage" src="/contents/html5/figs/web/418fig02.png" alt="" />
+					</div>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>localStorage.setItem("sticky_0", "Pick up dry cleaning");</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div> <!-- /sidebar -->
+
+<!-- Page 419 -->
+
+			<div class="pagebreak pageNumber">419</div>
+
+			<ol start="2">
+				<li>
+					<p>That was easy enough; let’s add a second item to the local store:</p>
+
+					<div class="hiddencode">
+						<div class="informalfigure">
+							<img class="codeimage" src="/contents/html5/figs/web/419fig01.png" alt="" />
+						</div>
+
+						<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  	<div class="modal-body">
+								<code>
+<pre>localStorage.setItem("sticky_1", "Cancel cable tv, who needs it now?");</pre>
+								</code>
+							</div>
+						</div>
+					</div>
+				</li>
+				
+				<li class="listitem">
+					<p>Now that we have two values
+						stored safely in our browser’s local storage, you can now use
+						one of the keys to retrieve its corresponding value from
+						localStorage. Like this:</p>
+
+					<div class="hiddencode">
+						<div class="informalfigure">
+							<div class="mediaobject">
+								<img class="codeimage" src="/contents/html5/figs/web/419fig02.png" alt="" />
+							</div>
+						</div>
+
+						<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  	<div class="modal-body">
+								<code>
+<pre>var sticky = localStorage.getItem("sticky_0");</pre>
+<pre>alert(sticky);</pre>
+								</code>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ol>
+
+		</section> <!-- Section 3 -->
+
+		<section class="section" data-number="4" data-name="Time for a test drive!">
+
+			<h2 class="title">Time for a test drive!</h2>
+
+			<p>Make sure you’ve got all this code into your script element
+				and load it into your browser.</p>
+
+			<p>Here’s the result of our test drive:</p>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/419fig03.png" alt="" />
+			</figure>
+
+<!-- Page 420 -->
+
+			<div class="pagebreak pageNumber">420</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/420fig01.png" />
+			</figure>
+
+			<p><a class="indexterm" /><strong>Sure.</strong>
+				Here it is in a nutshell: your browser provides you with a local
+				store—space on your own computer, in your browser—that a page can
+				make use of to store key/value pairs. You created a few key/value
+				pairs, stored them away using the local storage API, and then you
+				retrieved one of them for use in your app. Now, while that might not
+				be the most exciting example, there are lots of interesting things
+				you can do with a bit of storage in every user’s browser (and we’re
+				sure you can think of at least a few).</p>
+
+			<p>So now that you’ve got an answer in a nutshell, let’s step
+				through in detail what just happened:</p>
+			
+			<div class="clear" />
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p>First, remember every browser has
+							a bit of local storage that you can use to store key/value pairs.</p>
+						
+						<figure class="center">
+							<img src="/contents/html5/figs/web/420fig02.png" alt="" />
+						</figure>
+					</li>
+				</ol>
+			</div>
+
+<!-- Page 421 -->
+
+			<div class="pagebreak pageNumber">421</div>
+			
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1" start="2">
+					<li class="listitem">
+						<p><a class="indexterm" /><a class="indexterm" />
+							<a class="indexterm" />With that local storage you can take a key
+							and a value (both in the form of strings) and you can store them.</p>
+
+						<figure class="">
+							<img src="/contents/html5/figs/web/421fig01.png" alt="" />
+						</figure>
+					</li>
+					
+					<li class="listitem">
+						<p>We then called setItem again and
+							stored a second key/value pair, this time with a key of
+							“sticky_1” and a value of “Cancel cable tv, who needs it now?”.</p>
+						
+						<figure class="">
+							<img src="/contents/html5/figs/web/421fig02.png" alt="" />
+						</figure>
+					</li>
+					
+					<li class="listitem">
+						<p>And when we call getItem with a key of “sticky_0”, it returns the
+							value of the key/value pair.</p>
+					</li>
+				</ol>
+			</div>
+
+<!-- Page 422 -->
+
+			<div class="pagebreak pageNumber">422</div>
+
+			<div class="sidebar" >
+				<div class="center">
+					<image src="/contents/html5/figs/web/therearenodumbquestions.png">
+				</div>
+
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<div class="qandaset">
+							<table style="border: 0;">
+								<colgroup>
+									<col style="text-align: left; width: 1%;" />
+									<col />
+								</colgroup>
+
+								<tbody>
+									<tr class="question" >
+										<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><a class="indexterm" /><a class="indexterm" />
+												<a class="indexterm" /><a class="indexterm" />
+												<a class="indexterm" /><a class="indexterm" />
+												<a class="indexterm" /><a class="indexterm" />
+												<a class="indexterm" />
+												<strong>Q: First you said “Web Storage” and then you started talking
+												about “local storage.” Are they the same?</strong></p>
+										</td>
+									</tr>
+								
+									<tr class="answer">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> The Web
+												standard is named “Web Storage” but most people just call it
+												local storage (in fact, the browsers even expose the API
+												through the localStorage object). Web Storage is actually
+												not the best name for the standard (because items are stored
+												in your browser, rather than on the Web). But that said,
+												we’re stuck with it. You’ll see us use the term local
+												storage more than the standard name of “Web Storage.”</p>
+										</td>
+									</tr>
+									
+									<tr class="question">
+										<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: How widely supported is the Web Storage API? Can
+												I count on it beingthere?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Yes; in fact
+												it is one of the better supported APIs, even all the way
+												back to IE8 and is now in most modern mobile browsers. There
+												are a few caveats here and there, but we’ll point them out
+												as we go. In terms of counting on Web Storage, as always you
+												should test before using APIs. Here’s how you test for
+												localStorage:</p>
+
+											<pre class="programlisting">if (window ["localStorage"]) {</pre>
+											<pre class="programlisting">// your localStorage code here...</pre>
+											<pre class="programlisting">}</pre>
+
+											<p>Notice that we test by checking to see if the window
+												global object has the localStorage property. If it’s there,
+												we know the browser supports localStorage.</p>
+
+										</td>
+									</tr>
+
+									<tr class="question">
+										<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: At the very
+												beginning of the chapter you mentioned 5MB of storage on
+												each browser. Is that five megabytes total across all
+												apps?</strong></p>
+										</td>
+									</tr>
+
+									<tr class="answer">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> No, that isactually five megabytes per domain.</p>
+										</td>
+									</tr>
+									
+									<tr class="question">
+										<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: You said the
+												server didn’t need to be involved, but then you started
+												talking about domains.</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Right, all
+												the storage is managed in the client. The domain comes in
+												because five megabytes is allocated to all the pages from
+												the same domain for storage. Pet-R-Us.com gets five,
+												PetEmporium. com gets five more, and so on, all on your
+												machines.</p>
+										</td>
+									</tr>
+									
+									<tr class="question">
+										<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: How does
+												this compare to Google Gears [or insert your favorite
+												proprietary local storage technology here]?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> There’s
+												nothing wrong with other browser storage technology, but
+												HTML5’s local storage is now the standard (and Google,
+												Apple, Microsoft and others now recognize Web Storage as the
+												standard way to store content locally in the browser).
+											</p>
+										</td>
+									</tr>
+									
+									<tr class="question">
+										<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: What happens
+												if I perform a <code class="literal">setItem</code> on the
+												same key multiple times. Say I called setItem twice on
+												<code class="literal">"sticky_1"</code>, what happens? Do I get
+												two <code class="literal">sticky_1</code> ‘s in the local
+												store?</strong></p>
+											</td>
+									</tr>
+
+									<tr class="answer">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> No. Keys are
+												unique in localStorage, so setItem will overwrite the first
+												value with the second value. Here’s an example; if you ran
+												this code:</p>
+											
+											<pre class="programlisting">localStorage.setItem("sticky_1", "Get Milk");</pre>
+											<pre class="programlisting">localStorage.setItem("sticky_1", "Get Almond Milk");</pre>
+											<pre class="programlisting">var sticky = localStorage.getItem("sticky_1");</pre>
+
+											<p>The value of sticky would be “Get Almond Milk”.</p>
+										</td>
+									</tr>
+
+									<tr class="question">
+										<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: Who can seethe data in my local store?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Local
+												storage is managed according to the origin (you can just
+												think of the origin as your domain) of the data. So, for
+												instance, every page on wickedlysmart.com can see the items
+												stored by other pages on that site, but code from other
+												sites, say, google.com, can’t access that storage (they can
+												access only their own local storage items).</p>
+										</td>
+									</tr>
+
+									<tr class="question">
+										<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: When I’m
+												loading a page from my computer, like we are in these
+												exercises, what is my origin?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Good
+												question. In that case your origin is known as the “Local
+												Files” origin, which is great to use for testing. If you
+												have access to server you could test your files there too,
+												and then you’ll be in your domain’s origin.</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div> <!-- /qandaset -->
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+			<div class="sidebar">
+				<div class="note">
+					<div class="left">
+						<img src="/contents/html5/figs/web/watchit.png">
+					</div>
+
+					<p><strong><em>Local Storage may not work properly in all browsers if you’re using file://.</em></strong></p>
+
+					<p><em>This is another case where some browsers require that you serve pages using localhost:// or
+						a hosted server, rather than loading from a file. So if your
+						stickies aren’t working, try running from a server or try adifferent browser.</em></p>
+				</div>
+			</div>
+
+<!-- Page 423 -->
+
+			<div class="pagebreak pageNumber">423</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/423fig01.png" alt="" />
+			</figure>
+
+			<p><a class="indexterm" /><a class="indexterm" />
+				<a class="indexterm" /><a class="indexterm" />
+				<a class="indexterm" /><span class="strong"><strong>You’ve got the right technology.</strong>
+			</p>
+
+			<p>It’s true, with <code class="literal">localStorage</code>
+				you can only use strings as keys and values. But, that’s not as
+				restricting as it sounds. Let’s say you need to store the integer 5.
+				You can store the string “5” instead, and then convert it back to an
+				integer when you retrieve it from the local store. Let’s take a look
+				at how you’d do this for integers and floats.</p>
+
+			<p>Say you want to store an integer with the key “numitems”.
+				You’d write:</p>
+
+			<img src="/contents/html5/figs/web/423fig02.png" alt="" />
+
+			<p>Okay, it might look like you’re storing an integer here, but
+				JavaScript knows this needs to be a string, so it coerces the
+				integer value into a string for you. What
+				<code class="literal">setItem</code>
+				actually sees is the string “1”, not an integer. JavaScript isn’t as
+				smart when you retrieve a value with
+				<code class="literal">getItem</code>:</p>
+
+			<pre class="programlisting">
+				<strong>var numItems = localStorage.getItem("numitems");</strong>
+			</pre>
+
+			<p>In this code, <code class="literal">numItems</code>
+				is assigned the string “1”, not an integer as we’d like. To make
+				sure <code class="literal">numItems</code> is a number, you need to use the JavaScript function
+				<code class="literal">parseInt</code> to convert a string to an integer:</p>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/423fig03.png" alt="" />
+			</figure>
+
+			<p>If you’re storing floating point values, you’ll want to use the
+				<code class="literal">parseFloat</code> function when you get the price items from localStorage instead:</p>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/423fig04.png" alt="" />
+			</figure>
+
+		</section> <!-- Section 4 -->
+
+		<section class="section" data-number="5" data-name="Were Local Storage and the Array separated at birth?">
+
+<!-- Page 424 -->
+
+			<div class="pagebreak pageNumber">424</div>
+
+			<h2 class="title">Were Local Storage and the Array separated at birth?</h2>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/424fig01.png" alt="" />
+			</figure>
+			
+			<p>
+				Local storage has another side you haven’t seen yet. Not only does
+				<code class="literal">localStorage</code> provide the getter and setter methods (that is,
+				<code class="literal">getItem</code> and <code class="literal">setItem</code>
+				), it also allows you to treat the localStorage object as an
+				associative array. What does that mean? Well instead of using the
+				<code class="literal">setItem</code> method, you can assign a key to a value in the store like this:
+			</p>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/424fig02.png" alt="" />
+			</figure>
+
+			<p>We can also retrieve the value stored in a key this way too. Here’s the syntax:</p>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/424fig03.png" alt="" />
+			</figure>
+			
+			<p>Not bad, huh? So, use either syntax, they are both valid. But
+				if you are used to using associative arrays in JavaScript, this
+				syntax may be more concise and readable for you.</p>
+			
+			<section class="subsection" data-number="6" data-name="But wait, there's more!">
+
+				<div class="titlepage">
+					<h3 class="title">But wait, there’s more!</h3>
+				</div>
+
+				<p>The localStorage API also provides two other interesting things: a
+					property, <code class="literal">length</code> , and a method, <code class="literal">key</code>.
+					The<code class="literal">length</code> property holds the number of items in the local store. You’ll see
+					what the <code class="literal">key</code> method does below:</p>
+
+				<figure class="">
+					<img src="/contents/html5/figs/web/424fig04.png" alt="" />
+				</figure>
+
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<p><strong><spanclass="underline">Big picture</span>: we’re using the length to
+							iterate over the contents of localStorage (just like an array),
+							and accessing each key (like “sticky_0”) as we go. We can then
+							use that key to extract its corresponding value.</strong></p>
+					</blockquote>
+				</div>
+
+<!-- Page 425 -->
+
+				<div class="pagebreak pageNumber">425</div>
+
+				<div class="sidebar">
+					<div class="center">
+						<image src="/contents/html5/figs/web/therearenodumbquestions.png">
+					</div>
+
+					<div class="blockquote">
+						<blockquote class="blockquote">
+							<div class="qandaset">
+								<table style="border: 0;">
+									<colgroup>
+										<col style="text-align: left; width: 1%;" />
+										<col />
+									</colgroup>
+
+									<tbody>
+										<tr class="question">
+											<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+
+											<td style="text-align: left; vertical-align: top;">
+												<p><a class="indexterm" /><a class="indexterm" />
+													<strong>Q: When I iterate through localStorage using
+													localStorage.length and localStorage.key, what order are
+													the items in? The same as the order I wrote them into the
+													store?</strong></p>
+											</td>
+										</tr>
+
+										<tr class="answer">
+											<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+											<td style="text-align: left; vertical-align: top;">
+												<p><strong>A:</strong> Actually
+													the order of the items isn’t defined. What does that mean?
+													It means you’ll see every key/value in the store by
+													iterating, but you shouldn’t count on any specific order in
+													your code. In fact, different browers may give you
+													different ordering for the same code and items.</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</blockquote>
+					</div> <!-- /blockquote -->
+				</div> <!-- /sidebar -->
+
+				<div class="sidebar">
+					<div class="titlepage">
+						<h2>The Shell Game</h2>
+					</div>
+
+					<p>Ready to try your luck? Or should we say skill? We’ve got a
+						game for you to test your command of localStorage, but you’ll need
+						to be on your toes. Use your knowledge of getting and setting
+						key/value pairs in localStorage to keep track of the pea as it
+						shifts from shell to shell.</p>
+
+					<div class="note" id="ch09note04">
+						<p>Feel free to use this space to keep track of the state of
+							localStorage.</p>
+					</div>
+
+					<div class="hiddencode">
+						<figure class="">
+							<img class="codeimage" src="/contents/html5/figs/web/425fig02.png" alt="" />
+						</figure>
+
+						<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  			<div class="modal-body">
+								<code>
+<pre>function shellGame() {</pre>
+<pre>    localStorage.setItem("shell1", "pea");</pre>
+<pre>    localStorage.setItem("shell2", "empty");</pre>
+<pre>    localStorage.setItem("shell3", "empty");</pre>
+<pre>    localStorage["shell1"] = "empty";</pre>
+<pre>    localStorage["shell2"] = "pea";</pre>
+<pre>    localStorage["shell3"] = "empty";</pre>
+<pre>    var value = localStorage.getItem("shell2");</pre>
+<pre>    localStorage.setItem("shell1", value);</pre>
+<pre>    value = localStorage.getItem("shell3");</pre>
+<pre>    localStorage["shell2"] = value;</pre>
+<pre>    var key = "shell2";</pre>
+<pre>    localStorage[key] = "pea";</pre>
+<pre>    key = "shell1";</pre>
+<pre>    localStorage[key] = "empty";</pre>
+<pre>    key = "shell3";</pre>
+<pre>    localStorage[key] = "empty";</pre>
+									<br />
+<pre>    for (var i = 0; i < localStorage.length; i++) {</pre>
+<pre>        var key = localStorage.key(i);</pre>
+<pre>        var value = localStorage.getItem(key);</pre>
+<pre>        alert(key + ": " + value);</pre>
+<pre>    }</pre>
+<pre>}</pre>
+								</code>
+							</div>
+						</div>
+					</div>
+				</div> <!-- /sidebare -->
+
+<!-- Page 426 -->
+
+				<div class="pagebreak pageNumber">426</div>
+
+				<div class="sidebar" id="fireside_chats">
+					<div class="titlepage left">
+						<img src="/contents/html5/figs/web/firesidechats.png">
+					</div>
+
+					<p><a id="iddle1773" class="indexterm" />Tonight’s talk: <strong>Cookie and Local Storage</strong></p>
+
+					<p>Tonight we have the incumbent browser storage technology,
+						the “Cookie” along with the new front runner, Local Storage.</p>
+					
+					<div class="informaltable">
+						<table style="border-collapse: collapse;">
+							<colgroup>
+								<col class="c1" />
+								<col class="c2" />
+							</colgroup>
+					
+							<thead>
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+										<p><strong>Cookie:</srong></p>
+									</td>
+
+									<td style="vertical-align: top; border-bottom: 0.5pt solid;"><p><strong>Local Storage:</strong></p></td>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+										<p>There he is, the golden boy, Local Storage. I’ve been in this
+											business for over a decade and you think you can come along
+											like you know something. A little wet behind the ears, aren’t
+											you?</p>
+									</td>
+									
+									<td style="border-bottom: 0.5pt solid;"> </td>
+								</tr>
+								
+								<tr>
+									<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+
+									<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+										<p>Sure, you could look at it that way, or, you could say I was built
+											from all the experience gained from your mistakes.</p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+										<p>Do you have any idea how many pages I’m used on? Ever looked at your stats?</p>
+									</td>
+									
+									<td style="border-bottom: 0.5pt solid;"></td>
+								</tr>
+
+								<tr>
+									<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+
+									<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+										<p>Give it a few years and take another look. The reality is I’m
+											helping to enable a whole new generation of web applications
+											in the browser. A lot of those pages you mention, are <em>just</em> pages.</p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+										<p>Hey, I’m ubiquitous, pervasive, everywhere! I don’t think there is
+											a browser on a desktop, device or mobile browser no matter
+											how old, where you won’t find me.</p>
+									</td>
+									
+									<td style="border-bottom: 0.5pt solid;"></td>
+								</tr>
+
+								<tr>
+									<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+
+									<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+										<p>I’m catching up fast. Of all the HTML5 technologies, I’m one of
+											the best supported.</p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+										<p>We’ll see. Just what exactly do you think you offer over me? My
+											storage works just fine.</p>
+									</td>
+									
+									<td style="border-bottom: 0.5pt solid;"></td>
+								</tr>
+
+								<tr>
+									<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+
+									<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+										<p>Well, I’m not sure I want to mention this in public, but you do
+											have a size issue.</p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+										<p>I have no idea what you’re talking about.</p>
+									</td>
+									
+									<td style="border-bottom: 0.5pt solid;"> </td>
+								</tr>
+								
+								<tr>
+									<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+
+									<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+										<p>Hey, you started all this, not me. You know very well that you are
+											limited to 4K of storage, I have over 1,200 times that!</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div> <!-- /informaltable -->
+				</div> <!-- /sidebar -->
+
+<!-- Page 427 -->
+
+				<div class="pagebreak pageNumber">427</div>
+
+				<div class="sidebar">
+					<div class="informaltable">
+						<table style="border-collapse: collapse;">
+							<colgroup>
+								<col class="c1" />
+								<col class="c2" />
+							</colgroup>
+							
+							<thead>
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+										<p><strong>Cookie:</strong></p></td>
+
+									<td style="vertical-align: top; border-bottom: 0.5pt solid;"><p><strong>Local Storage:</strong></p></td>
+								</tr>
+							</thead>
+							
+							<tbody>
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+										<p>Yeah, I’m light, nimble, we might even say agile.</p>
+									</td>
+									
+									<td style="border-bottom: 0.5pt solid;"> </td>
+								</tr>
+								
+								<tr>
+									<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+
+									<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+										<p>Ha, that’s rich. Have you ever talked to a web developer? You’re
+											anything but agile. Given you are Mr. Statistics, do you have
+											the stats on the number of developer hours lost to stupid
+											mistakes and misconceptions using cookies?</p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+										<p>Come on, I’m an open book, just pure storage to put whatever you want in.</p>
+									</td>
+									
+									<td style="border-bottom: 0.5pt solid;"> </td>
+								</tr>
+								
+								<tr>
+									<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+
+									<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+										<p>What you really mean is you essentially have no data format at
+											all, so developers have to reinvent a new scheme for storing
+											data in cookies.</p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+										<p>Oh, and key/value pairs are some great innovation?</p>
+									</td>
+									
+									<td style="border-bottom: 0.5pt solid;"></td>
+								</tr>
+
+								<tr>
+									<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+
+									<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+										<p>We don’t need great innovation on storage; key/value pairs work
+											great, are straightforward and fit many computing
+											applications.</p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+										<p>&lt;Snicker&gt; Oh yeah, and you store everything as a string! Nice work! &lt;/Snicker&gt;</p>
+									</td>
+									
+									<td style="border-bottom: 0.5pt solid;"></td>
+								</tr>
+
+								<tr>
+									<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+
+									<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+										<p>You can get a lot of mileage out of strings, and if you need
+											something more complex there are ways.</p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+										<p>Yeah yeah, call me in ten years, we’ll see if you’ve stood the test of time.</p>
+									</td>
+									
+									<td style="border-bottom: 0.5pt solid;"></td>
+								</tr>
+								
+								<tr>
+									<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+
+									<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+										<p>Oh you can bet on it. Face it, you were doomed from the start. I
+											mean come on, who names their kid Cookie?</p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid;">
+										<p>You’ll see, you’ll be calling me crying when they say “Haha, 5
+											megabytes, is that all you got?”</p>
+									</td>
+									
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</div> <!-- /informaltable -->
+				</div> <!-- /sidebar -->
+
+			</section> <!-- Section 6 -->
+
+		</section> <!-- Section 5 -->
+
+		<section class="section" data-number="7" data-name="Getting serious about stickies">
+
+<!-- Page 427 -->
+
+			<div class="pagebreak pageNumber">428</div>
+
+			<h2 class="title">Getting serious about stickies</h2>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/428fig01.png" alt="" />
+			</figure>
+			
+			<p><a id="iddle2319" class="indexterm" />Now that
+				you’ve had a little time to play with Web Storage, let’s take this
+				implementation further. We’re going to create a Sticky Notes
+				application so you can see your stickies and add new ones. Let’s
+				take a peek at what we’re going to build before we build it.</p>
+			
+			<figure class="">
+				<img src="/contents/html5/figs/web/428fig02.png" alt="" />
+			</figure>
+
+		</section> <!-- Section 7 -->
+
+		<section class="section" data-number="8" data-name="Creating the interface">
+
+<!-- Page 429 -->
+
+			<div class="pagebreak pageNumber">429</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/429fig01.png" alt="" />
+			</figure>
+			
+			<h2 class="title">Creating the interface</h2>
+
+			<p><a id="iddle1801" class="indexterm" />
+				<a id="iddle2847" class="indexterm" />To start, we need a way to enter
+				the text of our sticky notes. And it would be great if we could see
+				them in the page, so we need an element to hold all the notes in the
+				page.</p>
+
+			<p>Let’s work on some code to do that, starting with the HTML markup—take your existing HTML file and add a
+				<code class="literal">&lt;form&gt;</code> element, the <code class="literal">&lt;ul&gt;</code>
+				element and the CSS link to it, like below:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/429fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>&lt;title&gt;Note to Self&lt;/title&gt;</pre>
+<pre>&lt;meta charset="utf-8"&gt;</pre>
+<pre>&lt;link rel="stylesheet" href="notetoself.css"&gt;</pre>
+<pre>&lt;script src="notetoself.js"&gt;&lt;/script&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;form&gt;</pre>
+<pre>	   &lt;input type="text" id="note_text" /&gt;</pre>
+<pre>	   &lt;input type="button" id="add_button" value="Add Sticky Note to Self"&gt;</pre>
+<pre>	&lt;/form&gt;</pre>
+<pre>	</pre>
+<pre>	&lt;ul id="stickies"&gt;</pre>
+<pre>	&lt;/ul&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 8 -->
+
+		<section class="section" data-number="9" data-name="Now let's add the JavaScript">
+
+<!-- Page 430 -->
+
+			<div class="pagebreak pageNumber">430</div>
+
+			<h2 class="title">Now let’s add the JavaScript</h2>
+
+			<p><a id="iddle1497" class="indexterm" /><a id="iddle2250" class="indexterm" />
+				<a id="iddle2272" class="indexterm" /><a id="iddle2773" class="indexterm" />
+				<a id="iddle2845" class="indexterm" />We’ve got everything we need in the page now,
+				and we’ve got a couple sticky notes in localStorage waiting to be
+				displayed. Let’s get them on the page by first reading them from
+				localStorage and then placing them inside the unordered list element
+				we just created. Here’s how we do that:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/430fig01.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>window.onload = init;</pre>
+							<br />
+<pre>function init() {</pre>
+<pre>	for (var i = 0; i < localStorage.length; i++) {</pre>
+<pre>		var key = localStorage.key(i);</pre>
+<pre>		if (key.substring(0, 6) == "sticky") {</pre>
+<pre>			var value = localStorage.getItem(key);</pre>
+<pre>			addStickyToDOM(value);</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>So now we need to write the <code class="literal">addStickyToDOM</code> function, which is going to insert the notes into the
+				<code class="literal">&lt;ul&gt;</code> element:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/430fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function addStickyToDOM(value) {</pre>
+<pre>	var stickies = document.getElementById("stickies");</pre>
+<pre>	var sticky = document.createElement("li");</pre>
+<pre>	var span = document.createElement("span");</pre>
+<pre>	span.setAttribute("class", "sticky");</pre>
+<pre>	span.innerHTML = value;</pre>
+<pre>	sticky.appendChild(span);</pre>
+<pre>	stickies.appendChild(sticky);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 9 -->
+
+		<section class="section" data-number="10" data-name="Time for another test drive!">
+
+<!-- Page 431 -->
+
+			<div class="pagebreak pageNumber">431</div>
+
+			<h2 class="title left">Time for another test drive!</h2>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/common-10.png" alt="" />
+			</figure>
+
+			<div class="clear" />
+
+			<p><a id="iddle1299" class="indexterm" /><a id="iddle2844" class="indexterm" />Go ahead and get this code into
+				your script element and load it into your browser.</p>
+
+			<p>Here’s what we got when we loaded the page in our browser:</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/431fig01.png" alt="" />
+			</figure>
+
+		</section> <!-- Section 10 -->
+
+		<section class="section" data-number="11" data-name="Completing the user interface">
+
+			<h2 class="title">Completing the user interface</h2>
+
+			<p>Now all we need to do is enable the form so we have a way to
+				add new notes. To do that we need to add a handler for when the “Add
+				Sticky Note to Self” button is clicked, and also write some code to
+				create a new sticky. Here’s our code to add a handler:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/431fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function init() {</pre>
+<pre>	var button = document.getElementById("add_button");</pre>
+<pre>	button.onclick = createSticky;</pre>
+							<br />
+<pre>	// for loop goes here</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 432 -->
+
+			<div class="pagebreak pageNumber">432</div>
+			<p><a id="iddle1185" class="indexterm" /><a id="iddle2251" class="indexterm" />And the code to create a new sticky note:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/432fig01.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function createSticky() {</pre>
+<pre>	var value = document.getElementById("note_text").value;</pre>
+<pre>	var key = "sticky_" + localStorage.length;</pre>
+<pre>	localStorage.setItem(key, value);</pre>
+<pre>	</pre>
+<pre>	addStickyToDOM(value);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 11 -->
+
+		<section class="sectio" data-number="12" data-name="Yet another test drive!">
+
+			<h2 class="title left">Yet another test drive!</h2>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/common-10.png" alt="" />
+			</figure>
+
+			<div class="clear" />
+
+			<p>Now we’re truly interactive! Load this new code in your
+				browser, enter a new “sticky note to self” and click or tap the “Add
+				Sticky Note to Self” button. You should see the new sticky note
+				appear in your list of stickies. Here’s what we see:</p>
+
+			<div class="note" id="ch09note05">
+				<p>You can take that trip to Fiji now, and when you come back, your stickies will still be there waiting for you!</p>
+			</div>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/432fig02.png" alt="" />
+			</figure>
+
+<!-- Page 433 -->
+
+			<div class="pagebreak pageNumber">433</div>
+
+			<div class="sidebar" id="there_are_no_dumb_question-id00104">
+				<div class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+				</div>
+
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<div class="qandaset" id="ch09qa2">
+							<table style="border: 0;">
+								<colgroup>
+									<col style="text-align: left; width: 1%;" />
+									<col />
+								</colgroup>
+
+								<tbody>
+									<tr class="question" id="id36246466">
+										<td style="text-align: left; vertical-align: top;" id="ch09qa2q1"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><a id="iddle2303" class="indexterm" /><a id="iddle2334" class="indexterm" />
+												<a id="iddle2456" class="indexterm" /><a id="iddle2704" class="indexterm" />
+												<strong>Q:Why do we test to see if each item’s key begins with the string “sticky”?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch09qa2q1a1">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Remember
+												that all the pages from one domain (like apple.com) can see
+												every item stored from other pages in that domain. That
+												means if we aren’t careful about naming our keys, we could
+												clash with another page that is using the same keys in a
+												different way. So, this is our way of checking to make sure
+												an item is a sticky (as opposed to say an order number or a
+												game level) before we use its value for a sticky note to
+												self.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36246571">
+										<td style="text-align: left; vertical-align: top;" id="ch09qa2q2"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: What if
+												there are lots of items in localStorage, including lots of
+												items that aren’t stickies? Wouldn’t it be inefficient to
+												iterate through the entire set of items?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch09qa2q2a2">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Well, unless
+												you are talking about a very large number of items we doubt
+												you’d notice a difference. That said, you’re right, it isn’t
+												efficient and there may be better ways to approach managing
+												our keys (we’ll talk about some of them shortly).</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36246599">
+										<td style="text-align: left; vertical-align: top;" id="ch09qa2q3"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: I’m
+												wondering about using localStorage.length as the sticky
+												number in the key. As in</strong></p>
+
+											<pre class="programlisting" id="pro_id00064">
+												<strong>"sticky_" + localStorage.length</strong>
+											</pre>
+											
+											<p><strong>Why did we dothat?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch09qa2q3a3">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> We need some
+												way to create new keys that are unique. We could use
+												something like the time or generate an integer that we
+												increase each time. Or, as we did, we can use the length of
+												the store (which increases each time we add an item). If you
+												are thinking this might be problematic, we’ll come back to
+												that. And if you hadn’t thought about it being problematic,
+												no worries, we’ll still come back to it.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36246638">
+										<td style="text-align: left; vertical-align: top;"id="ch09qa2q4"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: I created a
+												bunch of stickies in Safari and then switched to Chrome,
+												and I don’t see any of my stickies in Chrome. Why not?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch09qa2q4a4">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Each browser
+												maintains its own local storage. So if you create stickies
+												in Safari, you will only see them in Safari.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36246670">
+										<td style="text-align: left; vertical-align: top;" id="ch09qa2q5"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: I just reloaded my page and now my stickies are in a different order!</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch09qa2q5a5">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> When you add
+												a new sticky note, we add the new sticky note item by
+												appending it to the notes list, so it always goes at the end
+												of the list. When you reload the page, the notes are added
+												in the order they’re found in localStorage (which, remember,
+												isn’t guaranteed to be in any particular order). You might
+												think that the order would be the same order that the items
+												were added to the store, or some other reasonable ordering,
+												however, you can’t count on that. Why? Well one reason is
+												the spec doesn’t specify an ordering, so different browsers
+												may implement this in different ways. If your browser does
+												appear to return items in an order that makes sense to you,
+												consider yourself lucky, but don’t count on that ordering
+												because your user’s browser may order your items another
+												way.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36246693">
+										<td style="text-align: left; vertical-align: top;" id="ch09qa2q6"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: I often use the “for in” form of the for loop. Will that work here?</strong></p>
+										</td>
+									</tr>
+
+									<tr class="answer" id="ch09qa2q6a6">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Sure will. It looks like this:</p>
+
+											<div class="informalfigure" id="med_id00835a">
+												<div class="mediaobject" id="med_id00835">
+													<img src="/contents/html5/figs/web/433fig01.png" alt="" />
+												</div>
+											</div>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36246740">
+										<td style="text-align: left; vertical-align: top;" id="ch09qa2q7"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: What if I don’t want a sticky any more? Can I delete stickies?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="brain_power-id00105">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Yes, we can
+												delete items from localStorage using localStorage.
+												removeItem method. You can also remove items from
+												localStorage directly using the browser console. We’re going
+												to show you both in this chapter.
+											</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div> <!-- /qandaset -->
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+			<div class="sidebar">
+				<div class="note" id="ch09note06">
+					<img src="/contents/html5/figs/web/brainpower.png">
+
+					<p>Given the way stickies are implemented, there would be a
+						problem with our naming scheme if a user could delete a sticky at
+						will. Can you think of what the problem is?</p>
+				</div>
+			</div>
+
+		</section> <!-- Section 12 -->
+
+		<section class="section" data-number="13" data-name="We need to stop for a little scheduled service">
+
+<!-- Page 434 -->
+
+			<div class="pagebreak pageNumber">434</div>
+
+			<h2 class="title">We need to stop for a little scheduled service</h2>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/434fig01.png" alt="" />
+			</figure>
+			
+			<p><a id="iddle1452" class="indexterm" /><a id="iddle2725" class="indexterm" />Wouldn’t it be great if there
+				were a tool to directly view the items in your localStorage? Or a
+				tool to delete items or even clear the whole thing out and start
+				over when you are debugging?</p>
+
+			<p>Well, all the major browsers ship with built-in developer
+				tools that allow you to directly examine your local store. As you
+				might expect, these tools differ between browsers, so rather than
+				covering them all here, we’re going to point you in the right
+				direction, and then you can dig in and figure out the specifics of
+				your own browser. As an example though, let’s see what Safari
+				offers:</p>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/434fig02.png" alt="" />
+			</figure>
+
+			<p>To enable or access the developer tools, as we said, you’ll need to
+				do different things for different browsers. Point your browser to
+				<code class="literal">http://wickedlysmart.com/hfhtml5/devtools.html</code>
+				to see how to do this on your specific browser.</p>
+
+		</section> <!-- Section 13 -->
+
+		<section class="section" data-number="14" data-name="Do-It-Yourself maintenance">
+
+<!-- Page 435 -->
+
+			<div class="pagebreak pageNumber">435</div>
+
+			<h2 class="title">Do-It-Yourself maintenance</h2>
+			
+			<p><a id="iddle1293" class="indexterm" /><a id="iddle1300" class="indexterm" />
+				<a id="iddle2329" class="indexterm" />There’s
+				another way to clear out your items (and as we we’ll see in a bit,
+				to delete them one by one), which requires doing a little
+				maintenance on your own, right from JavaScript. The localStorage API
+				includes a handy method, <code class="literal">clear</code>
+				, that deletes all items from your local store (at least, the ones
+				from your domain). Let’s take a look at how we can use this call in
+				JavaScript by creating a new file named
+				<code class="literal">maintenance.html</code>.
+				Once you’ve done that, add the code below, and we’ll step through
+				how it works.</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/435fig01.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>&lt;title&gt;Maintenance&lt;/title&gt;</pre>
+<pre>&lt;meta charset="utf-8"&gt;</pre>
+<pre>&lt;script&gt;</pre>
+<pre>window.onload = function () {</pre>
+<pre>	var clearButton = document.getElementById("clear_button");</pre>
+<pre>	clearButton.onclick = clearStorage;</pre>
+<pre>}</pre>
+							<br />
+<pre>function clearStorage () {</pre>
+<pre>	localStorage.clear();</pre>
+<pre>}</pre>
+<pre>&lt;/script&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;form&gt;</pre>
+<pre>		&lt;input type="button" id="clear_button" value="Clear storage" /&gt;</pre>
+<pre>	&lt;/form&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>After you’ve typed in the code, go ahead and load it in your
+				browser. It’s safe (with regards to our Sticky Notes app) to go
+				ahead and clear your localStorage now, so give it a try! Make sure
+				you’ve figured out your developer tools first so you can observe the
+				changes.</p>
+			
+			<div class="sidebar">
+				<div class="note" id="ch09note07">
+					<img src="/contents/html5/figs/web/watchit.png" alt="" />
+				
+					<p><strong><em>This deletes all items in your domain!</em></strong></p>
+
+					<p><em>If you’ve got a super valuable local store related to another project in the same
+						domain, you’ll lose all your items by running this code. Just
+						sayin’...</em></p>
+				</div>
+			</div>
+
+<!-- Page 436 -->
+
+			<div class="pagebreak pageNumber">436</div>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/436fig01.png" alt="" />
+			</figure>
+
+			<p><a id="iddle2850" class="indexterm" /><strong>Ah, you’ve discovered a major design flaw.</strong></p>
+
+			<p>Alright, it’s time to come clean: we’ve built a great little app so
+				far, and it should work perfectly for years to come <em>as long as you don’t introduce any
+				other items</em> into the localStorage (like Joel did with his shopping
+				cart). Once you do that, our whole scheme of tracking stickies no
+				longer works, or, at least, no longer works well. Here’s why:</p>
+
+			<div class="note" id="ch09note08">
+				<p>If you’re willing to live with that, cool; otherwise you
+					better keep reading.</p>
+			</div>
+			
+			<p>First of all, our sticky notes are numbered from zero to the number of stickies (minus one):</p>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/436fig02.png" alt="" />
+			</figure>
+
+			<p>To add a new sticky, we count the number of items in the local store and create our new key from that number:</p>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/436fig03.png" alt="" />
+			</figure>
+			
+			<p>And to display all the stickies, we iterate from zero to the length of the local store (minus one):</p>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/436fig04.png" alt="" />
+			</figure>
+
+<!-- Page 437 -->
+
+			<div class="pagebreak pageNumber">437</div>
+
+			<p><a id="iddle2314" class="indexterm" />Now let’s add Joel’s items from his shopping cart to localStorage:</p>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/437fig01.png" alt="" />
+			</figure>
+			
+			<p>And let’s create a new sticky:</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/437fig02.png" alt="" />
+			</figure>
+			
+			<p>When we need to iterate through the stickies to display them, we’re in trouble:</p>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/437fig03.png" alt="" />
+			</figure>
+			
+			<div class="sidebar" id="sharpen_your_pencil-id00106">
+				<img src="/contents/html5/figs/web/sharpenpencil.png">
+				
+				<p>Put a check next to the ways our current implementation could cause problems:</p>
+
+				<div class="informaltable">
+					<table style="border-collapse: collapse;">
+						<colgroup>
+							<col class="c1" />
+							<col class="c2" />
+						</colgroup>
+				
+						<tbody>
+							<tr>
+								<td>
+									<img src="/contents/html5/figs/web/squer.png" alt="" />
+								</td>
+								
+								<td>Displaying stickies is inefficient if there are a lot of items in localStorage that aren’t stickies.</td>
+							</tr>
+							
+							<tr>
+								<td><img src="/contents/html5/figs/web/squer.png" alt="" /></td>
+								
+								<td>A sticky could be overwritten by setItem if the size of the localStorage
+									gets smaller when another app deletes its own items.
+								</td>
+							</tr>
+							
+							<tr>
+								<td><img src="/contents/html5/figs/web/squer.png" alt="" /></td>
+								
+								<td>It’s hard to quickly tell how many stickies there are; you have to
+										iterate through every item in localStorage to get all the stickies.
+								</td>
+							</tr>
+							
+							<tr>
+								<td><img src="/contents/html5/figs/web/squer.png" alt="" /></td>
+								
+								<td>Use a cookie, it has to be easier than all this!</td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- /informaltable -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 438 -->
+
+			<div class="pagebreak pageNumber">438</div>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/438fig01.png" alt="" />
+			</figure>
+
+		</section> <!-- Section 14 -->
+
+		<section class="section" data-number="15" data-name="We have the technology...">
+
+<!-- Page 439 -->
+
+			<div class="pagebreak pageNumber">439</div>
+
+			<h2 class="title">We have the technology...</h2>
+
+			<p><a id="iddle2100" class="indexterm" /><a id="iddle2321" class="indexterm" />We haven’t been lying, it is
+				true that you can store only strings as the values of localStorage
+				items, however that isn’t the whole truth because we can always
+				convert an array (or an object) into a string before we store it.
+				Sure, it seems like cheating, but it’s a totally legit way to store
+				your non-String data types in localStorage.</p>
+
+			<p>We know you’re dying to jump into the nitty-gritty of how to
+				store arrays, but before we do, let’s first step through how an
+				array would actually solve our (and Joel’s) problems.</p>
+
+			<p>Let’s rewind and say we’ve got six stickies in localStorage:</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/439fig01.png" alt="" />
+			</figure>
+			
+			<p>and we’ve got an array in localStorage named “stickiesArray”:</p>
+			
+			<p>Now let’s add a new sticky. Let’s call the sticky
+				“sticky_815”. Why such a crazy number? Because we’re not going to
+				care what it is called anymore as long as it is unique. So, to add
+				the sticky, we just add “sticky_815” to the array and then store an
+				item for the sticky, just like we have been. Like this:</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/439fig02.png" alt="" />
+			</figure>
+		
+		</section> <!-- Section 15 -->
+
+		<section class="section" data-number="16" data-name="Reworking our app to use an array">
+
+<!-- Page 440 -->
+
+			<div class="pagebreak pageNumber">440</div>
+
+			<h2 class="title">Reworking our app to use an array</h2>
+
+			<p><a id="iddle1089" class="indexterm" /><a id="iddle2852" class="indexterm" />Okay, we know roughly how we’re
+				going to keep track of our stickies using an array, but let’s take
+				this a little further and make sure we can iterate through and
+				display all the stickies. In the current code we display all the
+				stickies in the <code class="literal">init</code>
+				function. Can we rewrite that using an array? We’ll look at the
+				existing code first, and then see how it changes (hopefully for the
+				better) with an array. Don’t type in this code yet; we’re focusing
+				on the changes we need to make for now and not making this code
+				bulletproof. We’ll bring on the bulletproof stuff in just a bit.</p>
+
+			<section class="subsection" data-number="17" data-name="Before...">
+				<div class="titlepage">
+					<h3 class="title">Before...</h3>
+				</div>
+
+				<div class="hiddencode">
+					<figure class="">
+						<img class="codeimage" src="/contents/html5/figs/web/440fig01.png" alt="" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>function init() {</pre>
+<pre>	// button code here...</pre>
+<pre>	for (var i = 0; i < localStorage.length; i++) {</pre>
+<pre>		var key = localStorage.key(i);</pre>
+<pre>		if (key.substring(0, 6) == "sticky") {</pre>
+<pre>			var value = localStorage.getItem(key);</pre>
+<pre>			addStickyToDOM(value);</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+			</section> <!-- Section 17 -->
+
+			<section class="subsection" data-number="18" data-name="New and improved">
+
+				<div class="linebreak" />
+
+				<div class="titlepage">
+					<h3 class="title">New and improved</h3>
+				</div>
+
+				<div class="hiddencode">
+					<figure class="">
+						<img class="codeimage" src="/contents/html5/figs/web/440fig02.png" alt="" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>function init() {</pre>
+<pre>	// button code here...</pre>
+<pre>	var stickiesArray = localStorage["stickiesArray"];</pre>
+<pre>	if (!stickiesArray) {</pre>
+<pre>		stickiesArray = [];</pre>
+<pre>		localStorage.setItem("stickiesArray", JSON.stringify(stickiesArray));</pre>
+<pre>	}</pre>
+<pre>	</pre>
+<pre>	for (var i = 0; i < stickiesArray.length; i++) {</pre>
+<pre>		var key = stickiesArray[i];</pre>
+<pre>		var value = localStorage[key];</pre>
+<pre>		addStickyToDOM(key, value);</pre>
+<pre>	}	</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+				<div class="note" id="ch09note08a">
+					<p><strong>NOTE: you still don’t
+						know how to store and retrieve arrays in localStorage, so treat
+						this as pseudo-code until we show you. We’ll have to make a very
+						small addition for this to work.</strong></p>
+				</div>
+
+<!-- Page 441 -->
+
+				<div class="pagebreak pageNumber">441</div>
+
+				<div class="sidebar" id="exercise-id00107">
+					<div class="left">
+						<img src="/contents/html5/figs/web/exercise.png">
+					</div>
+
+					<p><a id="iddle2191" class="indexterm" /><a id="iddle2868" class="indexterm" />
+						<strong>We still need to figure out how to actually store an array in localStorage.</strong></p>
+
+					<p>You might have already guessed that we can use JSON to
+						create a string representation of an array and if so, you’re
+						right. And once you have that you can store it in localStorage.</p>
+
+					<p>Recall that there are only two methods in the JSON API:
+						stringify and parse. Let’s put these methods to work by finishing
+						the init function (check the solution at the end of the chapter
+						before moving on):</p>
+
+					<div class="hiddencode">
+						<figure class="">
+							<img class="codeimage" src="/contents/html5/figs/web/441fig01.png" alt="" />
+						</figure>
+
+						<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  	<div class="modal-body">
+								<code>
+<pre>function init() {</pre>
+<pre>	// button code here...</pre>
+<pre>	var stickiesArray = localStorage["stickiesArray"];</pre>
+<pre>	if (!stickiesArray) {</pre>
+<pre>		stickiesArray = [];</pre>
+<pre>		localStorage.setItem("stickiesArray", _____(stickiesArray));</pre>
+<pre>	}	else {</pre>
+<pre>		stickiesArray = _____ (stickiesArray);</pre>
+<pre>	}</pre>
+<pre>	for (var i = 0; i < stickiesArray.length; i++) {</pre>
+<pre>		var key = stickiesArray[i];</pre>
+<pre>		var value = localStorage[key];</pre>
+<pre>		addStickyToDOM(key, value);</pre>
+<pre>	}	</pre>
+<pre>}</pre>
+								</code>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</section> <!-- Section 18 -->
+
+		</section> <!-- Section 16 -->
+
+		<section class="section" data-number="19" data-name="Converting createSticky to use an array">
+
+			<h2 class="title">Converting createSticky to use an array</h2>
+
+			<p>We’ve almost got this app covered. All we need to do is to rework
+				the <code class="literal">createSticky</code>
+				method, which, as you’ll remember, just gets the text for the sticky
+				from the form, stores it locally, and then displays it. Let’s look
+				at the curent implementation before changing it:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/441fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function createSticky() {</pre>
+<pre>	var value = document.getElementById("note_text").value;</pre>
+<pre>	var key = "sticky_" + currentDate.getTime();</pre>
+<pre>	localStorage.setItem(key, value);</pre>
+<pre>	</pre>
+<pre>	addStickyToDOM(key, value);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 442 -->
+
+			<div class="pagebreak pageNumber">442</div>
+
+		</section> <!-- Section 19 -->
+
+		<section class="section" data-number="20" data-name="What needs to change?">
+
+			<h2 class="title">What needs to change?</h2>
+
+			<p><a id="iddle1934" class="indexterm" /><a id="iddle2229" class="indexterm" />
+				<a id="iddle2234" class="indexterm" /><a id="iddle2433" class="indexterm" />
+				<a id="iddle2484" class="indexterm" /><a id="iddle2920" class="indexterm" />
+				We have two things that need to change in <code class="literal">createSticky</code>.
+				First, we need a new way to generate a key for each sticky that is
+				unique. We also need to alter the code so that it stores the sticky in the
+				<code class="literal">stickiesArray</code> in localStorage.</p>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem"><p><strong>We need to create a unique key for the sticky</strong></p>
+
+						<p>There are lots of ways to create unique keys. We could use the
+							date and time, or create fancy random 64-bit numbers, or hook our
+							app up to an atomic-clock API. Hmm, the date and time sounds like
+							a nice, easy way to do this. JavaScript supports a date object
+							that returns the number of milliseconds since 1970; that should
+							be unique enough (unless you’re going to create your stickies at
+							a <em>really fast</em> rate):</p>
+
+						<div class="hiddencode">
+							<figure class="">
+								<img class="codeimage" src="/contents/html5/figs/web/442fig01.png" alt="" />
+							</figure>
+
+							<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  				<div class="modal-body">
+									<code>
+<pre>var currentDate = newDate();</pre>
+<pre>var time = currentDate.getTime();</pre>
+<pre>var key = "sticky_" + time;</pre>
+									</code>
+								</div>
+							</div>
+						</div>
+					</li>
+					
+					<li class="listitem"><p><strong>We need to store thenew sticky in the array</strong></p>
+
+						<p>Now that we have a way to create a unique key, we need to store
+							the text of the sticky with that key, and add the key to the
+							<code class="literal">stickiesArray</code>.
+							Let’s work through how to do that, and then we’ll put all this
+							code together.</p>
+
+						<div class="hiddencode">
+							<figure class="">
+								<img class="codeimage" src="/contents/html5/figs/web/442fig02.png" alt="" />
+							</figure>
+
+							<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  				<div class="modal-body">
+									<code>
+<pre>var stickiesArray = getStickiesArray();</pre>
+<pre>localStorage.setItem(key, value);</pre>
+<pre>stickiesArray.push(key);</pre>
+<pre>localStorage.setItem("stickiesArray", JSON.stringify(stickiesArray));</pre>
+									</code>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ol>
+			</div> <!-- /orderedlist -->
+
+		</section> <!-- Section 20 -->
+
+		<section class="section" data-number="21" data-name="There are no dumb questions">
+
+			<div class="sidebar" id="there_are_no_dumb_question-id00108">
+				<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<div class="qandaset" id="ch09qa3">
+							<table style="border: 0;">
+								<colgroup>
+									<col style="text-align: left; width: 1%;" />
+									<col />
+								</colgroup>
+
+								<tbody>
+									<tr class="question" id="id36248146">
+										<td style="text-align: left; vertical-align: top;" id="ch09qa3q1"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;"><p><strong>Q: What are milliseconds since 1970?</strong></p></td>
+									</tr>
+									
+									<tr class="answer" id="ch09qa3q1a1">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> You might
+												already know a millisecond is a 1000th of a second, and the
+												<code class="literal">getTime</code>
+												method returns a count of milliseconds that have occurred
+												since 1970. Why 1970? That behavior is inherited from the
+												Unix operating system, which defined time that way. While it
+												isn’t perfect (for instance, it represents times before 1970
+												with negative numbers), it does come in handy when you need
+												a unique number or to track time in JavaScript code.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36248181">
+										<td style="text-align: left; vertical-align: top;" id="ch09qa3q2"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: Isn’t all
+												this parsing and stringifying of JSON types rather
+												inefficient? And if my array gets really large isn’t that
+												also going to be inefficient to store?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch09qa3q2a2">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong>
+												Theorectially yes on both counts. But for typical web page
+												programming tasks it usually isn’t an issue. That said, if
+												you’re implementing a serious application with very large
+												storage requirements, you could see issues using JSON to
+												convert items to and from strings.</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div> <!-- /qandaset -->
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 443 -->
+
+			<div class="pagebreak pageNumber">443</div>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/443fig01.png" alt="" />
+			</figure>
+
+		</section> <!-- Section 21 -->
+
+		<section class="section" data-number="22" data-name="Puting it all together">
+
+			<h2 class="title">Putting it all together</h2>
+
+			<p><a id="iddle2207" class="indexterm" /><a id="iddle2851" class="indexterm" />It’s time to integrate all this
+				new array-based code, including the <code class="literal">init</code> and
+				<code class="literal">createSticky</code> functions. To do that we’re first going to abstract a small bit of
+				code that’s needed in both functions—it’s the code that retrieves
+				the stickies array from localStorage. You’ve seen it in <code class="literal">init</code>,
+				and we need it again in <code class="literal">createSticky</code>.
+				Let’s take that code and put it in a method called <code class="literal">getStickiesArray</code>
+				—it should look familar to you given the code we’ve already walked through:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/443fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function getStickiesArray() {</pre>
+<pre>	var stickiesArray = localStorage.getItem("stickiesArray");</pre>
+<pre>	if (!stickiesArray) {</pre>
+<pre>		stickiesArray = [];</pre>
+<pre>		localStorage.setItem("stickiesArray", JSON.stringify(stickiesArray));</pre>
+<pre>	} else {</pre>
+<pre>		stickiesArray = JSON.parse(stickiesArray);</pre>
+<pre>	}</pre>
+<pre>	return stickiesArray;</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 444 -->
+
+			<div class="pagebreak pageNumber">444</div>
+
+		</section> <!-- Section 22 -->
+
+		<section class="section" data-number="23" data-name="Putting it all together continued...">
+
+			<h2 class="title">Putting it all together continued...</h2>
+
+			<p>With <code class="literal">getStickiesArray</code> written, let’s look at the simplified, final versions of the
+				<code class="literal">init</code> and <code class="literal">createSticky</code> functions. Go ahead and type these in:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/444fig01.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function init() {</pre>
+<pre>	var button = document.getElementById("add_button");</pre>
+<pre>	button.onclick = createSticky;</pre>
+							<br />
+<pre>	var stickiesArray = localStorage["stickiesArray"];</pre>
+							<br />
+<pre>	for (var i = 0; i < stickiesArray.length; i++) {</pre>
+<pre>		var key = stickiesArray[i];</pre>
+<pre>		var value = localStorage[key];</pre>
+<pre>		addStickyToDOM(key, value);</pre>
+<pre>	}	</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>With <code class="literal">init</code> finished, we just have <code class="literal">createSticky</code> left:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/444fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function createSticky() {</pre>
+<pre>	var stickiesArray = getStickiesArray();</pre>
+<pre>	var currentDate = new Date();</pre>
+<pre>	var key = "sticky_" + currentDate.getTime();</pre>
+<pre>	var value = document.getElementById("note_text").value;</pre>
+<pre>	localStorage.setItem(key, value);</pre>
+<pre>	stickiesArray.push(key);</pre>
+<pre>	localStorage.setItem("stickiesArray", JSON.stringify(stickiesArray));	</pre>
+<pre>	addStickyToDOM(key, value);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 23 -->
+
+		<section class="section" data-number="24" data-name="Test drive!">
+
+<!-- Page 445 -->
+
+			<div class="pagebreak pageNumber">445</div>
+
+			<div class="left">
+				<h2 class="title">Test Drive!</h2>
+			</div>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/common-10.png" alt="" />
+			</figure>
+
+			<div class="clear" />
+
+			<p><a id="iddle2208" class="indexterm" /><a id="iddle2304" class="indexterm" />
+				<a id="iddle2309" class="indexterm" /><a id="iddle2485" class="indexterm" />
+				<a id="iddle2519" class="indexterm" />Get all this code in and clear out your
+				localStorage to make a nice clean start. Load this code, and you
+				should see exactly the same behavior as last time. Joel, you’ll see
+				your code working correctly now!</p>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/445fig01.png" alt="" />
+			</figure>
+			
+			<div class="sidebar" id="there_are_no_dumb_question-id00109">
+				<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+			
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<div class="qandaset" id="ch09qa4">
+							<table style="border: 0;">
+								<colgroup>
+									<col style="text-align: left; width: 1%;" />
+									<col />
+								</colgroup>
+								
+								<tbody>
+									<tr class="question" id="id36248620">
+										<td style="text-align: left; vertical-align: top;" id="ch09qa4q1"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: We’re using
+												“sticky_” as the prefix for our localStorage item names.
+												Is there a convention for localStorage naming schemes?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch09qa4q1a1">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> There is no
+												convention for naming localStorage items. If your web app is
+												on a small site at a domain that you have control over, then
+												naming shouldn’t be an issue since you’ll be aware of all
+												the names being used by all the different pages at the site.
+												We think it’s probably a good idea to use a name that
+												indicates the page or web app relying on that item. So
+												“sticky_” helps us remember that those items are related to
+												the Sticky Notes app.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36248652">
+										<td style="text-align: left; vertical-align: top;" id="ch09qa4q2"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: So if my
+												sticky notes app is just one of many apps at a domain, I
+												have to worry about potential conflicts right?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch09qa4q2a2">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Yes. In that
+												case, it would be a good idea for you (or someone who
+												manages the web sites at the domain) to put together a plan
+												for how to name items.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36248674">
+										<td style="text-align: left; vertical-align: top;" id="ch09qa4q3"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: If I have a
+												lot of stickies, my stickiesArray is going to get very
+												long. Is that a problem?</strong>
+											</p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch09qa4q3a3">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Unless you
+												create thousands of stickies, it shouldn’t be (and if you do
+												create thousands of stickies, we want to know how you are so
+												productive!). JavaScript is pretty fast these days.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36248700">
+										<td style="text-align: left; vertical-align: top;" id="ch09qa4q4"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: So just to
+												be clear, we can store any object in localStorage, just by
+												stringifying it first with JSON?</strong>
+											</p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch09qa4q4a4">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Right. JSON
+												strings are simplified versions of JavaScript objects, and
+												most simple JavaScript objects can be turned into a string
+												using JSON and stored in localStorage. That includes arrays
+												(as you’ve seen) as well as objects containing property
+												names and values, as you’ll see shortly.</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div> <!-- /qandaset -->
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+			<div class="blockquote">
+				<blockquote class="blockquote">
+					<p><strong>Pick a naming scheme for your localStorage items that won’t conflict with those of
+						other applications at the same domain.</strong></p>
+				</blockquote>
+			</div>
+
+			<div class="blockquote">
+				<blockquote class="blockquote">
+					<p><strong>If you need to store arrays or objects in localStorage, use JSON.stringify to create
+						the value to store, and JSON.parse after you retrieve it.</strong>
+					</p>
+				</blockquote>
+			</div>
+
+<!-- Page 446 -->
+
+			<div class="pagebreak pageNumber">446</div>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/446fig01.png" alt="" />
+			</figure>
+
+		</section> <!-- Section 24 -->
+
+		<section class="section" data-number="25" data-name="Deleting sticky notes">
+			<h2 class="title">Deleting sticky notes</h2>
+
+			<p><a id="iddle2335" class="indexterm" /><a id="iddle2849" class="indexterm" />
+				She’s right, this app isn’t going to be very successful if we can’t remove stickies. We’ve
+				already mentioned the <code class="literal">localStorage.removeItem</code>
+				method in this chapter, but we haven’t really talked about it. The
+				<code class="literal">removeItem</code> method takes the key of an item, and removes that item from localStorage:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/446fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>localStorage.removeItem(key);</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>That sounds easy enough, doesn’t it? Ah, but if you think about it,
+				there is more to removing an sticky note than calling the
+				<code class="literal">removeItem</code> method—we also need to deal with <code class="literal">stickiesArray</code>...</p>
+
+<!-- Page 447 -->
+
+			<div class="pagebreak pageNumber">447</div>
+
+			<div class="sidebar" id="sharpen_your_pencil-id00110">
+				<div class="left">
+					<img src="/contents/html5/figs/web/sharpenpencil.png">
+				</div>
+
+				<p><strong>Let’s delete a sticky!</strong></p>
+
+				<p>Below you’ll see the contents of localStorage. You’ve got all the
+					JavaScript you want along with the removeItem method. Using a
+					pencil, sketch out what you need to do to remove
+					<code class="literal">sticky_1304220006342</code>
+					from localStorage. After you’ve sketched it out, go ahead and write
+					some pseudo-code below to show how you’re going to write your code.</p>
+
+				<figure class="">
+					<img src="/contents/html5/figs/web/447fig01.png" alt="" />
+				</figure>
+			</div>
+
+<!-- Page 448 -->
+
+			<div class="pagebreak pageNumber">448</div>
+
+			<div class="sidebar" id="sharpen_your_pencil_solution-id00111">
+				<div class="left">
+					<img src="/contents/html5/figs/web/sharpenpencil.png">
+				</div>
+
+				<p><span class="strong"><strong>Let’s delete a sticky!</strong></p>
+
+				<p>Below you’ll see the contents of localStorage. You’ve got all the
+					JavaScript you want along with the removeItem method. Using a
+					pencil, sketch out what you need to do to remove
+					<code class="literal">sticky_1304220006342</code>
+					from localStorage. After you’ve sketched it out, go ahead and write
+					some pseudo-code below to show how you’re going to write your code.
+					Here’s our solution.</p>
+
+				<figure class="">
+					<img src="/contents/html5/figs/web/448fig01.png" alt="" />
+				</figure>
+			</div>
+
+		</section> <!-- Section 25 -->
+
+		<section class="section" data-number="26" data-name="The deleteSticky function">
+
+<!-- Page 449 -->
+
+			<div class="pagebreak pageNumber">449</div>
+
+			<h2 class="title">The deleteSticky function</h2>
+
+			<p><a id="iddle2336" class="indexterm" />You made a plan for how to delete the sticky notes, so let’s take a look at
+				the <code class="literal">deleteSticky</code> function:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/449fig01.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function deleteSticky(key) {</pre>
+<pre>	localStorage.removeItem(key);</pre>
+<pre>	var stickiesArray = getStickiesArray();</pre>
+<pre>	if (stickiesArray) {</pre>
+<pre>		for (var i = 0; i < stickiesArray.length; i++) {</pre>
+<pre>			if (key == stickiesArray[i]) {</pre>
+<pre>				stickiesArray.splice(i,1);</pre>
+<pre>			}</pre>
+<pre>		}</pre>
+							<br />
+<pre>		localStorage.setItem("stickiesArray", JSON.stringify(stickiesArray));</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/449fig02.png" alt="" />
+			</figure>
+
+		</section> <!-- Section 26 -->
+
+		<section class="section" data-number="27" data-name="How do you select a sticky to delete?"> 
+
+<!-- Page 450 -->
+
+			<div class="pagebreak pageNumber">450</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/450fig01.png" alt="" />
+			</figure>
+			
+			<h2 class="title">How do you select a sticky to delete?</h2>
+
+			<p><a id="iddle1061" class="indexterm" /><a id="iddle1301" class="indexterm" />
+				<a id="iddle1405" class="indexterm" /><a id="iddle1605" class="indexterm" />
+				<a id="iddle2032" class="indexterm" /><a id="iddle2538" class="indexterm" />
+				<a id="iddle2769" class="indexterm" /><a id="iddle2853" class="indexterm" />We need a way for the user to
+				select a sticky note to delete. We could get all fancy and add a
+				little delete icon to each note, but for our Sticky Notes app, we’re
+				going to do something much simpler: we’re going to just delete the
+				sticky note if the user clicks on it. That may not be the best
+				implementation in terms of usability, but it’s straightforward.</p>
+
+			<p>To implement this, we first need to change the stickies so that we
+				can detect <em>when</em> a sticky is clicked on, and then we’ll pass that along to the
+				<code class="literal">deleteSticky</code> function.</p>
+
+			<p>A lot of this needs to happen in the <code class="literal">addStickyToDOM</code> function, let’s see how:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/450fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function addStickyToDOM(key, value) {</pre>
+<pre>	var stickies = document.getElementById("stickies");</pre>
+<pre>	var sticky = document.createElement("li");</pre>
+<pre>	sticky.setAttribute("id", key);</pre>
+<pre>	var span = document.createElement("span");</pre>
+<pre>	span.setAttribute("class", "sticky");</pre>
+<pre>	span.innerHTML = value;</pre>
+<pre>	sticky.appendChild(span);</pre>
+<pre>	stickies.appendChild(sticky);</pre>
+<pre>	sticky.onclick = deleteSticky;</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sidebar" id="exercise-id00112">
+				<div class="left">
+					<image src="/contents/html5/figs/web/exercise.png">
+				</div>
+
+				<p>Your job now is to update all the code so that everywhere
+					we’re calling addStickyToDOM, we’re passing in the key as well as
+					the value. You should be able to easily find these places. But
+					after you’ve finished, check the solution at the end of the chapter
+					to make sure.</p>
+			
+				<div class="note" id="ch09note08b">
+					<p><strong>Don’t skip this, or the upcoming test drive won’t work!</strong></p>
+				</div>
+			</div>
+
+		</section> <!-- Section 27 -->
+
+		<section class="section" data-number="28" data-name="How to get the sticky to delete from the event">
+			
+<!-- Page 451 -->
+
+			<div class="pagebreak pageNumber">451</div>
+
+			<h2 class="title">How to get the sticky to delete from the event</h2>
+
+			<p><a id="iddle1619" class="indexterm" /><a id="iddle2889" class="indexterm" />We’ve now got an event handler
+				on each sticky note listening for clicks. When you click on a sticky, <code class="literal">deleteSticky</code>
+				will be called and an event object will be passed into <code class="literal">deleteSticky</code>
+				with information about the event, like which element was clicked on. We can look at the
+				<code class="literal">event.target</code> to tell which sticky was clicked on. Let’s take a closer look at
+				what happens when you click on a sticky note.</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/451fig01.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function deleteSticky(e) {</pre>
+<pre>	var key = e.target.id;</pre>
+<pre>	if (e.target.tagName.toLowerCase() == "span") {</pre>
+<pre>		key = e.target.parentNode.id;</pre>
+<pre>	}</pre>
+<pre>	localStorage.removeItem(key);</pre>
+<pre>	var stickiesArray = getStickiesArray();</pre>
+<pre>	if (stickiesArray) {</pre>
+<pre>		for (var i = 0; i < stickiesArray.length; i++) {</pre>
+<pre>			if (key == stickiesArray[i]) {</pre>
+<pre>				stickiesArray.splice(i,1);</pre>
+<pre>			}</pre>
+<pre>		}</pre>
+<pre>		localStorage.setItem("stickiesArray", JSON.stringify(stickiesArray));</pre>
+<pre>		removeStickyFromDOM(key);</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 28 -->
+
+		<section class="section" data-number="29" data-name="Delete the sticky from the DOM, too">
+
+<!-- Page 452 -->
+
+			<div class="pagebreak pageNumber">452</div>
+
+			<h2 class="title">Delete the sticky from the DOM, too</h2>
+
+			<p><a id="iddle2706" class="indexterm" />To finish up the delete, we need to implement the
+				<code class="literal">removeStickyFromDOM</code> function. You updated the
+				<code class="literal">addStickyToDOM</code> function earlier to add the key of the sticky as the id of the
+				<code class="literal">&lt;li&gt;</code> element holding the sticky in the DOM, so we can use
+				<code class="literal">document. getElementById</code> to find the sticky in the DOM. We get the parent node of the sticky,
+				and use the <code class="literal">removeChild</code> method to delete the sticky:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/452fig01.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function removeStickyFromDOM(key) {</pre>
+<pre>	var sticky = document.getElementById(key);</pre>
+<pre>	sticky.parentNode.removeChild(sticky);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<section class="subsection" data-number="30" data-name="Okay, test it...">
+
+				<div class="titlepage left">
+					<h3 class="title">Okay, test it...</h3>
+				</div>
+
+				<figure class="">
+					<img src="/contents/html5/figs/web/common-10.png" alt="" />
+				</figure>
+
+				<div class="clear" />
+
+				<p>Get all that code in, load the page, add and delete some
+					stickies. Quit your browser, load it again, and give it a real run
+					through!</p>
+
+				<figure class="">
+					<img src="/contents/html5/figs/web/452fig02.png" alt="" />
+				</figure>
+
+			</section> <!-- Section 30 -->
+
+		</section> <!-- Section 29 -->
+
+		<section class="section" data-number="31" data-name="But of course we can!">
+
+			<h2 class="title">But of course we can!</h2>
+
+			<p>Come on, given your level of experience with this we’re going to be
+				able to knock this out. How do we do it? Well, we’re going to create
+				an object to store the text of the note and its color, and then
+				we’re going to store that as the value of the sticky item, using
+				<code class="literal">JSON.stringify</code> to convert it to a string first.<
+
+		</section> <!-- Section 31 -->
+
+		<section class="section" data-number="32" data-name="Update the user interface so we can specify a color">
+
+<!-- Page 453 -->
+
+			<div class="pagebreak pageNumber">453</div>
+
+			<h2 class="title">Update the user interface so we can specify a color</h2>
+
+			<p><a id="iddle1802" class="indexterm" /><a id="iddle2565" class="indexterm" />
+				<a id="iddle2756" class="indexterm" />Right now, all our notes are yellow. Wouldn’t it be nicer if we could have
+				a whole range of sticky note colors?</p>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/453fig01.png" alt="" />
+			</figure>
+			
+			<p>Let’s tackle the easy part first: updating the HTML so we have a
+				selection menu of colors to choose from. Edit your
+				<code class="literal">notetoself.html</code>
+				file and update your form to add the colors like this:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/453fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;html&gt;</pre>
+<pre>...</pre>
+<pre>	&lt;form&gt;</pre>
+<pre>		&lt;label for="note_color"&gt;Color: &lt;/label&gt;</pre>
+<pre>		&lt;select id="note_color"&gt;</pre>
+<pre>			&lt;option value="LightGoldenRodYellow"&gt;yellow&lt;/option&gt; &lt;!-- #FAFAD2 --&gt;</pre>
+<pre>			&lt;option value="PaleGreen"&gt;green&lt;/option&gt; &lt;!-- #98FB98 --&gt;</pre>
+<pre>			&lt;option value="LightPink"&gt;pink&lt;/option&gt; &lt;!-- #FFB6C1 --&gt;</pre>
+<pre>			&lt;option value="LightBlue"&gt;blue&lt;/option&gt; &lt;!-- #ADD8E6 --&gt;</pre>
+<pre>		&lt;/select&gt;</pre>
+<pre>		&lt;label for="note_text"&gt;Text:&lt;/label&gt; &lt;input type="text" id="note_text"&gt;</pre>
+<pre>		&lt;input type="button" id="add_button" value="Add Sticky Note to Self"&gt;</pre>
+<pre>	&lt;/form&gt;</pre>
+<pre>...</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>We’ve been using CSS to define the default color for the
+				notes. Now we want to store a note’s color with the note itself. So,
+				now the question is: how are we going to store the color for the
+				sticky note in localStorage?</p>
+
+		</section> <!-- Section 32 -->
+
+		<section class="section" data-number="33" data-name="JSON.stringify, it's not just for Arrays">
+		
+<!-- Page 454 -->
+
+			<div class="pagebreak pageNumber">454</div>
+
+			<h2 class="title">JSON.stringify, it’s not just for Arrays</h2>
+
+			<p><a id="iddle2228" class="indexterm" /><a id="iddle2520" class="indexterm" />To store the color of the sticky
+				with the text of the sticky, we can use the same technique we used for
+				<code class="literal">stickiesArray</code> : we can store an object that contains the text and the color as the
+				value for the sticky in localStorage.</p>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/454fig01.png" alt="" />
+			</figure>
+			
+			<p>Let’s rewrite the <code class="literal">createSticky</code>
+				function to store the color with the sticky note text. To represent
+				the text and the color, we’ll use our handy object:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/454fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function createSticky() {</pre>
+<pre>	var stickiesArray = getStickiesArray();</pre>
+<pre>	var currentDate = new Date();</pre>
+<pre>	var colorSelectObj = document.getElementById("note_color");</pre>
+<pre>	var index = colorSelectObj.selectedIndex;</pre>
+<pre>	var color = colorSelectObj[index].value;</pre>
+<pre>	var key = "sticky_" + currentDate.getTime();</pre>
+<pre>	var value = document.getElementById("note_text").value;</pre>
+<pre>	var stickyObj = {</pre>
+<pre>			"value": value,</pre>
+<pre>			"color": color</pre>
+<pre>	};</pre>
+<pre>	localStorage.setItem(key, JSON.stringify(stickyObj));</pre>
+<pre>	stickiesArray.push(key);</pre>
+<pre>	localStorage.setItem("stickiesArray", JSON.stringify(stickiesArray));	</pre>
+<pre>	addStickyToDOM(key, stickyObj);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 455 -->
+
+			<div class="pagebreak pageNumber">455</div>
+
+		</section> <!-- Section 33 -->
+
+		<section class="section" data-number="34" data-name="Using the new stickyObj">
+			<h2 class="title">Using the new stickyObj</h2>
+
+			<p><a id="iddle1113" class="indexterm" /><a id="iddle2882" class="indexterm" />Now that we’re passing stickyObj
+				to <code class="literal">addStickyToDOM</code>, we need to update the function to use the object instead of the
+				string we were passing in before, and to set the background color of
+				the sticky. It’s a fairly easy change though; let’s take a look:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/455fig01.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function addStickyToDOM(key, stickyObj) {</pre>
+<pre>	var stickies = document.getElementById("stickies");</pre>
+<pre>	var sticky = document.createElement("li");</pre>
+<pre>	sticky.setAttribute("id", key);</pre>
+							<br />
+<pre>	sticky.style.backgroundColor = stickyObj.color;</pre>
+							<br />
+<pre>	var span = document.createElement("span");</pre>
+<pre>	span.setAttribute("class", "sticky");</pre>
+<pre>	span.innerHTML = stickyObj.value;</pre>
+<pre>	sticky.appendChild(span);</pre>
+<pre>	stickies.appendChild(sticky);</pre>
+<pre>	sticky.onclick = deleteSticky;</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>There is one other place we need to update the code, and that is in
+				<code class="literal">init</code>, where we are getting the stickies from localStorage and passing to
+				<code class="literal">addStickyToDOM</code> when we first load the page.</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/455fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function init() {</pre>
+<pre>	var button = document.getElementById("add_button");</pre>
+<pre>	button.onclick = createSticky;</pre>
+							<br />
+<pre>	var stickiesArray = getStickiesArray();</pre>
+<pre>	</pre>
+<pre>	for (var i = 0; i < stickiesArray.length; i++) {</pre>
+<pre>		var key = stickiesArray[i];</pre>
+<pre>		var value = JSON.parse(localStorage[key]);</pre>
+<pre>		addStickyToDOM(key, value);</pre>
+<pre>	}	</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 34 -->
+
+		<section class="section" data-number="35" data-name="Test drive sticky note colors">
+
+<!-- Page 456 -->
+
+			<div class="pagebreak pageNumber">456</div>
+
+			<h2 class="title left">Test drive sticky note colors</h2>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/common-10.png" alt="" />
+			</figure>
+
+			<div class="clear" />
+
+			<p>Before running the Note to Self app again, you’ll need to
+				clear out your localStorage first because the previous version of
+				our stickies didn’t have any color stored in them, and now we’re
+				using a different format for our sticky values. Before we were using
+				strings, now we’re using objects. So empty out your localStorage,
+				reload the page, and add some stickies, selecting a different color
+				for each one. Here are our stickies (and we’ll also check out
+				localStorage too):</p>
+
+			<div class="note" id="ch09note09">
+				<p>You can use your maintenance.html file to clear out your
+					localStorage, or use the console.</p>
+			</div>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/456fig01.png" alt="" />
+			</figure>
+
+<!-- Page 457 -->
+
+			<div class="pagebreak pageNumber">457</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/457fig01.png" alt="" />
+			</figure>
+
+			<p><a id="iddle2295" class="indexterm" /><span class="strong"><strong>For some uses, that makes a lot of sense.</strong></p>
+
+			<p>Knowing what we know now, we certainly could design the stickies so
+				that they were objects embedded in an array. And going forward you
+				might decide to do just that. It might also make sense for your
+				shopping cart. The only downside is that the
+				<code class="literal">JSON.stringify</code> and <code class="literal">JSON.parse</code>
+				methods have to do a lot more work anytime you make a change, for
+				instance to add a note we have to parse the entire set of notes, add
+				the note, and then stringify all the notes again before writing them
+				back in to the store. But, for the amount of data in Stickies, that
+				shouldn’t be a problem in general (although do think about mobile
+				devices with limited CPUs and the effect of the CPU usage on battery life).</p>
+
+			<p>So whether you want to pack everything into one object or
+				array in localStorage, really depends on how many data items you
+				need to store, how big each one is, and what type of processing
+				you’re going to do on them.</p>
+
+			<p>While our implementation here may be a bit of overkill for a
+				limited number of Stickies, we hope you agree it gave us a great way
+				to think about the localStorage API and how to deal with items in
+				it.</p>
+
+<!-- Page 458 -->
+
+			<div class="pagebreak pageNumber">458</div>
+
+			<div class="sidebar" id="try_this_at_home_left_parenthesisor_blo">
+
+				<h3><span class="inlinemediaobject" id="inline_id00032"><img src="/contents/html5/figs/web/dont.png" alt="" /></span>
+					Try this at Home (or Blowing up your 5 Megabytes)</h3>
+				
+				<p>We’ve told you that you have five whole
+					megabytes of storage on every user’s browser, but while five
+					megabytes sounds like a lot, remember that all your data is stored
+					in the form of a string rather than in a byte-efficient data
+					format. Take a long number, say, the national debt—when expressed
+					in floating point form it takes up very little storage, but when
+					expressed in the form of a string, it takes up many times that
+					amount of memory. So, given that, the five megabytes might not hold
+					as much as you think.</p>
+
+				<p>So what happens when you use all 5MBs? Well, unfortunately this is
+					one of those behaviors that isn’t well defined by the HTML5
+					specification, and browsers may do different things when you exceed
+					your limit—the browser may ask if you want to allow more storage,
+					or it may throw a <code class="literal">QUOTA_EXCEEDED_ERR</code>
+					exception, which you can catch like this:</p>
+
+				<div class="hiddencode">
+					<figure class="">
+						<img class="codeimage" src="/contents/html5/figs/web/458fig01.png" alt="" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>try {</pre>
+<pre>	localStorage.setItem(myKey, myValue);</pre>
+<pre>} catch(e) {</pre>
+<pre>	if (e == QUOTA_EXCEEDED_ERR) {</pre>
+<pre>		alert("Out of storage!");</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+				<figure class="">
+					<img src="/contents/html5/figs/web/458fig02.png" alt="" />
+				</figure>
+			</div> <!-- /sidebar -->
+
+<!-- Page 459 -->
+
+			<div class="pagebreak pageNumber">459</div>
+			
+			<figure class="right">
+					<img src="/contents/html5/figs/web/459fig01.png" alt="" />
+			</figure>
+			
+			<div class="sidebar">
+				<p>We don’t see any reason not
+					to push your browser to the limit, see what it’s made of, see how
+					far it can go, see what its behavior is under pressure. Let’s write
+					a little code to push your browser over its storage limit:</p>
+
+				<p>Go ahead and type this in, light the fuse by loading it, and
+					have fun! Try this on a few different browsers.</p>
+
+				<div class="hiddencode">
+					<figure class="">
+						<img class="codeimage" src="/contents/html5/figs/web/459fig02.png" alt="" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>&lt;lhtml&gt;</pre>
+<pre>&lt;lhead&gt;</pre>
+								<br />
+<pre>localStorage.setItem("fuse", "-");</pre>
+<pre>while(true) {</pre>
+<pre>    var fuse = localStorage.getItem("fuse");</pre>
+<pre>    try { </pre>
+<pre>        localStorage.setItem("fuse", fuse + fuse);</pre>
+<pre>    } catch(e) {</pre>
+<pre>        alert("Your browser blew up at " + fuse.length + " with exception: " + e);</pre>
+<pre>	break;</pre>
+<pre>    }</pre>
+<pre>}</pre>
+<pre>localStorage.removeItem("fuse");</pre>
+<pre>&lt;l/script&gt;</pre>
+<pre>&lt;l/head&gt;</pre>
+<pre>&lt;lbody&gt;</pre>
+<pre>&lt;l/body&gt;</pre>
+<pre>&lt;l/html&gt;</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+				<figure>
+					<img src="/contents/html5/figs/web/459fig03.png" alt="" />
+				</figure>
+
+				<div class="note" id="ch09note10">
+					<div class="sidebar">
+						<div class="left">
+							<img src="/contents/html5/figs/web/watchit.png">
+						</div>
+
+						<p><span class="emphasis"><em><strong>Use at your own risk!</strong></em></span></p>
+
+						<p><span class="emphasis"><em>Seriously, this code could
+							crash your browser, which might lead to your operating system
+							being unhappy, which could lead to you losing work. Use at your
+							own risk!!!</em></span></p>
+					</div>
+				</div>
+			</div> <!-- /sidebar -->
+
+<!-- Page 460 -->
+
+			<div class="pagebreak pageNumber">460</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/460fig01.png" alt="" />
+			</figure>
+
+			<p><a id="iddle2765" class="indexterm" /><strong>No Luke, there is another Skywalker.</strong></p>
+
+			<p>It turns out that localStorage has a sister, named sessionStorage.
+				If you substitute the global variable <code class="literal">sessionStorage</code>
+				everywhere you’ve used <code class="literal">localStorage</code>
+				then your items are stored only during the browser session. So, as
+				soon as that session is over (in other words, the user closes the
+				browser window), the items in storage are removed.</p>
+
+			<p>The <code class="literal">sessionStorage</code> object supports exactly the same API as localStorage, so you already
+				know everything about it you need to.</p>
+
+			<p>Give it a try!</p>
+
+			<div class="clear" />
+
+<!-- Page 461 -->
+
+			<div class="pagebreak pageNumber">461</div>
+
+			<div class="sidebar" id="who_does_whatquestion_mark-id00113">
+				<div class="center">
+					<img src="/contents/html5/figs/web/whodoeswhat.png">
+				</div>
+
+				<p>At this point you’ve been through the
+					localStorage API. Below you’ll find all the main characters of the
+					API sitting with their masks on. See if you can determine who does
+					what. We’ve gone ahead and done one for you to get you started.</p>
+
+				<figure class="">
+					<img src="/contents/html5/figs/web/461fig01.png" alt="" />
+				</figure>
+
+		</section> <!-- Section 35 -->
+
+		<section class="section" data-number="36" data-name="Now that you know localStorage, how are you going to use it?">
+
+<!-- Page 462 -->
+
+			<div class="pagebreak pageNumber">462</div>
+
+			<h2 class="title">Now that you know localStorage, how are you going to use it?</h2>
+
+			<p>There are many ways to make use of localStorage—the Stickies app used them so we didn’t need a
+				server, but even with a server, localStorage can be quite helpful.
+				Here’s a few other ways developers are using them:</p>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/462fig01.png" alt="" />
+			</figure>
+			
+			<figure class="">
+				<img src="/contents/html5/figs/web/462fig02.png" alt="" />
+			</figure>
+			
+			<figure class="">
+				<img src="/contents/html5/figs/web/462fig03.png" alt="" />
+			</figure>
+
+<!-- Page 463 -->
+
+			<div class="pagebreak pageNumber">463</div>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/463fig01.png" alt="" />
+			</figure>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/463fig02.png" alt="" />
+			</figure>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/463fig03.png" alt="" />
+			</figure>
+
+<!-- Page 464 -->
+
+			<div class="pagebreak pageNumber">464</div>
+
+			<div class="sidebar" id="bullets_points">
+				<img src="/contents/html5/figs/web/xxvifig03.png">
+	
+				<div class="itemizedlist">
+					<ul class="itemizedlist">
+						<li class="listitem"><p>Web Storage is a store in your browser and an
+							API you can use to save and retrieve items from the store.</p>
+						</li>
+						
+						<li class="listitem"><p>Most browsers provide at least 5 megabytes of storage per origin.</p></li>
+
+						<li class="listitem"><p>Web Storage consists of local storage and session storage.</p></li>
+
+						<li class="listitem"><p>Local storage is persistent, even if you close your browser window or quit the browser.</p></li>
+
+						<li class="listitem"><p>Items in session storage are removed when you close your browser window or quit the browser.
+							Session storage is good for temporary items, not longer term storage.</p>
+						</li>
+						
+						<li class="listitem"><p>Both local storage and session storage use exactly the same API.</p></li>
+
+						<li class="listitem"><p>Web Storage is organized by origin (think domain). An origin is the location of the document
+							on the Web (e.g., wickedlysmart.com or headfirstlabs.com).</p>
+						</li>
+						
+						<li class="listitem"><p>Each domain has a separate storage, so items stored in one origin are not visible to web
+							pages in another origin.</p>
+						</li>
+						
+						<li class="listitem"><p>Use localStorage.setItem(key) to add a value to the store.</p></li>
+
+						<li class="listitem"><p>Use localStorage.getItem(key) to retrieve a value from the store.</p></li>
+
+						<li class="listitem"><p>You can use the same syntax as associative arrays to set and retrieve items to and from the
+							store. Use localStorage[key] to do this.</p>
+						</li>
+						
+						<li class="listitem"><p>Use the localStorage.key() method to enumerate the keys in localStorage.</p></li>
+
+						<li class="listitem"><p>localStorage.length is the number of items in localStorage at a given origin.</p></li>
+
+						<li class="listitem"><p>Use the console in your browser to see and delete items in localStorage.</p></li>
+
+						<li class="listitem"><p>You can delete items directly from localStorage by right-clicking on an item and choosing
+							delete (note: may not work in all browsers).</p>
+						</li>
+						
+						<li class="listitem"><p>You can delete items from localStorage in code using the removeItem(key) method and the
+							clear method. Note that the clear method deletes everything in
+							localStorage at the origin where you do the clear.</p>
+						</li>
+						
+						<li class="listitem"><p>The keys for each localStorage item must be unique. If you use the same key as an existing
+							item, you’ll overwrite the value of that item.</p>
+						</li>
+						
+						<li class="listitem"><p>One way to generate a unique key is to use the current time in milliseconds
+							since 1970, using the Date object’s getTime() method.</p>
+						</li>
+						
+						<li class="listitem"><p>It is important to create a naming scheme for your web app that will still work if items are
+							removed from the store, or if another app creates items in the store.</p>
+						</li>
+						
+						<li class="listitem"><p>Web Storage currently supports storing strings as values for keys.</p></li>
+						
+						<li class="listitem"><p>You can convert numbers stored in localStorage as strings back to numbers using parseInt or
+							parseFloat.</p>
+						</li>
+						
+						<li class="listitem"><p>If you need to store more complex data, you can use JavaScript objects and
+							convert them to strings before storing using JSON.stringify, and back to objects after
+							retrieving using JSON. parse.</p>
+						</li>
+						
+						<li class="listitem"><p>Local storage may be particularly useful on mobile devices to reduce
+							bandwidth requirements.</p>
+						</li>
+						
+						<li class="listitem"><p>Session storage is just like local storage, except that what’s saved in the browser’s store
+							doesn’t persist if you close the tab, the window, or exit the browser. Session storage is useful for
+							short term storage, such as for a shopping session.</p>
+						</li>
+					</ul>
+				</div> <!-- /itemizedlist -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 465 -->
+
+			<div class="pagebreak pageNumber">465</div>
+
+			<div class="sidebar" id="html5cross-id00114">
+				<img src="/contents/html5/figs/web/html5cross.png">
+
+				<p>Take some time to test your own local storage.</p>
+
+				<figure class="center">
+					<img src="/contents/html5/figs/web/465fig01.png" alt="" />
+				</figure>
+				
+				<div class="informaltable">
+					<table style="border-collapse: collapse;">
+						<colgroup>
+							<col class="c1" />
+							<col class="c2" />
+							<col class="c3" />
+							<col class="c4" />
+						</colgroup>
+
+						<thead>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;" colspan="2">
+									<p><strong>Across</strong></p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;" colspan="2"><strong><p>Down</p></strong></td>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>3.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>When we used the _________ of localStorage to create key names, we
+										ran into a problem: gaps in the names of our sticky notes.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>1.</p></td>
+
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>We used the _____________ to hold the keys of all our stickies so
+										we could easily find them in localStorage.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>4.</p></td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>Luke Skywalker’s sister.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>2.</p></td>
+
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>sessionStorage is just like localStorage except its not __________ if you
+										close your browser window.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>7.</p></td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>We have to _________ an object before we store it in localStorage.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>5.</p></td>
+
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>We create an _______ to store the sticky note text and its color
+										in one localStorage item.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>8.</p></td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>Most browsers offer ________ megabytes of storage per origin.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>6.</p></td>
+
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>Use _________ to convert a string to an integer.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>9.</p></td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>We can detect which sticky note the user clicks on by looking at
+										the event _________.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>7.</p></td>
+
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;"><p>Cookie has a _________ issue.</p></td>
+							</tr>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>10.</p></td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>We store an item in localStorage with this method.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>8.</p></td>
+
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>If you store something in your browser and fly to ________, it
+										will still be there when you come back.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>11.</p></td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>localStorage can store only _________________.</p></td>
+
+								<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+
+								<td style="border-bottom: 0.5pt solid;"></td>
+							</tr>
+
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>12.</p></td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>We thought it would be just a fantasy to store an _______ in
+										localStorage but it turns out you can, with JSON.</p>
+								</td>
+								
+								<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+
+								<td style="border-bottom: 0.5pt solid;"></td>
+							</tr>
+
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid;"><p>13.</p></td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid;">
+									<p>Use a try/_______ to detect quota-exceeded errors in localStorage.</p>
+								</td>
+								
+								<td tyle="border-right: 0.5pt solid;"></td>
+								
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- /informaltable -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 466 -->
+
+			<div class="pagebreak pageNumber">466</div>
+
+			<div class="sidebar" id="shell_game_solution">
+				<h3>The Shell Game Solution</h3>
+
+				<p>Ready to try your luck? Or should we say
+					skill? We’ve got a game for you to test your command of
+					localStorage, but you’ll need to be on your toes. Use your
+					knowledge of getting and setting key/value pairs in localStore to
+					keep track of the pea as it shifts from shell to shell. Here’s our
+					solution.</p>
+
+				<div class="hiddencode">
+					<figure class="">
+						<img class="codeimage" src="/contents/html5/figs/web/466fig01.png" alt="" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>function shellGame() {</pre>
+<pre>    localStorage.setItem("shell1", "pea");</pre>
+<pre>    localStorage.setItem("shell2", "empty");</pre>
+<pre>    localStorage.setItem("shell3", "empty");</pre>
+<pre>    localStorage["shell1"] = "empty";</pre>
+<pre>    localStorage["shell2"] = "pea";</pre>
+<pre>    localStorage["shell3"] = "empty";</pre>
+<pre>    var value = localStorage.getItem("shell2");</pre>
+<pre>    localStorage.setItem("shell1", value);</pre>
+<pre>    value = localStorage.getItem("shell3");</pre>
+<pre>    localStorage["shell2"] = value;</pre>
+<pre>    var key = "shell2";</pre>
+<pre>    localStorage[key] = "pea";</pre>
+<pre>    key = "shell1";</pre>
+<pre>    localStorage[key] = "empty";</pre>
+<pre>    key = "shell3";</pre>
+<pre>    localStorage[key] = "empty";</pre>
+								<br />
+<pre>    for (var i = 0; i < localStorage.length; i++) {</pre>
+<pre>        var key = localStorage.key(i);</pre>
+<pre>        var value = localStorage.getItem(key);</pre>
+<pre>        alert(key + ": " + value);</pre>
+<pre>    }</pre>
+<pre>}</pre>
+							</code>
+						</div>				
+					</div>
+				</div>
+			</div>
+
+			<div class="sidebar" id="exercise_solution-id00115">
+				<div class="left">
+					<img src="/contents/html5/figs/web/exercisesolution.png">
+				</div>
+
+				<p>Your job was to update all the code so that everywhere we’re
+					calling addStickyToDOM, we’re passing in the key as well as the
+					value.</p>
+
+				<p>You should have updated all the calls to addStickyToDom in
+					<code class="literal">init</code> and <code class="literal">createSticky</code>, to look like this:</p>
+
+				<pre class="programlisting" id="pro_id00065">
+					<strong>addStickyToDOM(key, value);</strong>
+				</pre>
+			</div>
+
+<!-- Page 467 -->
+
+			<div class="pagebreak pageNumber">467</div>
+
+			<div class="sidebar" id="sharpen_your_pencil_solution-id00116">
+				<img src="/contents/html5/figs/web/sharpenyourpencilsolution.png">
+
+				<p>Put a check next to the ways our current implementation could cause problems:</p>
+
+				<div class="informaltable">
+					<table style="border-collapse: collapse;">
+						<colgroup>
+							<col class="c1" />
+							<col class="c2" />
+						</colgroup>
+				
+						<tbody>
+							<tr>
+								<td><img src="/contents/html5/figs/web/467fig0a.png" alt="" /></td>
+								
+								<td>Displaying stickies is inefficient if there are a lot of items in localStorage that aren’t stickies.</td>
+							</tr>
+							
+							<tr>
+								<td><img src="/contents/html5/figs/web/467fig0b.png" alt="" /></td>
+								
+								<td>A sticky could be overwritten by setItem if the size of the
+										localStorage gets smaller when another app deletes its own
+										items.
+								</td>
+							</tr>
+							
+							<tr>
+								<td><img src="/contents/html5/figs/web/467fig0c.png" alt="" /></td>
+								
+								<td>It’s hard to quickly tell how many stickies there are; you have to
+										iterate through every item in localStorage to get all the
+										stickies.
+								</td>
+							</tr>
+							
+							<tr>
+								<td><img src="/contents/html5/figs/web/squer.png" alt="" /></td>
+								
+								<td>Use a cookie, it has to be easier than all this!</td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- /informaltable -->
+			</div> <!-- /sidebar -->
+
+			<div class="sidebar" id="exercise_solutions-id00117">
+				<div class="left">
+					<img src="/contents/html5/figs/web/exercisesolution.png">
+				</div>
+
+				<p><strong>We still need to figure out how to actually store an array in localStorage</strong></p>
+
+				<p>You might have already guessed that we can use JSON to create
+					a string representation of an array and if so, you’re right. And
+					once you have that you can store it in localStorage.</p>
+				
+				<p>Recall that there are only two methods in the JSON API,
+					stringify and parse. Let’s put those methods to work by finishing
+					the init function:</p>
+				
+				<div class="hiddencode">
+					<figure class="">
+						<img class="codeimage" src="/contents/html5/figs/web/467fig01.png" alt="" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>function init() {</pre>
+<pre>	// button code here...</pre>
+<pre>	var stickiesArray = getStickiesArray();</pre>
+<pre>	if (!stickiesArray) {</pre>
+<pre>		stickiesArray = [];</pre>
+<pre>		localStorage.setItem("stickiesArray", JSON.stringify(stickiesArray));</pre>
+<pre>	} else {</pre>
+<pre>		stickiesArray = JSON.parse(stickiesArray);</pre>
+<pre>	}</pre>
+<pre>	for (var i = 0; i < stickiesArray.length; i++) {</pre>
+<pre>		var key = stickiesArray[i];</pre>
+<pre>		var value = localStorage[key];</pre>
+<pre>		addStickyToDOM(value);</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 468 -->
+
+			<div class="pagebreak pageNumber">468</div>
+
+			<div class="sidebar" id="try_this_at_home_left_parenthesi-id00118">
+				<h3><span class="inlinemediaobject" id="inline_id00037"><img src="/contents/html5/figs/web/dont.png" alt="" />
+					</span> Try this at Home (or Blowing up your 5 Megabytes)</h3>
+				
+				<p>We’ve told you that you have five whole
+					megabytes of storage on every user’s browser, but while five
+					megabytes sounds like a lot, remember that all your data is stored
+					in the form of a string rather than in a byte-efficient data
+					format. Take a long number, say, the national debt—when expressed
+					in floating point form it takes up very little storage, but when
+					expressed in the form of a string, it takes up many times that
+					amount of memory. So, given that, the five megabytes might not hold
+					as much as you think.</p>
+
+				<p>So what happens when you use all 5MBs? Well, unfortunately this is
+					one of those behaviors that isn’t well defined by the HTML5
+					specification, and browsers may do different things when you exceed
+					your limit—the browser may ask if you want to allow more storage,
+					or it may throw a <code class="literal">QUOTA_EXCEEDED_ERR</code>
+					exception, which you can catch like this:</p>
+
+				<div class="hiddencode">
+					<figure class="">
+						<img class="codeimage" src="/contents/html5/figs/web/468fig01.png" alt="" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>try {</pre>
+<pre>	localStorage.setItem(myKey, myValue);</pre>
+<pre>} catch(e) {</pre>
+<pre>	if (e == QUOTA_EXCEEDED_ERR) {</pre>
+<pre>		alert("Out of storage!");</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+				<figure class="">
+					<img src="/contents/html5/figs/web/468fig02.png" alt="" />
+				</figure>
+			</div> <!-- /sidebar -->
+
+<!-- Page 469 -->
+
+			<div class="pagebreak pageNumber">469</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/469fig01.png" alt="" />
+			</figure>
+			
+			<p>We don’t see any reason not to push your browser to the
+				limit, see what it’s made of, see how far it can go, see what its
+				behavior is under pressure. Let’s write a little code to push your
+				browser over its storage limit:</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/469fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;html&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>&lt;script&gt;</pre>
+							<br />
+<pre>localStorage.setItem("fuse", "-");</pre>
+<pre>while(true) {</pre>
+<pre>    var fuse = localStorage.getItem("fuse");</pre>
+<pre>    try { </pre>
+<pre>        localStorage.setItem("fuse", fuse + fuse);</pre>
+<pre>    } catch(e) {</pre>
+<pre>        alert("Your browser blew up at " + fuse.length + " with exception: " + e);</pre>
+<pre>				break;</pre>
+<pre>    }</pre>
+<pre>}</pre>
+<pre>localStorage.removeItem("fuse");</pre>
+<pre>&lt;/script&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p>Go ahead and type this in, light the fuse by loading it, and
+				have fun! Try this on a few different browsers.</p>
+
+			<figure class="">
+				<img src="/contents/html5/figs/web/469fig03.png" alt="" />
+			</figure>
+
+<!-- Page 470 -->
+
+			<div class="pagebreak pageNumber">470</div>
+
+			<div class="sidebar" id="who_does_what_solution">
+				<div class="center">
+					<img src="/contents/html5/figs/web/whodoeswhatsolution.png">
+				</div>
+
+				<p>At this point you’ve been through the
+					localStorage API. Below you’ll find all the main characters of the
+					API sitting with their masks on. See if you can determine who does
+					what. Here’s our solution.</p>
+
+				<figure class="">
+					<img src="/contents/html5/figs/web/470fig01.png" alt="" />
+				</figure>
+			</div>
+
+<!-- Page 471 -->
+
+			<div class="pagebreak pageNumber">471</div>
+
+			<div class="sidebar" id="html5cross_solution-id00119">
+				<div class="center">
+					<img src="/contents/html5/figs/web/html5crosssolution.png">
+				</div>
+
+				<figure class="center">
+					<img src="/contents/html5/figs/web/471fig01.png" alt="" />
+				</figure>
+			</div>
+
+		</section> <!-- Section 36 -->
+	
+	</div> <!-- /container -->
+
+</body>
+</html>

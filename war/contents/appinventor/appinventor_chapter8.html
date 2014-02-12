@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+	<head>
+		<title> App Inventor Chapter 8 </title>
+	</head>
+
+  <body>
+	<div id="appinventor8" class="appinventor container"> 
+		<div class="page">
+
+<!-- Page 113 -->
+
+			<div class="chapter_head">
+				CHAPTER 8
+			</div>
+
+			<section class="section" data-number="0" data-name="Presidents Quiz">
+
+				<h2>Presidents Quiz</h2>
+
+				<img class="rightImage" src="/contents/appinventor/images/ch08img01.png">
+
+				<div class="chapter_description">
+					<p>The Presidents Quiz is a trivia game 
+						about former leaders of the United 
+						States. Though this quiz is about 
+						presidents, you can use it as a tem-plate to build quizzes on any topic.</p>
+					<p>In the previous chapters, you’ve been 
+						introduced to some fundamental 
+						programming concepts. Now you’re 
+						ready for something more challenging. 
+						You’ll find that this chapter requires a 
+						conceptual leap in terms of program-ming skills and abstract thinking. In 
+						particular, you’ll use two list variables to store the data—in this case, the quiz questions 
+						and answers—and you’ll use an index variable to track where the user is in the quiz. 
+						When you finish, you’ll be armed with the knowledge to create quiz apps and many other 
+						apps that require list processing.
+					</p>This chapter assumes you’re familiar with the basics of App Inventor: using the 
+						Component Designer to build the user interface, and using the Blocks Editor to specify 
+						event handlers and program the component behavior. If you are not familiar with these 
+						fundamentals, be sure to review the previous chapters before continuing.</p>
+					<p>You’ll design the quiz so that the user proceeds from question to question by clicking 
+						a Next button and receives feedback on whether each answer he inputs is correct or 
+						incorrect.</p>
+				</div>
+
+			</section> <!-- Section 0, Presidents Quiz -->
+
+			<section class="section" data-number="1" data-name="What You'll Learn">
+
+				<h3>What You'll Learn</h3>
+
+				<p>This app, shown in Figure 8-1, covers:</p>
+
+				<ul>
+					<li>Defining list variables for storing the questions and answers in lists.</li>
+					<li>Sequencing through a list using an index; each time the user clicks Next, you’ll 
+						display the next question. </li>
+				</ul>
+
+<!-- Page 114 -->
+
+				<div class="pagebreak">
+					<span class="pageNumber"> 114 </span> Chapter 8: Presidents Quiz
+				</div>
+
+				<ul class="clear">
+					<li>Using conditional (<span class="python">if</span>) behaviors: performing certain operations only
+						under specific conditions. You’ll use an <span class="pBlock">if</span> block to handle the app’s behavior when the user reaches the
+						end of the quiz.</li>
+					<li>Switching an image to show a different picture for each quiz question.</li>
+				</ul>
+
+				<figure>
+					<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch08img02.png">
+					</div>
+					<figcaption>Figure 8-1. The Presidents Quiz running in the emulator</figcaption>
+				</figure>
+
+			</section> <!-- Section 1, What You'll Learn -->
+
+			<section class="section" data-number="2" data-name="Getting Started">
+
+				<h3>Getting Started</h3>
+
+				<p>Connect to the App Inventor website and start a new project. Name it “PresidentsQuiz” 
+					and set the screen’s title to “Presidents Quiz”. Open the Blocks Editor and connect 
+					to the phone. Also download the pictures for the quiz from the book’s site (<spann class="url">http://
+					examples.oreilly.com/0636920016632/</span>)onto your computer: roosChurch.gif, nixon.gif, 
+					carterChina.gif, and atomic.gif. You’ll load these images into your project in the next 
+					section.</p>
+
+			</section> <!-- Section 2, Getting Started -->
+
+			<section class="section" data-number="3" data-name="Designing the Components">
+
+				<h3>Designing the Components</h3>
+
+				<p>The Presidents Quiz app has a simple interface for displaying the question and allowing the user to
+					answer. You can build the components from the snapshot of the Component Designer shown in Figure 8-2.</p>
+
+<!-- Page 115 -->
+
+				<div class="pagebreak">
+					<span class="pageNumber"> 115 </span> Designing the Components
+				</div>
+
+				<figure>
+					<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch08img03.png">
+					</div>
+					<figcaption>Figure 8-2. The Presidents Quiz in the Designer</figcaption>
+				</figure>
+
+				<p>To create this interface, first load the images you downloaded into the project. Click 
+					Add in the Media area and select one of the downloaded files (e.g., <em>roosChurch.gif</em>). 
+					Do the same for the other three images. Then add the components listed in Table 8-1.</p>
+
+				<p class="caption">Table 8-1. Components for the Presidents Quiz app</p>
+
+				<table>
+					<thead>
+						<tr>
+							<th>Component type</th>
+							<th>Palette group</th>
+							<th>What you’ll name it</th>
+							<th>Purpose</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><span class="python">Image</span></td>
+							<td>Basic</td>
+							<td><span class="python">Image1</span></td>
+							<td>The picture displayed with the question.</td>
+						</tr>
+						<tr>
+							<td><span class="python">Label</span></td>
+							<td>Basic</td>
+							<td><span class="python">QuestionLabel</span></td>
+							<td>Display the current question.</td>
+						</tr>
+						<tr>
+							<td><span class="python">HorizontalArrangement</span></td>
+							<td>Screen Arrangement</td>
+							<td><span class="python">HorizontalArrangement1</span></td>
+							<td>Organize the <span class="python">AnswerPrompt</span> and <span class="python">Text</span></td>
+						</tr>
+						<tr>
+							<td><span class="python">TextBox</span></td>
+							<td>Basic</td>
+							<td><span class="python">AnswerText</span></td>
+							<td>The user will enter his answer here.</td>
+						</tr>
+						<tr>
+							<td><span class="python">Button</span></td>
+							<td>Basic</td>
+							<td><span class="python">AnswerButton</span></td>
+							<td>The user clicks this to submit an answer.</td>
+						</tr>
+						<tr>
+							<td><span class="python">Label</span></td>
+							<td>Basic</td>
+							<td><span class="python">RightWrongLabel</span></td>
+							<td>Display “correct!” or “incorrect!”</td>
+						</tr>
+						<tr>
+							<td><span class="python">Button</span></td>
+							<td>Basic</td>
+							<td><span class="python">NextButton</span></td>
+							<td>The user clicks this to proceed to the next question.</td>
+						</tr>
+					</tbody>
+				</table>					
+
+				<p>Set the properties of the components as follows:</p>
+
+				<ol>
+					<li>Set <span class="python">Image1.Picture</span> to the image file <em>roosChurch.gif</em>,
+						the first picture that should 
+						appear. Set its <span class="python">Width</span> to “Fill parent” and its
+						<span class="python">Height</span> to 200.</li>
+					<li>Set <span class="python">QuestionLabel.Text</span> to “Question…” (you’ll input the first question in the 
+						Blocks Editor).</li>
+					<li>Set <span class="python">AnswerText.Hint</span> to “Enter an answer”. Set its Text property to blank. Move 
+						it into <span class="python">HorizontalArrangement1</span>.</li>
+				</ol>
+
+<!-- Page 116 -->
+
+				<div class="pagebreak">
+					<span class="pageNumber"> 116 </span> Chapter 8: Presidents Quiz
+				</div>
+
+				<ol class="clear" start="4">
+					<li>Change <span class="python">AnswerButton.Text</span> to “Submit” and move it into
+						<span class="python">HorizontalArrangement1.</span></li>
+					<li>Change <span class="python">NextButton.Text</span> to “Next”.</li>
+					<li>Change <span class="python">RightWrongLabel.Text</span> to blank.</li>
+				</ol>
+
+			</section> <!-- Section 3, Designing the Components -->
+
+			<section class="section" data-number="4" data-name="Adding Behaviors to the Components">
+
+				<h3>Adding Behaviors to the Components</h3>
+
+				<p>You’ll need to program the following behaviors:</p>
+
+				<ul>
+					<li>When the app starts, the first question appears, including its corresponding image.</li>
+					<li>When the user clicks the <span class="python">NextButton</span>, the second question appears.
+						When he clicks it again, the third
+						question appears, and so on.</li>
+					<li>When the user reaches the last question and clicks the <span class="python">NextButton</span>,
+						the first question should appear
+						again.</li>
+					<li>When the user answers a question, the app will report whether it is correct or not. </li>
+				</ul>
+
+				<p>To start, you’ll define two list variables based on the items listed in Table 8-2: 
+					<span class="python">QuestionList</span> to hold the list of questions, and
+					<span class="python">AnswerList</span> to hold the list of corresponding answers.
+					Figure 8-3 shows the two lists you’ll create in the Blocks Editor.</p>
+
+				<p class="caption">Table 8-2.Variables for holding question and answer lists</p>
+
+				<table>
+					<thead>
+						<tr>
+							<th>Block type</th>
+							<th>Drawer</th>
+							<th>Purpose</th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td><span class="pBlock">def variable</span> ("QuestionList") </td>
+						<td>Definitions</td>
+						<td>Store the list of questions (rename it <span class="python">QuestionList</span>)</td>
+					</tr>
+					<tr>
+						<td><span class="pBlock">def variable</span> ("AnswerList"</td>
+						<td>Definitions</td>
+						<td>Store the list of answers (rename it <span class="python">AnswerList</span>).</td>
+					</tr>
+					<tr>
+						<td><span class="pBlock">make a list</span></td>
+						<td>Lists</td>
+						<td>Insert the items of the <span class="python">QuestionList</span></td>
+					</tr>
+					<tr>
+						<td><span class="pBlock">text</span> (three of them)</td>
+						<td>Text</td>
+						<td>The questions.</td>
+					</tr>
+					<tr>
+						<td><span class="pBlock">make a list</span></td>
+						<td>Lists</td>
+						<td>Insert the items of the <span class="python">AnswerList</span>.</td>
+					</tr>
+					<tr>
+						<td><span class="pBlock">text</span> (three of them)</td>
+						<td>Text</td>
+						<td>The answers.</td>
+					</tr>
+					</tbody>
+				</table>
+
+				<figure>
+					<div class="centeredImage">
+						<img class="imageUndertable" src="/contents/appinventor/images/ch08img04.png">
+					</div>
+					<figcaption>Figure 8-3. The lists for the quiz</figcaption>
+				</figure>
+
+<!-- Page 117 -->
+
+				<div class="pagebreak">
+					<span class="pageNumber"> 117 </span> Adding Behaviors to the Components
+				</div>
+
+				<section class="subsection" data-number="5" data-name="Defining the Index Variable">
+
+					<h4>Defining the Index Variable</h4>
+
+					<p>The app needs to keep track of the current question as the user clicks the
+						<span class="python">NextButton</span> to proceed through the quiz. You’ll define a variable named
+						<span class="python">currentQuestionIndex</span> for this, and the variable will serve as the index into
+						both the <span class="python">QuestionList</span> and <span class="python">AnswerList</span>.
+						Table 8-3 lists the blocks you’ll need to do this, and Figure 8-4 shows what that variable will look
+						like.</p>
+
+					<p class="caption">Table 8-3.Creating the index</p>
+
+					<table>
+						<thead>
+							<tr>
+								<th>Block type</th>
+								<th>Drawer</th>
+								<th>Purpose</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><span class="pBlock">def variable</span> ("currentQuestionIndex")</td>
+								<td>Definitions</td>
+								<td>Hold the index (position) of the current question/answer.</td>
+							<tr>
+							<tr>
+								<td><span class="pBlock">number</span> (1)</td>
+								<td>Math</td>
+								<td>Set the initial value of <span class="python">currentQuestionIndex</span> to 1
+									(the first question).</td>
+							<tr>
+						</tbody>
+					</table>
+
+					<figure>
+						<div class="centeredImage">
+							<img class="imageUndertable" src="/contents/appinventor/images/ch08img05.png">
+						</div>
+						<figcaption>Figure 8-4. Initiating the index blocks with a value of 1</figcaption>
+					</figure>
+
+				</section> <!-- Section 5, Defining the Index Variable -->
+
+				<section class="subsection" data-number="6" data-name="Displaying the First Question">
+
+					<h4>Displaying the First Question</h4>
+
+					<p>Now that you’ve defined the variables you need, you can specify the app’s interactive 
+						behavior. As with any app, it’s important to work incrementally and define one be-havior at a time.
+						To start, let’s think only about the questions—specifically, displaying 
+						the first question in the list when the app launches. We’ll come back and deal with 
+						the images a bit later.</p>
+					<p>You want your code blocks to work regardless of the specific questions that are in the 
+						list. That way, if you decide to change the questions or create a new quiz by copying 
+						and modifying this app, you’ll only need to change the actual questions in the list 
+						definitions, and you won’t need to change any event handlers.</p>
+					<p>So, for this first behavior, you don’t want to refer directly to the first question, “Which 
+						president implemented the ‘New Deal’ during the Great Depression?” Instead, you 
+						want to refer, abstractly, to the first slotin the <span class="python">QuestionList</span>
+						(regardless of the 
+						specific question there). That way, the blocks will still work even if you modify the 
+						question in that first slot. </p>
+					<p>You select particular items in a list with the <span class="pBlock">select list item</span> block.
+						The block asks you 
+						to specify the list and an index (a position in the list). If a list has three items, you can 
+						enter 1, 2, or 3 as the index.</p>
+					<p>For this first behavior, when the app launches, you want to select the first item in 
+						<span class="python">QuestionList</span> and place it in the <span class="python">QuestionLabel</span>.
+						As you’ll recall from the “Android, 
+						Where’s My Car?” app in Chapter 7, if you want something to happen when your app 
+						launches, you program that behavior in the <span class="pBlock">Screen1.Initialize</span>
+						event handler using 
+						the blocks listed in Table 8-4.</p>
+
+<!-- Page 118 -->
+
+					<div class="pagebreak">
+						<span class="pageNumber"> 118 </span> Chapter 8: Presidents Quiz
+					</div>
+
+					<p class="caption">Table 8-4.Blocks to load the initial question when the app starts</p>
+
+					<table>
+						<thead>
+							<tr>
+								<th class="colExpand">Block type</th>
+								<th>Drawer</th>
+								<th>Purpose</th>
+							</tr>
+						</thead>
+						</tbody>
+							<tr>
+								<td><span class="pBlock">Screen1.Initialize</span></td>
+								<td>Screen1</td>
+								<td>Event handler triggered when the app begins.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">set QuestionLabel.Text to</span></td>
+								<td>QuestionLabel</td>
+								<td>Put the first question in <span class="python">QuestionLabel</span>.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">select list item</span></td>
+								<td>Lists</td>
+								<td>Select the first question from <span class="python">QuestionList</span>.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">Global  QuestionList</span></td>
+								<td>My Definitions</td>
+								<td>The list to select questions from.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">number</span> (1)</td>
+								<td>Math</td>
+								<td>Select the first question by using an index of 1.</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<section class="subsection" data-number="7" data-name="How the blocks work">
+
+						<h5>How the blocks work</h5>
+
+						<p>The <span class="pBlock">Screen1.Initialize</span> event is triggered when the app begins. As shown in 
+							Figure 8-5, the first item of the variable <span class="python">QuestionList</span>
+							is selected and placed into <span class="python">QuestionLabel.Text</span>. So, when
+							the app begins, the user will see the first question.</p>
+
+						<figure>
+							<div class="centeredImage">
+								<img src="/contents/appinventor/images/ch08img06.png">
+							</div>
+							<figcaption>Figure 8-5. Selecting the first question</figcaption>
+						</figure>
+
+						<div class="test_your_app">
+								<img src="/contents/appinventor/images/test_phone.jpg">
+								
+								<p><span class="apptest_header">Test your app.</span>Plug in your phone to the computer or click “New 
+									emulator” to open an Android emulator, and then click ”Connect 
+									to Device.” When your app loads, do you see the first item of 
+									<span class="normalFont python">QuestionList</span>, “Which president implemented the
+									‘New Deal’ during the Great Depression?”</p>
+						</div>
+
+					</section> <!-- Section 7, How the blocks work -->
+
+				</section> <!-- Section 6, Displaying the First Question -->
+
+				<section class="subsection" data-number="8" data-name="Iterating Through the Questions">
+
+					<h4>Iterating Through the Questions</h4>
+
+					<p>Now program the behavior of the <span class="python">NextButton</span>. You’ve already defined the 
+						<span class="python">current QuestionIndex</span> to remember which question the user is on.
+						When the user clicks the <span class="python">NextButton</span>, the app needs to
+						<em>increment</em> (add one to) the <span class="python">currentQuestionIndex</span> (i.e., 
+						change it from 1 to 2 or from 2 to 3, and so on). You’ll then use the resulting value of 
+						<span class="python">currentQuestionIndex</span> to select the new question to display.</p>
+					<p>As a challenge, see if you can build these blocks on your own. When you’re finished, 
+						compare your results against Figure 8-6.</p>
+
+<!-- Page 119 -->
+
+					<div class="pagebreak">
+						<span class="pageNumber"> 119 </span> Adding Behaviors to the Components
+					</div>
+
+					<figure>
+						<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch08img07.png">
+						</div>
+						<figcaption>Figure 8-6. Moving to the next question</figcaption>
+					</figure>
+
+					<section class="subsection" data-number="9" data-name="How the blocks work">
+
+						<h5>How the blocks work</h5>
+
+						<p>The first row of blocks increments the variable <span class="python">currentQuestionIndex</span>.
+							If current <span class="python">QuestionIndex</span> has a 1 in it, it is changed to 2. If it has a 2,
+							it is changed to 3, and so on. Once the <span class="python">currentQuestionIndex</span> variable has
+							been changed, the app uses it to select the new question to display.</p>
+						<p>When the user clicks <span class="python">NextButton</span> for the first time, the increment blocks
+							will change <span class="python">currentQuestionIndex</span> from 1 to 2, so the app will select
+							the second item from <span class="python">QuestionList</span>, “Which president granted communist
+							China formal recognition in 1979?” The second time <span class="python">NextButton</span> is clicked,
+							<span class="python">currentQuestionIndex</span> will be set from 2 to 3, and the app will select
+							the third question in the list, “Which president resigned due to the Watergate scandal?”</p>
+
+						<div class="note">
+							<img src="/contents/appinventor/images/tip_suggestion.jpg">
+							
+							<p><span class="pBlock normalFont">Note.</span>Take a minute to compare the blocks of
+								<span class="pBlock">NextButton.Click</span> to	those in the
+								<span class="pBlock">Screen.Initialize</span> event handler. In the
+								<span class="pBlock">Screen.Initialize</span>	blocks, the app used
+								<span class="pBlock">select list item</span>	with a concrete number (1) to select the list item.
+								In these blocks, you’re selecting the list item using a variable as the index.
+								The app doesn’t choose the first
+								item in the list, or the second or third; it chooses the <span class="python normalFont">currentQuestion
+								Index</span>th item, and thus a different item will be selected each time 
+								the <span class="python normalFont">NextButton</span> is clicked. This is a very common use for an index—
+								incrementing its value to find and display items in a list.</p>
+						</div>
+
+						<p>The problem with the app is that it simply increments to the next question each time 
+							without any concern for the end of the quiz. When <span class="python">currentQuestionIndex</span>
+							is already 3 and the user clicks the <span class="python">NextButton</span>, the app changes
+							<span class="python">currentQuestionIndex</span> from 3 to 4. It then calls
+							<span class="pBlock">select list item</span> to get the
+							<span class="python">currentQuestionIndex</span>th item — in this</p>
+
+<!-- Page 120 -->
+
+						<div class="pagebreak">
+							<span class="pageNumber"> 120 </span> Chapter 8: Presidents Quiz
+						</div>
+
+						<p>case, the fourth item. Since there are only three items in the variable <span class="python">QuestionList</span>, 
+							the Android device doesn’t know what to do and forces the app to quit. So how can 
+							we let the app know that it has reached the end of the quiz?</p>
+
+						<div class="test_your_app">
+							<img src="/contents/appinventor/images/test_phone.jpg">
+									
+							<p><span class="apptest_header">Test your app.</span>Test the behavior of the
+								<span class="python normalFont">NextButton</span> to see if the app 
+								is working correctly. Click the <span class="normalFont python">NextButton</span> on the phone. Does the 
+								phone display the second question, “Which president granted com-munist China formal recognition in 1979?”
+								It should, and the third question should appear when you click the
+								<span class="python normalFont">NextButton</span> again. But 
+								if you click again, you should see an error: “Attempting to get item 
+								4 of a list of length 3.” The app has a bug! Do you know what the 
+								problem is? Try figuring it out before moving on.</p>
+						</div>
+
+						<p>The app needs to ask a question when the <span class="python">NextButton</span> is clicked, and execute
+							different blocks depending
+							on the answer. Since you know your app contains three ques-tions, one way to ask the question would be,
+							“Is the variable <span class="python">currentQuestionIndex</span> greater than 3?” If the answer is yes,
+							you should set 
+							<span class="python">currentQuestionIndex</span> back to 1 so the user is taken back to the first question.
+							The blocks you’ll need
+							for this are listed in Table 8-5.</p>
+
+						<p class="caption">Table 8-5.Blocks for checking the index value for the end of the list</span>
+
+						<table>
+							<thead>
+								<tr>
+									<th>Block type</th>
+									<th>Drawer</th>
+									<th>Purpose</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><span class="pBlock">if</span></td>
+									<td>Control</td>
+									<td>Figure out if the user is on the last question.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">=</span></td>
+									<td>Math</td>
+									<td>Test if <span class="python">currentQuestionIndex</span> is 3.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">global currentQuestionIndex</span></td>
+									<td>My Definitions </td>
+									<td>Put this into the left side of <span class="pBlock">=</span>.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">number 3</span></td>
+									<td>Math</td>
+									<td>Put this into the right side of <span class="pBlock">=</span> since 3 is the number of items in the list.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">set global currentQuestion Index to</span></td>
+									<td>My Definitions </td>
+									<td>Set to 1 to revert to the first question.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">number 1</span></td>
+									<td>Math</td>
+									<td>Set the index to 1.</td>
+								</tr>
+							</tbody>
+						</table>
+
+<!-- Page 121 -->
+
+						<div class="pagebreak">
+							<span class="pageNumber"> 121 </span> Adding Behaviors to the Components
+						</div>
+
+						<div class="test_your_app">
+							<img src="/contents/appinventor/images/test_phone.jpg">
+									
+							<p><span class="apptest_header">Test your app.</span>Because variables like
+								<span class="python normalFont">currentQuestionIndex</span>
+								aren’t visible when you run an app, they are often the source of bugs 
+								in a program. Fortunately, App Inventor provides a way to “watch” 
+								variables during testing. Specifically, you can right-click a
+								<span class="pBlock normalFont">def variable</span> block and select Watch,
+								and a little box will appear, show-ing the value of the variable.
+								In this case, right-click the <span class="pBlock normalFont">def currentQuestionIndex</span>
+								definition to watch it. Then click on the “Connect to 
+								Device...” button in the Blocks Editor to restart the app. The
+								<span class="pBlock normalFont">def currentQuestionIndex</span> block will appear
+								with a watch box displaying the 
+								initial value of <span class="python normalFont">currentQuestionIndex</span> (1), as shown in Figure 8-8.
+
+							<figure>
+								<div class="centeredImage">
+									<img class="noWrapImage" src="/contents/appinventor/images/ch08img08.png">
+								</div>
+								<figcaption>Figure 8-8. Watching a variable while testing your app</figcaption>
+							</figure>
+
+							<p>Now pick up the phone and click the <span class="python normalFont">NextButton</span>.
+								The second ques-tion, “Which president granted
+								communist China formal recognition 
+								in 1979?” should appear in the <span class="python normalFont">QuestionLabel</span> on the phone, as 
+								before. On the App Inventor screen, a 2 should appear in the 
+								<span class="python normalFont">currentQuestionIndex</span> watch box, as shown in Figure 8-9.</p>
+
+							<figure>
+								<div class="centeredImage">
+									<img class="noWrapImage" src="/contents/appinventor/images/ch08img09.png">
+								</div>
+								<figcaption>Figure 8-9. Confirming that the index is incrementing</span>
+							</figure>
+
+							<p>When you click again, the third question should appear on the 
+								phone and a 3 should appear in the watch box. Now for the be-havior you’re really testing: if you click
+								again, you should see 1 in 
+								<span class="python normalFont">currentQuestionIndex</span>, and the first question (“Which president 
+								implemented the ‘New Deal’ during the Great Depression?”) should 
+								appear on the phone.</p>
+						
+						</div>
+
+<!-- Page 122 -->
+
+						<div class="pagebreak">
+							<span class="pageNumber"> 122 </span> Chapter 8: Presidents Quiz
+						</div>
+
+						<p>When the user clicks the <span class="python">NextButton</span>, the app increments the index as it did before. 
+							But then, as shown in Figure 8-7, it checks to see if <span class="python">currentQuestionIndex</span> is larger 
+							than 3, the number of questions. If it is larger than 3, <span class="python">currentQuestionIndex</span> is set 
+							back to 1, and the first question is displayed. If it is 3 or less, the blocks within the
+							<span class="pBlock">if</span> block are not performed, and the current question is displayed as usual.</p>
+
+						<figure>
+							<div class="centeredImage">
+								<img src="/contents/appinventor/images/ch08img10.png">
+							</div>
+							<figcaption>Figure 8-7. Checking if the last (third) question has been reached</figcaption>
+						</figure>
+
+					</section> <!-- Section 9, How the blocks work -->
+
+				</section> <!-- Section 8, Iterating Through the Questions -->
+					
+			</section> <!-- Section 4, Adding Behaviors to the Components -->
+
+			<section class="section" data-number="10" data-name="Making the Quiz Easy to Modify">
+
+				<h3>Making the Quiz Easy to Modify</h3>
+
+				<p>If your blocks for the <span class="python">NextButton</span> work, pat yourself on the back—you are on your 
+					way to becoming a programmer! But what if you added a new question (and answer) 
+					to the quiz? Would your blocks still work?</p>
+				<p>To explore this, first add a fourth question to <span class="python">QuestionList</span> and a fourth answer into 
+					<span class="python">AnswerList</span>, as shown in Figure 8-10.</p>
+
+				<figure>
+					<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch08img11.png">
+					</div>
+					<figcaption>Figure 8-10. Adding an item to both lists</figcaption>
+				</figure>
+
+<!-- Page 123 -->
+
+				<div class="pagebreak">
+					<span class="pageNumber"> 123 </span> Making the Quiz Easy to Modify
+				</div>
+
+				<div class="test_your_app">
+					<img src="/contents/appinventor/images/test_phone.jpg">
+							
+					<p><span class="apptest_header">Test your app.</span>Click the <span class="python normalFont">NextButton</span>
+						several times. You’ll notice that 
+						the fourth question never appears, no matter how many times you 
+						click Next.</p>
+					<p>Do you know what the problem is? Before reading on, see if you can 
+						fix the blocks so the fourth question appears</p>
+				</div>
+
+				<p>The problem is that the test to determine whether the user is on the last question is 
+					too specific; it asks if the <span class="python">currentQuestionIndex</span> variable is 3. You could just change 
+					the number 3 to a 4, and the app would work correctly again. The problem with that 
+					solution, however, is that each time you modify the questions and answers, you also 
+					have to remember to make this change. Such dependencies in a computer program 
+					often lead to bugs, especially as an app grows in complexity.</p>
+				<p>A much better strategy is to design the blocks so that they will work no matter how 
+					many questions there are. Such generality makes it easier if you, as a programmer, 
+					want to customize your quiz for some other topic. It is also essential if the list you are 
+					working with changes dynamically—for example, think of a quiz app that allows the 
+					user to add new questions (you’ll build this in Chapter 10).</p>
+				<p>For a program to be more general, it can’t refer to concrete numbers like 3, as that 
+					only works for quizzes of three questions. So, instead of asking if the value of 
+					<span class="python">currentQuestionIndex</span> is larger than the specific number 3, ask if it is
+					as large as the 
+					<em>number of items</em> in <span class="python">QuestionList</span>. If the app asks this more general question,
+					it will 
+					work even when you add to or remove items from the <span class="python">QuestionList</span>. So modify the 
+					<span class="pBlock">NextButton.Click</span> event handler to replace the previous test that
+					referred directly to 
+					3. You’ll need the blocks listed in Table 8-6.</p>
+
+				<p class="caption">Table 8-6.Blocks to check the length of the list</p>
+
+				<table>
+					<thead>
+						<tr>
+							<th>Block type</th>
+							<th>Drawer</th>
+							<th>Purpose</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><span class="pBlock">length of list</span></td>
+							<td>Lists</td>
+							<td>Ask how many items are in <span class="python">QuestionList</span>.</td>
+						</tr>							
+						<tr>
+							<td><span class="pBlock">global QuestionList</span></td>
+							<td>My Definitions</td>
+							<td>Put this into the “list” slot of <span class="pBlock">length of list</span>.</td>
+						</tr>							
+					</tbody>
+				</table>
+
+				<section class="subsection" data-number="11" data-name="How the Blocks Work">
+
+					<h4>How the Blocks Work</h4>
+
+					<p>The <span class="pBlock">if</span> test now compares the <span class="python">currentQuestionIndex</span>
+						to the length of the 
+						<span class="python">QuestionList</span>, as shown in Figure 8-11. So, if
+						<span class="python">currentQuestionIndex</span> is 5, and the 
+						length of the <span class="python">QuestionList</span> is 4, then the
+						<span class="python">currentQuestionIndex</span> will be set back 
+						to 1. Note that, because the blocks no longer refer to 3 or any specific number, the 
+						behavior will work no matter how many items are in the list.</p>
+
+<!-- Page 124 -->
+
+				<div class="pagebreak">
+					<span class="pageNumber"> 124 </span> Chapter 8: Presidents Quiz
+				</div>
+
+				<figure>
+					<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch08img12.png">
+					</div>
+					<figcaption>Figure 8-11. Checking for the end of the list in a generic way</figcaption>
+				</figure>
+
+				<div class="test_your_app">
+						<img src="/contents/appinventor/images/test_phone.jpg">
+						
+						<p><span class="apptest_header">Test your app.</span>When you click the
+							<span class="normalFont python">NextButton</span>, does the app now 
+							cycle through the four questions, moving to the first one after the 
+							fourth?</p>
+
+						<div class="clear"></div>
+				</div>
+
+				</section> <!-- Section 11, How the Blocks Work -->
+
+			</section> <!-- Section 10, Making the Quiz Easy to Modify -->
+
+			<section class="section" data-number="12" data-name="Switching the Image for Each Question">
+
+				<h3>Switching the Image for Each Question</h3>
+
+				<p>Now that you’ve programmed all the behaviors for moving through the questions 
+					(and you’ve made your code smarter and more flexible by making it more <em>abstract</em>), 
+					let’s get the images working properly, too. Right now, the app shows the same image 
+					no matter what question is being asked. You can change this so an image pertaining 
+					to each question appears when the user clicks the <span class="python">NextButton</span>. Earlier, you added 
+					four pictures as media for the project. Now, you’ll create a third list, <span class="python">PictureList</span>, 
+					with the image filenames as its items. You’ll also modify the <span class="pBlock">NextButton.Click</span> event 
+					handler to switch the picture each time, just as you switch the question text each 
+					time. (If you’re already thinking about using the <span class="python">currentQuestionIndex</span> here, you’re 
+					on the right track!)</p>
+				<p>First, create a <span class="python">PictureList</span> and initialize it with the names of the image files. Be sure 
+					that the names are exactly the same as the filenames you loaded into the Media sec-tion of the project.
+					Figure 8-12 shows how the blocks for the <span class="python">PictureList</span> should look.</p>
+
+				<figure>
+					<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch08img13.png">
+					</div>
+					<figcation>Figure 8-12. The PictureList with image filenames as items</figcaption>
+				</figure>
+
+<!-- Page 125 -->
+
+				<div class="pagebreak">
+					<span class="pageNumber"> 125 </span> Switching the Image for Each Question
+				</div>
+
+				<p>Next, modify the <span class="pBlock">NextButton.Click</span> event handler so that it changes the picture that 
+					appears depending on the question index. The <span class="pBlock">Image.Picture</span> property is used to 
+					change the picture displayed. To modify <span class="pBlock">NextButton.Click</span>, you’ll need the blocks 
+					listed in Table 8-7.</p>
+
+				<p class="caption">Table 8-7.Blocks to add the image that accompanies the question</p>
+
+				<table>
+					<thead>
+						<tr>
+							<th class="colExpand">Block type</th>
+							<th>Drawer</th>
+							<th>Purpose</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><span class="pBlock">set Image1.Picture to</span></td>
+							<td>Image1</td>
+							<td>Set this to change the picture.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">select list item</span></td>
+							<td>Lists</td>
+							<td>Select the picture corresponding to the current question.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">global PictureList</span></td>
+							<td>My Definitions</td>
+							<td>Select a filename from this list.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">global currentQuestion Index</span></td>
+							<td>My Definitions</td>
+							<td>Select the <span class="python">currentQuestionIndex</span>th item.</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<section class="subsection" data-number="13" data-name="How the Blocks Work">
+
+					<h4>How the Blocks Work</h4>
+
+					<p>The <span class="python">currentQuestionIndex</span> serves as the index for both the
+						<span class="python">QuestionList</span> and the 
+						<span class="python">PictureList</span>. As long as you’ve set up your lists properly such that the first question 
+						corresponds to the first picture, the second to the second, and so on, the single index 
+						can serve both lists, as shown in Figure 8-13. For instance, the first picture, <em>roosChurch
+						.gif</em>, is a picture of President Franklin Delano Roosevelt (sitting with British Prime 
+						Minister Winston Churchill), and “Roosevelt” is the answer to the first question.</p>
+
+					<figure>
+						<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch08img14.png">
+						</div>
+						<figcaption>Figure 8-13. Selecting the currentQuestionIndexth picture each time</span>
+					</figure>
+
+					<div class="test_your_app">
+							<img src="/contents/appinventor/images/test_phone.jpg">
+							
+							<p class="twoLines"><span class="apptest_header">Test your app.</span>Click next a few times. Now does a different image 
+								appear each time you click the <span class="python normalFont">NextButton</span>?</p>
+
+							<div class="clear"></div>
+					</div>
+
+				</section> <!-- Section 13, How the Blocks Work -->
+
+			</section> <!-- Section 12, Switching the Image for Each Question -->
+
+<!-- Page 126 -->
+
+			<section class="section" data-number="14" data-name="Checking the User's Answers">
+
+				<div class="pagebreak">
+					<span class="pageNumber"> 126 </span> Chapter 8: Presidents Quiz
+				</div>
+
+				<h3>Checking the User's Answers</h3>
+
+				<p>Thus far, we’ve created an app that simply cycles through questions and answers 
+					(paired with an image of the answer). It’s a great example of apps that use lists, but to 
+					be a true quiz app, it needs to give users feedback on whether they’re right or wrong. 
+					So now let’s add blocks that report whether the user has answered a question correctly or not.
+					Our interface is set up so the user enters her answer in <span class="python">AnswerText</span> and 
+					then clicks the <span class="python">AnswerButton</span>. The app must compare the user’s entry with
+					the answer 
+					to the current question, using an <span class="pBlock">ifelse</span>
+					block to check. The <span class="python">RightWrongLabel</span> should 
+					then be modified to report whether or not the answer is correct. There are quite a few 
+					blocks needed to program this behavior, all of which are listed in Table 8-8.</p>
+
+				<table>
+					<thead>
+						<tr>
+							<th>Block type</th>
+							<th>Drawer</th>
+							<th>Purpose</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><span class="pBlock">AnswerButton.Click</span></td>
+							<td>AnswerButton</td>
+							<td>Triggered when the user clicks the <span class="python">AnswerButton</span>.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">ifelse</span></td>
+							<td>Control</td>
+							<td>If the answer is correct, do one thing; otherwise, do another.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">text=</span></td>
+							<td>text</td>
+							<td>Ask if the answer is correct.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">AnswerText.Text</span></td>
+							<td>AnswerText</td>
+							<td>Contains the user’s answer.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">select list item</span></td>
+							<td>Lists</td>
+							<td>Select the current answer from <span class="python">AnswerList</span>.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">global AnswerList</span></td>
+							<td>My Definitions</td>
+							<td>The list to select from.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">global currentQuestionIndex</span></td>
+							<td>My Definitions</td>
+							<td>The question (and answer) number the user is on.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">set RightWrongLabel.Text to</span></td>
+							<td>RightWrongLabel</td>
+							<td>Report the answer here.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">text</span> ("correct!")</td>
+							<td>Text</td>
+							<td>Display this if the answer is right.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">set RightWrongLabel.Text to</span></td>
+							<td>RightWrongLabel</td>
+							<td>Report the answer here.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">text</span> ("incorrect!")</td>
+							<td>Text</td>
+							<td>Display this if the answer is wrong.</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<section class="subsection" data-number="15" data-name="How the Blocks Work">
+
+					<h4>How the Blocks Work</h4>
+
+					<p>As shown in Figure 8-14, the <span class="pBlock">ifelse</span>
+						test asks whether the answer the user entered 
+						(<span class="pBlock">AnswerText.Text</span>) is equal to the
+						<span class="python">currentQuestionIndex</span><em>th</em> item in the
+						<span class="python">AnswerList</span>. 
+						If <span class="python">currentQuestionIndex</span> is 1, the app will compare the user’s answer
+						with the first 
+						item in <span class="python">AnswerList</span>, “Roosevelt.” If
+						<span class="python">currentQuestionIndex</span>is 2, the app will compare the
+						user’s answer with the second answer in the list, “Carter,” and so on. If the 
+						test result is positive, the “then-do” blocks are executed and the
+						<span class="python">RightWrongLabel</span>
+						is set to “correct!” If the test is false, the “else-do” blocks are executed and the 
+						<span class="python">RightWrongLabel</span> is set to “incorrect!”</p>
+
+<!-- Page 127 -->
+
+					<div class="pagebreak">
+						<span class="pageNumber"> 127 </span> Checking the User's Answers
+					</div>
+
+					<figure>
+						<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch08img15.png">
+						</div>
+						<figcaption>Figure 8-14. Checking the answer</figcaption>
+					</figure>
+
+					<div class="test_your_app">
+							<img src="/contents/appinventor/images/test_phone.jpg">
+							
+								<p class="twoLines"><span class="apptest_header">Test your app.</span>
+									Try answering one of the questions. It should report 
+									whether or not you answered the question exactly as specified in the 
+									<span class="python normalFont">AnswerList</span>. Test with both a correct and
+									incorrect answer. You’ll 
+									likely notice that for an answer to be marked as correct, it has to be 
+									an exact match (meaning case-specific and including any punctua-tion or spaces)
+									to what you entered in the <span class="python">AnswerList</span>. Be sure to 
+									also test that things work on successive questions.</p>
+					</div>
+					
+					<div class="rightfig">
+						<img src="/contents/appinventor/images/ch08img16.png">
+						<figcaption>Figure 8-15. The first answer and “correct!” still appear when user
+							moves to the next question.</figcaption>
+					</div>
+					
+					<p>The app should work, but you might notice that 
+						when you click the <span class="python">NextButton</span>, the “correct!” or 
+						“incorrect!” text and the previous answer are still 
+						there, as shown in Figure 8-15, even though you’re 
+						looking at the next question. It’s fairly innocuous, 
+						but your app users will definitely notice such user 
+						interface issues.
+						To blank out the <span class="python">RightWrongLabel</span> and the 
+						<span class="python">AnswerText</span>, you’ll put the blocks listed in Table 8-9 
+						within the <span class="pBlock">NextButton.Click</span> event handler.</p>
+
+					<div class="clear"></div>
+
+<!-- Page 128 -->
+
+					<div class="pagebreak">
+						<span class="pageNumber"> 128 </span> Chapter 8: Presidents Quiz
+					</div>
+
+					<p class="caption">Table 8-9.Blocks to clear the RightWrongLabel</span>
+
+					<table>
+						<thead>
+							<tr>
+								<th>Block type</th>
+								<th>Drawer</th>
+								<th>Purpose</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><span class="pBlock">set RightWrongLabel.Text to</span></td>
+								<td>RightWrongLabel</td>
+								<td>This is the label to blank out.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">text</span> ("")</td>
+								<td>Text</td>
+								<td>When the user clicks <span class="python">NextButton</span>, erase the previous answer’s =
+									feedback</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">set AnswerText.Text to</span></td>
+								<td>AnswerText</td>
+								<td>The user’s answer from the previous question.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">text</span> ("")</td>
+								<td>Text</td>
+								<td>When the user clicks the <span class="python">NextButton</span>, erase the previous answer.</td>
+							</tr>
+						</tbody>
+					</table>
+
+				</section> <!-- Section 15, How the Blocks Work -->												
+
+				<section class="subesction" data-number="16" data-name="How the Blocks Work">
+
+					<h4>How the Blocks Work</h4>
+
+					<p>As shown in Figure 8-16, when the user clicks the <span class="python">NextButton</span>, he is moving on 
+						to the next question, so the top two rows of the event handler blank out the 
+						<span class="python">RightWrongLabel</span> and the <span class="python">AnswerText</span>.</p>
+
+					<figure>
+						<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch08img17.png">
+						</div>
+						<figcaption>Figure 8-16. Blanking out the answer and correct/incorrect label for the next
+							question</figcaption>
+					</figure>
+
+					<div class="test_your_app">
+						<img src="/contents/appinventor/images/test_phone.jpg">
+						
+						<p><span class="apptest_header">Test your app.</span>Answer a question and click “Submit”, then click the 
+							<span class="python normalFont">NextButton</span>. Did your previous answer and its feedback
+							disappear?</p>
+
+						<div class="clear"></div>
+					</div>
+
+				</section> <!-- Section 16, How the Blocks Work -->
+
+			</section> <!-- Section 14, Checking the User's Answers -->
+
+<!-- Page 129 -->
+
+			<section class="section" data-number="17" data-name="The Complete App: The Presidents Quiz">
+
+				<div class="pagebreak">
+					<span class="pageNumber"> 129 </span> The Complete App: The Presidents Quiz
+				</div>
+
+				<p>Figure 8-17 shows the final block configuration for the Presidents Quiz.</p>
+
+				<figure>
+					<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch08img18.png">
+					</div>
+					<figcaption>Figure 8-17. The blocks for the Presidents Quiz</figcaption>
+				</figure>
+
+			</section> <!-- Section 17, The Complete App: The Presidents Quiz -->
+
+<!-- Page 130 -->
+
+			<section class="section" data-number="18" data-name="Variations">
+
+				<div class="pagebreak">
+					<span class="pageNumber"> 130 </span> Chapter 8: Presidents Quiz
+				</div>
+
+				<h3>Variations</h3>
+
+				<p>Once you get this quiz working, you might want to explore some variations. For example:</p>
+
+				<ul>
+					<li>Instead of just showing images for each question, try playing a sound clip or a 
+						short video. With sound, you can turn your quiz into a Name That Tune app.</li>
+					<li>The quiz is very rigid in terms of what it accepts as a valid answer. There are a 
+						number of ways to modify this. One is to use the <span class="pBlock">text.contains</span> block to see if 
+						the user’s answer is contained in the actual answer. Another option is to provide 
+						multiple answers for each question, and check by iterating (<span class="pBlock">foreach</span>) through 
+						them to see if any match. You could also figure out how to deal with any extra 
+						spaces your user entered in the answer or allow upper- or lowercase characters 
+						(i.e., make the answers case-insensitive).</li>
+					<li>Transform the quiz so that it is multiple choice. You’ll need an additional list to 
+						hold the answer choices for each question. The possible answers will be a list of 
+						lists, with each sublist holding the answer choices for a particular question. Use 
+						the <span class="python">ListPicker</span> component to allow the user to choose an answer. You can read 
+						more about lists in Chapter 19.</li>
+				</ul>
+
+			</section> <!-- Section 18, Variations -->
+
+			<section class="section" data-number="19" data-name="Summary">
+
+				<h3>Summary</h3>
+
+				<p>Here are some of the ideas we’ve covered in this tutorial:</p>
+
+				<ul>
+					<li>Separate an app into its data (often stored in a list) and its event handlers. Use 
+						an <span class="pBlock">ifelse</span> block to check conditions. For more information on conditionals, see 
+						Chapter 18.</li>
+					<li>The blocks in event handlers should refer only <em>abstractly</em> to list items and list size 
+						so that the app will work even if the data in the list is changed</li>
+						<li>Index variables track the current position of an item within a list. When you increment
+							them, be careful about using an <span class="pBlock">if</span> block to handle the app’s behavior when 
+						the user reaches the end of the list.</li>
+				</ul>
+
+			</section> <!-- Section 19, Summary -->
+
+	</body>
+</html>

@@ -1,0 +1,25 @@
+/* Style definitions for the notebook printer */
+
+.subsection {
+	
+}
+
+.sectionTitle {
+	font-weight: bold;
+	font-size: 20px;
+	margin-top: 25px;
+}
+
+.notesTitle, .highlightsTitle, .summaryTitle {
+	margin-left: 2em;
+	font-size: 17px;
+	margin-top: 10px;
+}
+
+.note, .highlight, .summary {
+	margin-left: 4em;
+}
+
+.empty {
+	margin-left: 4em;
+}

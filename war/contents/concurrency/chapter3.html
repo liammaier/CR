@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h1>3</h1>
+
+				<h2>Concurrent Execution</h2>
+
+				<div class="border"></div>
+
+				<p><span class="first-sentence">The execution of a concurrent program consists of multiple processes active at the same time.</span> As discussed in the last chapter, each process is the execution of a sequential program. A process progresses by submitting a sequence of instructions to a processor for execution. If the computer has multiple processors then instructions from a number of processes, equal to the number of physical processors, can be executed at the same time. This is sometimes referred to as parallel or real concurrent execution. However, it is usual to have more active processes than processors. In this case, the available processors are switched between processes. Figure 3.1 depicts this switching for the case of a single processor supporting three processes, <em>A</em>, <em>B</em> and <em>C</em>. The solid lines represent instructions from a process being executed on the processor. With a single processor, each process makes progress but, as depicted in Figure 3.1, instructions from only one process at a time can be executed.</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure3-1.png">
+					<figcaption><strong>Figure 3.1</strong> Process switching.</figcaption>
+				</figure>
+
+				<p class="i">The switching between processes occurs voluntarily or in response to interrupts. Interrupts signal external events such as the completion of an I/O operation or a clock tick to the processor. As can be seen from Figure 3.1, processor switching does not affect the order of instructions executed by each process. The processor executes a sequence of instructions which is an <em>interleaving</em> of the instruction</p>
+
+				<div class="pagebreak pageNumber">38</div>
+
+				<p>sequences from each individual process. This form of concurrent execution using interleaving is sometimes referred to as pseudo-concurrent execution since instructions from different processes are not executed at the same time but are interleaved. We use the terms <em>parallel</em> and <em>concurrent</em> interchangeably and usually do not distinguish between real and pseudo-concurrent execution since, in general, the same programming principles and techniques are applicable to both physically (real) concurrent and interleaved execution. In fact, we always model concurrent execution as interleaved whether or not implementations run on multiple processors.</p>
+
+				<p class="i">This chapter describes how programs consisting of multiple processes are modeled and illustrates the correspondence between models and implementations of concurrent programs by a multi-threaded Java example.</p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Modeling Concurrency">
+
+				<h3>3.1 Modeling Concurrency</h3>
+
+				<p><span class="first-sentence">In the previous chapter, we modeled a process abstractly as a state machine that proceeds by executing atomic actions, which transform its state.</span> The execution of a process generates a sequence (trace) of atomic actions. We now examine how to model systems consisting of multiple processes.</p>
+
+				<p class="i">The first issue to consider is how to model the speed at which one process executes relative to another. The relative speed at which a process proceeds depends on factors such as the number of processors and the scheduling strategy -how the operating system chooses the next process to execute. In fact, since we want to design concurrent programs which work correctly independently of the number of processors and the scheduling strategy, we choose not to model relative speed but state simply that processes execute at arbitrary relative speeds. This means that a process can take an arbitrarily long time to proceed from one action to the next. We abstract away from execution time. This has the disadvantage that we can say nothing about the real-time properties of programs but has the advantage that we can verify other properties independently of the particular configuration of the computer and its operating system. This independence is clearly important for the portability of concurrent programs.</p>
+
+				<p class="i">The next issue is how to model concurrency or parallelism. Is it necessary to model the situation in which actions from different processes can be executed simultaneously by different processors in addition to the situation in which concurrency is simulated by interleaved execution? We choose always to model concurrency using interleaving. An action <em>a</em> is concurrent with another action <em>b</em> if a model permits the actions to occur in either the order <em>a</em> &rarr; <em>b</em> or the order <em>b</em> &rarr; <em>a</em>. Since we do not represent time in the model, the fact that the event <em>a</em> actually occurs at the same time as event <em>b</em> does not affect the properties we can assert about concurrent executions.</p>
+
+				<div class="pagebreak pageNumber">39</div>
+
+				<p class="i">Finally, having decided on an interleaved model of concurrent execution, what can we say about the relative order of actions from different processes in the interleaved action trace representing the concurrent program execution? We know that the actions from the same process are executed in order. However, since processes proceed at arbitrary relative speeds, actions from different processes are arbitrarily interleaved. Arbitrary interleaving turns out to be a good model of concurrent execution since it abstracts the way processors switch between processes as a result of external interrupts. The timing of interrupts relative to process execution cannot in general be predetermined since actions in the real world cannot be predicted exactly - we cannot foretell the future.</p>
+
+				<p class="i">The concurrent execution model in which processes perform actions in an arbitrary order at arbitrary relative speeds is referred to as an <em>asynchronous</em> model of execution. It contrasts with the <em>synchronous</em> model in which processes perform actions in simultaneous execution steps, sometimes referred to as lock-step.</p>
+
+				<section class="subsection" data-number="2" data-name="Parallel Composition">
+
+					<h4>3.1.1 Parallel Composition</h4>
+
+					<div class="definition">If <code>P</code> and <code>Q</code> are processes then ( <code>P||Q</code>) represents the concurrent execution of <code>P</code> and <code>Q</code>. The operator <code>||</code> is the parallel composition operator.</div>
+
+					<p><span class="first-sentence">Parallel composition yields a process, which is represented as a state machine in the same way as any other process.</span> The state machine representing the composition generates all possible interleavings of the traces of its constituent processes. For example, the process:</p>
+
+					<pre>
+ITCH = (scratch -> STOP).
+					</pre>
+
+					<p>has a single trace consisting of the action <code>scratch</code>. The process:</p>
+
+					<pre>
+CONVERSE = (think -> talk -> STOP).
+					</pre>
+
+					<p>has the single trace <code>think &rarr; talk</code>. The composite process:</p>
+
+					<pre>
+|| CONVERSE_ITCH = (ITCH || CONVERSE).
+					</pre>
+
+					<p>has the following traces:</p>
+
+					<pre>
+think &rarr; talk &rarr; scratch
+think &rarr; scratch &rarr; talk
+scratch &rarr; think &rarr; talk
+					</pre>
+
+					<div class="pagebreak pageNumber">40</div>
+
+					<p>The state machines corresponding to <code>ITCH, CONVERSE</code> and <code>CONVERSE_ITCH</code>
+					are depicted in Figure 3.2. The state machine representing the composition is
+					formed by the Cartesian product of its constituents. For example, if <code>ITCH</code> is in
+					<em>state(i)</em> and <code>CONVERSE</code> is in <em>state(j)</em>, then this combined state is represented by <code>CONVERSE_ITCH</code> in <em>state(&lt;i,j&gt;)</em>. So if <code>CONVERSE</code> has performed the <code>think</code> action and is in <em>state</em>(1) and <code>ITCH</code> performs its <code>scratch</code> action and is in <em>state</em>(1) then the state representing this in the composition is <em>state</em>( &lt;1,1&gt;). This is depicted as <em>state</em>(4) of the composition. We do not manually compute the composite state machines in the rest of the book, since this would be tedious and error-prone. Compositions are computed by the <em>LTSA</em> tool and the interested reader may use it to verify that the compositions depicted in the text are in fact correct.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-2.png">
+						<figcaption><strong>Figure 3.2</strong> Composition <code>CONVERSE_ITCH</code>.</figcaption>
+					</figure>
+
+					<p>From Figure 3.2, it can be seen that the action <code>scratch</code> is concurrent with both <code>think</code> and <code>talk</code> as the model permits these actions to occur in any order while retaining the constraint that <code>think</code> must happen before <code>talk</code>. In other words, one must think before talking but one can scratch at any point!</p>
+
+					<p class="i">Composite process definitions are always preceded by || to distinguish them from primitive process definitions. As described in the previous chapter, primitive</p>
+
+					<div class="pagebreak pageNumber">41</div>
+
+					<p>processes are defined using action prefix and choice while composite processes are defined using only parallel composition. Maintaining this strict distinction between primitive and composite processes is required to ensure that the models described by <em>FSP</em> are finite.</p>
+
+					<p class="i">As a further example, the following processes model a clock radio which incorporates two independent activities: a clock which ticks and a radio which can be switched on and off. The state machine for the composition is depicted in Figure 3.3.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-3.png">
+						<figcaption><strong>Figure 3.3</strong> Composition <code>CLOCK_RADIO</code>.</figcaption>
+					</figure>
+
+					<pre>
+CLOCK = (tick -> CLOCK).
+RADIO = (on -> off -> RADIO).
+
+||CLOCK_RADIO = (CLOCK || RADIO).
+					</pre>
+
+					<p>Examples of traces generated by the state machine of Figure 3.3 are given below. The LTSA Animator can be used to generate such traces.</p>
+
+					<pre>
+on &rarr; tick &rarr; tick &rarr; off &rarr; tick &rarr; tick &rarr; tick &rarr; on &rarr; off &hellip;
+tick &rarr; on &rarr; off &rarr; on &rarr; off &rarr; on &rarr; off &rarr; tick &rarr; on &rarr; tick &hellip;
+					</pre>
+
+					<p>The parallel composition operator obeys some simple algebraic laws:</p>
+
+					<pre>
+<strong>Commutative:</strong> (P||Q) = (Q||P)
+<strong>Associative:</strong> (P||(Q||R)) = ((P||Q)||R)
+					</pre>
+
+					<p>Taken together these mean that the brackets can be dispensed with and the order that processes appear in the composition is irrelevant.</p>
+
+				</section>
+
+				<section class="subsection" data-number="3" data-name="Shared Actions">
+
+					<h4>3.1.2 Shared Actions</h4>
+
+					<p><span class="first-sentence">The examples in the previous section are all compositions of processes with disjoint alphabets.</span> That is, the processes in a composition do not h!lve any actions in common. If processes in a composition do have actions in common, these</p>
+
+					<div class="pagebreak pageNumber">42</div>
+
+					<p>actions are said to be <em>shared</em>. Shared actions are the way that process interaction is modeled. While unshared actions may be arbitrarily interleaved, <em>a shared action must be executed at the same time by all the processes that participate in that shared action</em>. The following example is a composition of processes that share the action <code>meet</code>.</p>
+
+					<pre>
+BILL = (play -> meet -> STOP).
+BEN  = (work -> meet -> STOP).
+||BILL_BEN = (BILL || BEN).
+					</pre>
+
+					<p>The possible execution traces of the composition are:</p>
+
+					<pre>
+play &rarr; work &rarr; meet
+work &rarr; play &rarr; meet
+					</pre>
+
+					<p>The unshared actions, <code>play</code> and <code>work</code>, are concurrent and thus may be executed in any order. However, both of these actions are constrained to happen before the shared action <code>meet</code>. The shared action synchronizes the execution of the processes <code>BILL</code> and <code>BEN</code>. The state machine for the composite process is depicted in Figure 3.4.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-4.png">
+						<figcaption><strong>Figure 3.4</strong> Composition <code>BILL_BEN</code>.</figcaption>
+					</figure>
+
+					<p>The next example consists of a process that manufactures an item and then signals that the item is ready for use by a shared <code>ready</code> action. A user can only use the item after the <code>ready</code> action occurs.</p>
+
+					<pre>
+MAKER = (make -> ready -> MAKER).
+USER  = (ready -> use -> USER).
+
+||MAKER_USER = (MAKER || USER).
+					</pre>
+
+					<div class="pagebreak pageNumber">43</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-5.png">
+						<figcaption><strong>Figure 3.5</strong> Composition <code>MAKER_USER</code>.</figcaption>
+					</figure>
+
+					<p>From Figure 3.5, it can be seen that the following are possible execution traces:</p>
+
+					<pre>
+make &rarr; ready &rarr; use &rarr; make &rarr; ready &rarr; &hellip;
+make &rarr; ready &rarr; make &rarr; use &rarr; ready &hellip;
+					</pre>
+
+					<p>After the initial item is manufactured and becomes <code>ready</code>, manufacture and use can proceed in parallel since the actions <code>make</code> and <code>use</code> can occur in any order. However, it is always the case that an item is made before it is used since the first action is <code>make</code> in all traces. The second trace shows that two items can be made before the first is used. Suppose that this is undesirable behavior and we do not wish the <code>MAKER</code> process to get ahead in this way. The solution is to modify the model so that the user indicates that the item is used. This <code>used</code> action is shared with the <code>MAKER</code> who now cannot proceed to manufacture another item until the first is used. This second version is shown below and in Figure 3.6.</p>
+
+					<pre>
+MAKERv2 = (make -> ready -> used -> MAKERv2).
+USERv2  = (ready -> use -> used -> USERv2).
+
+||MAKER_USERv2 = (MAKERv2 || USERv2).
+					</pre>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-6.png">
+						<figcaption><strong>Figure 3.6</strong> Composition <code>MAKER_USERv2</code>.</figcaption>
+					</figure>
+
+					<p>The interaction between <code>MAKER</code> and <code>USER</code> in this second version is an example of a <em>handshake</em>, an action which is acknowledged by another. As we see in the chapters to follow, handshake protocols are widely used to structure interactions between processes. Note that our model of interaction does not distinguish which process instigates a shared action even though it is natural to think of the <code>MAKER</code> process instigating the <code>ready</code> action and the <code>USER</code> process instigating the <code>used</code> action.</p>
+
+					<div class="pagebreak pageNumber">44</div>
+
+					<p>However, as noted previously, an output action instigated by a process does not usually form part of a choice while an input action may.</p>
+
+					<p class="i">The examples of synchronization so far are between two processes; however, many processes can engage in a shared action. The next example illustrates the use of multi-party synchronization in a small manufacturing system which produces two different parts and assembles the parts into a product. Assembly cannot take place until both parts are ready. Again, makers are not permitted to get ahead of users. The state machine is depicted in Figure 3.7.</p>
+
+					<pre>
+MAKE_A   = (makeA -> ready -> used -> MAKE_A).
+MAKE_B   = (makeB -> ready -> used -> MAKE_B).
+ASSEMBLE = (ready -> assemble -> used -> ASSEMBLE).
+
+||FACTORY = (MAKE_A || MAKE_B || ASSEMBLE).
+					</pre>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-7.png">
+						<figcaption><strong>Figure 3.7</strong> Composition <code>FACTORY</code>.</figcaption>
+					</figure>
+
+					<p>Since a parallel composition of processes is itself a process, called a composite process, it can be used in the definition of further compositions. We can restructure the previous example by creating a composite process from <code>MAKE_A</code> and <code>MAKE_B</code> as follows:</p>
+
+					<pre>
+MAKE_A = (makeA -> ready -> used -> MAKE_A).
+MAKE_B = (makeB -> ready -> used -> MAKE_B).
+
+||MAKERS = (MAKE_A || MAKE_B).
+					</pre>
+
+					<p>The rest of the factory description now becomes:</p>
+
+					<pre>
+ASSEMBLE = ready -> assemble -> used -> ASSEMBLE).
+
+||FACTORY = (MAKERS || ASSEMBLE).
+					</pre>
+
+					<div class="pagebreak pageNumber">45</div>
+
+					<p>The state machine remains that depicted in Figure 3.7. Substituting the definition for <code>MAKERS</code> in <code>FACTORY</code> and applying the commutative and associative laws for parallel composition stated in the last section results in the original definition for <code>FACTORY</code> in terms of primitive processes. The <em>LTSA</em> tool can also be used to confirm that the same state machine results from the two descriptions.</p>
+
+				</section>
+
+				<section class="subsection" data-number="4" data-name="Process Labeling">
+
+					<h4>3.1.3 Process Labeling</h4>
+
+					<p><span class="first-sentence">Given the definition of a process, we often want to use more than one copy of that process in a program or system model.</span> For example, given the definition for a switch:</p>
+
+					<pre>
+SWITCH = (on -> off -> SWITCH).
+					</pre>
+
+					<p>we may wish to describe a system that is the composition of two distinct switches. However, if we describe this system as (<code>SWITCH || SWITCH</code>), the composition is indistinguishable from a single switch since the two switch processes synchronize on their shared actions <code>on</code> and <code>off</code>. We must ensure that the actions of each <code>SWITCH</code> process are not shared, i.e. they must have disjoint labels. To do this we use the process labeling construct.</p>
+
+					<div class="definition"><code>a:P</code> prefixes each action label in the alphabet of <code>P</code> with the label "<code>a</code>".</div>
+
+					<p>A system with two switches can now be defined as:</p>
+
+					<pre>
+||TWO_SWITCH = (a:SWITCH || b:SWITCH).
+					</pre>
+
+					<p>The state machine representation for the processes <code>a:SWITCH</code> and <code>b:SWITCH</code> is given in Figure 3.8. It is clear that the alphabets of the two processes are disjoint,
+					i.e. <code>{a.on, a.off}</code> and <code>{b.on, b.off}</code>.</p>
+
+					<p class="i">Using a parameterized composite process, <code>SWITCHES</code>, we can describe an array of switches in <em>FSP</em> as follows:</p>
+
+					<pre>
+||SWITCHES(N=3) = (<strong>forall</strong>[i:1..N) s[i]:SWITCH).
+					</pre>
+
+					<p>An equivalent but shorter definition is:</p>
+
+					<pre>
+||SWITCHES(N=3) = (s[i:1..N]:SWITCH).
+					</pre>
+
+					<p>Processes may also be labeled by a set of prefix labels. The general form of this prefixing is as follows:</p>
+
+					<div class="pagebreak pageNumber">46</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-8.png">
+						<figcaption><strong>Figure 3.8</strong> Process labeling in <code>TWO_SWITCH</code>.</figcaption>
+					</figure>
+
+					<div class="definition"><code>{a1,..,ax}::P</code> replaces every action label <code>n</code> in the alphabet of <code>P</code> with the labels <code>a1.n,...,ax.n</code>. Further, every transition (<code>n->Q</code>) in the definition of <code>P</code> is replaced with the transitions (<code>{a1.n,...,ax.n}->Q</code>).</div>
+
+					<p>We explain the use of this facility in the following example. The control of a resource is modeled by the following process:</p>
+
+					<pre>
+RESOURCE = (acquire -> release -> RESOURCE).
+					</pre>
+
+					<p>and users of the resource are modeled by the process:</p>
+
+					<pre>
+USER = (acquire -> use -> release -> USER).
+					</pre>
+
+					<p>We wish to model a system consisting of two users that share the resource such that only one user at a time may be using it (called "mutual exclusion"). The two users may be modeled using process labeling as <code>a:USER</code> and <code>b:USER</code>. This means that there are two distinct actions (<code>a.acquire</code> and <code>b.acquire</code>) to obtain the resource and similarly two actions to free it (<code>a.release</code> and <code>b.release</code>). Consequently, <code>RESOURCE</code> must be labeled with the set <code>{a, b}</code> to yield these transitions. The composition is described below.</p>
+
+					<div class="pagebreak pageNumber">47</div>
+
+					<pre>
+||RESOURCE_SHARE = (a:USER || b:USER || {a, b}::RESOURCE).
+					</pre>
+
+					<p>The state machine representations of the processes in the <code>RESOURCE_SHARE</code> model are depicted in Figure 3.9. The effect of process labeling on <code>RESOURCE</code> can be clearly seen. The composite process graph shows that the desired result of allowing only one user to use the resource at a time has been achieved.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-9.png">
+						<figcaption><strong>Figure 3.9</strong> Process labeling in <code>RESOURCE_SHARE</code>.</figcaption>
+					</figure>
+
+					<p>A perceptive reader might notice that our model of the <code>RESOURCE</code> alone would permit one user to acquire the resource and the other to release it! For example, it would permit the following trace:</p>
+
+					<pre>
+a.acquire &rarr; b.release &rarr; &hellip;
+					</pre>
+
+					<p>However, each of the <code>USER</code> processes cannot <code>release</code> the resource until it has succeeded in performing an <code>acquire</code> action. Hence, when the <code>RESOURCE</code> is composed with the <code>USER</code> processes, this composition ensures that only the same user that acquired the resource can release it. This is shown in the composite process <code>RESOURCE_SHARE</code> in Figure 3.9. This can also be confirmed using the LTSA Animator to run through the possible traces.</p>
+
+					<div class="pagebreak pageNumber">48</div>
+
+				</section>
+
+				<section class="subsection" data-number="5" data-name="Relabeling">
+
+					<h4>3.1.4 Relabeling</h4>
+
+					<div class="definition">Relabeling functions are applied to processes to change the names of action labels. The general form of the relabeling function is:<br/><br/>
+					/{<em>newlabel</em>_1/<em>oldlabel</em>_1, ... <em>newlabel</em>_n/<em>oldlabel</em>_n}.</div>
+
+					<p><span class="first-sentence">Relabeling is usually done to ensure that composite processes synchronize on the desired actions.</span> A relabeling function can be applied to both primitive and composite processes. However, it is generally used more often in composition.</p>
+
+					<p class="i">A server process that provides some service and a client process that invokes the service are described below:</p>
+
+					<pre>
+CLIENT = (call -> wait -> continue -> CLIENT).
+SERVER = (request -> service -> reply -> SERVER).
+					</pre>
+
+					<p>As described, the <code>CLIENT</code> and <code>SERVER</code> have disjoint alphabets and do not interact in any way. However, using relabeling, we can associate the <code>call</code> action of the <code>CLIENT</code> with the <code>request</code> action of the <code>SERVER</code> and similarly the <code>reply</code> and <code>wait</code> actions. The composition is defined below.</p>
+
+					<pre>
+||CLIENT_SERVER = (CLIENT || SERVER)
+                  /{call/request, reply/wait}.
+					</pre>
+
+					<p>The effect of applying the relabeling function can be seen in the state machine representations of Figure 3.10. The label <code>call</code> replaces <code>request</code> in the description of <code>SERVER</code> and <code>reply</code> replaces <code>wait</code> in the description of <code>CLIENT</code>.</p>
+
+					<p class="i">An alternative formulation of the client-server system is described below using qualified or prefixed labels.</p>
+
+					<pre>
+SERVERv2 = (accept.request 
+           -> service -> accept.reply -> SERVERv2).
+CLIENTv2 = (call.request 
+           -> call.reply -> continue -> CLIENTv2).
+
+||CLIENT_SERVERv2 = (CLIENTv2 || SERVERv2)
+                    /{call/accept}.
+			  		</pre>
+
+					<p>The relabeling function <code>/{call/accept}</code> replaces any label prefixed by <code>accept</code> with the same label prefixed by <code>call</code>. Thus <code>accept.request</code> becomes <code>call.request</code> and <code>accept.reply</code> becomes <code>call.reply</code> in the composite</p>
+
+					<div class="pagebreak pageNumber">49</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-10.png">
+						<figcaption><strong>Figure 3.10</strong> Relabeling in <code>CLIENT_SERVER</code>.</figcaption>
+					</figure>
+
+					<p>process <code>CLIENT_SERVERv2</code>. This relabeling by prefix is useful when a process has more than one interface. Each interface consists of a set of actions and can be related by having a common prefix. If required for composition, interfaces can be relabeled using this prefix as in the client-server example.</p>
+
+				</section>
+
+				<section class="subsection" data-number="6" data-name="Hiding">
+
+					<h4>3.1.5 Hiding</h4>
+
+					<div class="definition">When applied to a process <code>P</code>, the hiding operator <code>{a<sub>1</sub>..a<sub>x</sub>}</code> removes the action names <code>a<sub>1</sub>..a<sub>x</sub></code> from the alphabet of <code>P</code> and makes these concealed actions "silent". These silent actions are labeled <code>tau</code>. Silent actions in different processes are not shared.</div>
+
+					<p><span class="first-sentence">The hidden actions become unobservable in that they cannot be shared with another process and so cannot affect the execution of another process.</span> Hiding is essential in reducing the complexity of large systems for analysis purposes since, as we see later, it is possible to <em>minimize</em> the size of state machines to remove tauactions. Hiding can be applied to both primitive and composite processes but is generally used in defining composite processes. Sometimes it is more convenient to state the set of action labels which are visible and hide all other labels.</p>
+
+					<div class="pagebreak pageNumber">50</div>
+
+					<div class="definition">When applied to a process <code>P</code>, the interface operator <code>@{a<sub>1</sub>..a<sub>x</sub>}</code> hides all actions in the alphabet of <code>P</code> not labeled in the set <code>a<sub>1</sub>..a<sub>x</sub></code>.</div>
+
+					<p>The following definitions lead to the state machine depicted in Figure 3.11:</p>
+
+					<pre>
+USER = (acquire -> use -> release -> USER)
+       \{use}.
+USER = (acquire -> use -> release -> USER)
+       @{acquire, release}.
+					</pre>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-11.png">
+						<figcaption><strong>Figure 3.11</strong> Hiding applied to <code>USER</code>.</figcaption>
+					</figure>
+
+					<p>Minimization of <code>USER</code> removes the hidden <code>tau</code> action to produce a state machine with equivalent observable behavior, but fewer states and transitions (Figure 3.12). <em>LTSA</em> can be used to confirm this.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-12.png">
+						<figcaption><strong>Figure 3.12</strong> Minimized <em>LTS</em> for <code>USER</code>.</figcaption>
+					</figure>
+
+				</section>
+
+				<section class="subsection" data-number="7" data-name="Structure Diagrams">
+
+					<h4>3.1.6 Structure Diagrams</h4>
+
+					<p><span class="first-sentence">We have used state machine diagrams to depict the dynamic behavior of processes.</span> State machine diagrams represent the dynamic process operators, action prefix and choice. However, these diagrams do not capture the static structure of a model. While the result of applying parallel composition can be described as a</p>
+
+					<div class="pagebreak pageNumber">51</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-13.png">
+						<figcaption><strong>Figure 3.13</strong> Structure diagram conventions.</figcaption>
+					</figure>
+
+					<p>state machine (since it is a process), the parallel composition expression itself is not represented. Parallel composition, relabeling and hiding are static operators that describe the structure of a model in terms of primitive processes and their interactions. Composition expressions can be represented graphically as shown in Figure 3.13.</p>
+
+					<p class="i">A process is represented as a box with visible actions shown as circles on the perimeter. A shared action is depicted as a line connecting two action circles, with relabeling if necessary. A line joining two actions with the same name indicates only a shared action since relabeling is not required. A composite process is the box enclosing a set of process boxes. The alphabet of the composite is again indicated by action circles on the perimeter. Lines joining these circles to internal action circles show how the composite's actions are defined by primitive processes. These lines may also indicate relabeling functions if the composite name for an action differs from the internal name. Those actions that appear internally, but are not joined to a composite action circle, are hidden. This is the case for action <code>a</code> inside <code>S</code> in Figure 3.13. The processes inside a composite may, of course, themselves be composite and have structure diagram descriptions.</p>
+
+					<p class="i">We sometimes use a line in a structure diagram to represent a set of shared actions that have a common prefix label. The line is labeled with the prefix rather than explicitly by the actions. The example in Figure 3.14 uses the single-slot buffer of section 2.1.3 to construct a buffer that can store two values. A definition of the single-slot buffer is given below.</p>
+
+					<pre>
+<strong>range</strong> T = 0..3
+BUFF = (in[i:T] -> out[i] -> BUFF).
+					</pre>
+
+					<div class="pagebreak pageNumber">52</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-14.png">
+						<figcaption><strong>Figure 3.14</strong> Two-slot buffer <code>TWOBUF</code>.</figcaption>
+					</figure>
+
+					<p>Each of the labels in the diagram of Figure 3.14 - <code>in</code>, <code>out</code> and <code>a.out</code> -represents the set of labels <code>in[i:T]</code>, <code>out[i:T]</code> and <code>a.out[i:T]</code>, respectively.</p>
+
+					<p class="i">Sometimes we omit the label on a connection line where it does not matter how relabeling is done since the label does not appear in the alphabet (interface) of the composite. For example, in Figure 3.14, it would not matter if we omitted the label
+					<code>a.out</code> and used <code>b.in/a.out</code> instead of <code>a.out/b.in</code> as shown. We also omit labels where all the labels are the same, i.e. no relabeling function is required.</p>
+
+					<p class="i">Lastly, we use a diagrammatic convention to depict the common situation of resource sharing as described in section 3.1.3. The resource-sharing model is repeated in Figure 3.15 together with its structure diagram representation. The resource is not anonymous as before; it is named <code>printer</code>. Sharing is indicated by enclosing a process in a rounded rectangle. Processes, which share the enclosed process, are connected to it by thick lines. The lines in Figure 3.15 could be labeled
+					<code>a.printer</code> and <code>b.printer</code>; however these labels are omitted as a relabeling function is not required.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="8" data-name="Multi-Threaded Programs">
+
+				<h3>3.2 Multi-Threaded Programs</h3>
+
+				<p><span class="first-sentence">Concurrency occurs in Java programs when more than one thread is alive.</span> Remember from Chapter 2 that a thread is alive if it has started but has not yet terminated. In this section, we present an example of a simple Java multi-threaded program that has two concurrently active threads in addition to the main thread of execution present in every Java program. The threads in the example program do not interact directly. The topic of how threads interact is left to succeeding chapters.</p>
+
+				<div class="pagebreak pageNumber">53</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure3-15.png">
+					<figcaption><strong>Figure 3.15</strong> Resource-sharing <code>PRINTER_SHARE</code>.</figcaption>
+				</figure>
+
+				<section class="subsection" data-number="9" data-name="ThreadDemo Example - Model">
+
+					<h4>3.2.1 ThreadDemo Example - Model</h4>
+
+					<p><span class="first-sentence">The example program drives the display depicted in Figure 3.16.</span> Each of the threads, A and B, can be run and paused by pressing the appropriate button. When a thread is run, the display associated with it rotates. Rotation stops when the thread is paused. When a thread is paused, its background color is set to red and when it is running, the background color is set to green. The threads do not</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-16.png">
+						<figcaption><strong>Figure 3.16</strong> <code>ThreadDemo</code> display.</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">54</div>
+
+					<p>interact with each other; however they do interact with the Java main thread of execution when the buttons are pressed.</p>
+
+					<p class="i">The behavior of each of the two threads in the applet is modeled by the following <code>ROTATOR</code> process:</p>
+
+					<pre>
+ROTATOR = PAUSED,
+PAUSED  = (run -> RUN | pause -> PAUSED),
+RUN     = (pause -> PAUSED | {run, rotate} -> RUN).
+					</pre>
+
+					<p>The process cannot perform the <code>rotate</code> action until it moves into the <code>RUN</code> state. This can only occur after the <code>run</code> action, which models pushing the <strong>Run</strong> button. When the <code>pause</code> action occurs - modeling the <strong>Pause</strong> button - the process moves back to the <code>PAUSED</code> state in which the <code>rotate</code> action cannot take place. The model implies that the implementation of <code>ROTATOR</code> runs forever -there is no way of stopping it. It is not good practice to program threads which run forever; they should terminate in an orderly manner when, for example, the <code>Applet.stop()</code> method is called by a browser. As we discussed in the previous chapter, the designers of Java do not recommend using <code>Thread.stop()</code> to terminate the execution of a thread. Instead, they suggest the use of <code>Thread.interrupt()</code> which raises the <code>InterruptedException</code> that allows a thread to clean up before terminating. We can include termination in the <code>ROTATOR</code> process as shown below. The corresponding <em>LTS</em> is depicted in Figure 3.17.</p>
+
+					<pre>
+ROTATOR = PAUSED,
+PAUSED  = (run -> RUN | pause -> PAUSED
+          |interrupt -> STOP),
+RUN     = (pause -> PAUSED | {run, rotate} -> RUN
+          |interrupt -> STOP).
+          			</pre>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-17.png">
+						<figcaption><strong>Figure 3.17</strong> <code>ROTATOR</code>.</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">55</div>
+
+					<p>This revised model includes the effect of an interrupt action. Whether the <code>ROTATOR</code> process is in the paused or running state, the interrupt takes it into a final state in which no further actions are possible, i.e. it is terminated. The model for the <code>ThreadDemo</code> program consisting of two copies or instances of the <code>ROTATOR</code> thread is shown in Figure 3.18.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-18.png">
+						<figcaption><strong>Figure 3.18</strong> <code>ThreadDemo</code> model.</figcaption>
+					</figure>
+
+					<p>We have relabeled the <code>a.interrupt</code> and <code>b.interrupt</code> actions to be the same action <code>stop</code>, indicating that we always interrupt both threads at the same time, when the browser calls <code>Applet.stop()</code>. Having constructed the model, we can animate it using the <em>LTSA</em> tool to check that its behavior corresponds to the behavior we expect of the <code>ThreadDemo</code> applet. Figure 3.19 shows a screen shot of the LTSA Animator window. As described in Chapter 2, those actions that can be chosen for execution are ticked. In the figure, the action <code>a.run</code> has put process <code>a</code> in the state where <code>a.rotate</code> actions can occur while process <code>b</code> cannot perform its
+					<code>b.rotate</code> action since <code>b.run</code> has not occurred.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-19.png">
+						<figcaption><strong>Figure 3.19</strong> LTSA Animator window for <code>THREAD_DEMO</code>.</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">56</div>
+
+					<p class="i">In fact, in the implementation, the environment is provided by the main thread of execution of the Java program. We can of course also model this main thread as a process that shares the actions. The display can rotate at any time and the buttons can be pushed at any time. Consequently, this main thread can be modeled as:</p>
+
+					<pre>
+MAIN = ({a.rotate, a.run, a.pause, stop,
+         b.rotate, b.run, b.pause} -> MAIN).
+         			</pre>
+
+					<p>Composing <code>MAIN</code> with <code>THREAD_DEMO</code> does not modify the behavior of <code>THREAD_DEMO</code> since it does not provide any additional ordering constraints on the actions.</p>
+
+				</section>
+
+				<section class="subsection" data-number="10" data-name="ThreadDemo Example - Implementation">
+
+					<h4>3.2.2 ThreadDemo Example - Implementation</h4>
+
+					<p><span class="first-sentence">The implementation for the process is provided by the <code>Rotator</code> class, which implements the <code>Runnable</code> interface as shown in Program 3.1.</span> The <code>run()</code> method simply finishes if an <code>InterruptedException</code> raised by <code>Thread.interrupt()</code> occurs. As described in the previous chapter, when the <code>run()</code> method exits, the thread which is executing it terminates.</p>
+
+					<pre class="program">
+<strong>class</strong> Rotator <strong>implements</strong> Runnable {
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      <strong>while</strong>(true) ThreadPanel.rotate();
+    } <strong>catch</strong>(InterruptedException e) {}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 3.1</strong> <code>Rotator</code> class.</p>
+
+					<p>The details of suspending and resuming threads when buttons are pressed are encapsulated in the <code>ThreadPanel</code> class. The <code>run()</code> method simply calls <code>ThreadPanel.rotate()</code> to move the display. If the <strong>Pause</strong> button has been pressed, this method suspends a calling thread until <strong>Run</strong> is pressed. We use the <code>ThreadPanel</code> class extensively in programs throughout the book. The methods offered by this class relevant to the current example are listed in Program 3.2.</p>
+
+					<p class="i">The <code>ThreadPanel</code> class manages the display and control buttons for the thread that is created by a call to the <code>start()</code> method. The thread is created from the class <code>DisplayThread</code> which is derived from <code>Thread</code>. The implemention of <code>start()</code> is given below:</p>
+
+					<div class="pagebreak pageNumber">57</div>
+
+					<pre class="program">
+<strong>public class</strong> ThreadPanel <strong>extends</strong> Panel {
+
+  <em>// construct display with title and segment color c</em>
+  <strong>public</strong> ThreadPanel(String title, Color c) {...}
+
+  <em>// rotate display of currently running thread 6 degrees</em>
+  <em>// return value not used in this example</em>
+  <strong>public static</strong> boolean rotate()
+    <strong>throws</strong> InterruptedException {...}
+
+  <em>// create a new thread with target r and start it running</em>
+  <strong>public</strong> void start(Runnable r) {...}
+
+  <em>// stop the thread using Thread.interrupt()</em>
+  <strong>public</strong> void stop() {...}
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 3.2</strong> <code>ThreadPanel</code> class.</p>
+
+					<pre>
+<strong>public</strong> void start(Runnable r) {
+	thread = <strong>new</strong> DisplayThread(canvas, r, ...);
+	thread.start();
+}
+					</pre>
+
+					<p>where <code>canvas</code> is the display used to draw the rotating segment. The thread is terminated by the <code>stop()</code> method using <code>Thread.interrupt()</code> as shown below:</p>
+
+					<pre>
+<strong>public</strong> void stop() {thread.interrupt();}
+					</pre>
+
+					<p><code>ThreadPanel</code> delegates calls to <code>rotate()</code> to <code>DisplayThread</code>. The relationship between these classes, the <code>applet</code> and the <code>Rotator</code> class is depicted in the class diagram of Figure 3.20. Note that <code>rotate()</code> is a static method which determines the particular thread instance to which it applies by calling the method <code>Thread.currentThread()</code>. This returns a reference to the currently running thread, which, of course, is the only thread which can have called the method.</p>
+
+					<p class="i">The <code>Applet</code> class <code>ThreadDemo</code> creates the two <code>ThreadPanel</code> displays when it is initialized and the two threads when it is started. The class is listed in Program 3.3.</p>
+
+					<p class="i">In section 2.2.3, we saw that Java provides a standard set of operations on threads including <code>suspend()</code> and <code>resume()</code> which the reader might surmise have been used to suspend and resume the execution of the threads in response to pushing the buttons. In fact, we cannot use the operations directly in the implementation of the</p>
+
+					<div class="pagebreak pageNumber">58</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure3-20.png">
+						<figcaption><strong>Figure 3.20</strong> <code>ThreadDemo</code> class diagram.</figcaption>
+					</figure>
+
+					<pre class="program">
+<strong>public class</strong> ThreadDemo <strong>extends</strong> Applet {<br/>
+  ThreadPanel A;
+  ThreadPanel B;
+
+  <strong>public</strong> void init() {
+    A = new ThreadPanel("Thread A", Color.blue);
+    B = new ThreadPanel("Thread B", Color.blue);
+    add(A);
+    add(B);
+  }
+
+  <strong>public</strong> void start() {
+    A.start(<strong>new</strong> Rotator());
+    B.start(<strong>new</strong> Rotator());
+  }
+
+  <strong>public</strong> void stop() {
+    A.stop();
+    B.stop();
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 3.3 </strong><code>ThreadDemo</code> applet class.</p>
+
+					<p><code>ThreadDemo</code> program for the following reason. The <code>rotate()</code> method acquires and releases resources from the graphical interface provided by the browser in which the applet runs. If we used <code>suspend()</code>, a thread could be suspended at some arbitrary time when <strong>Pause</strong> was pressed. In particular, it could be suspended while it was holding on to display resources. This can cause some browsers to</p>
+
+					<div class="pagebreak pageNumber">59</div>
+
+					<p>hang or deadlock<sup>1</sup>. Consequently, the threads in the program are suspended using the methods <code>Object.wait()</code> and <code>Object.notify()</code>. We defer an explanation of how these work until Chapter 5 and consider the problem of deadlock in Chapter 6.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="11" data-name="Summary">
+
+				<h3>Summary</h3>
+
+				<p><span class="first-sentence">This chapter has introduced the concept of <em>interleaving</em> both as a way of executing multiple processes on a single processor and as a way of modeling concurrent execution.</span> The chapter has dealt mainly with modeling concurrency:</p>
+
+				<ul>
+
+					<li>The model of concurrency is interleaved and asynchronous. By asynchronous we mean that processes proceed at arbitrary relative speeds and consequently their actions can be arbitrarily interleaved.</li>
+
+					<li>The parallel composition of two or more processes modeled as finite state processes results in a finite state process that can generate all possible interleavings of the execution traces of the constituent processes.</li>
+
+					<li>Process interaction is modeled by shared actions, where a shared action is executed at the same time by all the processes that share the action. A shared action can only occur when all the processes that have the action in their alphabets are ready to participate in it -they must all have the action as an eligible choice.</li>
+
+					<li>Process labeling, relabeling and hiding are all ways of describing and controlling the actions shared between processes. Minimization can be used to help reduce the complexity of systems with hidden actions.</li>
+
+					<li>Parallel composition and the labeling operator describe the static structure of a model. This structure can be represented diagrammatically by structure diagrams.</li>
+
+					<li>Concurrent execution in Java is programmed simply by creating and starting multiple threads.</li>
+
+				</ul>
+
+			</section>
+
+			<section class="section" data-number="12" data-name="Notes and Further Reading">
+
+				<h3>Notes and Further Reading</h3>
+
+				<p><span class="first-sentence">The parallel composition operator used here is from CSP (Hoare, 1985).</span> It is also used in the ISO specification language LOTOS (ISO/IEC, 1988). We have chosen to use explicit process labeling as the sole means of creating multiple copies of a process definition. LOTOS and CSP introduce the interleaving operator "<code>|||</code>"</p>
+
+				<p class="footnote"><sup>1</sup> For just this reason, <code>stop()</code>, <code>suspend()</code>, and <code>resume()</code> are now deprecated.</p>
+
+				<div class="pagebreak pageNumber">60</div>
+
+				<p>which interleaves all actions even if they have the same name. We have found that explicit process labeling clarifies trace information from the <em>LTSA</em> tool. Further, having a single composition operator rather than the three provided by LOTOS is a worthwhile notational simplification. The simple rule that actions with the same name synchronize and those that are different interleave is intuitive for users to grasp.</p>
+
+				<p class="i">Most process calculi have an underlying interleaved model of concurrent execution. The reader should look at the extensive literature on Petri Nets (Peterson, J.L., 1981) for a model that permits simultaneous execution of concurrent actions.</p>
+
+				<p class="i">Forms of action relabeling and hiding are provided in both CSP (Hoare, 1985) and CCS (Milner, 1989). The <em>FSP</em> approach is based on that of CCS, from which the concepts of the silent tau action and observational equivalence also come. Techniques for equivalence testing and minimization can be found in the paper by Kanellakis and Smolka (1990).</p>
+
+				<p class="i">The structure diagrams presented in this chapter are a simplified form of the graphical representation of Darwin (Magee, Dulay and Kramer, 1994; Magee, Dulay, Eisenbach <em>et al</em>., 1995), a language for describing Software Architectures. The Darwin toolset includes a translator from Darwin to <em>FSP</em> composition expressions (Magee, Kramer and Giannakopoulou, 1997).</p>
+
+			</section>
+
+			<section class="section" data-number="13" data-name="Exercises">
+
+				<h3>Exercises</h3>
+
+				<p><span class="first-sentence">Exercises 3.1 to 3.6 are more instructive and interesting if the <em>FSP</em> models are developed using the analyzer tool <em>LTSA</em>.</span></p>
+
+				<ol id="three">
+
+					<li>Show that <code>S1</code> and <code>S2</code> describe the same behavior:</li>
+					<pre>
+P = (a -> b -> P).
+Q = (c -> b -> Q).
+||S1 = (P||Q).
+
+S2 = (a -> c -> b -> S2 | c -> a -> b -> S2).
+					</pre>
+
+					<li><code>ELEMENT = (up -> down -> ELEMENT)</code> accepts an <code>up</code> action and then a <code>down</code> action>. Using parallel composition and the <code>ELEMENT</code> process describe a model that can accept up to four <code>up</code> actions before a <code>down</code> action. Draw a structure diagram for your solution.</li>
+
+					<li>Extend the model of the client-server system described in section 3.1.4 such that more than one client can use the server.</li>
+
+					<li>Modify the model of the client-server system in exercise 3.3 such that the call may terminate with a timeout action rather than a response from the server. What happens to the server in this situation?</li>
+
+					<li>A roller-coaster control system only permits its car to depart when it is full. Passengers arriving at the departure platform are registered with the roller-coaster controller by
+
+						<div class="pagebreak pageNumber">61</div>
+
+					a turnstile. The controller signals the car to depart when there are enough passengers on the platform to fill the car to its maximum capacity of <em>M</em> passengers. The car goes around the roller-coaster track and then waits for another <em>M</em> passengers. A maximum of <em>M</em> passengers may occupy the platform. Ignore the synchronization detail of passengers embarking from the platform and car departure. The roller coaster consists of three processes: <code>TURNSTILE</code>, <code>CONTROL</code> and <code>CAR</code>. <code>TURNSTILE</code> and <code>CONTROL</code> interact by the shared action <code>passenger</code> indicating an arrival and <code>CONTROL</code> and <code>CAR</code> interact by the shared action <code>depart</code> signaling car departure. Draw the structure diagram for the system and provide <em>FSP</em> descriptions for each process and the overall composition.</li>
+
+					<li>A museum allows visitors to enter through the east entrance and leave through its west exit. Arrivals and departures are signaled to the museum controller by the turnstiles at the entrance and exit. At opening time, the museum director signals the controller
+					that the museum is open and then the controller permits both arrivals and departures. At closing time, the director signals that the museum is closed, at which point only departures are permitted by the controller. Given that it consists of the four processes <code>EAST</code>, <code>WEST</code>, <code>CONTROL</code> and <code>DIRECTOR</code>, draw the structure diagram for the museum. Now provide an <em>FSP</em> description for each of the processes and the overall composition.</li>
+
+					<li>Modify the example Java program of section 3.2.2 such that it consists of three rotating displays.</li>
+
+				</ol>
+
+			</section>
+
+		</div> <!--container-->
+
+	</div> <!--concurrency-->
+
+</body>
+</html>

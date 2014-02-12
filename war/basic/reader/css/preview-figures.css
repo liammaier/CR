@@ -1,0 +1,44 @@
+@CHARSET "UTF-8";
+
+#previewFigures {
+	height: 100%;
+	width: 100%;
+	position: relative;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	padding: 0px 40px;
+	line-height: 1.5;
+	-webkit-user-select: none;
+}
+
+
+#clearStrat{
+	float:right;
+}
+.instructions {
+	text-align: center;
+	background-color: #FFE27F;
+	margin-bottom: 10px;
+	padding: 10px
+}
+
+.instructions h2 {
+	font-size: 20px;
+}
+
+figure.skimmed {
+	border: 4px red solid;
+	padding: 5px;
+}
+
+#preview-figures-counter {
+	position: fixed;
+	left: 20px;
+	padding: 18px;
+	z-index: 20;
+	background-color: lightgrey;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	top: 120px;
+}

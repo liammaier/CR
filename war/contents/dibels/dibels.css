@@ -1,0 +1,370 @@
+div.dibels.container {
+ 	background-color: white;
+ 	zoom: 1;
+	width: 90%;
+ 	max-width: 900px;
+ 	margin-left: 5%;
+ 	margin-right: 5%;
+ 	margin-top: 40px;
+ 	font-family: "Times New Roman", calibri, sans-serrif;
+ 	font-size: 15pt;
+}
+
+div.dibels.container2 {
+ 	background-color: white;
+ 	zoom: 1;
+	width: 90%;
+ 	max-width: 1300px;
+ 	margin-left: 5%;
+ 	margin-right: 5%;
+ 	margin-top: 40px;
+ 	font-family: "Times New Roman", calibri, sans-serrif;
+ 	font-size: 15pt;
+}
+
+.dibels .extendedwidth {
+	max-width: 1300px;
+}
+
+.dibels h1 {
+	text-align: center;
+	font-style: bold;
+	font-size: 18pt;
+	line-height: 1.5;
+}
+
+.dibels h2 {
+	font-size: 15pt;
+	font-weight: normal;
+	margin-top: 2em;
+	text-decoration: underline;
+}
+
+.dibels h3 {
+	font-size: 15pt;
+	font-style: bold;
+	text-decoration: underline;
+}
+
+.dibels p {
+	margin-top: 20px;
+}
+
+.dibels .reference {
+	vertical-align: super;
+	font-size: 50%;
+}
+
+.dibels img {
+	max-width: 100%;
+}
+
+.dibels .imagealigntop {
+	vertical-align: top;
+}
+
+.dibels .nounderline {
+	border-bottom: none;
+	visibility: hidden;
+}
+
+.dibels .heavyunderline {
+	border-bottom: 3px black solid;
+}
+
+.dibels .heavyunderlinetwo {
+	border-bottom: 3px black solid;
+	padding: 0 1px 5px 0;
+}
+
+.dibels p.bodytext {
+	text-indent: 2cm;
+}
+
+.dibels div.oval {
+	border: black solid 5px;
+	border-radius: 60px / 50px ;
+	display: inline-block;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.dibels .plain {
+	font-style: normal;
+	font-weight: normal;
+}
+
+.dibels .instructions {
+	font-weight: bold;
+	font-style: italic;
+	font-size: 125%;
+}
+
+.dibels .directions h2 {
+	float: left;
+	margin: 0 1em 0 0;
+}
+
+.dibels .materials h2 {
+	float: left;
+	margin: 0 1em 0 0;
+}
+
+.dibels .materials p {
+	margin-left: 5em;
+}
+
+.dibels .nounderline {
+	text-decoration: none;
+}
+
+.dibels .pagebreak {
+	border-top: .5em dotted;
+	color: #4D4D4D;
+	margin-bottom: 3em;
+	margin-top: 1em;
+	line-height: .25;
+	width: 100%;
+	font-size: 90%;
+	text-align: right;
+}
+
+.dibels .referencebodyborder {
+	border-top: 1px solid #4D4D4D;
+	width: 30%;
+}
+
+.dibels .referencebody {
+	font-size: 75%;
+}
+
+.dibels .pageend {
+	font-size: 75%;
+	text-align: center;
+	color: #4D4D4D;
+	margin-top: 3em;
+}
+
+.dibels .revised {
+	font-size: 75%;
+	text-align: center;
+	color: #4D4D4D;
+	float: right;	
+	margin-top: 2em;
+}
+
+/* TEXT ALIGNMENT */
+
+.dibels .centered {
+	text-align: center;
+}
+
+.dibels .left {
+	text-align: left;
+}
+
+.dibels .right {
+	text-align: right;
+}
+
+.dibels .floatleft {
+	float: left;
+}
+
+.dibels .floatright {
+	float: right;
+}
+
+.dibels .verticalcenteredimage {
+	vertical-align: middle;
+}
+
+/* TABLES */
+
+.dibels .scoringtable {
+	margin: 1em;
+	border-collapse: collapse;
+	border: none;
+	width: 100%;
+}
+
+.dibels .scoringtable th {
+	font-style: normal;
+	font-weight: normal;
+	text-align: left;
+}
+
+.dibels .scoringtable td {
+	height: 2.5em;
+}
+
+.dibels .scoringtable td:last-child {
+	padding-bottom: .5em;
+}
+
+.dibels .scoringtable tr:last-child {
+	border-bottom: solid 1px;
+}
+
+.dibels .scoringtable img {
+	vertical-align: middle;
+}
+
+.dibels .directionstable {
+	border: solid 3px;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.dibels .directionstable thead tr {
+	height: 2em;
+	vertical-align: bottom;
+}
+
+.dibels .directionstable th {
+	font-style: normal;
+	font-weight: normal;
+	border-bottom: solid 3px;
+}
+
+.dibels .directionstable td.bottombordered {
+	border-bottom: solid 3px;
+}
+
+.dibels .directionstable > thead > tr > th:first-child, .dibels .directionstable > thead > tr > th:nth-child(2) {
+	text-decoration: underline;
+}
+
+.dibels .directionstable tbody tr {
+	height: 3em;
+	padding-top: 2em;
+}
+
+.dibels .directionstable > tbody > tr > td:first-child, .dibels .directionstable > tbody > tr > td:nth-child(2) {
+	text-align: center;
+	width: 3em;
+}
+
+.dibels .directionstable tbody tr {
+	vertical-align: top;
+}
+
+.dibels .directionstable tbody td:nth-child(3) {
+	vertical-align: middle;
+}
+
+.dibels .responsetable {
+	border: solid 3px;
+	border-collapse: collapse;
+	width: 90%;
+}
+
+.dibels .responsetable th {
+	font-weight: normal;
+	font-style: normal;
+	width: 50%;
+}
+
+.dibels .responsetable td, .dibels .responsetable th  {
+	border: solid 1px;
+	vertical-align: top;
+	padding: .5em;
+}
+
+.dibels .pronunciationtableleft {
+	width: 48%;
+	float: left;
+}
+
+.dibels .pronunciationtable {
+	margin: 1em;
+	border-collapse: collapse;
+	border: none;
+}
+
+.dibels .pronunciationtable th {
+	border-bottom: 1px solid;
+	font-weight: normal;
+	font-style: normal;
+}
+
+.dibels .plaintable {
+	border: solid 1px black;
+	border-collapse: collapse;
+	text-align: center;
+}
+
+.dibels .plaintable th {
+	font-weight: bold;
+	width: 4em;
+}
+
+.dibels .plaintable td, .dibels .plaintable th {
+	border: 1px solid black;
+	padding: 3px;
+}
+
+.dibels .plaintable2 {
+	border: solid 1px black;
+	border-collapse: collapse;
+	text-align: left;
+}
+
+.dibels .plaintable2 table > thead > th {
+	font-weight: bold;
+	width: 66%;
+}
+
+.dibels .plaintable2 td, .dibels .plaintable2 th {
+	vertical-align: top;
+	border: 1px solid black;
+	padding: 3px;
+}
+
+.dibels .descriptivetable {
+	margin: 1em;
+	border-collapse: collapse;
+	border: none;
+	width: 100%;
+}
+
+.dibels .descriptivetable th.bottomborder, .dibels .descriptivetable td.bottomborder  {
+	border-bottom: 3px solid;
+}
+
+.dibels .descriptivetable th.topborder {
+	border-top: 3px solid;
+}
+
+.dibels .descriptivetable th {
+	font-style: normal;
+	font-weight: normal;
+}
+
+.dibels .descriptivetable td {
+	height: 2.5em;
+	text-align: center;
+}
+
+.dibels .descriptivetable td.leftalign {
+	text-align: left;
+}
+
+.dibels .descriptivetable td:last-child {
+	padding-bottom: .5em;
+}
+
+/* LISTS */
+
+.dibels ol li {
+	margin-bottom: 1em;
+}
+
+.dibels li.invisible {
+	list-style-type: none;
+	visibility: visible;
+}
+
+.dibels ul {
+	list-style-type: disc;
+}

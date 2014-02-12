@@ -1,0 +1,349 @@
+/* NOTEBOOK */
+
+#Notebook {
+	position: absolute;
+	top: 50px;
+	left: 50px;
+	background-color: #EFF5FB;
+	z-index: 200;
+	display: none;
+	height: 73%;
+	width: 85%;
+	min-width: 980px;
+	border: 1px solid #AAAAAA;
+	border-radius: 5px;
+	/* shadow */
+	-moz-box-shadow:    0px 0px 6px 2px #aaa;
+	-webkit-box-shadow: 0px 0px 6px 2px #aaa;
+	box-shadow:         0px 0px 6px 2px #aaa;
+	opacity: 1;
+}
+
+.hlTab{
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.hlTab-mobile{
+	font-size: 9px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+#notebookHeader {
+	position: absolute;
+	width: 100%;
+	background-color: #D1E5FA;
+	z-index: 1;
+	border-bottom: 1px solid #CCCCCC;
+	height: 45px;
+	padding-left: 10px;
+	border-radius: 5px 5px 0px 0px;
+}
+
+#notebookHeader > h2 {
+	display: inline-block;
+}
+
+#notebookInstructions {
+	display: inline-block;
+	padding-left: 70px;
+	position: relative;
+	top: -2px;
+}
+
+#notebook-body {
+	position: relative;
+	height: 100%;
+	padding: 50px 5px 45px 260px;
+}
+
+#notebook-footer {
+	height: 40px;
+	width: 100%;
+	position: relative;
+	top: -40px;
+	background-color: #EEEEEE;
+	border-top: 1px solid #CCCCCC;
+	border-radius: 0px 0px 5px 5px;
+}
+
+#notebookClose {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	cursor: pointer;
+}
+
+#rightNotebookArea {
+	width: 100%;
+	height: 100%;
+	padding-top: 30px;
+	border: 1px solid #AAA;
+}
+
+.notebookTabContainer {
+	position: relative;
+	width: 100%;
+	height: 70%;
+	padding-top: 33px;
+	background-color: #E7F3FA;
+	display: none;
+}
+
+#notebookSummary {
+	width: 100%;
+	height: 30%;
+	top: -2px;
+	padding: 4px 8px 4px 8px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	margin-top: 2px;
+	background-color: #D7EEFC;
+}
+
+.notebookArea {
+	position: relative;
+	float: left;
+	background-color: #E7F3FA;
+}
+
+.notebookSubArea {
+	position: relative;
+}
+
+#saveNotebookBtn {
+	top: 10%;
+	position: relative;
+	height: 85%;
+	float: right;
+	margin-right: 20px;
+}
+
+
+/* START jQuery Tabs */
+	.ui-tabs {
+		font-size: 11px;
+		padding-top: 0.25em;
+	}
+	.ui-tabs .ui-tabs-nav {
+		margin-top: -30px;
+	}
+	.ui-corner-all {
+		border-radius: 0px;
+	}
+	.ui-widget-content {
+		background: none;
+		border: none;
+	}
+/* 	.ui-tabs .ui-tabs-nav li {
+	    width: 24%;
+	    min-width: 130px;
+	} */
+	
+	.ui-tabs .ui-tabs-nav li a {
+	    display: inline-block;
+	    float: none;
+	    padding: 5px;
+	    padding-left: 5%;
+	    text-decoration: none;
+	    width: 100%;
+	}
+	
+	.notebook-tab {
+		height: 100%;
+		overflow-x: hidden;
+		overflow-y: scroll;
+	}
+/* END jQuery Tabs */
+
+.highlights-tab{
+	width: 29%;
+}
+
+.list-tab{
+    width: 21%;
+}
+
+.questions-tab{
+    width: 24%;
+}
+
+.others-tab{
+    width: 24%;
+}
+
+hr.thick {
+	border-top: 1px solid #BBB;
+	border-bottom: 1px solid #DDD;
+	margin: 0px;
+}
+
+hr {
+	margin: 0px 10px 0px 10px;
+	border-top: 1px solid #CCC;
+}
+/*
+.noteIcon {
+	height: 100%;
+	left: 50%;
+	position: absolute;
+}
+
+.checkIcon {
+	float: right;
+	width: 14px;
+	height: 14px;
+	right: 25px;
+	top: 5px;
+	position: absolute;
+}
+*/
+
+.notebookTitle {
+	font-size: 15px;
+}
+
+#secSumTitle {
+	position: relative;
+	font-weight: bold;
+	text-align: center;
+	margin-top: -12px;
+}
+
+#voiceBtn {
+  width: 20px;
+  color: transparent;
+  background-color: transparent;
+  -webkit-transform: scale(2.0, 2.0);
+  border: transparent;
+  cursor: pointer;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  padding-top: 0px;
+  margin-bottom: 0px;
+}
+
+.sectionSummaryTextbox {
+	resize: none;
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+
+.highlight-supporting {
+	margin-left: 3em;
+	border-left: 1px solid #C7C7C7;
+}
+
+.highlight-supporting > hr {
+	margin-left: 0em;
+}
+
+.highlightNotebook {
+	cursor: pointer;
+	text-align: left;
+	position: relative;
+	font-size: 13px;
+}
+
+.highlightContent {
+	position: relative;
+	margin-right: 50px;
+	padding: 3px;
+}
+
+.highlightAnnotation {
+	margin-left: 50px;
+	font-style: italic;
+	font-size: 11px;
+	color: #666;
+}
+
+.highlightType {
+	font-style: italic;
+	font-size: 11px;
+	color: #666;
+}
+
+.highlightIcon {
+	height: 100%;
+	left: 60%;
+	position: absolute;
+}
+
+#notebookNotes {
+	margin-top: 15px;
+	text-align: left;
+}
+
+
+/* START MY QUESTIONS */
+
+.answerTextbox {
+	width: 90%;
+	resize: none;
+	height: 50px;
+	margin-left: 3em;
+}
+
+
+
+/* END MY QUESTIONS */
+
+
+
+/* START TOC */
+	#notebookTOC {
+		height: 100%;
+		width: 250px;
+		right: 255px;
+		margin-left: -100%;
+		font-size: 12.5px;
+		border: 1px solid #AAA;
+		overflow-y: scroll;
+	}
+	.tocNotebookTitle {
+		border-bottom: 1px solid #AAA;
+		border-right: 1px solid #AAA;
+		background-color: #C6E7FC;
+		padding: 4px;
+	}
+	.notebookTOCelement {
+		cursor: pointer;
+		margin-left: 4px;
+		margin-top: 4px;
+	}
+	.highlighted {
+		color: blue;
+	}
+	.checkIconTOC {
+		float: right;
+		width: 14px;
+		height: 14px;
+		right: 10px;
+		position: absolute;
+	}
+	.tabbed {
+		margin-left: 2em;
+	}
+	.summaryIcon {
+		height: 100%;
+		width:5%;
+		left: 40%;
+		position: absolute;
+	}
+	.hasHighlight {
+		font-weight: bold;
+	}
+/* END TOC */
+
+/* controller */
+#notebookBtn{
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+

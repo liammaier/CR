@@ -1,0 +1,77 @@
+#review-media {
+	padding:20px;
+	overflow-y: scroll;
+	height:100%;
+}
+
+.instructions {
+	background-color: #FFE27F;
+	margin-bottom: 10px;
+	padding: 10px
+	text-align: center;
+}
+.instructions h2 {
+	font-size: 30px;
+}
+.instructions li {
+	line-height: 1.5em;
+}
+.instructions ul {
+	margin-left: 40px;
+}
+
+.review-media {
+	margin-bottom: 10px;	
+}
+.media-title {
+	width: 100%;
+	background-color: #CCC;
+	font-size: 20px;
+	line-height: 1.5em;
+	border-radius: 5px;
+	padding: 0 10px;
+	padding-bottom: 3px;
+}
+
+.media-title .title {
+	cursor: pointer;
+	padding-right: 48%;
+	color: #000;
+}
+
+.media-title .title:hover {
+	color: #000;
+}
+
+.media-title.compleated {
+	background-color: #0EF105;	
+}
+
+.media-title .icon-trash {
+	float: right;
+	margin-top: 5px;
+}
+
+.media-note {
+	width: 100%;
+	background-color: #EEE;
+	padding: 10px;
+	margin-top: -3px;
+}
+
+.media-context {
+	width: 100%;
+	background-color: #DDD;
+	padding: 10px;
+	margin-top: -3px;
+}
+
+.media-context span.media-location {
+	background-color: yellow;
+}
+
+
+
+.review-media i {
+	margin-right:5px;
+}

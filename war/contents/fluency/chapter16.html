@@ -1,0 +1,3035 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+
+	<title>Chapter 16</title>
+
+	
+</head>
+
+<body>
+
+  <div id="FLU" class="container fit">
+  
+    <section class="intro" data-number="0" data-name="Chapter 16 Introduction">
+		<img src="/contents/fluency/images/ch16Intro01.png" />
+
+		<div class="content">
+			<h1><span class="first-sentence">Introduction to Database Concepts</span></h1>
+			<h2>A Table with a View</h2>
+			<h3>learning objectives</h3>
+			<ul class="learning-objectives">
+				<li>Use XML to describe the metadata for a table of information, and classify the uses of the tags as identification, affinity, or collection</li>
+				<li>Explain the differences between everyday tables and database tables</li>
+				<li>Explain how the concepts of entities and attributes are used to design a database table</li>
+				<li>Use the six database operations: <strong>Select, Project, Union, Difference, Product,</strong> and <strong>Join</strong></li>
+				<li>Describe the differences between physical and logical databases</li>
+				<li>Express a query using Query By Example</li>
+			</ul>
+		</div>
+    </section> <!-- / intro1 -->
+
+	<div class="pagebreak pageNumber">471</div>
+
+	<section class="intro">
+	
+		<div class="content">
+		
+			<blockquote>
+				Computers are useless. They only give answers.
+				<p class="citation">- Pablo Picasso</p>
+			</blockquote>
+			
+			<blockquote>
+				Now that we have all this useful information, it would be nice to do something with it. (Actually, it can be emotionally fulfilling just to get the information. This is usually only true, however, if you have the social life of a kumquat.)
+				<p class="citation">- Unix Programer's Manual</p>
+			</blockquote>
+			
+			<div class="intro-text"> 
+				<p>
+					<strong>We have </strong>seen the benefits of using spreadsheets to
+					organize lists of information. By arranging similar information into columns and using a separate row for
+					each new list item, we can easily sort data, use formulas to summarize and compute values, get help from
+					the computer to set up series, and so forth. Spreadsheets are very powerful, but with databases it's
+					possible to apply even greater degrees of organization and receive even more help from the computer.
+				</p>
+				<p>
+					The key idea is to supply metadata describing the properties of the collected information. Recall that
+					metadata is simply information describing (the properties of ) other information. We have seen the idea of
+					specifying metadata in Chapter 8, when we saw tags - the metadata - describe the content of the <em>Oxford
+					English Dictionary</em>, enabling the computer to help us search for words and definitions. Some databases
+					use tags for metadata, others use different kinds of metadata, but the same principles apply: Knowing the
+					structure and properties of the data, the computer can help us retrieve, organize, and manage it.
+				</p>
+				<p>
+					In this chapter we distinguish between the everyday concept of a table and a relational database
+					table. Next, we explain how to set up the metadata for collections of information to create a database.
+					The principles are straightforward and intuitive. We will make the metadata tangible by using a notation
+					called XML. After introducing basic table concepts, we present the five fundamental operations on tables
+					and the Join operation. The concepts of physical database and logical database are connected by the
+					concept of queries, and we illustrate how to build a user's logical view from physical tables. Finally,
+					the convenience of Query By Example is illustrated using simple examples.
+				</p>
+			</div>
+		</div>
+
+        <img src="/contents/fluency/images/ch16Intro02.png" />
+    </section> <!-- /intro2 -->
+
+	<div class="pagebreak pageNumber">472</div>
+
+	<section class="page">
+		
+		<section class="section" data-number="1" data-name="Differences Between Tables and Databases">
+			<h2>Differences Between Tables and Databases</h2>
+			<p>
+				<span class="first-sentence">When we think of databases, we often think of tables of information. For example, your iTunes or similar
+				application records the title, artist, running time, and so on in addition to the actual MP3 data (the music).</span>
+				Your favorite song is a row in that table. Another example is your state's database of automobile registrations
+				recording the owner's name and address, the vehicle identification number (VIN), the license plate number, and
+				such. Your car is a row in the registration database table. And as a last example, the U.S. Central Intelligence
+				Agency (CIA) keeps an interesting database called the World Factbook; see
+				https://www.cia.gov/library/publications/the-world-factbook/index.html. They have a demographic table that records
+				the country name, population, life expectancy, and so on. The U.S. is a row in the demography table.
+			</p>
+			
+			<section class="subsection" data-number="2" data-name="Comparing Tables">
+				<h3>Comparing Tables</h3>
+				<p><span class="first-sentence">To see the difference between these database tables and other forms of tables, such as spreadsheets and
+				HTML tables, consider the row for Canada in the CIA's demographic database.</span> This row is displayed as</p>
+				<table class="one-row">
+					<tr>
+						<td><strong>Canada</strong></td>
+						<td>32805041</td>
+						<td>1.61</td>
+						<td>5</td>
+						<td>80.1</td>
+					</tr>
+				</table>
+		
+				<p>in a table with column headings such as Country, Population, and Birthrate. In the file it is represented as</p>
+				
+				<code>
+					<pre>
+&lt;demogData&gt;
+	&lt;country&gt;Canada&lt;/country&gt;
+	&lt;population&gt;32805041&lt;/population&gt;
+	&lt;fertility&gt;1.61&lt;/fertility&gt;
+	&lt;infant&gt;5&lt;/infant&gt;
+	&lt;lifeExpct&gt;80.1&lt;/lifeExpct&gt;
+&lt;/demogData&gt;
+					</pre>
+				</code>
+				
+				<p>
+					where the tags identify the population, fertility or birthrate, infant mortality (per 1,000 live births),
+					and life expectancy. That is, we are shown a row of data as it appears in any other table, but inside the
+					computer it has a tag identifying each of the data fields.
+				</p>
+				<p>How does this data appear in other table forms? In a spreadsheet, the following is the row for Canada. </p>
+				
+				<img src="/contents/fluency/images/spreadsheet01.png" />
+				
+				<p>
+					The entries for Canada are the same, but the software knows the values only by position, not by their
+					meaning. So, if a cell is inserted at the beginning, causing all of the data to shift right one position,
+				</p>
+		
+				<div class="pagebreak pageNumber">473</div>
+		
+				<img src="/contents/fluency/images/spreadsheet02.png"/>
+				
+				<p>
+					the identity of the information is lost. Spreadsheets rely on position to keep the integrity of their data;
+					the information is not known by its <code>&lt;country&gt; </code>tag, but rather as A37.
+				</p>
+				
+				<p>
+					HTML tables are possibly even worse. The usual Web page presentation of the data for Canada is represented
+					in HTML as
+				</p>
+				<code>
+					<pre>
+&lt;tr&gt;
+	&lt;td&gt;Canada&lt;/td&gt;
+	&lt;td&gt;32805041&lt;/td&gt;
+	&lt;td&gt;1.61&lt;/td&gt;
+	&lt;td&gt;5&lt;/td&gt;
+	&lt;td&gt;80.1&lt;/td&gt;
+&lt;/tr&gt;
+					</pre>
+				</code>
+				
+				<p>
+					where we recall that <code>&lt;tr&gt;</code> is a table row tag and <code>&lt;td&gt;</code> is a table data tag. These tags simply
+					identify Canada's data as table entries with no unique identity at all; that is, the same kind of <code>&lt;td&gt;</code>
+					tags surround all of the different forms of data. HTML is concerned only with how to display the data, not with
+					its meaning.
+				</p>
+			</section>
+			<section class="subsection" data-number="3" data-name="The Database's Advantage">
+				<h3>The Database's Advantage</h3>
+				
+				<p>
+					<span class="first-sentence">The metadata is the key advantage of databases over other approaches to recording data as tables.</span> Here's
+					why. Suppose we want to know the life expectancy of Canadians. Database software can search for the
+					<code> &lt;country&gt;</code> tag surrounding Canada. When it's found, the<code> &lt;country&gt;</code> tag will be one of several tags
+					surrounded by <code>&lt;demogData&gt;</code> tags. These constitute the entry for Canada in the database. The software can
+					then look for the <code>&lt;lifeExpct&gt; </code>tag among those tags and report the data that they surround as the data for
+					Canada. The computer knew which data to return based on the availability of the metadata.
+				</p>
+				
+				<p>The tags for the CIA database just discussed fulfill two of the most important roles in defining metadata.</p>
+				
+				<ul>
+					<li><strong>Identify the type of data:</strong> Each different type of value is given a unique tag.</li>
+					<li><strong>Define the affinity of the data:</strong> Tags enclose all data that is logically related.</li>
+				</ul>
+				
+				<p>
+					The <code>&lt;country&gt;</code>,<code> &lt;population&gt;</code>, and similar tags have the role of identification because they
+					label the content. The <code>&lt;demogData&gt;</code> tag has the role of implementing affinity because it keeps an entry's
+					data together. There are other properties of data that metadata must record, as you will see throughout this
+					chapter, but these are perhaps the most fundamental.
+				</p>
+		
+				<div class="pagebreak pageNumber">474</div>
+			</section>
+		</section>
+		<section class="section" data-number="4" data-name="XML: A Language for Metadata Tags">
+			<h2>XML: A Language for Metadata Tags</h2>
+			<p>
+				<span class="first-sentence">To emphasize the importance of metadata and to prepare for our own applications of database technology, let's take
+				a moment to discuss the basics of <span class="keyword">XML</span>.</span> XML stands for the Extensible
+				Markup Language, and like the Hypertext Markup Language (HTML), it is basically a tagging scheme, making it
+				rather intuitive. The tagging scheme used for the <em>Oxford English Dictionary</em> (OED) in Chapter 8 was a
+				precursor to XML, and the demographic data of the last section was written in XML.
+			</p>
+			<p>
+				What makes XML easy and intuitive is that there are no standard tags to learn. <em>We think up the tags we
+				need!</em> Computer scientists call this a <em>self-describing language</em>, because whatever we create becomes the
+				language (tags) to structure the data. There are a couple of rules - for example, always match tags - but
+				basically anything goes. Perhaps XML is the world's easiest-to-learn "foreign" language.
+			</p>
+			<p>
+				The same people who coordinate the Web - <span class="keyword">the World Wide Web Consortium (W3C)</span> - developed
+				XML. As a result, it works very well with browsers and other Web-based applications. So, it comes as no surprise
+				that just as XHTML must be written with a text editor rather than a word processoruse a fg to avoid
+				unintentionally including the word processor's tags, we must also write XML in a simple text editor for the same
+				reason. Use the same editor that you used in Chapter 4 to practice writing Web pages: TextWrangler for Mac users
+				and Notepad++ for Windows users.
+			</p>
+			
+			<div class="fluency-tip">
+				<strong class="fluency-tip-title">Use a Text Editor for XML.</strong> Like XHTML, XML should be written using a text
+				editor like Notepad++ or TextWrangler rather than a word processor like Word or Word Perfect. Text editors give
+				you only the text you see, but word processors include their own tags and other information that could confuse
+				XML.
+			</div>
+			<section class="subsection" data-number="5" data-name="An Example from Tahiti">
+				<h3>An Example from Tahiti</h3>
+				<p>
+					<span class="first-sentence">Let's use XML to define tags to specify the metadata for a small data collection.</span> Given the following size
+					data (area in km2) for Tahiti and its neighboring islands in the Windward Islands archipelago of the South
+					Pacific,
+				</p>
+				<table class="data small">
+					<tr>
+						<td>Tahiti</td>
+						<td>1048</td>
+					</tr>
+					<tr>
+						<td>Moorea</td>
+						<td>130</td>
+					</tr>
+					<tr>
+						<td>Maiao</td>
+						<td>9.5</td>
+					</tr>
+					<tr>
+						<td>Mehetia</td>
+						<td>2.3</td>
+					</tr>
+					<tr>
+						<td>Tetiaroa</td>
+						<td>12.8</td>
+					</tr>
+				</table>
+						
+				<p>
+					we want to add the metadata, that is, identify which data is an island name and which is the area. As
+					usual, the tag and its companion closing tag surround the data. We choose <code>&lt;iName&gt;</code> and <code>&lt;area&gt;</code> as the
+					tags and write:
+				</p>
+				
+				<div class="pagebreak pageNumber">474</div>
+				
+				<code>
+					<pre>
+&lt;iName&gt;Tahiti&lt;/iName&gt; 		&lt;area&gt;1048&lt;/area&gt;
+&lt;iName&gt;Moorea&lt;/iName&gt; 		&lt;area&gt;130&lt;/area&gt;
+&lt;iName&gt;Maiao&lt;/iName&gt; 		&lt;area&gt;9.5&lt;/area&gt;
+&lt;iName&gt;Mehetia&lt;/iName&gt; 		&lt;area&gt;2.3&lt;/area&gt;
+&lt;iName&gt;Tetiaroa&lt;/iName&gt; 	&lt;area&gt;12.8&lt;/area&gt;
+					</pre>
+				</code>
+				<p>
+					These tags are used in the identification role. Notice that we chose <code>&lt;iName&gt;</code> rather than, say,
+					<code>&lt;island name&gt;</code>. This is because XML tag names cannot contain spaces. But because both uppercase and
+					lowercase are allowed - XML is case sensitive - we capitalize the "N" to make the tag more
+					readable. All XML rules are shown later in this section in Table 16.1.
+				</p>
+				
+				<p>
+					Though we have labeled each item with a tag describing what it is, we're not done describing the data. We
+					need tags describing what sort of thing the name specifies and the area measures. That's an island, of course.
+					So we enclose each entry with an <code>&lt;island&gt;</code> tag, as in
+				</p>
+				<code>
+					<pre>
+&lt;island&gt;&lt;iName&gt;Tahiti&lt;/iName&gt; 		&lt;area&gt;1048&lt;/area&gt;&lt;/island&gt;
+&lt;island&gt;&lt;iName&gt;Moorea&lt;/iName&gt; 		&lt;area&gt;130&lt;/area&gt;&lt;/island&gt;
+&lt;island&gt;&lt;iName&gt;Maiao&lt;/iName&gt; 		&lt;area&gt;9.5&lt;/area&gt;&lt;/island&gt;
+&lt;island&gt;&lt;iName&gt;Mehetia&lt;/iName&gt; 		&lt;area&gt;2.3&lt;/area&gt;&lt;/island&gt;
+&lt;island&gt;&lt;iName&gt;Tetiaroa&lt;/iName&gt; 	&lt;area&gt;12.8&lt;/area&gt;&lt;/island&gt;
+					</pre>
+				</code>
+				
+				<p>
+					The <code>&lt;island&gt;</code> tag serves in the affinity role to keep the two facts together; that is, Tahiti is
+					grouped with its area and it is separated from Moorea and its area.
+				</p>
+				
+				<p>
+					We're nearly done. The islands are not just randomly dispersed around the ocean. They are part of an
+					archipelago, the proper name for a group of islands. So, we naturally invent one more tag, <code>&lt;archipelago&gt;</code>,
+					and surround all of the islands with it. The result is shown in Figure 16.1.
+				</p>
+				
+				
+				<figure class="xml">
+					<code>
+						<pre>
+&lt;?xml version = "1.0" encoding="ISO-8859-1" ?&gt;
+&lt;archipelago&gt;
+&lt;island&gt;&lt;iName&gt;Tahiti&lt;/iName&gt; 	&lt;area&gt;1048&lt;/area&gt;&lt;/island&gt;
+&lt;island&gt;&lt;iName&gt;Moorea&lt;/iName&gt; 	&lt;area&gt;130&lt;/area&gt;&lt;/island&gt;
+&lt;island&gt;&lt;iName&gt;Maiao&lt;/iName&gt; 	&lt;area&gt;9.5&lt;/area&gt;&lt;/island&gt;
+&lt;island&gt;&lt;iName&gt;Mehetia&lt;/iName&gt; 	&lt;area&gt;2.3&lt;/area&gt;&lt;/island&gt;
+&lt;island&gt;&lt;iName&gt;Tetiaroa&lt;/iName&gt;	&lt;area&gt;12.8&lt;/area&gt;&lt;/island&gt;
+&lt;/archipelago&gt;
+						</pre>
+					</code>
+				</figure>
+				<figcaption>
+					<span class="figureId">Figure 16.1</span> XML file encoding data for the Windward Islands database. The first
+					line states that the file contains XML tags.
+				</figcaption>
+				
+				
+				<p>
+					Notice that in Figure 16.1 an additional line has been added at the beginning of the file. This line, which
+					uses the unusual form of associating question marks (?) within the brackets, identifies the file as containing
+					XML data representations. (It also states that the file's characters are the standard ASCII set used in the
+					U.S.; see Chapter 8.) This first line is required and must be thefirst line of any XML file. By identifying the file as XML, hundreds of software applications can
+					understand what it contains. In this way the effort to tag all of the information can be repaid by using the
+					data with those applications.
+				</p>
+				
+				
+		
+				<div class="pagebreak pageNumber">474</div>
+				
+				<div class="fluency-tip">
+					<p>Start Off Right with XML. XML files must be identified as such, and so they are required to begin with the text</p>
+					<code> &lt;?xml version = "1.0" encoding="ISO-8859-1" ?&gt;</code>
+					<p>(or other encoding) as their first line and without leading spaces. The file should be ASCII text, and
+					the file extension should be .xml.</p>
+				</div>
+				
+				<div class="try-it">
+					<p><strong>16.1 More Islands.</strong> Write an XML metadata coding for the following collection of data from the
+					Gal&aacute;pagos archipelago.</p>
+					<table>
+						<tr>
+							<th>Island</th>
+							<th>Area</th>
+							<th>Elevation</th>
+						</tr>
+						<tr>
+							<td>Isabella</td>
+							<td>4588</td>
+							<td>1707</td>
+						</tr>
+						<tr>
+							<td>Fernandina</td>
+							<td>642</td>
+							<td>1494</td>
+							</tr>
+						<tr>
+							<td>Tower</td>
+							<td>14</td>
+							<td>76</td>
+						</tr>
+						<tr>
+							<td>Santa Cruz</td>
+							<td>986</td>
+							<td>846</td>
+						</tr>
+					</table>
+					<p>For the items of the same type as the data from the Windward archipelago, use the same tags; for the elevation,
+					the highest point on the island, think up a new tag.</p>
+				</div>
+			</section>
+			<section class="subsection" data-number="6" data-name="Expanding the Use of XML">
+				<h3>Expanding the Use of XML</h3>
+				<p><span class="first-sentence">Given the XML encoding of two archipelagos - the Windward Islands and the Gal&aacute;pagos Islands - it seems reasonable to combine the encodings.</span></p>
+				<p>
+					To create a database of the two archipelagos, we place them in a file, one after the other. This might seem
+					odd because the Windward Islands have only two data values - name and area - while the Gal&aacute;pagos
+					Islands have three - name, area, and elevation. But this is okay. Both archipelago encodings use the same
+					tags for the common information, which is the key issue to consider when combining them. Extra data is allowed
+					and, in fact, we might want to gather the elevation data for the Windward Islands.
+				</p>
+				<p>
+					With the two archipelagos combined into one database, we want to include the name of each to tell them
+					apart easily. Of course, this means adding another tag for the name. We could use <code>&lt;name&gt;</code>, which is
+					different from the <code>&lt;iName&gt;</code> tag used before. But in the same way that we added &#8220;i&#8221; to remind
+					ourselves that it is an island name, it is probably wise to use the same idea to create a more specific tag
+					name. Let's adopt the tag <code>&lt;a_name&gt;</code>. Notice the use of underscore, which is an allowed punctuation symbol
+					for XML. We will place the name inside the <code>&lt;archipelago&gt;</code> tag, since it is data about the archipelago.
+				</p>
+				<p>
+					Finally, we have two archipelagos and we need to group them together by surrounding them with tags; these
+					tags will serve as the root element of our
+				</p>
+					
+				<div class="pagebreak pageNumber">477</div>
+				<p>
+					XML database. A <span class="keyword">root element</span> is the tag that encloses all of the content of the XML
+					file. In Figure 16.1 the <code>&lt;archipelago&gt;</code> tag was the root element, but now with two archipelagos in the
+					file, we need a new tag to enclose them. They are both geographic features of our planet, so we will use<code>
+					&lt;geo_feature&gt;</code> as the tag that surrounds both archipelagos. The final result of our revisions is shown in
+					Figure 16.2.
+				</p>
+				<p>
+					Notice that the text in the file has been indented to make it more readable. Like XHTML, XML doesn't care
+					about white space - spaces, tabs, and new lines - when they are between tags. This allows us to format
+					XML files to simplify working with them, but the indenting is only for our use.
+				</p>
+			</section>
+			<section class="subsection" data-number="7" data-name="Attributes in XML">
+				<h3>Attributes in XML</h3>
+				<p>
+					<span class="first-sentence">Recall that XHTML tags can have <span class="keyword">attributes</span> to give additional information, such as
+					src and alt in <code>&lt;img src="photo.jpg"...&gt;</code>.</span> Our invented tags of XML can also have attributes. They have a
+					similar form, and must always be set inside the simple quotation marks - that is, the straight quotes, not
+					the curly "smart" quotes. Tag attribute values can be enclosed either in paired single or
+				</p>
+				
+				<figure class="xml large">
+					<code class="column">
+						<pre>
+&lt;?xml version = "1.0"
+  encoding="ISO-8859-1" ?&gt;
+&lt;geo_feature&gt;
+  &lt;archipelago&gt;
+	&lt;a_name&gt;Windward Islands 
+	&lt;/a_name&gt;
+	&lt;island&gt;
+	  &lt;iName&gt;Tahiti&lt;/iName&gt;
+	  &lt;area&gt;1048&lt;/area&gt;
+	&lt;/island&gt;
+	&lt;island&gt;
+	  &lt;iName&gt;Moorea&lt;/iName&gt;
+	  &lt;area&gt;130&lt;/area&gt;
+	&lt;/island&gt;
+	&lt;island&gt;
+	  &lt;iName&gt;Maiao&lt;/iName&gt;
+	  &lt;area&gt;9.5&lt;/area&gt;
+	&lt;/island&gt;
+	&lt;island&gt;
+	  &lt;iName&gt;Mehetia&lt;/iName&gt;
+	  &lt;area&gt;2.3&lt;/area&gt;
+	&lt;/island&gt;
+	&lt;island&gt;
+	  &lt;iName&gt;Tetiaroa&lt;/iName&gt;
+	  &lt;area&gt;12.8&lt;/area&gt;
+	&lt;/island&gt;
+						</pre>
+					</code >
+					<code class="column">
+						<pre>
+ &lt;/archipelago&gt;
+ &lt;archipelago&gt;
+	&lt;a_name&gt;Galapagos Islands 
+	&lt;/a_name&gt;
+	&lt;island&gt;
+	  &lt;iName&gt;Isabella&lt;/iName&gt;
+	  &lt;area&gt;4588&lt;/area&gt;
+	  &lt;elevation&gt;1707&lt;/elevation&gt;
+	&lt;/island&gt;
+	&lt;island&gt;
+	  &lt;iName&gt;Fernandina&lt;/iName&gt;
+	  &lt;area&gt;642&lt;/area&gt;
+	  &lt;elevation&gt;1494&lt;/elevation&gt;
+	&lt;/island&gt;
+	&lt;island&gt;
+	  &lt;iName&gt;Tower&lt;/iName&gt;
+	  &lt;area&gt;14&lt;/area&gt;
+	  &lt;elevation&gt;76&lt;/elevation&gt;
+	&lt;/island&gt;
+	&lt;island&gt;
+	  &lt;iName&gt;Santa Cruz&lt;/iName&gt;
+	  &lt;area&gt;986&lt;/area&gt;
+	  &lt;elevation&gt;846&lt;/elevation&gt;
+	&lt;/island&gt;
+  &lt;/archipelago&gt;
+&lt;/geo_feature&gt;
+						</pre>
+					</code>
+				</figure>
+				<figcaption>
+				  <span class="figureId">Figure 16.2 </span>XML file for the Geographic Features database. XML ignores white
+				  space, so the text in the file has been indented for easier reading. Click <a href="xml/figure16-2.xml">here</a>
+				  to see an interactive version of this xml.
+				</figcaption>
+		
+				<div class="pagebreak pageNumber">478</div>
+				
+				<p>	
+					paired double quotes. If the content of the tag attribute requires quotes or an apostrophe (the single
+						quote), then enclose the attribute value in the other form of quotes. So, we might have 
+				</p>
+				<code>&lt;entry warnIfNone="Ain't there!"&gt; The user entered this data. &lt;/entry&gt;</code>
+				<p>for one instance, and</p>
+				<code>&lt;entry warnIfNone='I say, "Please enter" '&gt; The data is from a user.&lt;/entry&gt;</code>
+				<p>for another.</p>
+				<p>
+					Understanding how to write tag attributes is easy enough. Even the rules for using quotes are
+					straightforward. But, we want to use them wisely, which requires some thought. 
+				</p>
+				<p>
+					The best advice about attributes is to use them for additional metadata, not for actual content. So,
+					although we could have written 
+				</p>
+				<code>&lt;archipelago name="Galapagos"&gt;</code>
+				<p>
+					we chose not to because the name of an archipelago is content. A better use is to give an alternate form of
+					the data, as in
+				</p>
+				<code> &lt;a_name accents="Gal&amp;aacute;pagos"&gt;Galapagos&lt;/a_name&gt;</code>
+				<p>
+					which records that the second "a" in Gal&aacute;pagos is accented. The name of the islands is still given
+					using a normal tag, but specifying accent marks separately simplifies searching and display options.
+				</p>
+			</section>
+			<section class="subsection" data-number="8" data-name="Effective Design with XML Tags">
+				<h3>Effective Design with XML Tags</h3>
+				<p>
+					<span class="first-sentence">XML is a very flexible way to encode metadata.</span> As we have described the archipelagos, we have used a few
+					basic guidelines to decide how to use the tags. To emphasize these rules, let's review our thinking in creating
+					metadata tags for the archipelago data, encapsulating it into three encoding rules.
+				</p>
+				
+				<div class="rule">
+					<p>
+						<span class="ruleName">Identification Rule: Label Data with Tags Consistently.</span> You can choose whatever
+						tag names you wish to name data, but once you've decided on a tag for a particular kind of data, you must
+						always surround that kind of data with that tag.
+					</p>
+				</div>
+				
+				<p>
+					Notice that one of the advantages of enclosing data with tags is that it keeps the data together. For
+					example, the island of Santa Cruz in the Gal&aacute;pagos is a two-word name, but we don't have to treat it any
+					differently than the oneword island names since the tags keep the two words together.
+				</p>
+				<p>
+					You may think that because we can choose our own tag names, it might be difficult to combine databases
+					written by two different people - without planning ahead, they will probably choose different tags. Luckily,
+					such differences are easily resolved: Because the tags are used consistently, it is possible to edit a file
+					using Find/Replace to change the tag names. (There are other, more sophisticated ways to make them consistent,
+					too.) For example, if your friend, who gathered the archipelago data for the Northern Hemisphere, used
+					<code> &lt;Name&gt;</code> for the archipelago name rather than <code>&lt;a_name&gt;</code>, use Find to locate
+				</p>
+				
+				<div class="pagebreak pageNumber"> 479 </div>
+				
+				<p>
+					<code>&lt;Name&gt;</code> and Replace to substitute <code>&lt;a_name&gt;</code>. Of course, searching for Name alone and replacing it
+					with a_name does not work since it would match and ruin the <code>&lt;iName&gt;</code> tags. (If such cases do get in the
+					way, use the placeholder technique described in Chapter 2.)
+				</p>
+				<div class="rule">
+					<p>
+						<span class="ruleName">Affinity Rule: Group Related Data. </span>Enclose in a pair of tags all tagged data
+						referring to the same entity. Grouping it keeps it all together, but the idea is much more fundamental:
+						Grouping makes an association of the tagged data items as being related to each other, properties of the same
+						thing.
+					</p>
+				</div>
+				<p>
+					We applied this rule when we grouped the island name and area data inside <code>&lt;island&gt;</code> tags. We did this
+					because both items referred to the same thing, the island. This is an important association, because the area
+					data is not just area data about some random place on the earth; it is the area data for a specific place that
+					is named Tahiti. This is an extremely important result from the simple act of enclosing data in tags.
+				</p>
+				<p>
+					When we added elevation data as an additional feature of islands, we included it inside the <code>&lt;island&gt;</code>
+					tags for the same reason. As the elevation data shows, it is not necessary for every instance of an object to
+					have data for the same set of characteristics.
+				</p>
+		
+				<div class="rule">
+					<p>
+						<span class="ruleName">Collection Rule: Group Related Instances. </span>When you have several instances of the
+						same kind of data, enclose them in tags; again, it keeps them together and implies that they are related by
+						being instances of the same type.
+					</p>
+				</div>
+				
+				<p>
+					When we had a group of five islands from the same area of the ocean, we grouped them inside an
+					<code>&lt;archipelago&gt;</code> tag, and when we had a group of two archipelagos, we grouped them inside a
+					<code>&lt;geo_feature&gt;</code> tag. We also added the names to the archipelagos using <code>&lt;a_name&gt;</code>, because as a
+					collection they also have this additional property that we want to record.
+				</p>
+				<p>
+					Notice that the Affinity Rule and Collection Rule are different. The Affinity Rule groups together the data
+					for a single thing - an island. Typically, the tags of the data values will all be different reflecting the
+					different properties of the thing. The Collection Rule groups together the data of several instances of the same
+					thing. Typically, in this case the tags - in our case <code>&lt;islands&gt;</code> - will be the same. The first
+					association is among properties of an object, the second is among the objects themselves, which we also call
+					entities. Notice that being grouped by the Collection Rule doesn't preclude being an object; the islands grouped
+					together form a larger object, the archipelago, and so it has properties, too, such as a name.
+				</p>
+			</section>
+			<section class="subsection" data-number="9" data-name="The XML Tree">
+				<h3>The XML Tree</h3>
+				<p>
+					<span class="first-sentence">The rules for producing XML encodings of information produce hierarchical descriptions that can be thought
+					of as trees.</span> (We interpreted hierarchies as trees in Chapter 5.) See Figure 16.3 for the tree structure of the
+					encoding of Figure 16.2. The hierarchy is a consequence of how the tags enclose one another and the data.
+				</p>
+		
+		
+				<div class="pagebreak pageNumber">480</div>
+		
+		
+				<figure>
+					<img src="/contents/fluency/images/figure16-3.png" />
+				</figure>
+				<figcaption>
+					<span class="figureId">Figure 16.3 </span>The XML displayed as a tree. The encoding from Figure 16.2 is shown
+					with the root element <strong>(geo_feature)</strong> to the left and the leaves (content) shown to the right.
+				</figcaption>
+				
+				<div class="table large">
+					<div class="table-title"><span class="tableNum">Table 16.1</span> Rules for writing XML</div>
+					<table>
+						<tr>
+							<td>Required first line</td>
+							<td><code><strong>&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</strong></code> must appear on the first line, starting in
+							the first position.</td>
+						</tr>
+						<tr>
+							<td>First tag</td>
+							<td>The first tag encountered is the root element, and it must enclose all of the file'scontent; it
+							appears on the second or possibly third line.</td>
+						</tr>
+						<tr>
+							<td>Closing tags</td>
+							<td>All tags must be closed.</td>
+						</tr>
+						<tr>
+							<td>Element naming</td>
+							<td>Observe these rules:
+								<ul>
+									<li>Names can contain letters, numbers, and underscore characters.</li>
+									<li>Names must not start with a number or punctuation character.</li>
+									<li>Names must not start with the letters xml (or XML, or Xml, etc.).</li>
+									<li>Names cannot contain spaces.</li>
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td>Case sensitivity</td>
+							<td>Tags and attributes are case sensitive.</td>
+						</tr>
+						<tr>
+							<td>Proper nesting</td>
+							<td>All tags must be well-nested.</td>
+						</tr>
+						<tr>
+							<td>Attribute quoting</td>
+							<td>All attribute values must be quoted; paired single quotes (apostrophes) or paired doublequotes are
+							okay; use "dumb" quotes only; choose 'opposite' quotes to enclose quotedvalues.</td>
+						</tr>
+						<tr>
+							<td>White space</td>
+							<td>White space is preserved and converted to a single space.</td>
+						</tr>
+						<tr>
+							<td>Comments</td>
+							<td>XML comments have the form  <code><strong>&lt;!-- This is a comment. --&gt;</strong></code>.</td>
+						</tr>
+					</table>
+				</div>
+				
+		
+				<div class="pagebreak pageNumber">481</div>
+			</section>
+		</section>
+		<section class="section" data-number="10" data-name="Tables and Entities">
+			<h2>Tables and Entities</h2>
+			<p>
+				<span class="first-sentence">You have seen how you can record metadata about a collection of data values using XML tags.</span> For the moment,
+				let's set aside the topics of tagging and XML, and focus directly on table database systems generally. I want you
+				to understand the concepts of database organization and the desirable properties embodied in the metadata, not
+				simply the way to encode that structure with tags. We'll return to tagging later in the next chapter, but for now,
+				think of tables pure and simple.
+			</p>
+			<p>
+				The kind of database approach we will discuss is known as a relational database. <span >Relational
+				databases</span> describe the relationships among the different kinds of data - the sort of ideas embodied in
+				Affinity and Collection Rules -  allowing the software to answer queries about them. Although every relational
+				database can be described by XML, it is not true that anything described by XML is a relational database. It may
+				seem that relational databases are limited, but their power is enormous.
+			</p>
+			
+			<div class="fluency-bit">
+					<strong class="fluency-bit-title">A Bright Idea.</strong> Though many people contributed to the creation of relational
+					databases, E. F. Codd of IBM is widely credited with the original concept. He received the Association of
+					Computing Machinery's Turing Award, the field's Nobel Prize, for the idea.
+			</div>
+			
+			<section class="subsection" data-number="11" data-name="Entities">
+				<h3>Entities</h3>
+				<p>
+					<span class="first-sentence">What <em>do</em> we want in database tables?</span> Entities. &#8220;Entity&#8221; is about as vague as &#8220;thing&#8221; and
+					&#8220;stuff,&#8221; but the inventors of databases didn't want to limit the kinds of information that can be
+					stored. An <span class="keyword">entity</span> is anything that can be identified by a fixed number of its
+					characteristics, called <span class="keyword">attributes</span>; the attributes have names and values, and the
+					values are the data that is stored in the table. (Unfortunately, <em>attributes</em> is an overused word in computing; in
+					relational databases, think of an attribute as a &#8220;column of a table,&#8221; where the &#8220;attribute
+					names&#8221; are the column headings and the &#8220;attribute values&#8221; are the entries. We use the term <em>tag
+					attributes</em> when we mean the attributes of XML.)
+				</p>
+				<p>
+					To relate entities and attributes to the metadata discussion earlier in this chapter, think of the
+					attribute's name as the tag used in the Identity role, and the attribute values as the content enclosed in the
+					tags. An entity is a group of attributes collected together by a tag used in the Affinity role. When describing
+					affinity, we noted that the tagged data that we were grouping together all applied to one object, which was why it
+					made sense to enclose it in tags. That object is the entity - the thing that the data applies to. Think of the
+					tag used in affinity as the entity's name, and the tags that we allow within it as its attributes. So, an
+					&#8220;island&#8221; is an entity, and its attributes include &#8220;name,&#8221; &#8220;area,&#8221; and
+					&#8220;elevation&#8221;; see Figure 16.4. An &#8220;archipelago&#8221; is also an entity.
+				</p>
+				
+				<p>
+					So, an entity defines a table. The name of the entity is the name of the table, and each of its possible
+					attributes is assigned a column with the column
+				</p>
+				
+		
+				<div class="pagebreak pageNumber">482 </div>
+				
+				<figure class="full-table">
+					<table>
+						<tr>
+							<th colspan="3" class="table-title">Island</th>
+						<tr>
+						<tr>
+							<th>Name</th>
+							<th>Area</th>
+							<th>Elevation</th>
+						</tr>
+						<tr>
+							<td>Isabela</td>
+							<td>4588</td>
+							<td>1707</td>
+						</tr>
+						<tr>
+							<td>Fernandina</td>
+							<td>642</td>
+							<td>1494</td>
+						</tr>
+						<tr>
+							<td>Tower</td>
+							<td>14</td>
+							<td>76</td>
+						</tr>
+						<tr>
+							<td>Santa Cruz</td>
+							<td>986</td>
+							<td>846</td>
+						</tr>
+					</table>
+				</figure>
+				<figCaption>
+					<span class="figureId">Figure 16.4</span> A table instance for the island entity.
+				</figcaption>
+				
+				<p>
+					heading being the attribute name. The values in the columns are the attributes' values, and the rows are the
+					entity instances. We say  <span class="keyword">entity instances</span> for a row because a specific set of values
+					for the attributes of an entity - that is, the content of the row - define one particular object, an
+					instance of the entity. So, &#8220;name&#8221; and &#8220;area&#8221; are attributes of &#8220;island&#8221;
+					generally, but &#8220;Tahiti&#8221; and &#8220;1048&#8221; define a specific island; a row with those values is an
+					instance of the &#8220;island&#8221; entity. Any table containing specific rows is said to be a <span class="keyword">table instance</span>.
+				</p>
+						
+				<p>
+					In addition to having a name, attributes also have a <span class="keyword">data type</span>, such as number, text,
+					image, and so on. (We haven't been concerned about data types so far.) The data type defines the form of the
+					information that can be stored in a field. By specifying the data type, database software can prevent us from
+					accidentally storing bad information in a table. To connect the data type to the tagging discussed earlier, think
+					of the type as a tag attribute, as in <code>&lt;name type="text"&gt;</code> or <code>&lt;area type="number"&gt;</code>, though database
+					software uses other forms of metadata to record the data type.
+				</p>
+				
+				<div class="fluency-bit">
+					<strong class="fluency-bit-title">For the Record. </strong>Because databases are so important and long-studied, the
+					concepts are known by several terms. The technical term for a row is a <span class="keyword">tuple</span> (short u) from words like
+					quintuple, sextuple, and septuple. Rows are often called <span class="keyword">records</span>, a holdover from computing's punch-card
+					days. Attributes are also known as <span class="keyword">fields</span> and <span class="keyword">columns</span>; an attribute's data type is sometimes
+					referred to as its <span class="keyword">format</span>. Tables are technically known as <span class="keyword">relations</span>.
+				</div>
+			</section>
+			<section class="subsection" data-number="12" data-name="Properties of Entities">		
+				<h3>Properties of Entities</h3>
+				<p>
+					<span class="first-sentence">One curious property of a relational database table is that it can be empty.</span> That is, the table has no
+					rows. (Visualize the idea by deleting the last four rows of the table in Figure 16.4.) It seems odd, but it
+					makes sense. Once we agree that an entity is anything defined by a specific set of attributes, then in principle
+					a table exists with a name and column headings. When we specify entity instances, we'll have rows. So, among the
+					instances of any table is the &#8220;empty instance.&#8221;
+				</p>
+				<p>
+					<span class="property">Instances are unordered. </span>Each distinct table is a different table instance.
+					Two table instances will have a different set of rows. And, tables with the same rows, but reordered - that
+					is, the same rows are listed in different sequence, say one sorted and the other unsorted - are the same table instance. Thus, the order of the rows
+					doesn't matter in databases. We need to list them in some order, of course, but any order will do.
+				</p>
+						
+				<div class="pagebreak pageNumber">483</div>
+				
+				<p>
+					The attributes (columns) are also considered to be unordered, though we must list them in some order. Since
+					the attributes have a name - think of the column heading or the tag - they do not have to be tracked by
+					position.
+				</p>
+				<p>
+					Notice that the columns are unordered and the rows are unordered, but that doesn't mean that data in the
+					table can go anywhere. Columns stay as columns, because they embody a kind of data being stored, and the items
+					in a row stay as a row, because they are descriptive of an individual entity. The freedom to move the data is
+					limited to exchanging entire rows or exchanging entire columns.
+				</p>
+				<p>
+					<span class="property">Uniqueness. </span>There are few limits on what an entity can be. Things that can be
+					identified or distinguished from each other based on a fixed set of attributes qualify as entities, which covers
+					almost everything. Amoebas are not entities, because they have no characteristics that allow us to tell them
+					apart. (Perhaps amoebas can tell each other apart, and if we could figure out how, then the characteristics on
+					which they differ could be their attributes, allowing them to become entities.) Of course, one-celled animals
+					are entities.
+				</p>
+				<p>
+					Because entities can be distinguished by their attributes, they are unique. Accordingly, in a database
+					table no two rows can be the same. Unique instances is usually what we intend when we set up a database. For
+					example, the database containing information about registered students at a college intends for each
+					row - corresponding to a student - to be unique since the students are. When we set up the database, we
+					ensure that we store information that uniquely identifies each student - such as name, birth date, parents'
+					names, and permanent address.
+				</p>
+				<p>
+					In cases where the entities are unique but it is difficult to process the information, we might select an
+					alternate encoding. For example, killer whales can be distinguished by the arrangement of their black-and-white
+					markings. Even though images can be stored in a database, it is difficult to compare two images to determine if
+					they show the same whale. So, we assign names to the killer whales, which are easy to manipulate, letting a
+					human do the recognition and assign the name.
+				</p>
+				<p>Notice that the two rows can have the same value for some attributes, just not all attributes.</p>
+				<p>
+					<span class="property">Keys. </span>The fact that no two rows in a database table are identical motivates us
+					to ask which attributes distinguish them. In most cases, there will be several possibilities. Single attributes
+					might be sufficient, like island name, or pairs of attributes like island name and archipelago name may be
+					needed if certain island names, like Santa Maria, are common. Or we may have to consider three or more
+					attributes taken together to ensure uniqueness. Any set of attributes for which all entities are different is
+					called a <span class="keyword">candidate key</span>. Because database tables usually have several candidate
+					keys, we choose one and call it the primary key. The <span class="keyword">primary key</span> is the one that the database system will use to
+					decide uniqueness.
+				</p>
+		
+				<div class="pagebreak pageNumber">484</div>
+				
+				<p>
+					Notice that candidate keys qualify only if they distinguish among all entities forever, not just those that
+					are in the table at the moment, that is, the given instance. For example, all currently registered college
+					students might have different names (first, middle, and last taken together), making the name attribute unique
+					for the current class. But, as we know, there are many people with identical names, and so that triple is not an
+					actual candidate key.
+				</p>
+				<p>
+					If no combination of attributes qualifies as a candidate key, then a unique ID must be assigned to each
+					entity. That's why your school issues students IDs: Some other student might match you on all of the attributes
+					that the school records in its database, but because the school doesn't want to worry about the possibility of
+					two distinct students matching on its key, it issues an ID number to guarantee that one attribute distinguishes
+					each student.
+				</p>
+				<p>
+					<span class="property">Atomic data. </span>In addition to requiring a description of each attribute's type
+					of data - for example, number, text, or date - databases also treat the information as <span class="keyword">atomic</span>, that is, not decomposable into any smaller parts. So, for example, an address
+					value
+				</p>
+				<code>1234 Sesame Street</code>
+				<p>
+					is treated in a database table as a single sequence of ASCII characters; the street number and the street
+					name cannot be separated. This is why forms -  both paper and Web - have separate fields for street,
+					city, state, and postal code: Most uses of address information must manipulate the city, state, and postal code
+					information independently, which means the data must be assigned to separate fields.
+				</p>
+				
+				<p>
+					The &#8220;only atomic data&#8221; rule is usually relaxed for certain types of data, such as dates, time,
+					and currency. Strictly speaking, a date value 01/01/1970 must be treated as a single unity; any use of the date
+					that refers to the month alone has to store the date as three attributes: day, month, and year. But database
+					software usually bends the rules, allowing us to specify the format of the data attribute, say dd/mm/yyyy, which
+					allows the program to understand how the field decomposes. This format saves us the trouble of manipulating
+					three attributes.
+				</p>
+			</section>
+			<section class="subsection" data-number="13" data-name="Database Schemes">
+				<h3>Database Schemes</h3>
+				<p>
+					<span class="first-sentence">Though tags may be a precise way to specify the structure of a table, it is a cumbersome way to define a table.</span>
+					Accordingly, database systems specify a table as a <span class="keyword">database scheme</span> or <span class="keyword">database schema</span>.
+					The scheme is a collection of table definitions that gives the name of the table, lists the attributes and their data types, and identifies the primary key. Each database system has
+					specific requirements for how a scheme is presented, so there are no universal rules. We use an informal
+					approach in which the attributes are given by their name, a data type, and a comment describing the meaning of
+					the field. Figure 16.5 shows a database scheme for the Island table.
+				</p>
+		
+				<div class="pagebreak pageNumber">485</div>
+		
+				<figure class="example">
+					<strong>Island</strong>
+					<table class="">
+						<tr>
+							<td>iName</td>
+							<td>text</td>
+							<td><em>Island Name</em></td>
+						</tr>
+						<tr>
+							<td>area</td>
+							<td>number</td>
+							<td><em>Area in square kilometers</em></td>
+						</tr>
+						<tr>
+							<td>elevation</td>
+							<td>number</td>
+							<td><em>Highest point on the island</em></td>
+						</tr>				
+					</table>
+					<p>Primary Key: iName</p>
+				</figure>
+				<figcaption>
+					<span class="figureId">Figure 16.5</span> Database table definition for an <strong>Island</strong> table.
+				</figcaption>
+			</section>
+			<section class="subsection" data-number="14" data-name="XML Trees and Entities">
+				<h3>XML Trees and Entities</h3>
+				<p>
+					<span class="first-sentence">As mentioned earlier, relational database tables and XML trees are not the same.</span> A full explanation of the
+					differences is for database experts, but basically relational databases are more restrictive than XML trees; the
+					limits make them more powerful and allow them to do more for us, as you'll soon see. For us, the main difference
+					concerns the Collection Rule: When entity instances are grouped, all entities within the tag must have the same
+					structure, because that structure defines the attributes that make up a row.
+				</p>
+				<p>
+					For example, the Island table for the Gal&aacute;pagos in Figure 16.4, which is a legal relational database
+					table, can be encoded in XML as shown in the answer to Try It Exercise 16.1 on page 505. So, the relational
+					formulation and the XML formulation are the same. But, when we added the <code>&lt;a_name&gt;</code> tags inside of the
+					<code>&lt;archipelago&gt; </code>tags, we violated the relational requirement that all entities have the same structure: The
+					<code>&lt;a_name&gt;</code> was not an<code> &lt;island&gt; </code>entity. Including the <code>&lt;a_name&gt;</code> tag made sense for XML, but not
+					for the relational model. So, they are related but not identical.
+				</p>
+			</section>
+			<section class="subsection" data-number="15" data-name="Database Tables Recap">		
+				<h3>Database Tables Recap</h3>
+				<p>
+					<span class="first-sentence">Summarizing the important points of the last few sections, tables in databases are not simply an
+					arrangement of text, but rather they have a structure that is specified by metadata.</span> The structure of a database
+					table is separate from its content. A table structures a set of entities - things that we can tell apart by
+					their attributes - by naming the attributes and giving their data types. The entities of the table are
+					represented as rows. We understand that rows and columns are unordered in databases, though when they are listed
+					they have to be listed in some order. Tables and fields should have names that describe their contents, the
+					fields must be atomic (i.e., indivisible), and one or more attributes define the primary key (i.e., field(s)
+					with the property of having a different value for every row in any table instance ever).
+				</p>
+			</section>
+		</section>
+		<section class="section" data-number="16" data-name="Operations on Tables">
+			<h2>Operations on Tables</h2>
+			<p>
+				<span class="first-sentence">A database is a collection of database tables.</span> The main use of a database is to look up information. Users
+				specify what they want to know and the database software finds it. For example, imagine a database containing
+				Olympic records. There might be a table of participants for each Olympics, including attributes of name, country, and
+				event; there might be a table of the medal winners for each Olympics, including attributes for the medal, the
+				winner's name, the winner's country, and perhaps the score, distance, time, or other measure of the achievement.
+				The database has many tables, but if we want to know how many marathon medalists have come from African countries,
+				there is no table to look in - the table of medalists probably includes all winners in all sports, not just
+				marathon winners from African countries. The data is in the database, but it's not stored in a single table where
+				we, or the computer, can look it up. What we need to do is describe the information we want in such a way that the
+				computer can figure out how to find it for us.
+			</p>
+	
+			<div class="pagebreak pageNumber">486</div>
+			
+			<p>
+				<span class="keyword">Database operations</span> allow us to ask questions of a database in a way that lets the
+				software find the answer for us. For example, we will ask for the number of African marathon winners by asking:
+			</p>
+			
+			<p>
+				<em>Put together the medalists for all of the Olympic Games (the operation will be called union), find the rows
+				of medalists who won in the marathon (the operation will be called select), and pick out those who come from
+				African countries (the operation will be called join). Count the resulting rows, which is the answer we want.</em>
+			</p>
+			
+			<p>
+				This example illustrates two important points. First, we can perform operations on tables to produce tables.
+				It's analogous to familiar operations on numbers: Operations like addition combine two numbers and produce another
+				number; operations like union combine two tables and produce another table. Second, the questions we ask of a
+				database are answered with a whole table. If the question has a single answer - who won the marathon in
+				2000? - then the table instance answering the question will have only a single row. Generally there will be
+				several answers forming the table. Of course, if there is no answer, the table will be empty.
+			</p>
+			
+			<p>
+				In this section we illustrate the idea of combining tables to produce new tables. For this example, we
+				imagine a table of the countries of the world as might be used by a travel agency. Its structure and sample
+				entries are shown in Figure 16.6. Using that table, Nations, we'll investigate the five fundamental operations
+				that can be performed on tables: Select, Project, Union, Difference, and Product.
+			</p>
+			<section class="subsection" data-number="17" data-name="Select Operation">
+				<h3><strong>Select</strong> Operation</h3>
+				<p>
+					<span class="first-sentence">The Select operation takes rows from one table to create a new table.</span> Generally we specify the Select
+					operation by giving the (single) table from which rows are to be selected and the test for selection. We use the
+					syntax:
+				</p>		
+				
+				<p>Select <em>Test</em> From <em>Table</em></p>
+				
+				<p>
+					The <em>Test</em> is to be applied to each row of the given table to decide if the row should be included in the
+					new result table. The <em>Test</em> is a short formula that tests attribute values. It is written using attribute
+					names, constants like numbers or letter strings, and the relational operators &lt;, &le;, &ne;, =, &ge;, &gt;.
+					The <span class="keyword">relational operators</span>
+				</p>
+		
+				<div class="pagebreak pageNumber">487</div>
+		
+				<figure class="example">
+					<strong>Nations</strong>
+					<table class="stretch">
+						<tr>
+							<td>Name</td>
+							<td>text</td>
+							<td><em>Common rather than official name</em></td>
+						</tr>
+						<tr>
+							<td>Domain</td>
+							<td>text</td>
+							<td><em>Internet top-level domain name</em></td>
+						</tr>
+						<tr>
+							<td>Capital</td>
+							<td>text</td>
+							<td><em>Nation&#700;s capital</em></td>
+						</tr>
+						<tr>
+							<td>Latitude</td>
+							<td>number</td>
+							<td><em>Approx. latitude of capital</em></td>
+						</tr>
+						<tr>
+							<td>N_S</td>
+							<td>Boolean</td>
+							<td><em>Latitude is N(orth) or S(outh)</em></td>
+						</tr>
+						<tr>
+							<td>Longitude</td>
+							<td>number</td>
+							<td><em>Approx. longitude of capital</em></td>
+						</tr>
+						<tr>
+							<td>E_W</td>
+							<td>Boolean</td>
+							<td>Longitude is E(ast) or W(est)</td>
+						</tr>
+						<tr>
+							<td>Interest</td>
+							<td>text</td>
+							<td>A short description of the country</td>
+						</tr>
+					</table>
+					Primary Key: Name
+					
+					<table class="collapse">
+						<tr>
+							<th>Name</th>
+							<th>Dom</th>
+							<th>Capital</th>
+							<th>Lat</th>
+							<th>NS</th>
+							<th>Lon</th>
+							<th>EW</th>
+							<th>Interest</th>
+						</tr>
+						<tr>
+							<td>Ireland</td>
+							<td>IE</td>
+							<td>Dublin</td>
+							<td>52</td>
+							<td>N</td>
+							<td>7</td>
+							<td>W</td>
+							<td>History</td>
+						</tr>
+						<tr>
+							<td>Israel</td>
+							<td>IR</td>
+							<td>Jerusalem</td>
+							<td>32</td>
+							<td>N</td>
+							<td>35</td>
+							<td>E</td>
+							<td>History</td>
+						</tr>
+						<tr>
+							<td>Italy</td>
+							<td>IT</td>
+							<td>Rome</td>
+							<td>42</td>
+							<td>N</td>
+							<td>12</td>
+							<td>E</td>
+							<td>Art</td>
+						</tr>
+						<tr>
+							<td>Jamaica</td>
+							<td>JM</td>
+							<td>Kingston</td>
+							<td>18</td>
+							<td>N</td>
+							<td>77</td>
+							<td>W</td>
+							<td>Beach</td>
+						</tr>
+						<tr>
+							<td>Japan</td>
+							<td>JP</td>
+							<td>Tokyo</td>
+							<td>35</td>
+							<td>N</td>
+							<td>143</td>
+							<td>E</td>
+							<td>Kabuki</td>
+						</tr>
+					</table>
+				</figure>
+				
+				<figcaption>
+					<span class="figureId">Figure 16.6 </span> The Nations table definition and sample entries.
+				</figcaption>
+		
+				<p>
+					test whether the attribute value has a particular relationship, for example, Interest = 'Beach' or Latitude &lt;
+					45. If the <em>Test</em> is true, the row is included in the new table; otherwise, it is ignored. Notice that the
+					information used to create the new table is a copy, so the original table is not changed by Select (or any of
+					the other table-building operations discussed here).
+				</p>
+		
+		
+				<p>
+					To use the Nations table to create a table of countries with beaches, we write a Select command to remove
+					all rows for countries that have Beach as their Interest attribute. The operation is
+				</p>
+				
+				<code><strong>Select</strong> Interest = 'Beach' <strong>From</strong> Nations</code>
+				
+				<p>
+					This gives us a new table, shown in part in Figure 16.7. Notice that the information in the last column is
+					constant because the <em>Test</em> required the word &#8220;Beach&#8221; for that field for all selected rows.
+				</p>
+		
+				<p>
+					The <em>Test</em> can be more than a test of a single value. For example, we can use the logical operations AND
+					and OR in the way they were used to search in
+				</p>
+		
+				<figure class="example">
+					<table class = "collapse">
+						<tr>
+							<th>Name</th>
+							<th>Dom</th>
+							<th>Capital</th>
+							<th>Lat</th>
+							<th>NS</th>
+							<th>Lon</th>
+							<th>EW</th>
+							<th>Interest</th>
+						</tr>
+						<tr>
+							<td>Australia</td>
+							<td>AU</td>
+							<td>Canberra</td>
+							<td>37</td>
+							<td>S</td>
+							<td>148</td>
+							<td>E</td>
+							<td>Beach</td>
+						</tr>
+						<tr>
+							<td>Bahamas</td>
+							<td>BS</td>
+							<td>Nassau</td>
+							<td>25</td>
+							<td>N</td>
+							<td>78</td>
+							<td>W</td>
+							<td>Beach</td>
+						</tr>
+						<tr>
+							<td>Barbados</td>
+							<td>BB</td>
+							<td>Bridgetown</td>
+							<td>13</td>
+							<td>N</td>
+							<td>59</td>
+							<td>W</td>
+							<td>Beach</td>
+						</tr>
+						<tr>
+							<td>Belize</td>
+							<td>BZ</td>
+							<td>Belmopan</td>
+							<td>17</td>
+							<td>N</td>
+							<td>89</td>
+							<td>W</td>
+							<td>Beach</td>
+						</tr>
+						<tr>
+							<td>Bermuda</td>
+							<td>BM</td>
+							<td>Hamilton</td>
+							<td>32</td>
+							<td>N</td>
+							<td>64</td>
+							<td>W</td>
+							<td>Beach</td>
+						</tr>
+					</table>
+				</figure>
+				<figcaption>
+					<span class="figureId">Figure 16.7 </span> Part of the table created by selecting countries with a Test for <strong>Interest</strong>
+					equal to <strong>Beach</strong>.
+				</figcaption>
+		
+				<div class="pagebreak pageNumber">488</div>
+				
+				<p>Chapter 5. So, for example, to find countries whose capitals are at least 60&deg north latitude, we write</p>
+				
+				<code><strong>Select</strong> Latitude &ge; 60 AND N_S = 'N' <strong>From</strong> Nations </code>
+				
+				<p>
+					which should produce a four-row table created from the Nations table's rows for Finland, Greenland,
+					Iceland, and Norway.
+				</p>
+			</section>
+			<section class="subsection" data-number="18" data-name="Project Operations">
+				<h3>Project Operation</h3>
+				
+				<p>
+					<span class="first-sentence">If we can pick out rows of a table (using Select), we should be able to pick out columns too.</span> Project
+					(pronounced pro &middot; JECT) is the operation that builds a new table from the columns of an existing table. We only
+					need to specify the name of a table and the columns (field names) from it to be included in the new table. The
+					syntax is
+				</p>
+				
+				<code><strong>Project</strong> <em>Field_List</em> <strong>From</strong> <em>Table</em></code>
+				
+				<p>
+					For example, to create a new table from the Nations table without the capital and position
+					information - that is, to keep the other three columns - write
+				</p>
+				
+				<code> <strong>Project</strong> Name, Domain, Interest <strong>From</strong> Nations </code>
+				
+				<p>
+					The new table will have as many rows as the Nation table, but just three columns. Figure 16.8 shows part of
+					that table.
+				</p>
+				
+				<figure class="small example">
+					<table class="collapse">
+						<tr>
+							<th>Name</th>
+							<th>Dom</th>
+							<th>Interest</th>
+						</tr>
+						<tr>
+							<td>Nauru</td>
+							<td>NR</td>
+							<td>Beach</td>
+						</tr>
+						<tr>
+							<td>Nepal</td>
+							<td>NP</td>
+							<td>Mountains</td>
+						</tr>
+						<tr>
+							<td>Netherlands</td>
+							<td>NL</td>
+							<td>Canals</td>
+						</tr>
+						<tr>
+							<td>New Caledonia</td>
+							<td>NC</td>
+							<td>Beach</td>
+						</tr>
+						<tr>
+							<td>New Zealand</td>
+							<td>NZ</td>
+							<td>Adventure</td>
+						</tr>
+					</table>
+				</figure>
+				<figcaption>
+					<span class="figureId">Figure 16.8 </span> Sample entries for a <strong>Project</strong> operation on <strong>Nations</strong>.
+				</figcaption>
+				
+				<p>
+					Project does not <em>always</em> result in a table with the same number of rows as the original table. When the
+					new table includes a key from the old table (e.g., Name), the key makes each row distinct, so the new table will
+					include fields from all rows of the original table. But if some of the new table's rows are the same - which
+					can't happen if key columns are included, but can if there is no key among the chosen columns - they will be
+					merged together into a single row. The rows have to be merged because of the rule that the rows of any table
+					must always be distinct. If rows in one table are merged, the two tables will, of course, have different numbers
+					of rows. So, for example, to list the Interest descriptions that travel agents use to summarize countries, we
+					create a new table of only the last column of Nations.
+				</p>
+				
+				<code> <strong>Project</strong> Interest <strong>From</strong> Nations </code>
+				
+				<div class="pagebreak pageNumber">489</div>
+				
+				<p>
+					This produces a one-column table with a row for each descriptive word: Beach appears once, Mountains
+					appears once, and so on. Thus, the table has as many rows as unique words, and because of merging, it does not have as many rows as Nations.
+				</p>
+				<p>
+					We often use Select and Project operations together to &#8220;trim&#8221; base tables to keep only some of
+					the rows and some of the columns. To illustrate, we define a table of the countries with northern capitals,
+					called Northern, and define it with the command
+				</p>
+				<code> At60OrAbove = (<strong>Select</strong> Latitude &ge; 60 AND N_S = 'N' <strong>From</strong> Nations)</code>
+				<p>
+					which is the table we created earlier. To throw away everything except the name, domain, and latitude to
+					produce Northern, we write
+				</p>
+				<code> Northern = (<strong>Project</strong> Name, Domain, Latitude <strong>From</strong> At60OrAbove) </code>
+		
+				<p>as shown in Figure 16.9.</p>
+				
+				<figure class="small example">
+					<table class = "collapse">
+						<tr>
+							<th>Name</th>
+							<th>Dom</th>
+							<th>Lat</th>
+						</tr>
+						<tr>
+							<td>Finland</td>
+							<td>FI</td>
+							<td>61</td>
+						</tr>
+						<tr>
+							<td>Greenland</td>
+							<td>GL</td>
+							<td>72</td>
+						</tr>
+						<tr>
+							<td>Iceland</td>
+							<td>IS</td>
+							<td>65</td>
+						</tr>
+						<tr>
+							<td>Norway</td>
+							<td>NO</td>
+							<td>60</td>
+						</tr>
+					</table>
+				</figure>
+				<figcaption>
+					<span class="figureId">Figure 16.9 </span><strong>Northern</strong>, the table of countries with northern capitals.
+				</figcaption>
+				
+				
+				<p>Another way to achieve the same result is to combine the two operations:</p>
+				<code> <pre>
+<strong>Project</strong> Name, Domain, Latitude From
+	(<strong>Select</strong> Latitude &ge; 60 AND N_S = 'N' <strong>From</strong> Nations)
+					</pre>
+				</code>
+				<p>
+					First a temporary table is created with the four countries, just as before. Then the desired columns are
+					selected. It might be a slightly more efficient solution if we don't need the At60OrAbove table for any other
+					purpose, but generally either solution is fine.
+				</p>
+			</section>
+			<section class="subsection" data-number="19" data-name="Union Operation">
+				<h3><strong>Union</strong> Operation</h3>
+				
+				<p>
+					<span class="first-sentence">Besides picking out rows and columns of a table, another operation on tables is to combine two tables.</span> This
+					only makes sense if they have the same set of attributes, of course. The operation is known as Union, and is
+					written as though it were addition:
+				</p>
+				<p> <em>Table1</em> + <em>Table2</em> </p>
+				<p>
+					The plus sign (+) can be read &#8220;combined with.&#8221; So, if the table of countries with capitals at
+					least 45&#176; south latitude are named At45OrBelow with the command
+				</p>
+
+				<code> At45OrBelow = (<strong>Select</strong> Latitude &#8805; 45 AND N_S = 'S'
+					<strong>From</strong> Nations) </code>
+				
+				<p>
+					then we can define places with their capitals closest to the poles using the union operation. Call the
+					result ExtremeGovt and define it by
+				</p>
+
+				<code>ExtremeGovt = At60OrAbove + At45OrBelow</code>
+		
+				<div class="clear"></div>
+
+				<div class="pagebreak pageNumber"> 490 </div>
+				
+				<p> The result is shown in Figure 16.10. This table could also have been created with a complex
+					<code>Select</code> command.</p>
+				
+				<figure class="example">
+					<table class="collapse">
+						<tr>
+							<th>Name</th>
+							<th>DOM</th>
+							<th>Capital</th>
+							<th>Lat</th>
+							<th>NS</th>
+							<th>Lon</th>
+							<th>EW</th>
+							<th>Interest</th>
+						</tr>
+						<tr>
+							<td>Falkland Is</td>
+							<td>FK</td>
+							<td>Stanley</td>
+							<td>51</td>
+							<td>S</td>
+							<td>58</td>
+							<td>W</td>
+							<td>Nature</td>
+						</tr>
+						<tr>
+							<td>Finland</td>
+							<td>FI</td>
+							<td>Helsinki</td>
+							<td>61</td>
+							<td>N</td>
+							<td>26</td>
+							<td>E</td>
+							<td>Nature</td>
+						</tr>
+						<tr>
+							<td>Greenland</td>
+							<td>GL</td>
+							<td>Nuuk</td>
+							<td>72</td>
+							<td>N</td>
+							<td>40</td>
+							<td>W</td>
+							<td>Nature</td>
+						</tr>
+						<tr>
+							<td>Iceland</td>
+							<td>IS</td>
+							<td>Reykjavik</td>
+							<td>65</td>
+							<td>N</td>
+							<td>18</td>
+							<td>W</td>
+							<td>Geysers</td>
+						</tr>
+						<tr>
+							<td>Norway</td>
+							<td>NO</td>
+							<td>Oslo</td>
+							<td>60</td>
+							<td>N</td>
+							<td>10</td>
+							<td>E</td>
+							<td>Vikings</td>
+						</tr>
+					</table>
+				</figure>
+				<figcaption>
+					<p> <span class="figureId">Figure 16.10</span> The <span class="exampleCode">ExtremeGovt</span> table created with <code>Union</code>.</p>
+				</figcaption>
+				
+				<p>
+					Union can be used to combine separate tables, say, Nations with Canada_Provinces. (Canada_Provinces gives the same
+					data about the provinces as Nations does about countries, except the Domain field is CA for all rows.) For example, had
+					the At60OrAbove table been defined by
+				</p>
+						
+				<code><pre>
+<strong>Select</strong> Latitude &#8805; 60 AND N_S = 'N'
+	<strong>From</strong>(Nations + Canada_Provinces)
+				</pre> </code>
+				
+				
+				<p>then the Yukon would be included because its capital, Whitehorse, is north of 60&#176;.</p>
+			</section>
+			<section class="subsection" data-number="20
+			" data-name="Difference Operation">
+				<h3><strong>Difference</strong> Operation</h3>
+				
+				<p>
+					<span class="first-sentence">The opposite of combining two tables with Union is to remove from one table the rows also listed in a second
+					table.</span> The operation is known as <span class="keyword">Difference</span> and it is written with the syntax
+				</p>
+				
+				<p><em>Table 1 - Table 2 </em></p>
+		
+				<p>
+					The operation can be read, "remove from <em>Table1</em> any rows also in <em>Table2</em>. "Like <code>Union</code>, 
+					<code>Difference</code> only makes sense when the table's fields are the same.<br />For example,
+				</p>
+				
+				<code>Nations - At60OrAbove</code>
+				
+				<p>
+					produces a table without those countries with northern capitals--that is, with-out Finland, Greenland, Iceland,
+					and Norway. Interestingly, this command works just as well if At60OrAbove had
+					included Canadian provinces like theYukon. That is, in a Difference command,
+					the items "subtracted away" do not have to exist in the original table.
+				</p>
+			</section>
+			<section class="subsection" data-number="21" data-name="Product Operation">
+				<h3><strong>Product</strong> Operation</h3>
+				
+				<p>
+					<span class="first-sentence">Adding and subtracting tables is easy.</span> What is multiplying tables like? The Product
+					operation on tables, which is written as
+				</p>
+				
+				<p> <em>Table1 x Table2</em> </p>
+				
+				<p>
+					creates a supertable. The table has the columns from <em>both</em> tables. So, if thefirst table has five
+					attributes and the second table has six attributes, the
+				</p>
+				
+				<div class="pagebreak pageNumber">491</div>
+				
+				<p>
+					Product table has eleven attributes. The rows of the new table are created by <em>appending</em>
+					or concatenating each row of the second table to each row of the first table-that is, putting the rows together.
+					The result is the "product" ofthe rows of each table.
+				</p>
+				
+				<p>
+					For example, if the first table is Nations with 230 rows, and the second table
+					has 4 rows, there weill be 230 X 4 = 920 rows, because each row of the Natrions
+					table is appended with each row of the second table to produce a rwo of the result.
+				</p>
+				
+				<p>
+					To illustrate, suppose you have a table of your traveling companions, asdescribed in Figure 16.11(a),
+					containing the information shown in Figure16.11(b).
+				</p>
+			
+				<figure class= "example large">
+					<div class="column" style="width: 380px">
+						<table class="small">
+							<tr>
+								<td><strong>Travelers</strong></td>
+							</tr>
+							<tr>
+								<td>Friend</td>
+								<td>text</td>
+								<td><em>A Traveling Companion</em></td>
+							</tr>
+							<tr>
+								<td>Homeland</td>
+								<td>text</td>
+								<td><em>Friend's Home Country</em></td>
+							</tr>
+						</table>
+						<p>Primary Key: Friend</p>
+						<p><strong>(a)</strong></p>
+					</div>
+					<div class="column" style="width: 220px">
+						<table class="collapse">
+							<tr>
+								<th>Friend</th>
+								<th>Homeland</th>
+							</tr>
+							<tr>
+								<td>Isabella</td>
+								<td>Argentina</td>
+							</tr>
+							<tr>
+								<td>Brian</td>
+								<td>South Africa</td>
+							</tr>
+							<tr>
+								<td>Wen</td>
+								<td>China</td>
+							</tr>
+							<tr>
+								<td>Clare</td>
+								<td>Canada</td>
+							</tr>
+						</table>
+						<p><strong>(b)</strong></p>
+					</div>
+				</figure>
+				<figcaption>
+					<p> <span class="figureId">Figure 16.11</span> (a) The definition of the Travelers table, and (b) its values.</p>
+				</figcaption>
+				
+				<p>Then the Product operation</p>
+				
+				<code>Super = Nations x Travelers</code>
+				
+				<div class="clear"></div>
+
+				<p>
+					creates a new table with ten fields-eight fields from <code>Nations</code> and two fields from <code>Travelers</code>-a
+					total of 920 rows. Some of the rows of the new table are shown in Figure 16.12. For each country, there is a row
+					for each of your friends.
+				</p>
+				
+				<p>
+					The <code>Product</code> operation may seem a little odd at first because its all-combina-tions approach
+					merges information that may not "belong together." And it'strue. But most often, <code>Product</code> is
+					used to create a supertable that contains bothuseful and useless rows, and then it is "trimmed down" using <code>Select</code>,
+					<code>Project</code>,
+				</p>
+				
+				<figure class="example large">
+					<table>
+						<tr>
+							<th>Name</th>
+							<th>Dom</th>
+							<th>Capital</th>
+							<th>Lat</th>
+							<th>NS</th>
+							<th>Log</th>
+							<th>EW</th>
+							<th>Interest</th>
+							<th>Firend</th>
+							<th>Homeland</th>
+						</tr>
+						<tr>
+							<td>Cyprus</td>
+							<td>CY</td>
+							<td>Nicosia</td>
+							<td>35</td>
+							<td>N</td>
+							<td>32</td>
+							<td>E</td>
+							<td>History</td>
+							<td>Clare</td>
+							<td>Canada</td>
+						</tr>
+						<tr>
+							<td>Czech Rep.</td>
+							<td>CZ</td>
+							<td>Prague</td>
+							<td>51</td>
+							<td>N</td>
+							<td>15</td>
+							<td>E</td>
+							<td>Pilsner</td>
+							<td>Isabella</td>
+							<td>Argentina</td>
+						</tr>
+						<tr>
+							<td>Czech Rep.</td>
+							<td>CZ</td>
+							<td>Prague</td>
+							<td>51</td>
+							<td>N</td>
+							<td>15</td>
+							<td>E</td>
+							<td>Pilsner</td>
+							<td>Brian</td>
+							<td>South Africa</td>
+						</tr>
+						<tr>
+							<td>Czech Rep.</td>
+							<td>CZ</td>
+							<td>Prague</td>
+							<td>51</td>
+							<td>N</td>
+							<td>15</td>
+							<td>E</td>
+							<td>Pilsner</td>
+							<td>Wen</td>
+							<td>China</td>
+						</tr>
+						<tr>
+							<td>Czech Rep.</td>
+							<td>CZ</td>
+							<td>Prague</td>
+							<td>51</td>
+							<td>N</td>
+							<td>15</td>
+							<td>E</td>
+							<td>Pilsner</td>
+							<td>Clare</td>
+							<td>Canada</td>
+						</tr>
+						<tr>
+							<td>Denmark</td>
+							<td>DK</td>
+							<td>Copenhagen</td>
+							<td>55</td>
+							<td>N</td>
+							<td>12</td>
+							<td>E</td>
+							<td>History</td>
+							<td>Isabella</td>
+							<td>Argentina</td>
+						</tr>
+					</table>
+				</figure>
+				<figcaption>
+					<p>
+						<span class="figureId">Figure 16.12</span> Some rows from the supertable that is the product of <strong>Nations</strong> and
+						<strong>Travelers</strong>. For each row in <strong>Nations</strong> and each row in <strong>Travelers</strong>, there is a row in the product table that
+						combines them.
+					</p>
+				</figcaption>
+				
+				<div class="pagebreak pageNumber">492</div>
+		
+				<p>
+					and <code>Difference</code> to contain only the intended information. This is a powerful approach that we
+					will use repeatedly in later sections.
+				</p>
+				
+				<p>
+					To illustrate, suppose your traveling companions volunteer to tutor students preparing for the National
+					Geographic Society's Geography Bee. Each friend agrees to tutor students "on their part of the world," that is,
+					in the quarter ofthe planet from which they come. So, Isabella, who comes from Argentina in the southern and
+					western hemispheres, agrees to tutor students on the geography of that part of the world, and so on. Then you
+					can produce a master list of who's responsible for each country. We'll call it the <code>Master</code>
+					table. It is produced by these commands:
+				</p>
+		
+				<div class="clear"></div>
+
+				<code>
+					<pre>
+Super  = Nations X Travelers
+Assign = (Select N_S = 'S' AND E_W = 'W'
+		  AND Friend = 'Isabella' From Super) 
+	   + (Select N_S = 'S' AND E_W = 'E'
+		  AND Friend = 'Brian' From Super) 
+	   + (Select N_S = 'N' AND E_W = 'E'
+		  AND Friend = 'Wen' From Super) 
+	   + (Select N_S = 'N' AND E_W = 'W'
+		  AND Friend = 'Clare' From Super) 
+Master = Project Name, Friend From Assign
+					</pre> 
+				</code>
+
+				<p>
+					Notice that we have used <code>Product</code> (<code>X</code>), <code>Union</code> (+),
+					<code>Select</code>, and
+					<code>Project</code>.
+				</p>
+				
+				<p>
+					How do these commands work? The <code>Super</code> table is the product table dis-cussed earlier with a row
+					for each nation paired with each friend (see Figure16.12). Then the <code>Assign</code> table is created by
+					the <code>Union</code> operation (+) that com-bines four tables, each created by a <code>Select</code>
+					operation from <code>Super</code>. The first <code>Select</code> keeps only those countries from <code>Super</code>
+					with Isabella's name that are also in the southern and western hemispheres. The second <code>Select</code>
+					keeps only those countries from <code>Super</code> with Brian's name that are in the southern and
+					easternhemispheres. The same kind of operations are used for Wen and Clare. The resulting <code>Assign</code>
+					table has 230 rows-the same as the original <code>Nations</code> table-with one of your friends' names
+					assigned to each country.
+				</p>
+				
+				<p>
+					We know that all of the countries are in the <code>Assign</code> table because every coun-try is in one of
+					the four hemisphere pairs, and in <code>Super</code> there is a row for each country for each friend. When
+					the right combination "comes up," the country will be chosen by one of the four <code>Selects</code>. In
+					addition, <code>Assign</code> has the property that each person is given countries in "their" part of the
+					world. (Wen has beenassigned the greatest amount of work!) Finally, we throw away all of the loca-tion
+					information to create our <code>Master</code> list, keeping only the names of the countries and the friends
+					responsible for tutoring students about that geogra-phy. Part of the result is shown in Figure 16.13.
+				</p>
+				
+				<p>
+					We have introduced five basic operations on tables. They are straightforwardand simple. It is surprising,
+					therefore, that these five are the only operations needed to create any table in a relational database. In
+					practice, we will rarely
+				</p>
+		
+				<div class="pagebreak pageNumber">493</div>
+				
+				<figure class = "example small" >
+					<table class="collapse">
+						<tr>
+							<th>Name</th>
+							<th>Friend</th>
+						</tr>
+						<tr>
+							<td>Chad</td>
+							<td>Wen</td>
+						</tr>
+						<tr>
+							<td>Chile</td>
+							<td>Isabella</td>
+						</tr>
+						<tr>
+							<td>China</td>
+							<td>Wen</td>
+						</tr>
+						<tr>
+							<td>Christmas ls.</td>
+							<td>Clare</td>
+						</tr>
+						<tr>
+							<td>Cocos ls.</td>
+							<td>Brian</td>
+						</tr>
+					</table>
+				</figure>
+				<figcaption>
+					<p><span class="figureId">Figure 16.13</span> A portion of the <strong>Master</strong> table of your friends' assignments.</p>
+				</figcaption>
+						
+				<p>
+					use the operations directly, because they are incorporated into database software. 'When we want to create
+					tables from other tables - an idea that is now quite natural - we will hardly be aware that we're using these
+					operations.
+				</p>
+				
+				<div class="fluency-bit">
+					<strong class="fluency-bit-title">Quotient Intelligence.</strong> There is a <strong>Divide</strong> operation on tables, but it's complicated and rather bizarre.
+					Because it doesn't give us any new capabilities, we willleave it to the experts.
+				</div>
+			</section>
+		</section>
+		<section class="section" data-number="22" data-name="Join Operation">
+			<h2>Join Operation</h2>
+			
+			<p>
+				<span class="first-sentence">Another powerful and useful operation for creating database tables is Join.</span> Indeed, it is so useful that
+				although Join can be defined from the five primitive database operations of the last section, it is usually
+				provided as a separate operator.
+			</p>
+			<section class="subsection" data-number="23" data-name="Join Defined">
+				<h3><strong>Join</strong> Defined</h3>
+				
+				<p>
+					<span class="first-sentence">Join combines two tables, like the Product operation does, but it doesn't necessarily produce all
+					pairings.</span> If the two tables each have fields with a common attribute, the new table produced by Join combines
+					only the rows from the given tables that match on those fields, not all pairings of rows, as does Product. We
+					write the Join operation as follows:
+				</p>
+				
+				<code>Table1 <img class="symbol" src="/contents/fluency/images/join.png" alt="joinSymbol"> Table2 <strong>On</strong> Match</code>
+		
+				
+				<p>
+					The unusual "bow tie" symbol suggests a special form of Product in which the two tables "match up." <em>Match</em>
+					is a comparison test involving fields from each table, which when true for a row from each table produces a
+					result row that is their concatenation. To refer to attributes in each table, we use the notation <em>Table.Field</em>,
+					as in <code>Master.Name</code>.
+				</p>
+			</section>
+			<section class="subsection" data-number="24" data-name="Join Applied">
+				<h3><strong>Join Applied</strong></h3>
+				
+				<p>
+					<span class="first-sentence">To show how Join works, recall the Northern table (Figure 16.9) and the Master table of your friends'
+					assignments (Figure 16.13).</span> The Join
+				</p>
+				
+				<code>Master <img class="symbol" src="/contents/fluency/images/join.png" alt="joinSymbol"> Northern <strong>On</strong> Master.Name = Northern.Name</code>
+						
+				<div class="pagebreak pageNumber">494</div>
+				
+				<p>
+					pairs all rows where the country name matches the home country of a friend. Which rows are those? This is
+					how to find out. Beginning with the first row of the Master table (shown here):
+				</p>
+				
+				<table class="example small">
+					<tr>
+						<th>Name</th>
+						<th>Friend</th>
+					</tr>
+					<tr>
+						<td>Afghanistan</td>
+						<td>Wen</td>
+					</tr>
+					<tr>
+						<td>Albania</td>
+						<td>Wen</td>
+					</tr>
+					<tr>
+						<td>...</td>
+						<td>...</td>
+					</tr>
+				</table>
+						
+				<p>
+					the Afghanistan row does not have the same Name field as any of the four countries of Northern, so it is
+					not part of the result. Nor does the Name in thesecond row of Master (Albania) appear as a Name field in
+					Northern. Indeed,only four rows of Master have the same Name field as rows in Northern:Finland, Greenland,
+					Iceland, and Norway. We combine those four rows with their corresponding rows in Northern to produce the
+					four-row result shown inFigure 16.14. As you see, Join associates the information from the rows of two tables in
+					a sensible way. Thus, Join is used to create new associations of infor-mation in the database.
+				</p>
+				
+				<figure>
+					<img src="/contents/fluency/images/Arrow.jpg" alt="Graph with Arrows" />
+				</figure>
+				<figcaption>
+					<p> <span class="figureId">Figure 16.14</span> The <strong>Join</strong> operation: <strong>Master <img class="symbol" src="/contents/fluency/images/join.png" alt="joinSymbol"> Northern</strong></p>
+				</figcaption>		
+		
+				
+				<div class="pagebreak pageNumber">495 </div>
+				
+				<p>
+					There are at least two ways to think about the Join operation. One way is to see it as a "lookup" operation
+					on tables. That is, for each row in one table, locate a row (or rows) in the other table with the same value in
+					the common field; if found, combine the two; if not, look up the next row. That's how we explained it in the
+					last paragraph. Another way is to see it as a Product operation forming all pairs of the two tables, and then
+					eliminating all rows that don't match in the common fields. Both ideas accurately describe the result, and the
+					computer probably uses still another approach to produce the Join table.
+				</p>
+				
+				<p>
+					Join, as described, is called a <em>natural</em> Join <em>because the natural meaning of "to match" is for the
+					fields to be equal. But as is typical of computing, it is also possible to join using any relational operator</em>
+					(<, &#8804, &#8800, =, &#8805, >), not just = to compare fields. Unnatural or not, a Join where T1.fieldID &lt
+					T2.fieldID can be handy.
+				</p>
+			</section>
+			<section class="subsection" data-number="25" data-name="African Marathon Runners">
+				<h3>African Marathon Runners</h3>
+				
+				<p>
+					<span class="first-sentence">To complete the task we discussed earlier of finding out how many African men marathon winners there have
+					been in the history of the Olympics, we assume there are tables Medalists1896, Medalists1900, . . .,
+					Medalists2008, and that there is a table, Africa, of African nation names, which includes colonial names like
+					Rhodesia and modern names like Zimbabwe.</span>
+				</p>
+				
+				<p>Assuming these tables, we write</p>
+				
+				<code> All_Medalists = Medalists1896 + Medalist1900 +<br /> &nbsp&nbsp&nbsp ... + Medalists2008 </code>
+				
+				<p>which is a lot of typing. The <code>All_Medalists</code> table contains the names, medal,event, and country of everyone who won in the Olympics. Next, we pick outthe marathon winners with</p>
+				
+				<code><pre>
+Distance 26 = <strong>Select</strong> medal='gold' AND event='marathan, men'
+			  <strong>From</strong> All_Medalists
+				</pre></code>
+				
+				<p>
+					The <code>Distance26</code> table contains all male runners who received a gold medal inthe
+					Olympic marathon event. Next, eliminate everyone but the African win-ners with
+				</p>
+		
+		
+				<code><pre>
+Africa_marathon = Distance26 <img class="symbol" src="/contents/fluency/images/join.png" alt="joinSymbol"/> Africa
+				  <strong>On</strong> Distance26.country = Africa.name
+				</pre></code>
+		
+				
+				<p>producing a table of African winners. The result is</p>
+				
+				<table class="example small">
+					<tr>
+						<td>Kenneth McArthur</td>
+						<td>South Africa</td>
+						<td>1912</td>
+					</tr>
+					<tr>
+						<td>Abebe Bikila</td>
+						<td>Ethiopia</td>
+						<td>1960</td>
+					</tr>
+					<tr>
+						<td>Abebe Bikila</td>
+						<td>Ethiopia</td>
+						<td>1964</td>
+					</tr>
+					<tr>
+						<td>Mamo Wolde</td>
+						<td>Ethiopia</td>
+						<td>1968</td>
+					</tr>
+					<tr>
+						<td>Josia Thugwane</td>
+						<td>South Africa</td>
+						<td>1996</td>
+					</tr>
+					<tr>
+						<td>Gezahegne Abera</td>
+						<td>Ethiopia</td>
+						<td>2000</td>
+					</tr>
+					<tr>
+						<td>Samuel Wanjiru</td>
+						<td>Kenya</td>
+						<td>2008</td>
+					</tr>
+				</table>
+				
+				<p>answering the question, except for the count.</p>
+			
+				<div class="pagebreak pageNumber">496</div>
+				
+				<p>Database software provides a function for counting the number of rows in a table, which is applied in the present case as</p>
+				
+				<code>count(African_marathon)</code>
+				
+				<p>Using the operators, we specified a set of tables that allowed us to find our solution. We will refine this skill after the next section.</p>
+				
+				<div class="try-it">
+					<p><strong>16.2 Joining Tutors.</strong> Suppose the <strong>Travelers</strong> relation of Figure 16.11 had the following revised definition:</p>
+					
+					<table class="small">
+						<tr>
+							<td><strong>TravRev</strong></td>
+						</tr>
+						<tr>
+							<td>Friend</td>
+							<td>text</td>
+							<td>Companion</td>
+						</tr>
+						<tr>
+							<td>Homeland</td>
+							<td>text</td>
+							<td>Home Country</td>
+						</tr>
+						<tr>
+							<td>NS</td>
+							<td>text</td>
+							<td>Latitude Hemi</td>
+						</tr>
+						<tr>
+							<td>EW</td>
+							<td>text</td>
+							<td>Longitude Hemi</td>
+						</tr>
+						<tr>
+							<td>Primary Key: Friend</td>
+						</tr>
+					</table>
+		
+					<table class="small collapse">
+						<tr>
+							<th>Friend</th>
+							<th>Homeland</th>
+							<th>NS</th>
+							<th>EW</th>
+						</tr>
+						<tr>
+							<td>Isabella</td>
+							<td>Argentina</td>
+							<td>S</td>
+							<td>W</td>
+						</tr>
+						<tr>
+							<td>Brian</td>
+							<td>South Africa</td>
+							<td>S</td>
+							<td>E</td>
+						</tr>
+						<tr>
+							<td>Wen</td>
+							<td>China</td>
+							<td>N</td>
+							<td>E</td>
+						</tr>
+						<tr>
+							<td>CLaire</td>
+							<td>Canada</td>
+							<td>N</td>
+							<td>W</td>
+						</tr>
+					</table>
+					<p>Use <strong>Join</strong> to create the <strong>Assign</strong> table</p>
+				</div>
+			</section>
+		</section>
+		<section class="section" data-number="26" data-name="Structure of a Database">
+			<h2>Structure of a Database</h2>
+			
+			<p>
+				<span class="first-sentence">You have learned that by using the five primitive operations and Join we can create tables from tables to
+				answer questions from a database.</span> But usually these operations are used in a slightly different way. We don't
+				usually ask a single question and quit. Rather, we want to arrange the information of adatabase in a way that
+				users see a relevant-to-their-needs view of the data that they will use continually. Figure 16.15 shows a
+				schematic of this idea.
+			</p>
+			
+			<p>
+				In Figure 16.15 you see that there are two forms of tables. The physical data-base, stored on the disk drives of
+				the computer system, is the permanent repository of the database. The logical database, also known as the<em>
+				view of the database</em>, is created for users on-the-fly and is customized for their needs. Why do we use this
+				two-level solution? The answer requires that we look a little closer at the two groups of tables.
+			</p>
+			
+			<section class="subsection" data-number="27" data-name="Physical and Logical Databases">
+				<h3>Physical and Logical Databases</h3>
+				
+				<p>
+					<span class="first-sentence">The point of the two-level system is to separate the management of the data, which is typically done at the
+					physical database level, from the presentation of the data, which typically involves many different versions for
+					many different users.</span>
+				</p>
+				
+				<div class="pagebreak pageNumber">497 </div>
+				<figure>
+					<img src="/contents/fluency/images/Database.jpg" alt="Database picture">
+				</figure>
+				<figcaption>
+					<p>
+						<span class="figureId">Figure 16.15</span> Structure of a database system. The physical database is the
+						permanent repository of the data; the logical database, or view of the database, is the form of the database
+						the users see. The transformation is implemented by the query processor, and is based on queries that define
+						the logical database tables from the physical database tables.
+					</p>
+				</figcaption>
+				
+				<p>
+					<span class="property">Physical database.</span> The physical database is designed by database
+					administra-tors so that the data is fast to access. More importantly, the physical databaseis set up to avoid
+					redundancy, that is, duplicating information. It seems obvi-ous that data should not be stored repeatedly
+					because it will waste space, but disk space is <em>extremely </em>cheap, implying that that isn't the reason to
+					avoid redundancy. Rather, if data is stored in multiple places in the physical database, there is a
+					chance - possibly, a good chance - that when it's changed in one place, it will not be changed in every other place
+					where it is stored. This causes the data to become <em>inconsistent</em>.
+				</p>
+				
+				<p>
+					For example, if your school stores your home address, and your major depart-ment also stores a separate
+					copy of your address, then when you notify the school of your new residence, both addresses should be changed.
+					But, with multiple copies, that might not occur. If the database contains two different addresses for you, then
+					the school has no idea which address is correct; per-fectly good information gets turned into garbage because it
+					is inconsistent.For this reason, database administrators make sure that there is only one copy of each piece of
+					data. That is, data is not stored redundantly.
+				</p>
+				
+				<p>
+					It might seem risky to keep only one copy of the data: What happens if itaccidentally gets deleted or the disk
+					crashes? Database administrators worry about this problem all the time, and have a process of making backup
+					copies of the database, which they store in a safe place, <em>never to be used</em>. That is, until the data is
+					accidentally deleted or the disk crashes-in other words-when the other copy is gone. There is still only one
+					copy.
+				</p>
+				
+				<p>
+					Avoiding redundancy is obviously good, but keeping one copy seems to ignore the fact that multiple users
+					need the information. The administration needs to send tuition bills, the dean needs to send notification that
+					you "made the list,"and the Sports Center needs to send you the picture of your photo finish;
+				</p>
+				
+				<div class="pagebreak pageNumber">498</div>
+			
+				<p>they all need your address. Where do they get their copy? That's where the logical database comes in.</p>
+				
+				<p>
+					<span class="property">Logical database.</span> The logical database shows users the view of the
+					informa-tion that they need and want. It doesn't exist permanently, but is created for them fresh every time
+					they look at it. This solves the problem of getting everyone a copy of the address. It's retrieved from the one
+					copy stored in the physical database, and provided to the users as needed, fresh every time.Creating a new copy
+					each time is essential, because if it were to be created once and then stored on the user's computer, then there
+					would be two copies of the information again-the copy in the physical database and the one in thelogical
+					database-making the data redundantly stored. So, it never stays onthe user's computer; it's always recreated. As
+					a result, when you notify the administration that you moved in the morning, the dean can send you a
+					con-gratulatory letter in the afternoon and have your correct address.
+				</p>
+				
+				<p>
+					The other advantage of creating specialized versions of the database for each user is that different users
+					want to see different information. For example, theSports Center needs to record a student's locker number, but
+					no other unit on campus cares. Similarly, the fact that a student is on academic probation is information that
+					most users of the school's database don't need to know, and it should not be included in their view. In
+					principle, each user wants a different view of the database.
+				</p>
+				
+				<p>
+					<span class="property">Queries.</span> Queries are the key to making this two-level organization work. Each
+					user group, say the dean's office, needs a version of the database created for them. For each user table a query
+					is formulated. A <span class="keyword">query</span> is a specification using the five operations and Join that define a
+					table from other tables. Think of the query as being written as described in the previous sections, but it is
+					actually written in the standard database language <span class="keyword">SQL</span>, short for <span class="keyword">Structured
+					Query Language</span>. Then, when the dean clicks on the table of Spring Term Grades, the database system runs the
+					query that defines that table, creating it and displaying it to the dean. It probably doesn't exist in that form
+					in the physi-cal database, but Select, Project, and the other operations can define how to create it from the
+					data that is physically stored. On the next day, when the dean opens the table of Spring Term Grades again, a
+					new copy will be created, which means that the grade change made the previous afternoon by some physics
+					pro-fessor (and stored in the physical database) will be visible to the dean.
+				</p>
+		
+				<p>It all seems pretty complicated, but it is not. Indeed, in the next section youwill see that it is all rather straightforward.</p>
+			</section>
+			<section class="subsection" data-number="28" data-name="Defining Physical Tables">
+				<h3>Defining Physical Tables</h3>
+				
+				<p><span class="first-sentence">In this section we define two tables to be used for illustration purposes, focusing on the roles of keys and relationships.</span></p>
+				
+				<p>
+					<span class="property">Database schemes.</span> Recall that the metadata specification of a database's
+					tables is given by a database schema, or database scheme. Interactive software
+				</p>
+				
+				<div class="pagebreak pageNumber">499</div>
+				
+				<p>
+					can help us define a database schema, but, as we saw earlier, declaring an entity's structure is easy
+					enough to do without software. The database schema is important because it describes the database design. When
+					we want to analyze a database design, we look at its schema.
+				</p>
+				
+				<p>To illustrate the basics of the two-level approach, imagine a college having a set of tables in its database schema, two of which are <code>Student</code> and <code>Home_Base</code>.</p>
+				
+				<div class="example">
+					
+					<table>
+						<tr>
+							<td><strong>Student</strong></td>
+						</tr>
+						<tr>
+							<td>Student_ID</td>
+							<td>number</td>
+							<td>Eight digits</td>
+						</tr>
+						<tr>
+							<td>First_Name</td>
+							<td>text</td>
+							<td>Single name, capitalized</td>
+						</tr>
+						<tr>
+							<td>Middle_Name</td>
+							<td>text</td>
+							<td>All other names, but family</td>
+						</tr>
+						<tr>
+							<td>Last_Name</td>
+							<td>text</td>
+							<td>Family name</td>
+						</tr>
+						<tr>
+							<td>Birthday</td>
+							<td>text</td>
+						</tr>
+						<tr>
+							<td>Grade_Point</td>
+							<td>number</td>
+							<td>0 &lt;= GPA &lt;= 4</td>
+						</tr>
+						<tr>
+							<td>Major</td>
+							<td>text</td>
+							<td>None, or degree granting unit</td>
+						</tr>
+						<tr>
+							<td>On_Probabtion</td>
+							<td>Boolean</td>
+							<td>0 is 'no'; 1 is 'yes'</td>
+						</tr>
+						<tr>
+							<td>Primary Key: Student_ID</td>
+						</tr>
+					</table>
+							
+					<table>
+						<tr>
+							<td><strong>Home_Base</strong></td>
+						</tr>			
+						<tr>
+							<td>Student_ID</td>
+							<td>number</td>
+							<td>Eight digits</td>
+						</tr>
+						<tr>
+							<td>Street</td>
+							<td>text</td>
+							<td>All address info before city</td>
+						</tr>
+						<tr>
+							<td>City</td>
+							<td>text</td>
+							<td>No abbreviations like NYC</td>
+						</tr>
+						<tr>
+							<td>State</td>
+							<td>text</td>
+							<td>Or province, canton, prefecture...</td>
+						</tr>
+						<tr>
+							<td>Country</td>
+							<td>text</td>
+							<td>Standard postal abbreviations OK</td>
+						</tr>
+						<tr>
+							<td>Student_ID</td>
+							<td>text</td>
+							<td>Full postal code</td>
+						</tr>
+						<tr>
+							<td>Primary Key: Student_ID</td>
+						</tr>					
+					</table>
+				</div>
+				
+				
+				<p>
+					Figure 16.16 shows the preceding table definitions as they appear in the Microsoft Access database system.
+					Notice that they are different forms of the same thing.
+				</p>
+			</section>
+			<section class="subsection" data-number="29" data-name="Connecting Database Tables by Relationships">
+				<h3>Connecting Database Tables by Relationships</h3>
+				
+				<p>
+					<span class="first-sentence">The <code>Student</code> entity records the information basic to the person's identity and associates a student with his
+					or her <code>Student_ID</code>.</span> This is the college's master record of each student. Part of each student's information is
+					where he or she lives. Though we could put addresses in the <code>Student</code> table, we decide not to. This is because
+					other campus units will want to access the address information, but they shouldn't have access to all of the
+					information (especially the sensitive information) about each student. The addresses are stored in a different
+					table, the <code>Home_Base</code> table, which can have a lower security rating. Though these two tables are separate, they
+					are not independent. The <code>Student_ID</code> connects each row in <code>Student</code> with his or her address in Home_Base. We say
+					that there is a relationship between the two entities.
+				</p>
+				
+				<div class="pagebreak pageNumber">500</div>
+				
+				<figure>
+					<img src="/contents/fluency/images/MSAccess.jpg" alt="Access Screenshot">
+				</figure>
+				<figcaption>
+					<p>
+						<span class="figureId">Figure 16.16 </span>Table declarations from Microsoft Access 2007: (a) <strong>Home_Base</strong>
+						tabledeclaration shown in the design view; and (b) students table declaration. Notice that the key is
+						specified by the tiny key next to <strong>Student_ID</strong> in the first column.
+					</p>
+				</figcaption>
+				
+				<p>
+					<span class="property">The idea of relationships.</span> A <span class="keyword">relationship</span> is a correspondence
+					between rows of one table and the rows of another table. Relationships are part of the meta-data of a database,
+					and because they are critical to building the logical data-base from the physical database, we give them names
+					and characterize their properties.
+				</p>
+				
+				<p>
+					The relationship between <code>Student</code> and <code>Home_Base</code> - that
+					is, for each row in <code>Student</code> there is a single row in <code>Home_Base</code>
+					(found by the <code>Student_ID</code>) - will be 
+					called <em>Lives_At.</em> Setting up the tables in this way is largely equivalent to stor-ing the address in
+					<code>Student</code>, but not all relationships are so close. This one is especially close because it is based on the
+					<code>Student_ID</code>, which is the key for both tables. (Recall that keys are unique, meaning no two rows can have the
+					same value.) The <em>Lives_At</em> relationship is said to be one-to-one.
+				</p>
+				<div class="pagebreak pageNumber">501</div>		
+				<p>
+					Because we used the key <code>Student_ID</code> in both tables, we not only can find the address for each student, but we can
+					also find the student for each address.That is, there is a second relationship in the opposite direction, which
+					we can call <em>Home_Of</em>, meaning that the home base entry is the address of the student who has that ID.
+					Like <em>Lives At, Home_Of</em> is a one-to-one relationship,because each row in <code>Home_Base</code>
+					corresponds to a single row in Student.
+				</p>
+				
+				<p>
+					<span class="property">Relationship examples.</span> Familiar relationships that we encounter every day
+					illustrate that their description often ends with a preposition.
+				</p>
+				
+				<ul>
+					<li><em>Father Of,</em> the relationship between a man and his child</li>
+					<li><em>Daughter Of,</em> the relationship between a girl and her parent</li>
+					<li><em>Employed_By,</em> the relationship between people and companies</li>
+					<li><em>Stars_In,</em> the relationship between actors and movies</li>
+				</ul>
+				
+				<p>
+					Names of database relationships should be meaningful to help people workingwith the database, but like all
+					names in computing, the computer doesn't know whether the name makes sense or not.
+				</p>
+				
+				<p>
+					<span class="property">Relationships in practice.</span> Database software systems need to know what
+					rela-tionships exist among the tables if they are to help us create the logical data-bases. The systems allow us
+					to define relationships among tables. The detailsare specific to each system, of course, but the example of <em>Lives_At
+					</em>and <em>Home_Of</em> are shown in Figure 16.17 as they would appear in Microsoft Access.
+				</p>
+				
+				<figure>
+					<img src="/contents/fluency/images/MSAccess2.jpg" alt="Access Screenshot">
+				</figure>
+				<figcaption>
+					<p>
+						<span class="figureId">Figure 16.17</span> The <em>Relationships</em> window from the Microsoft Access
+						database system; the 1-to-1 <em>Lives_At</em> and<em> Home_Of</em> relationships are shown between <strong>Home_Base</strong> and <strong>Students</strong>.
+					</p>
+				</figcaption>
+				
+				<div class="pagebreak pageNumber">502</div>
+			</section>
+			<section class="subsection" data-number="30" data-name="Defining Logical Tables">
+				<h3>Defining Logical Tables</h3>
+				
+				<p>
+					<span class="first-sentence">The school's administration probably thinks there is a single master list recording all of the data for each
+					student.</span> Because that's what they want to see, it's part of the administration's logical view of the database.
+					So, we create it for them from the physical database.
+				</p>
+				
+				<p>
+					<span class="property">Constrution using <strong>Join</strong>.</span> The relationships between the <code>Student</code> 
+					and <code>Home_Base</code> tables allow us to construct a single table, <code>Master_List</code>,
+					which contains the combined information from both tables. How? Using the natural Join operation, described
+					earlier in this chapter. Recall that the natural Joincreates a table out of two other tables by joining rows
+					that match - it's an equality test - on specified fields. Thus, we write
+				</p>
+				
+				<code><pre>
+Master_List = Student <img class="symbol" src="/contents/fluency/images/join.png" alt="joinSymbol"/>	 Home_Base
+			  <strong>On</strong> Student.Student_ID = Home_Base.Student_ID
+				</pre></code>
+					
+				<p>
+					where the match is on the common field of <code>Student_ID</code>. Fields of the resulting table are shown in Figure
+					16.18. We don't lose anything by storing the basic student information in one table and the addresses in
+					another, because with this simple command, we can create a table that recombines the information just as if it
+					were stored in a single table.
+				</p>
+				
+				<table class="example small">
+					<tr>
+						<td>Student_ID</td>
+					</tr>
+					<tr>
+						<td>First_Name</td>
+					</tr>
+					<tr>
+						<td>Middle_Name</td>
+					</tr>
+					<tr>
+						<td>Last_Name</td>
+					</tr>
+					<tr>
+						<td>Birthdate</td>
+					</tr>
+					<tr>
+						<td>On_Probation</td>
+					</tr>
+					<tr>
+						<td>Street_Address</td>
+					</tr>
+					<tr>
+						<td>City</td>
+					</tr>
+					<tr>
+						<td>State</td>
+					</tr>
+					<tr>
+						<td>Country</td>
+					</tr>
+					<tr>
+						<td>Postal_Code</td>
+					</tr>
+				</table>
+				
+				<figcaption>
+					<p>
+						<span class="figureId">Figure 16.18</span> Attributes of the <strong>Master_List</strong>
+						table. Being created from Student andHome_Base allows <strong>Master_List</strong>to inherit
+						its data types and key (<strong>Student_ID</strong>) fromthe component tables.
+					</p>
+				</figcaption>
+				
+				<p>
+					The important idea here is that although we chose to store the information in two tables, we never lost the
+					association of the information because we keptthe <code>Student_ID</code> with the
+					addresses. The relationship <em>Lives_At</em> lets us connecteach student with his or her address by the <code>
+					Student_ID</code>. The approach gives usthe flexibility to arrange tables so as to avoid
+					problems of redundancy—though we haven't demonstrated that benefit yet—while keeping track of important
+					information, like where a person lives.
+				</p>
+				
+				<p>
+					<span class="property">Practical construction using QBE.</span> Though it wasn't difficult to write the
+					natu-ral Join query in the last section to create the <code>Master_List</code> table,
+					database systems can make it even easier for us. A technique developed at IBM in the1970s, called<span class="keyword"> Query By
+					Example (QBE)</span>, is available to us in the Microsoft Access system. Basically, the software gives us a template
+					of a table, and we fill in what we want in the fields. That is, we give an example of what we want inthe table,
+					referencing fields from other tables that have already been defined.The software then figures out a query that
+					creates the table from the sample table. It couldn't be easier! Figure 16.19 shows the QBE query window that
+					will create <code>Master_List</code>.
+				</p>
+				
+				<div class="pagebreak pageNumber">503</div>
+				
+				<p>
+					The database software automatically creates the query needed for Master_List.What query did it create? We can
+					ask and find out what it generated; seeFigure 16.20. The query is expressed in SQL, the standard database
+					querylanguage. If we could read SQL - it's actually not too hard - we'd see that thisquery is the query we created
+					above for <code>Master_List</code>.
+				</p>		
+			</section>
+			<section class="subsection" data-number="31" data-name="The Dean's View">
+				<h3>The Dean's View</h3>
+				
+				<p>
+					<span class="first-sentence">Because the school administrators probably want to see the entire student record, there isn't much
+					advantage to breaking the files into smaller tables inthe physical design, but it does make sense for others who
+					only need to seeparts of the database in their view.</span> To illustrate one more logical database, we create a view
+					for the dean.
+				</p>
+				
+				<p> Storing the dean's data. We imagine that the database administrators have setup a special table with the dean's record of the students in the college. The </p>
+				
+				<figure>
+					<img src="/contents/fluency/images/MSAccess3.jpg" alt="Access Screenshot" width="630">
+				</figure>
+				<figcaption>
+					<p>
+						<span class="figureId">Figure 16.19</span> The Query By Example definition of the <strong>Master_List</strong>
+						table from MS Access.
+					</p>
+				</figcaption>
+				
+				<div class="pagebreak pageNumber">504</div>
+				
+				<figure>
+					<img src="/contents/fluency/images/MSAccess4.jpg" alt="Access Screenshot">
+				</figure>
+				<figcaption>
+					<p>
+						<span class="figureId">Figure 16.20 </span>SQL query created from the Query By Example data in Figure 16.19.
+					</p>
+				</figcaption>
+				
+				<p>
+					table definition is shown in Figure 16.21. The <code>Top_Scholar</code> is basically
+					infor-mation of interest only to the dean.
+				</p>
+				
+				<p>
+					The table has a one-to-one relationship with the Home_Base table, based on the <code>Student_ID</code>
+					attribute, just as Student does: For each scholar, there is an address in <code>Home_Base</code>.
+					Therefore, there is a relationship between the <code>Top_Scholar</code> and the <code>Home_Base</code>
+					tables, which we'll call<em> Resides_At</em>. The relationship gives the dean access to the student's hometown,
+					which is some thing the dean wants to be reminded of. Of course, there is a relationship in the opposite
+					direction, too, from <code>Home_Base</code> to <code>Top_Scholar</code>.
+				</p>
+				
+				<p>
+					<code>Student_ID</code> also connects <code>Top_Scholar</code> to
+					Student. This is lucky, because other-wise the dean doesn't know a student's legal name, only the nickname. All
+					of this data can be combined in tables for the dean's office using natural <code>Join</code>
+				</p>
+				
+				<figure class="example large">
+				
+					<table>
+						<tr>
+							<td><strong>Top_Scholar</strong></td>
+						</tr>
+						<tr>
+							<td>Student_ID</td>
+							<td>number</td>
+							<td><em>Eight digits</em></td>
+						</tr>
+						<tr>
+							<td>Nickname</td>
+							<td>text</td>
+							<td><em>Informal handle for student</em></td>
+						</tr>
+						<tr>
+							<td>Factoid</td>
+							<td>text</td>
+							<td><em>Data to remember student by</em></td>
+						</tr>
+						<tr>
+							<td>Summer_Plans</td>
+							<td>text</td>
+							<td><em>Or other conversation topic</em></td>
+						</tr>	
+						<tr>
+							<td>Primary Key: Student_ID</td>
+						</tr>
+					</table>
+					
+					<p><strong>(a)</strong></p>
+					
+					<img src="/contents/fluency/images/MSAccess5.jpg" alt="Access Screenshot">
+					
+					<p><strong>(b)</strong></p>
+					
+				</figure>
+				<figcaption>
+					<p>
+						<span class="figureId">Figure 16.21</span> The <strong>Top_Scholar</strong> definition: (a) informal form, (b) in MS Access.
+					</p>
+				</figcaption>
+				
+				<div class="pagebreak pageNumber">505</div>
+				
+				<p>operations like we did in the last section, but the dean doesn't want to see all that information.</p>
+				
+				<p>
+					<span class="property">Creating a dean's view.</span> Imagine a table, known as the Dean's View, containing
+					information specific to the dean's unique needs. For example, because the dean is not the person who sends
+					letters to top students telling them they made the "Dean's List," the Dean's View doesn't need the students'
+					full home addresses. (Someone else in the dean's office will need them.) The students' home towns are enough
+					information for the dean to make small talk at parties in honor of the good students. So the Dean's View will
+					include information selected from the physical tables, as shown in Figure 16.22.
+				</p>
+				
+				<p>
+					Notice that the dean doesn't even want to see the student ID. We use it tocreate the Dean's View, but it
+					doesn't have to be part of what the dean looks atin the database view.
+				</p>
+				
+				<p>
+					<span class="property">Join three tables into one.</span> The first step in creating a query for the
+					Dean'sView is to note that it contains information from three tables: <code>Top_Scholar</code>,the
+					table actually storing the data the dean wants kept; <code>Student</code>, the college'spermanent record of the student; and
+					<code>Home_Base</code>, the college's currentaddress list. The information for each student
+					must be associated to create the <code>Deans_View</code> table, and the <code>Join</code> operation is
+					the key to doing it. The expression
+				</p>
+				
+				<div class="clear"></div>
+
+				<code><pre>
+Dean_Data_Collect = Top_Scholar <img class="symbol" src="/contents/fluency/images/join.png" alt="joinSymbol"/> Student <img class="symbol" src="/contents/fluency/images/join.png" alt="joinSymbol"/> Home_Base
+					<strong>On</strong> Student.Student_ID=Home_Base.Student_ID)
+					<strong>On</strong> Student.Student_ID=Top_Scholar.Student_ID)
+				</pre></code>
+				
+				<p>
+					makes a table that has a row for each student in the dean's <code>Top_Scholar</code>
+					table,but it also has all of the information from all three tables for that student. The association of each
+					student's row in each table is accomplished by matching onthe <code>Student_ID</code>
+					attribute.
+				</p>
+					
+				<figure class="example">
+					<table class="collapse">
+						<tr>
+							<td><strong>Deans_View</strong></td>
+						</tr>
+						<tr>
+							<th>Name</th>
+							<th></th>
+							<th>Source Table</th>
+						</tr>
+						<tr>
+							<td>Nickname</td>
+							<td>Top_Scholar</td>
+							<td>Used by the dean to seem "chummy"</td>
+						</tr>
+						<tr>
+							<td>First_Name</td>
+							<td>Student</td>
+							<td>Name information required because</td>
+						</tr>
+						<tr>
+							<td>Last_Name</td>
+							<td>Student</td>
+							<td>the dean forgets the person'sactual name, being so chummy</td>
+						</tr>
+						<tr>
+							<td>Birthday</td>
+							<td>Student</td>
+							<td>Is student of &quot;drinking age&quot;?</td>
+						</tr>
+						<tr>
+							<td>City</td>
+							<td>Home_Base</td>
+							<td>Hometown (given by city, state) is</td>
+						</tr>
+						<tr>
+							<td>State</td>
+							<td>Home_Base</td>
+							<td>important for small talk, butfull address not needed by dean</td>
+						</tr>
+						<tr>
+							<td>Major</td>
+							<td>Student</td>
+							<td>Indicates what the student's doingin college besides hanging out</td>
+						</tr>
+						<tr>
+							<td>Grade_Point</td>
+							<td>Student</td>
+							<td>How's student doing grade-wise?</td>
+						</tr>
+						<tr>
+							<td>Factoid</td>
+							<td>Top_Scholar</td>
+							<td>Data to remember student by</td>
+						</tr>
+						<tr>
+							<td>Nickname</td>
+							<td>Top_Scholar</td>
+							<td>Or other conversation topic</td>
+						</tr>			
+					</table>
+				</figure>
+				<figcaption>
+					<p>
+						<span class="figureId">Figure 16.22</span> The Dean's View fields showing their source in physical database	tables.
+					</p>
+				</figcaption>
+			
+				<div class="pagebreak pageNumber"> 506</div>
+				
+				<p>
+					<span class="property">Trim the table.</span> The resulting table contains too much information, of course,
+					because it has all the columns from the three tables. The dean doesn't want to see so much information. So, the
+					second step is to retrieve only the columns the dean wants to see.
+				</p>
+				
+				<p>The Project operation retrieves columns:</p>
+
+				<div class="clear"></div>
+				
+				<code><pre>
+Deans_View =
+   <strong>Project</strong> Nickname, First_Name, Last_Name, Birthdate<
+		   City, State, Major, Grade_Point, Factoid, Summer_Plans
+   <strong>From</strong>    Dean_Data_Collect
+				</pre></code>
+				
+				<p>
+					In English, the query says, "Save the Nickname column, First_Name column,and so forth, from the table,
+					<code>Dean_Data_Collect</code>, that is formed by joining - that is, associating on <code>Student_ID</code> - the
+					three tables <code>Top_Scholar</code>, <code>Student</code>, and <code>Home_Base</code> ." 
+					This is precisely what the dean wants. The query defines the
+					<code>Deans_View</code> table. Although the dean probably thinks the table exists physically, it is created fresh every time
+					it's needed.
+				</p>
+				
+				<p>
+					The join-then-trim strategy used to create the Dean's View is a standard approach to creating logical
+					tables: a supertable is formed by joining several physical tables. These are then trimmed down to keep only the
+					information of interest to the user. The <code>Deans_View</code> query used <code>Project</code>, but <code>Select</code> and <code>Difference</code> are also
+					frequently used.
+				</p>
+				
+				<p>
+					<span class="property">Software creates dean's view</span>. If we add <code>Top_Scholar</code>
+					to the Access database schema given in Figure 16.16, and include the one-to-one relationship between it and the
+					other tables based on the <code>Student_ID</code>, as shown in Figure 16.17, then we can use Query By Example again to define
+					the Dean's View,saving ourselves the effort of working out our own query, though writing SQL directly wouldn't
+					be that difficult. Figure 16.23 shows the QBE window from Microsoft Access that defines the Dean's View from the
+					three tables.
+				</p>
+				
+				<figure class="large">
+					<img src="/contents/fluency/images/MSAccess6.jpg" alt="Access Screenshot">
+				</figure>
+				<figcaption>
+					<p>
+						<span class="figureId">Figure 16.23</span> The Query By Example definition of the Dean's View table as
+						expressedin Microsoft Access 2007.
+					</p>
+				</figcaption>
+				
+				<div class="pagebreak pageNumber">507</div>
+				
+				<p>
+					For the record, the SQL query that Access produced for us based on our example from Figure 16.23 is shown
+					in Figure 16.24. It is the identical query we developed ourselves, expressed in SQL syntax. (Notice that SQL
+					uses the word "Select" where we used "Project"; the concepts are the same, but the term is different between the
+					theory of relational databases and the SQL language. This naming inconsistency is an annoying feature of the
+					study of databases.)
+				</p>
+				
+				<figure>
+					<img src="/contents/fluency/images/MSAccess7.jpg" alt="Access Screenshot" width="700">
+				</figure>
+				<figcaption>
+					<p>
+						<span class="figureId">Figure 16.24</span> SQL query created for the Dean's View by the Query ByExample data
+						in Figure 16.22.
+					</p>
+				</figcaption>
+			</section>
+		</section>
+		<section class="section" data-number="32" data-name="Summary">
+			<h2>Summary</h2>
+			
+			<p>
+				<span class="first-sentence">In this chapter we followed a path from XML tagging through to the con-struction of logical views using QBE.</span>
+				You learned a lot, including:
+			</p>
+			
+			<ul>
+				<li>XML tags are an effective way to record metadata in a file.</li>
+				<li>Metadata is used to identify values, can capture the affinity among values of the same entity, and can collect together a group of entity instances.</li>
+				<li>Database tables have names and fields that describe the attributes of the entity contained in the table.</li>
+				<li>The data that quantitatively records each property has a specific datatype and is atomic.</li>
+				<li>There are five fundamental operations on tables: Select, Project,Union, Difference, and Product. These operations are the only ones you need to create new tables from other database tables.</li>
+				<li>Join is an especially useful operation that associates information from separate tables in new ways, based on matching fields.</li>
+				<li>Relationships are the key to associating fields of the physical database.</li>
+				<li>The physical database resides on the disk drive; it avoids storing data redundantly and is optimized for speed.</li>
+				<li>The main approach for creating logical views from physical data isthe join-and-trim technique.</li>
+				<li>There is a direct connection between the theoretical ideas of data-base tables and the software of database systems.</li>
+			</ul>
+				
+			<div class="pagebreak pageNumber">507</div>
+		</section>
+	</section> <!-- /page -->	
+	
+	<section id="conclusion" data-number="33" data-name="Try It Solutions">
+		<div class="content">
+			<h2>Try-it Solutions</h2>
+			<ol id="try-it-solutions">
+				<li class="sixteen-one">
+					<span class="first-sentence">More Islands Using a tag name different from <code>&lt;elev&gt;</code> for the elevation is possible, but otherwise this is the one solution apart from spacing.</span>
+					<code><pre>
+&lt;archipelago&gt;
+  &lt;island&gt; &lt;iName&gt;Isabella&lt;/iName&gt;
+      &lt;area&gt;4588&lt;/area&gt;&lt;elev&gt;1707&lt;/elev&gt; &lt;/island&gt;
+  &lt;island&gt; &lt;iName&gt;Fernandina&lt;/iName&gt;
+      &lt;area&gt;642&lt;/area&gt; &lt;elev&gt;1494&lt;/elev&gt; &lt;/island&gt;
+  &lt;island&gt; &lt;iName&gt;Tower&lt;/iName&gt;
+      &lt;area&gt;14&lt;/area&gt; &lt;elev&gt;76&lt;/elev&gt; &lt;/island&gt;
+  &lt;island&gt; &lt;iName&gt;Santa Cruz&lt;/iName&gt;
+      &lt;area&gt;986&lt;/area&gt; &lt;elev&gt;846&lt;/elev&gt; &lt;/island&gt;
+&lt;/archipelago&gt;
+					</pre></code>
+				</li>
+				<li class="sixteen-two"> 
+					Joining Tutors
+			
+					<code><pre>
+Assign = Nations <img class="symbol" src="/contents/fluency/images/join.png" alt="joinSymbol"/> TravRev
+         <strong>On</strong>(Nations.EW = TravRev.EW & Nations.NS = TravRev.NS)
+					</pre></code>
+				</li>
+			</ol>
+			
+			<h2>Review Questions</h2>
+			<section id="multiple-choice" data-number="34" data-name="Multiple Choice">
+				<h3>Multiple Choice</h3>
+				
+				<ol>
+					<li><span class="first-sentence">If you know the structure and properties of data you can</span>
+						<ol>
+							<li>retrieve it</li>
+							<li>organize it</li>
+							<li>manage it</li>
+							<li>all of the above</li>
+						</ol>
+					</li>
+					<li>An important task when defining metadata is to
+						<ol>
+							<li>identify the type of data</li>
+							<li>normalize the data</li>
+							<li>define the affinity of the data</li>
+							<li>more than one of the above</li>
+						</ol>
+					</li>
+					<li>Which of the following is an invalid XML tag?
+						<ol>
+							<li>&lt;address&gt;</li>
+							<li>&lt;stud ID&gt;</li>
+							<li>&lt;cellphone&gt;</li>
+							<li>&lt;SSN&gt;</li>
+						</ol>
+					</li>
+					<li>Which of the following is a valid XML tag?
+						<ol>
+							<li>&lt;active?&gt;</li>
+							<li>&lt;grad-date&gt;</li>
+							<li>&lt;zip code&gt;</li>
+							<li>&lt;DOB&gt;</li>
+						</ol>
+					</li>
+					<li>The first tag in an XML document is known as a(n)
+						<ol>
+							<li>metatag</li>
+							<li>tree</li>
+							<li>root element</li>
+							<li>entity</li>
+						</ol>
+					</li>		
+					<li>An XML comment looks like
+						<ol>
+							<li>&lt;!--Updated 09-26-09--&gt;</li>
+							<li>&lt;! Updated 09-26-09 !&gt;</li>
+							<li>&lt;" Updated 09-26-09 "&gt;</li>
+							<li>&lt;/ Updated 09-26-09&gt;</li>
+						</ol>
+					</li>
+					
+					<li>In database terminology, a set of entities refers to
+						<ol>
+							<li>field</li>
+							<li>column</li>
+							<li>table</li>
+							<li>information</li>
+						</ol>
+					</li>
+					
+					<li>The kind of information stored in a field in a database is described by the
+						<ol>
+							<li>tuple</li>
+							<li>field name</li>
+							<li>data type</li>
+							<li>record</li>
+						</ol>
+					</li>
+					
+					<li>A Project operation will
+						<ol>
+							<li>return a table with as many rows as the original tables</li>
+							<li>return only unique rows and merge duplicate rows</li>
+							<li>automatically sort the list in alphabetical order by the first field</li>
+							<li>all of the above</li>
+						</ol>
+					</li>
+					
+					<li>The <em>Test</em> in a <code>Select</code> command is used to
+						<ol>
+							<li>add rows to an existing table</li>
+							<li>remove rows from an existing table</li>
+							<li>include rows in a new table</li>
+							<li>describe rows in any table</li>
+						</ol>
+					</li>
+					
+					<li>Databases store data just once
+						<ol>
+							<li>in order to avoid data redundancy</li>
+							<li>because data storage is expensive</li>
+							<li>because data access is slow</li>
+							<li>all of the above</li>
+						</ol>
+					</li>
+				</ol>
+			</section>
+			
+			<section id="short-answer" data-number="35" data-name="Short Answer">
+				<h3>Short Answer</h3>
+				
+				<ol>
+					<li class="review-question"><span class="first-sentence">________ is information describing other information.</span></li>
+					<li class="review-question">A(n) ________ database uses tables to organize information.</li>
+					<li class="review-question">XML is ________, that is, the tags create the structure of the data.</li>
+					<li class="review-question">XML should be edited with a ________.</li>
+					<li class="review-question">XML attribute values must be enclosed in ________.</li>
+					<li class="review-question">A(n) ________ is a group of related items in an XML document.</li>
+					<li class="review-question">The rules for XML encodings are a hierarchical description called ________.</li>
+					<li class="review-question">________ describe the relationships among the different kinds of data.</li>
+					<li class="review-question">A(n) ________ is used to ensure that all entities in a database are unique.</li>
+					<li class="review-question">Data that cannot be decomposed into smaller parts is considered ________.</li>
+					<li class="review-question">A(n) ________ is a collection of table definitions that give the name of the table, list of the
+					attributes and their data types, and identifies the primary key.</li>
+					<li class="review-question">A(n) ________ is a specification using the five operations and <span class="exampleCode">Join</span>
+					that define a table from other tables.</li>
+					<li class="review-question">A(n) ________ between two tables means that there is a corresponding row in one table for every row in
+					the other table.</li>
+				</ol>
+			</section>
+			<section id="exercises" data-number="36" data-name="Exercises">
+				<h3>Exercises</h3>
+				
+				<ol>
+					<li class="review-question"><span class="first-sentence">Use XML to define your class schedule.</span></li>
+					<li class="review-question">Create a list of IDs you have that could be considered primary keys in a database.</li>
+					<li class="review-question">
+						For the following, either indicate that the field is atomic or divide the field to make the result
+						atomic.
+						<table>
+							<tr>
+								<th><strong>Field</strong></th>
+								<th><strong>Contents</strong></th>
+							</tr>
+							<tr>
+								<td>Phone</td>
+								<td>(212) 555-1212</td>
+							</tr>
+							<tr>
+								<td>Name</td>
+								<td>Maria Murray</td>
+							</tr>
+							<tr>
+								<td>Class</td>
+								<td>CSE100</td>
+							</tr>
+							<tr>
+								<td>City</td>
+								<td>Seattle, WA</td>
+							</tr>
+							<tr>
+								<td>DOB</td>
+								<td>September 26, 1948</td>
+							</tr>
+						</table>
+					</li>
+					<li class="review-question">Take your class schedule from Exercise 1 and define it as a database table.</li>
+					
+					<li class="review-question">Define the attribute names, data types, and optional comments needed to create a table that could be
+					used as a datebook.</li>
+					
+					<li class="review-question">Write an operation to display the Name and Interest from the Nations table for those countries with
+					Beach, and store it in a table called Vacation.</li>
+					
+					<li class="review-question">Create tables that might exist with your student information on campus. Include such areas as
+					Registrar, Bursar, Library, Financial Aid, Food Service, Residence Halls, Parking, and so forth.</li>
+					
+					<li class="review-question">Take a look at one of your monthly bills, such as the cable bill, phone bill, or utility bill. What
+					fields are used and what is their structure?</li>
+					
+					<li class="review-question">Using a text editor, create your own XML file containing CD or DVD information. Open the file in a
+					browser.</li>
+					
+					<li class="review-question">Create a table with information from your driver's license.</li>
+				</ol>
+				
+			</section>
+		</div>
+	</section> <!-- /conclusion -->
+
+  </div> <!-- /container -->
+
+</body>
+</html>

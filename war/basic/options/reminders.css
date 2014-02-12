@@ -1,0 +1,91 @@
+#logoutBtn {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+}
+
+.inline {
+	display: inline-block;
+}
+
+hr {
+	color: #DDDDDD;
+}
+
+h1.title {
+	font-size: 44px;
+	letter-spacing: -1px;
+}
+
+#backBtn {
+	position: absolute;
+}
+
+.reminders{
+	margin-left: 30px;
+}
+
+#submitbtn {
+	position: fixed;
+	right: 10%;
+	bottom: 50px;
+	font-size: 42px;
+	padding: 20px 51px;
+}
+
+/*  reminders */
+
+
+.fields {
+	float: left;
+	width: 100%;
+	margin-left: 57px;
+	margin-top: 10px;
+}
+
+input[type="checkbox"], input[type="radio"] {
+	display:none;
+}
+
+input[type="checkbox"] + label span {
+	display:inline-block;
+	width:29px;
+	height:29px;
+	margin:-1px 4px 0 0;
+	vertical-align:middle;
+	background:url(/images/big_box.gif) left top no-repeat;
+	cursor:pointer;
+}
+
+input[type="checkbox"]:checked + label span {
+	background:url(/images/big_check.gif) top no-repeat;
+}
+
+input[type="radio"] + label span {
+	display:inline-block;
+	width:29px;
+	height:29px;
+	margin:-1px 4px 0 0;
+	vertical-align:middle;
+	background:url(/images/big_radio.gif) top no-repeat;
+	cursor:pointer;
+}
+
+input[type="radio"]:checked + label span {
+	background:url(/images/big_radio_check.gif) top no-repeat;
+}
+
+.reminders label {
+	display: inline;
+}
+
+
+textarea.other {
+	margin-left: 15px;
+	margin-bottom: 0px;
+	overflow: hidden; 
+	word-wrap: break-word; 
+	resize: horizontal; 
+	height: 50px;
+}
+

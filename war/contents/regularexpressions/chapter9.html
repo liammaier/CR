@@ -1,0 +1,803 @@
+<html lang='en'>
+<head>
+	<title>Introducing Regular Expressions</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="regexp">
+
+		<div class="container">
+
+			<h3>CHAPTER 9</h3>
+			<div class="border"></div>
+
+			<section class="intro" data-number="0" data-name="Chapter 9 Introduction">
+
+				<h1>Marking Up a Document with HTML</h1>
+
+				<p><span class="first-sentence">This chapter will take you step by step through the process of marking up plain-text
+				documents with HTML5 using regular expressions, concluding what we started early
+				in the book.</span></p>
+
+				<p>Now, if it were me, I’d use AsciiDoc to do this work. But for our purposes here, we’ll
+				pretend that there is no such thing as AsciiDoc (what a shame). We’ll plod along using
+				a few tools we have at hand—namely, <em>sed</em> and Perl—and our own ingenuity.</p>
+
+				<p>For our text we’ll still use Coleridge’s poem in <em>rime.txt</em>.</p>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>The scripts in this chapter work well with <em>rime.txt</em> because you understand
+					the structure of that file. These scripts will give you less predictable
+					results when used on arbitrary text files; however, they give you a starting
+					point for handling text structures in more complex files.</p>
+				</div>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Matching Tags">
+
+				<h2>Matching Tags</h2>
+
+				<p><span class="first-sentence">Before we start adding markup to the poem, let’s talk about how to match either HTML
+				or XML tags.</span> There are a variety of ways to match a tag, either start-tags (e.g., <code>&lt;html&gt;</code>)
+				or end-tags (e.g., <code>&lt;/html&gt;</code>), but I have found the one that follows to be reliable. It will
+				match start-tags, with or without attributes:</p>
+
+				<p class="indented"><code>&lt;[_a-zA-Z][^&gt;]*&gt;</code></p>
+
+				<p>Here is what it does:</p>
+
+				<ul>
+
+					<li>The first character is a left angle bracket (&lt;).</li>
+
+					<li>Elements can begin with an underscore character (_) in XML or a letter in the ASCII
+					range, in either upper- or lowercase (see <strong>“Technical Notes” on page 98</strong>).</li>
+
+					<li>Following the start character, the name can be followed by zero or more characters,
+					any character other than a right angle bracket (&gt;).</li>
+
+					<li>The expression ends with a right angle bracket.</li>
+
+				</ul>
+
+				<div class="pagebreak pageNumber right">87</div>
+
+				<p>Try this with <em>grep</em>. Match it against a sample DITA file in the archive, <em>lorem.dita</em>:</p>
+
+				<p class="indented"><code>grep -Eo '&lt;[_a-zA-Z][^&gt;]*&gt;' lorem.dita</code></p>
+
+				<p>yields this answer:</p>
+
+				<p class="indented"><code>
+					&lt;topic id="lorem"&gt;<br/>
+					&lt;title&gt;<br/>
+					&lt;body&gt;<br/>
+					&lt;p&gt;<br/>
+					&lt;p&gt;<br/>
+					&lt;ul&gt;<br/>
+					&lt;li&gt;<br/>
+					&lt;li&gt;<br/>
+					&lt;li&gt;<br/>
+					&lt;p&gt;<br/>
+					&lt;p&gt;
+				</code></p>
+
+				<p>To match both start- and end-tags, simply add a forward slash followed by a question
+				mark. The question mark makes the forward slash optional:</p>
+
+				<p class="indented"><code>&lt;/?[_a-zA-Z][^&gt;]*&gt;</code></p>
+
+				<p>I’m sticking with start-tags only here. To refine the output, I often pipe in a few other
+				tools to make it prettier:</p>
+
+				<p class="indented"><code>grep -Eo '&lt;[_a-zA-Z][^&gt;]*&gt;' lorem.dita | sort | uniq | sed 's/^&lt;//;s/ id=\".*\"//;s/&gt;
+				$//'</code></p>
+
+				<p>This gives you a list of sorted XML tag names:</p>
+
+				<p class="indented"><code>
+					body<br/>
+					li<br/>
+					p<br/>
+					p<br/>
+					title<br/>
+					topic<br/>
+					ul<br/>
+				</code></p>
+
+				<p>I’ll take this a step further in the next and final chapter. The following sections will take
+				you through some of the steps you have learned before, but with a few new twists.</p>
+
+			</section>
+
+			<section class="section" data-number="2" data-name="Transforming Plain Text with sed">
+
+				<h2>Transforming Plain Text with <em>sed</em></h2>
+
+				<p><span class="first-sentence">Let’s add some markup to the top of the text in <em>rime.txt</em></span>. We can do this with the insert
+				command (<code>i\</code>). In the directory where the <em>rime.txt</em> file is located, enter the following at
+				a shell prompt:</p>
+
+				<div class="pagebreak left"><span class="pageNumber">88</span> | Chapter 9: Marking Up a Document with HTML</div>
+
+				<p class="indented"><code>
+					sed '1 i\<br/>
+					&lt;!DOCTYPE html&gt;\<br/>
+					&lt;html lang="en"&gt;\<br/>
+					&lt;head&gt;\<br/>
+					&lt;title&gt;The Rime of the Ancyent Marinere (1798)&lt;/title&gt;\<br/>
+					&lt;meta charset="utf-8"/&gt;\<br/>
+					&lt;/head&gt;\<br/>
+					&lt;body&gt;\
+				</code></p>
+
+				<p class="indented"><code>q' rime.txt</code></p>
+
+				<p>After you press Enter or Return, your output should look like the following, with the
+				tags at the top:</p>
+
+				<p class="indented"><code>
+					&lt;!DOCTYPE html&gt;<br/>
+					&lt;html lang="en"&gt;<br/>
+					&lt;head&gt;<br/>
+					&lt;title&gt;The Rime of the Ancyent Marinere (1798)&lt;/title&gt;<br/>
+					&lt;meta charset="utf-8"/&gt;<br/>
+					&lt;/head&gt;<br/>
+					&lt;body&gt;<br/>
+					THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS
+				</code></p>
+
+				<p>The command you just entered did not actually change the file—it only produced an
+				output to your screen. I’ll show you how to write your changes to a file later.</p>
+
+			</section>
+
+			<section class="section" data-number="3" data-name="Substitution with sed">
+
+				<h2>Substitution with <em>sed</em></h2>
+
+				<p><span class="first-sentence">In the next example, <em>sed</em> finds the first line of the file and captures the entire line in a
+				capturing group using escaped parentheses \( and \)</span>. <em>sed</em> needs to escape the parentheses
+				used to capture a group unless you use the <em>-E</em> option (more on this in a moment).
+				The beginning of the line is demarcated with <code>^</code>, and the end of the line with a <code>$</code>. The
+				backreference <code>\1</code> pulls the captured text into the content of the <em>title</em> element, indented
+				with one space.</p>
+
+				<p>Run the command that follows:</p>
+
+				<p class="indented"><code>sed '1s/^\(.*\)$/ &lt;title&gt;\1&lt;\/title&gt;/;q' rime.txt</code></p>
+
+				<p>The resulting line looks like this:</p>
+
+				<p class="indented"><code>&lt;title&gt;THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.&lt;/title&gt;</code></p>
+
+				<p>Now try it this way:</p>
+
+				<p class="indented"><code>
+					sed -E '1s/^(.*)$/&lt;!DOCTYPE html&gt;\<br/>
+					&lt;html lang="en"&gt;\<br/>
+					&lt;head&gt;\<br/>
+					&nbsp;&nbsp;&lt;title&gt;\1<\/title&gt;\<br/>
+					&lt;\/head&gt;\<br/>
+					&lt;body&gt;\<br/>
+					&lt;h1&gt;\1&lt;\/h1&gt;\<br/>
+					/;q' rime.txt
+				</code></p>
+
+				<div class="pagebreak right">Transforming Plain Text with <em>sed</em> | <span class="pageNumber">89</span></div>
+
+				<p>Let's talk about it:</p>
+
+				<ul>
+
+					<li>The <em>-E</em> options tells <em>sed</em> to use extended regular expressions or EREs (so you don’t
+					have to escape the parentheses, etc.).</li>
+
+					<li>Using a substitute (<em>s</em>) command, grab line 1 in a capturing group <code>(^(.*)$)</code> so you
+					can reuse the text with <code>\1</code>.</li>
+
+					<li>Create HTML tags and escape newlines with <code>\</code>.</li>
+
+					<li>Insert the captured text in the <em>title</em> and <em>h1</em> tags using <code>\1</code>.</li>
+
+					<li>Quit at this point (<code>q</code>) to stop printing the rest of the poem to the screen.</li>
+
+				</ul>
+
+				<p>The correct result is:</p>
+
+				<p class="indented"><code>
+					&lt;!DOCTYPE html&gt;<br/>
+					&lt;html lang="en"&gt;<br/>
+					&lt;head&gt;<br/>
+					&nbsp;&nbsp;&lt;title&gt;THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.&lt;/title&gt;<br/>
+					&lt;/head&gt;<br/>
+					&lt;body&gt;<br/>
+					&lt;h1&gt;THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.&lt;/h1&gt;
+				</code></p>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="Handling Roman Numerals with sed">
+
+				<h2>Handling Roman Numerals with <em>sed</em></h2>
+
+				<p><span class="first-sentence">The poem is divided into seven sections, with each section introduced with a Roman
+				numeral.</span> There is also an “ARGUMENT” heading. The following line will use <em>sed</em> to
+				capture that heading and those Roman numerals and surround them in <em>h2</em> tags:</p>
+
+				<p class="indented"><code>sed -En 's/^(ARGUMENT\.|I{0,3}V?I{0,2}\.)$/&lt;h2&gt;\1&lt;\/h2&gt;/p' rime.txt</code></p>
+
+				<p>and here is what you'll see:</p>
+
+				<p class="indented"><code>
+					&lt;h2&gt;ARGUMENT\.&lt;/h2&gt;<br/>
+					&lt;h2&gt;I.&lt;/h2<br/>
+					&lt;h2&gt;II.&lt;/h2<br/>
+					&lt;h2&gt;III.&lt;/h2<br/>
+					&lt;h2&gt;IV.&lt;/h2<br/>
+					&lt;h2&gt;V.&lt;/h2<br/>
+					&lt;h2&gt;VI.&lt;/h2<br/>
+					&lt;h2&gt;VII.&lt;/h2
+				</code></p>
+				
+				<p>Following is a description of this previous <em>sed</em> command:</p>
+				
+				<ul>
+				
+					<li>The <em>-E</em> option gives you extended regular expressions, and the <em>-n</em> option suppresses
+					the printing of each line, which is <em>sed</em>’s default behavior.</li>
+					
+					<li>The substitute (<em>s</em>) command captures the heading and the seven uppercase
+					Roman numerals, each on separate lines and followed by a period, in the range I
+					through VII.</li>
+					
+					<li>The <em>s</em> command then takes each line of captured text and nestles it in an <em>h2</em> element.</li>
+
+					<li>The <em>p</em> flag at the end of the substitution prints the result to the screen.</li>
+					
+				</ul>
+				
+				<div class="pagebreak left"><span class="pageNumber">90</span> | Chapter 9: Marking Up a Document with HTML</div>
+				
+			</section>
+			
+			<section class="section" data-number="5" data-name="Handling a Specific Paragraph with sed">
+			
+				<h2>Handling a Specific Paragraph with <em>sed</em></h2>
+				
+				<p><span class="first-sentence">Next, this line finds a paragraph on line 5:</span></p>
+				
+				<p class="indented"><code>sed -En '5s/^([A-Z].*)$/&lt;p&gt;\1&lt;\/p&gt;/p' rime.txt</code></p>
+				
+				<p>and places that paragraph in a <em>p</em> tag:</p>
+				
+				<p class="indented"><code>
+					&lt;p&gt;How a Ship having passed the Line was driven by Storms to the cold Country towards the South Pole; and how from thence she made her course to the tropical Latitude of the Great Pacific Ocean; and of the strange things that befell; and in what manner the Ancyent Marinere came back to his own Country.</p>
+				</code></p>
+				
+				<p>I know this looks like we are moving inchmeal at the moment, but hang on and I’ll
+				bring it all together in a page or two.</p>
+				
+			</section>
+			
+			<section class="section" data-number="6" data-name="Handling the Lines of the Poem with sed">
+			
+				<h2>Handling the Lines of the Poem with <em>sed</em></h2>
+				
+				<p><span class="first-sentence">Next we’ll mark up the lines of the poem with:</span></p>
+				
+				<p class="indented"><code>
+					sed -E '9s/^[ ]*(.*)/ &lt;p&gt;\1&lt;br\/&gt;/;10,832s/^([ ]{5,7}.*)/\1&lt;br\/&gt;/;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;833s/^(.*)/\1&lt;\/p&gt;/' rime.txt
+				</code></p>
+				
+				<p>These <em>sed</em> substitutions depend on line numbers to get their little jobs done. This
+				wouldn’t work with a generalized case, but it works quite well when you know exactly
+				what you are dealing with.</p>
+				
+				<ul>
+				
+					<li>On line 9, the first line of verse, the s command grabs the line and, after prepending
+					a few spaces, it inserts a <em>p</em> start-tag and appends a <em>br</em> (break) tag at the end of the line.</li>
+					
+					<li>Between lines 10 and 832, every line that begins with between 5 to 7 spaces gets a
+					<em>br</em> appended to it.</li>
+					
+					<li>On line 833, the last line of the poem, instead of a <em>br</em>, the s appends a <em>p</em> end-tag.</li>
+					
+				</ul>
+				
+				<p>A sample of the resulting markup is here:</p>
+				
+				<p class="indented"><code>
+					&lt;p&gt;It is an ancyent Marinere,&lt;br/&gt;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;And he stoppeth one of three:&lt;br/&gt;<br/>
+					"By thy long grey beard and thy glittering eye&lt;br/&gt;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;"Now wherefore stoppest me?&lt;br/&gt;
+				</code></p>
+				
+				<p class="indented"><code>
+					"The Bridegroom's doors are open'd wide&lt;br/&gt;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;"And I am next of kin;&lt;br/&gt;<br/>
+					"The Guests are met, the Feast is set,--&lt;br/&gt;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;"May'st hear the merry din.--&lt;br/&gt;
+				</code></p>
+				
+				<p>You should also replace the blank lines with a <em>br</em>, to keep the verses separated:</p>
+				
+				<p class="indented"><code>sed -E 's/^$/&lt;br\/&gt;/' rime.txt</code></p>
+				
+				<p>See what you just did:</p>
+				
+				<p class="indented"><code>
+					He prayeth best who loveth best,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;All things both great and small:<br/>
+					For the dear God, who loveth us,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;He made and loveth all.
+				</code></p>
+				
+				<div class="pagebreak right"><span class="pageNumber">91</span> | Transforming Plain Text with <em>sed</em></div>
+				
+				<p class="indented"><code>
+					&lt;br/&gt;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;The Marinere, whose eye is bright,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Whose beard with age is hoar,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;Is gone; and now the wedding-guest<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Turn'd from the bridegroom's door.<br/>
+					&lt;br/&gt;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;He went, like one that hath been stunn'd<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;And is of sense forlorn:<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;A sadder and a wiser man<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;He rose the morrow morn.
+				</code></p>
+				
+				<p>I have found that I can play with this kind of thing endlessly, getting the tags and space
+				just right. I encourage you to do so yourself.</p>
+				
+			</section>
+			
+			<section class="section" data-number="7" data-name="Appending Tags">
+			
+				<h2>Appending Tags</h2>
+				
+				<p><span class="first-sentence">Now we’ll append some tags to the end of the poem.</span> With the append command
+				(<code>a\</code>), the <code>$</code> finds the end (the last line) of the file, and appends (<code>a\</code>) the 			<em>body</em> and <em>html</em>
+				end-tags after the last line:</p>
+				
+				<p class="indented"><code>
+					sed '$ a\<br/>
+					&lt;\/body&gt;\<br/>
+					&lt;\/html&gt;\<br/>
+					' rime.txt
+				</code></p>
+				
+				<p>Here's how the end of the file will look now:</p>
+				
+				<p class="indented"><code>
+					&nbsp;&nbsp;&nbsp;&nbsp;He went, like one that hath been stunn'd<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;And is of sense forlorn:<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;A sadder and a wiser man<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;He rose the morrow morn.<br/>
+					&lt;/body&gt;<br/>
+					&lt;/html&gt;
+				</code></p>
+				
+				<p>Enough <em>sed</em>.</p>
+				
+				<p>What if you wanted to do all of these changes at the same time? You know what to
+				do. You’ve already done it. You just have to put all these commands in a file and use
+				the <em>-f</em> option with <em>sed</em>.</p>
+				
+				<section class="subsection" data-number="8" data-name="Using a Command File with sed">
+				
+					<h4>Using a Command File with <em>sed</em></h4>
+					
+					<p><span class="first-sentence">This example shows the file <em>html.sed</em>, which collects all the previous <em>sed</em> commands
+					into one file, plus a command or two more.</span> We’ll use this file of commands to transform
+					<em>rime.txt</em> to HTML using <em>sed</em>. The numbered callouts in the example will guide you
+					through what is happening in the <em>sed</em> script.</p>
+					
+					<div class="pagebreak left"><span class="pageNumber">92</span> | Chapter 9: Marking Up a Document with HTML</div>
+					
+					<p class="indented"><code>#!/usr/bin/sed <strong>1</strong></code></p>
+					
+					<p class="indented"><code>
+						1s/^(.*)$/&lt;!DOCTYPE html&gt;\ <strong>2</strong><br/>
+						&lt;html lang="en"&gt;\<br/>
+						&lt;head&gt;\<br/>
+						&nbsp;&nbsp;&lt;title&gt;\1&lt;\/title&gt;\<br/>
+						&lt;\/head&gt;\<br/>
+						&lt;body&gt;\<br/>
+						&lt;h1&gt;\1&lt;\/h1&gt;\<br/>
+						/
+					</code></p>
+					
+					<p class="indented"><code>
+						s/^(ARGUMENT|I{0,3}V?I{0,2})\.$/&lt;h2&gt;\1&lt;\/h2&gt;/ <strong>3</strong><br/>
+						5s/^([A-Z].*)$/&lt;p&gt;\1&lt;\/p&gt;/ <strong>4</strong><br/>
+						9s/^[ ]*(.*)/ &lt;p&gt;\1&lt;br\/&gt;/ <strong>5</strong><br/>
+						10,832s/^([ ]{5,7}.*)/\1&lt;br\/&gt;/ <strong>6</strong><br/>
+						833s/^(.*)/\1&lt;\/p&gt;/ <strong>7</strong><br/>
+						13,$s/^$/&lt;br\/&gt;/ <strong>8</strong><br/>
+						$ a\ <strong>9</strong><br/>
+						&lt;\/body&gt;\<br/>
+						&lt;\/html&gt;\
+					</code></p>
+					
+					<p><strong>1</strong> The first line is called the <em>shebang</em> line, a hint to the shell of where the 					executable
+					(<em>sed</em>) is located.</p>
+					
+					<p><strong>2</strong> At line 1, substitute (<em>s</em>) the line with the tags that follow. The backslash (\) 				indicates
+					that the text you want to add continues on the next line so a newline is inserted.
+					Insert the title of the poem from line 1 with <code>\1</code>, as the content of <em>title</em> and <em>h1</em> 				elements.</p>
+					
+					<p><strong>3</strong> Surround headings and Roman numerals with <em>h2</em> tags.</p>
+					
+					<p><strong>4</strong> On line 5, enclose the introductory paragraph in a <em>p</em> element.</p>
+					
+					<p><strong>5</strong> On line 9, prepend a <em>p</em> start-tag and add a <em>br</em> at the end of the line.</p>
+					
+					<p><strong>6</strong> Between line 9 and 832, add a <em>br</em> at the end of each line that begins with a certain
+					number of spaces.</p>
+					
+					<p><strong>7</strong> At the end of the poem, append a <em>p</em> end-tag.</p>
+					
+					<p><strong>8</strong> After line 13, replace each blank line with a break (<em>br</em>).</p>
+					
+					<p><strong>9</strong> Appends a few tags at the end (<code>$</code>) of the document.</p>
+					
+					<p>To apply this command file to <em>rime.txt</em>, enter this line, followed by Enter or Return:</p>
+					
+					<p class="indented"><code>sed -E -f html.sed rime.txt</code></p>
+					
+					<p>To redirect the output to a file:</p>
+					
+					<p class="indented"><code>sed -E -f html.sed rime.txt &gt; rime.html</code></p>
+					
+					<p>Open <em>rime.html</em> in a browser to see what you have created (see <strong>Figure 9-1</strong>).</p>
+					
+					<div class="pagebreak">Appending Tags | <span class="pageNumber">93</span></div>
+					
+					<figure>
+						<img src="/contents/regularexpressions/images/figure9-1.png">
+						<figcaption>Figure 9-1. rime.html in Firefox</figcaption>
+					</figure>
+					
+				</section>
+			
+			</section>
+			
+			<section class="section" data-number="9" data-name="Transforming Plain Text with Perl">
+			
+				<h2>Transforming Plain Text with Perl</h2>
+				
+				<p><span class="first-sentence">I’ll now show you how to mark up a file with HTML using Perl.</span> First, like with <em>sed</em>, I’ll
+				give you a series of one-liners; then I’ll show those same commands in a file.</p>
+				
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>This book introduces you to only the rudiments of the Perl language,
+					and how to get started using it. It is not a Perl tutorial or manual, but I
+					hope to pique your interest in Perl and show you a few possibilities. A
+					good place to get started with Perl is at the Learning Perl website found
+					at <span class="url">http://learn.perl.org/</span>, which also includes instructions on how to install
+					it.</p>
+				</div>
+				
+				<p>If the current line (<code>$.</code>) is line 1, assign the whole line ($_) to the <em>$title</em> variable and 			print
+				<em>$title</em>.</p>
+				
+				<p class="indented"><code>
+					perl -ne 'if ($. == 1) {chomp($title = $_); print "&lt;h1&gt;" . $title . "&lt;/h1&gt;" . "\n";};'<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;rime.txt
+				</code></p>
+				
+				<p>If all goes well, the result should be:</p>
+				
+				<p class="indented"><code>&lt;h1&gt;THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.&lt;/h1&gt;</code></p>
+				
+				<div class="pagebreak left"><span class="pageNumber">94</span> | Chapter 9: Marking Up a Document with HTML</div>
+				
+				<p>Here is an explanation for the Perl command:</p>
+				
+				<ul>
+				
+					<li>Test if you are on line 1 with <code>$.</code></li>
+					
+					<li>Chomp the line ($_) and assign the string to the <code>$title</code> variable. When you chomp
+					the line with the <em>chomp</em> function, it removes the trailing newline from the string.</li>
+					
+					<li>Print <code>$title</code> in an <em>h1</em> element, followed by a newline (<code>\n</code>).</li>
+					
+				</ul>
+				
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>For more information on Perl’s built-in variables, such as <code>$.</code>, enter the
+					command <code>perldoc -v $</code>. at a prompt (<em>perldoc</em> normally is installed
+					when you install Perl). If this doesn’t work, see <strong>“Technical
+					Notes” on page 98</strong>.</p>
+				</div>
+				
+				<p>To prepend some markup to the top of the file, including that <em>h1</em> tag, use this:</p>
+				
+				<p class="indented"><code>
+					perl -ne 'if ($. == 1) {chomp($title = $_)};<br/>
+					print "&lt;!DOCTYPE html&gt;\<br/>
+					&lt;html xmlns=\"http://www.w3.org/1999/xhtml\"&gt;\<br/>
+					&nbsp;&nbsp;&lt;head&gt;\<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;$title&lt;/title&gt;\<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta charset=\"utf-8\"/&gt;\<br/>
+					&nbsp;&nbsp;&lt;/head&gt;\<br/>
+					&lt;body&gt;\<br/>
+					&lt;h1&gt;$title&lt;/h1&gt;\n" if $. == 1; exit' rime.txt
+				</code></p>
+				
+				<p>and you'll get the following output:</p>
+				
+				<p class="indented"><code>
+					&lt;!DOCTYPE html&gt;<br/>
+					&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;<br/>
+					&nbsp;&nbsp;&lt;head&gt;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.&lt;/title&gt;<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta charset="utf-8"/&gt;<br/>
+					&nbsp;&nbsp;&lt;/head&gt;<br/>
+					&lt;body&gt;<br/>
+					&lt;h1&gt;THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.&lt;/h1&gt;
+				</code></p>
+				
+				<p>The <em>print</em> function prints the tags that follow, and each line (except the last), is followed
+				by a <code>\</code>, which enters a newline into the output. The <code>$title</code> variable is expanded within
+				the <em>title</em> and <em>h1</em> elements.</p>
+				
+				<section class="subsection" data-number="10" data-name="Handling Roman Numerals with Perl">
+				
+					<h4>Handling Roman Numerals with Perl</h4>
+					
+					<p><span class="first-sentence">To tag up the heading and those Roman numeral section breaks, use:</span></p>
+					
+					<p class="indented"><code>perl -ne 'print if s/^(ARGUMENT\.|I{0,3}V?I{0,2}\.)$/&lt;h2&gt;\1&lt;\/h2&gt;/;' rime.txt</code></p>
+
+					<p>This is the output:</p>
+					
+					<p class="indented"><code>
+						&lt;h2&gt;ARGUMENT.&lt;/h2&gt;<br/>
+						&lt;h2&gt;I.&lt;/h2&gt;<br/>
+						&lt;h2&gt;II.&lt;/h2&gt;<br/>
+						&lt;h2&gt;III.&lt;/h2&gt;<br/>
+						&lt;h2&gt;IV.&lt;/h2&gt;
+					</code></p>
+					
+					<div class="pagebreak right">Transforming Plain Text with Perl | <span class="pageNumber">95</span></div>
+					
+					<p class="indented"><code>
+						&lt;h2&gt;V.&lt;/h2&gt;<br/>
+						&lt;h2&gt;VI.&lt;/h2&gt;<br/>
+						&lt;h2&gt;VII.&lt;/h2&gt;
+					</code></p>
+					
+					<p>The substitute (<em>s</em>) command captures the <em>ARGUMENT</em> heading and those seven uppercase
+					Roman numerals, each on separate lines and followed by a period, in the range
+					I through VII. Then it encloses the captured text in an <em>h2</em> tag.</p>
+				
+				</section>
+				
+				<section class="subsection" data-number="11" data-name="Handling a Specific Paragraph with Perl">
+				
+					<h4>Handling a Specific Paragraph with Perl</h4>
+					
+					<p><span class="first-sentence">Use this code to enclose the introductory paragraph in a <em>p</em> element, if the line number
+					is equal to 5:</span></p>
+					
+					<p class="indented"><code>perl -ne 'if ($. == 5) {s/^([A-Z].*)$/&lt;p&gt;$1&lt;\/p&gt;/;print;}' rime.txt</code></p>
+					
+					<p>You should see this:</p>
+					
+					<p class="indented"><code>
+						&lt;p&gt;How a Ship having passed the Line was driven by Storms to the cold Country towards the South Pole; and how from thence she made her course to the tropical Latitude of the Great Pacific Ocean; and of the strange things that befell; and in what manner the Ancyent Marinere came back to his own Country.&lt;/p&gt;
+					</code></p>
+					
+				</section>
+				
+				<section class="subsection" data-number="12" data-name="Handling the Lines of the Poem with Perl">
+				
+					<h4>Handling the Lines of the Poem with Perl</h4>
+					
+					<p><span class="first-sentence">The following command places a <em>p</em> start-tag at the beginning of the first line of the
+					poem, and a <em>br</em> tag after the end of that line:</span></p>
+					
+					<p class="indented"><code>perl -ne 'if ($. == 9) {s/^[ ]*(.*)/ &lt;p&gt;$1&lt;br\/&gt;/;print;}' rime.txt</code></p>
+					
+					<p>It gives you:</p>
+					
+					<p class="indented"><code>&lt;p&gt;It is an ancyent Marinere,&lt;br/&gt;</code></p>
+					
+					<p>Next, between lines 10 and 832, this bit of Perl puts a <em>br</em> at the end of each line of the
+					poem:</p>
+					
+					<p class="indented"><code>perl -ne 'if (10..832) { s/^([ ]{5,7}.*)/$1&lt;br\/&gt;/; print;}' rime.txt</code></p>
+					
+					<p>A sample of what you will see:</p>
+					
+					<p class="indented"><code>
+						Farewell, farewell! but this I tell&lt;br/&gt;<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;To thee, thou wedding-guest!&lt;br/&gt;<br/>
+						He prayeth well who loveth well&lt;br/&gt;<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Both man and bird and beast.&lt;br/&gt;
+					</code></p>
+					
+					<p>Add a <em>p</em> end-tag to the end of the last line of the poem.</p>
+					
+					<p class="indented"><code>perl -ne 'if ($. == 833) {s/^(.*)/$1&lt;\/p&gt;/; print;}' rime.txt</code></p>
+					
+					<p>It shows:</p>
+					
+					<p class="indented"><code>He rose the morrow morn.&lt;/p&gt;</code></p>
+					
+					<p>Replace blank lines at the end of each line with a <em>br</em> tag:</p>
+					
+					<p class="indented"><code>perl -ne 'if (9..eof) {s/^$/&lt;br\/&gt;/; print;}' rime.txt</code></p>
+					
+					<div class="pagebreak left"><span class="pageNumber">96</span> | Chapter 9: Marking Up a Document with HTML</div>
+					
+					<p>to yield this:</p>
+					
+					<p class="indented"><code>
+						&lt;br/&gt;<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;He prayeth best who loveth best,<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All things both great and small:<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;For the dear God, who loveth us,<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;He made and loveth all.<br/>
+						&lt;br/&gt;<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;The Marinere, whose eye is bright,<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Whose beard with age is hoar,<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Is gone; and now the wedding-guest<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Turn'd from the bridegroom's door.<br/>
+						&lt;br/&gt;
+					</code></p>
+					
+					<p>And finally, when the end of the file is discovered, print a couple of end-tags:</p>
+					
+					<p class="indented"><code>perl -ne 'if (eof) {print "&lt;/body&gt;\n&lt;/html&gt;\n"};' rime.txt</code></p>
+					
+					<p>All this code works together more easily when it’s in a file. You’ll see that next.</p>
+					
+				</section>
+				
+				<section class="subsection" data-number="13" data-name="Using a File of Commands with Perl">
+				
+					<h4>Using a File of Commands with Perl</h4>
+					
+					<p><span class="first-sentence">The following lists <em>html.pl</em> which transforms <em>rime.txt</em> to HTML using Perl.</span> The numbered
+					callouts in the example guide you through what is happening in the script.</p>
+					
+					<p class="indented"><code>
+						#!/usr/bin/perl -p <strong>1</strong>
+					</code></p>
+					
+					<p class="indented"><code>
+						if ($. == 1) { <strong>2</strong><br/>
+						&nbsp;&nbsp;chomp($title = $_);<br/>
+						}<br/>
+						print "&lt;!DOCTYPE html&gt;\ <strong>3</strong><br/>
+						&lt;html xmlns=\"http://www.w3.org/1999/xhtml\"&gt;\<br/>
+						&nbsp;&nbsp;&lt;head&gt;\<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;$title&lt;/title&gt;\<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta charset=\"utf-8\"/&gt;\<br/>
+						&nbsp;&nbsp;&lt;/head&gt;\<br/>
+						&lt;body&gt;\<br/>
+						&lt;h1&gt;$title&lt;/h1&gt;\n" if $. == 1;<br/>
+						s/^(ARGUMENT|I{0,3}V?I{0,2})\.$/&lt;h2&gt;$1&lt;\/h2&gt;/; <strong>4</strong><br/>
+						if ($. == 5) { <strong>5</strong><br/>
+						&nbsp;&nbsp;s/^([A-Z].*)$/&lt;p&gt;$1&lt;\/p&gt;/;<br/>
+						}<br/>
+						if ($. == 9) { <strong>6</strong><br/>
+						&nbsp;&nbsp;s/^[ ]*(.*)/ &lt;p&gt;$1&lt;br\/&gt;/;<br/>
+						}<br/>
+						if (10..832) { <strong>7</strong><br/>
+						&nbsp;&nbsp;s/^([ ]{5,7}.*)/$1&lt;br\/&gt;/;<br/>
+						}<br/>
+						if (9..eof) { <strong>8</strong><br/>
+						&nbsp;&nbsp;s/^$/&lt;br\/&gt;/;<br/>
+						}<br/>
+						if ($. == 833) {<strong>9</strong><br/>
+						&nbsp;&nbsp;s/^(.*)$/$1&lt;\/p&gt;\n &lt;\/body&gt;\n&lt;\/html&gt;\n/;<br/>
+						}<br/>
+					</code></p>
+					
+					<div class="pagebreak right">Transforming Plain Text with Perl | <span class="pageNumber">97</span></div>
+
+					<p><strong>1 </strong>This is called the <em>shebang</em> directive, which gives a hint to the shell of where the
+					program you are running is located.</p>
+
+					<p><strong>2 </strong>If the current line (<code>$.</code>) is line 1, then assign the whole line ($_) to the <em>$title</em> variable,
+					chomping off (with <code>chomp</code>) the last character in the string (a newline) in the process.</p>
+
+					<p><strong>3 </strong>Print a doctype and several HTML tags at the top of the document at line 1, and
+					reuse the value of the <code>$title</code> variable in several places.</p>
+
+					<p><strong>4 </strong>Give the ARGUMENT heading and the Roman numerals <em>h2</em> tags.</p>
+
+					<p><strong>5 </strong>Surround the introductory paragraph with <em>p</em> tags.</p>
+
+					<p><strong>6 </strong>Prepend a <em>p</em> start-tag to the beginning of the first line of verse, and append a <em>br</em> to
+					that line.</p>
+
+					<p><strong>7 </strong>Append a <em>br</em> tag to the end of each line of verse, except the last line.</p>
+
+					<p><strong>8 </strong>Replace each blank line, after line 9, with a <em>br</em> tag.</p>
+
+					<p><strong>9 </strong>Append <em>p</em>, <em>body</em>, and <em>html</em> end-tags to the last line.</p>
+
+					<p>To run this, simply do the following:</p>
+
+					<p class="indented"><code>perl html.pl rime.txt</code></p>
+
+					<p>You can also redirect the output with a > to save your output to a file. In the next and
+					final chapter, I’ll conclude our regex tutorial.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="14" data-name="What You Learned in Chapter 9">
+
+				<h2>What You Learned in Chapter 9</h2>
+
+				<ul>
+
+					<li><span class="first-sentence">How to use <em>sed</em> on the command line</span></li>
+
+					<li>How to prepend (insert), substitute, and append text (tags) with <em>sed</em></li>
+
+					<li>How to use Perl to do the same</li>
+
+				</ul>
+
+			</section>
+
+			<section class="section" data-number="15" data-name="Technical Notes">
+
+				<h2>Technical Notes</h2>
+
+				<ul>
+
+					<li><span class="first-sentence">AsciiDoc (<span class="url">http://www.methods.co.nz/asciidoc/</span>) by Stuart Rackham is a text format
+					that can be converted, using a Python processor, into HTML, PDF, ePUB, DocBook
+					and man pages.</span> The syntax for the text files is similar to Wiki or Markdown and
+					much quicker than hand-coding HTML or XML tags.</li>
+
+					<li>The underscore applies to XML tag names only, not HTML. In addition, XML tags
+					can of course have a much wider range of characters in their names than what is
+					represented in the ASCII set. For more information on characters used in XML
+					names, see <span class="url">http://www.w3.org/TR/REC-xml/#sec-common-syn</span>.</li>
+
+				</ul>
+
+				<div class="pagebreak left"><span class="pageNumber">98</span> | Chapter 9: Marking Up a Document with HTML</div>
+
+				<ul>
+
+					<li>If the command <code>perldoc</code> doesn’t work, you have some alternatives. First, you can
+					easily read about Perl online at <span class="url">http://perldoc.perl.org</span>. (To learn more about <code>$.</code>,
+					for example, go to <span class="url">http://perldoc.perl.org/perlvar.html#Variables-related-to-filehan
+					dles</span>.) If you are on a Mac, try <code>perldoc5.12</code>. If you installed Perl from ActiveState,
+					you will find it at <code>/usr/local/ActivePerl-5.XX/bin</code>. Both <code>perl</code> and <code>perldoc</code> are installed
+					at <code>/usr/local/bin</code> when compiled and built from source. You can add <code>/usr/
+					local/bin</code> to your path so <code>perl</code> and <code>perldoc</code> will run. For information on setting
+					your path variable, see <span class="url">http://java.com/en/download/help/path.xml</span>.</li>
+
+				</ul>
+
+			</section>
+
+		</div> <!--container-->
+
+	</div> <!--regexp-->
+</body>
+</html>

@@ -1,0 +1,88 @@
+#logoutBtn {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	height: 18px;
+}
+
+.inline {
+	display: inline-block;
+}
+
+hr {
+	color: #DDDDDD;
+}
+
+h1.title {
+	font-size: 44px;
+	letter-spacing: -1px;
+}
+
+/* STRATEGIES */
+
+h2 {
+	text-align: center;
+}
+
+
+
+.type {
+	border: 1px solid #000000;
+	margin-bottom:20px;
+	float:left;
+	padding: 5px 10px;
+	width: 95%;
+}
+
+div.strategy {
+	width: 95%;
+	float:left;
+	margin-bottom:10px;
+}
+
+.strategy .description {
+	width:90%;
+	float:left;
+}
+
+
+/* TOGGLE BOX */
+
+
+input[type=checkbox] { 
+	float:right; 
+	position:relative;
+}
+
+input[type=checkbox]:after, input[type=checkbox]:before {
+	content:''; 
+	display:block; 
+	width:4em; 
+	height:2em; 
+	background:#991010; 
+	position:absolute; 
+	top:-.5em; 
+	left:-.25em; 
+	border:.1em solid #b0b0b0; 
+	border-radius:1em; 
+	text-transform:uppercase; 
+	font-weight:700; 
+	line-height:2em; 
+	text-align:center; 
+	color:#323232;
+}
+
+input[type=checkbox]:before {
+	width:2.5em; 
+	background:#fafafa; 
+	z-index:2; 
+	content:'off';
+}
+
+input[type=checkbox]:checked:after {
+	background:#76DAFF;
+}
+
+input[type=checkbox]:checked:before {
+	left:1.5em; content:'on';
+}

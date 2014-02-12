@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+
+<head>
+
+    <title>Chapter 11</title>
+
+</head>
+
+<body>
+
+    <div id="FLU" class="container fit">
+
+        <section class="intro"> <!-- intro2 -->
+
+            <div class="content">
+
+                <blockquote>
+                    Blue color is everlastingly appointed by the Deity to be a source of delight.  
+                    <p class="citation">&dash;JOHN RUSKIN, 1853</p>
+                </blockquote>
+
+                <blockquote>
+                    Science will never be able to reduce the value of a sunset to arithmetic.
+                    <p class="citation">&dash;DR LOUIS ORR, 1960</p>
+                </blockquote>
+
+                <div class="intro-text">
+                    <p><strong>A TYPICAL DAY</strong> at college involves so many forms of digital information that few of us notice: There's sending email with an attached photo to your folks, texting friends, downloading MP3 tunes from the Web, watching online videos, having the required EKG to try out for the swim team, admiring your roommate's new iPhone, using the smart ID card from your work, and researching with the ever&dash;popular database, the library's Online Catalog. Though these examples seem to be much more complicated than the digital representations we've seen so far &dash; well, maybe not the catalog &dash; they are not. As you'll see in this chapter, all these common multimedia devices build on the basic ideas you've already learned.</p>
+
+                    <p>From the earlier discussions you learned that discrete things &dash; things that can be separated from each other &dahs; can be represented by bits. We begin this chapter by looking closer at RGB color, which has been mentioned several times before. You will learn how a color is encoded in bits, and how you can make the colors darker or lighter. This process &dash; a basic part of digital photo software &dash; is little more than doing arithmetic on binary numbers. Changing the color of an image and performing other modifications illustrates these concepts. Next, we discuss JPEG and MPEG and the need for compression techniques for images and video. We go on to discuss optical character recognition to emphasize the advantages of encoding information in digital form. The discussion of virtual reality that follows helps to clarify how well computers can create synthetic worlds. And finally, the whole topic of digital representation is summarized in one fundamental principle.</p>
+                </div>
+            </div> <!-- /content -->
+
+            <img src="/contents/fluency/images/sidepic.png">
+        </section> <!-- /intro2 -->
+
+        <div class="pagebreak pageNumber">302</div>
+
+        <section class="page"> <!-- page1 -->
+
+            <section class="section" data-number="0" data-name="Digitizing Color"> <!-- section1 -->
+                <h2>Digitizing Color</h2>
+
+                <p><span class="first-sentence">In Chapter 8 we discussed the binary encoding of keyboard characters to create the ASCII representation, but we (and the creators) didn't pay much attention to which bit patterns are associated with which characters.</span> It's true that in ASCII the numerals are encoded in numeric order, and the letter sets are roughly in alphabetical order, but the assignment is largely arbitrary. The specifics of the keyboard character encoding don't matter much (as long as everyone agrees on them) because the bytes are used as units. We rarely manipulate the individual bits that make up the pattern for the characters. For other encodings, however, manipulating the individual bits is essential.</p>
+
+                <section class="subsection" data-number="1" data-name="RGB Colors: Binary Representation">
+                    <h3>RGB Colors: Binary Representation</h3>
+
+                    <p><span class ="first-sentence">Recall that giving the intensities for the three constituent colors &dash; red, green, and blue (RGB) &dash; specifies a color on the monitor.</span> Each of the RGB colors is assigned a byte (8 bits) to record the intensity of that color. But the color intensities are not assigned arbitrarily, like the letter characters in ASCII. Instead, color intensity is represented as a quantity, ranging from 0 (none) through 255 (most intense); the higher the number, the more intense the colored light. When we want to change the intensity, we just add to or subtract from the values, implying that the encoding should make it simple to perform arithmetic on the intensities. So, RGB intensities are encoded as binary numbers.</p>
+
+                    <p><span class="paragraph-header">Binary numbers compared with decimal numbers.</span> Binary numbers are different from decimal numbers because they are limited to two digits, 0 and 1, rather than the customary ten digits, 0 through 9. The number of digits is the <srong>base</strong> of the numbering system &dash; 2 or 10 &dash; but that is really the only difference. The other features distinguishing binary from decimal relate to that one difference.</p>
+
+                    <p>For example, in decimal numbers, we use a <strong>place value</strong> representation, where each "place" represents the next higher power of 10, starting from the right. In binary, it's the same idea, but with higher powers of 2.</p>
+
+                    <p><span class="paragraph-header">Place value in a decimal number.</span> Recall that to find the quantity expressed by a decimal number, the digit in a place is multiplied by the place value and the results are added. So, in Table 11.1, for example, the result is one thou- sand ten, found by adding from right to left: the digit in the l's place (0) mul- tiplied by its place value (1), plus the digit in the 10's place (1) multiplied by its place value (10), and so on: 0 x 1 + 1 x 10 + 0 x 100 + 1 x 1,000.</p>
+
+                    <div class="table large">
+
+                        <div class="small-table">
+
+                            <div class="small-table-title"><span class="tableNum">Table 11.1</span> The decimal number 1,010 representing one thousand ten = 1,000 + 10</div>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>10<sup>3</sup></td>
+                                        <td>10<sup>2</sup></td>
+                                        <td>10<sup>1</sup></td>
+                                        <td>10<sup>0</sup></td>
+                                        <td>Decimal Place Values</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>Digits of Decimal Number</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1x10<sup>3</sup></td>
+                                        <td>0x10<sup>2</sup></td>
+                                        <td>1x10<sup>1</sup></td>
+                                        <td>1x10<sup>0</sup></td>
+                                        <td>Multiply place digit by place value</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,000</td>
+                                        <td>0</td>
+                                        <td>10</td>
+                                        <td>0</td>
+                                        <td>and add to get decimal 1,010</td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div> <!-- /small-table -->
+
+                    </div> <!-- /table large -->
+
+                    <div class="pagebreak pageNumber">303</div>
+
+                    <p><span class="paragraph-header">Place value in a binary number.</span> Binary works in exactly the same way except that the base of the power is not 10 but 2, because there are only two digits, not ten. Therefore, instead of the decimal place values, 1, 10, 100, 1,000, ..., resulting from the successive powers of 10, the binary place values are 1, 2, 4, 8, 16, ..., resulting from the successive powers of 2.</p>
+
+                    <div class="table large">
+
+                        <div class="small-table">
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Power</th>
+                                        <th>Decimal</th>
+                                        <th>Biary</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>0</td>
+                                        <td>1 = 10<sup>0</sup></td>
+                                        <td>1 = 2<sup>0</sup></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>10 = 10<sup>1</sup></td>
+                                        <td>2 = 2<sup>1</sup></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>100 = 10<sup>2</sup></td>
+                                        <td>4 = 2<sup>2</sup></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>1,000 = 10<sup>3</sup></td>
+                                        <td>8 = 2<sup>3</sup></td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>10,000 = 10<sup>4</sup></td>
+                                        <td>16 = 2<sup>4</sup></td>
+                                    </tr>
+                                    <tr>
+                                        <td>. . .</td>
+                                        <td>. . .</td>
+                                        <td>. . .</td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div> <!-- /small-table -->
+
+                    </div> <!-- /table large -->
+
+                    <p>Thus, if we are given a binary representation, we can find the (decimal equivalent) value if we multiply the digit times the place value and add the results. See Table 11.2, which shows that 1010 in binary has the value ten in decimal: O x 1 + 1 x 2 + 0 x 4 + 1 x 8.</p>
+
+                    <div class="table large">
+
+                        <div class="small-table">
+
+                            <div class="small-table-title"><span class="tableNum">Table 11.2</span> The binary number 1010, representing the decimal number ten = 8 + 2</div>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>2<sup>3</sup></td>
+                                        <td>2<sup>2</sup></td>
+                                        <td>2<sup>1</sup></td>
+                                        <td>2<sup>0</sup></td>
+                                        <td>Binary Place Values</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>Bits of Binary Number</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1x2<sup>3</sup></td>
+                                        <td>0x2<sup>2</sup></td>
+                                        <td>1x2<sup>1</sup></td>
+                                        <td>0x2<sup>0</sup></td>
+                                        <td>Multiply place bit by place value</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>8</td>
+                                        <td>0</td>
+                                        <td>2</td>
+                                        <td>0</td>
+                                        <td>and add to get a decimal 10</td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div> <!-- /small-table -->
+
+                    </div> <!-- /table large -->
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">2nd Base.</strong> The "base" of a numbering system, 10 for decimal and 2 for binary, is also called its <strong>radix</strong>.</div>
+
+                    <p>Because powers of 2 don't increase as fast as powers of 10, binary numbers need more places than decimal numbers to represent the same amount. So, for example, representing one thousand ten as a binary number requires ten bits, as shown in Table 11.3. Compare Table 11.3 with Table 11.1.</p>
+
+                    <div class="table large">
+
+                        <div class="small-table">
+
+                            <div class="small-table-title"><span class="tableNum">Table 11.3</span> Binary representation of the decimal number one thousand ten = 11 1111 0010</div>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>2<sup>9</sup></td>
+                                        <td>2<sup>8</sup></td>
+                                        <td>2<sup>7</sup></td>
+                                        <td>2<sup>6</sup></td>
+                                        <td>2<sup>5</sup></td>
+                                        <td>2<sup>4</sup></td>
+                                        <td>2<sup>3</sup></td>
+                                        <td>2<sup>2</sup></td>
+                                        <td>2<sup>1</sup></td>
+                                        <td>2<sup>0</sup></td>
+                                        <td>Binary Place Values</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>Bits of Binary Number</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1x2<sup>9</sup></td>
+                                        <td>1x2<sup>8</sup></td>
+                                        <td>1x2<sup>7</sup></td>
+                                        <td>1x2<sup>6</sup></td>
+                                        <td>1x2<sup>5</sup></td>
+                                        <td>1x2<sup>4</sup></td>
+                                        <td>0x2<sup>3</sup></td>
+                                        <td>0x2<sup>2</sup></td>
+                                        <td>1x2<sup>1</sup></td>
+                                        <td>0x2<sup>0</sup></td>
+                                        <td>Multiply place bit by place value</td>
+                                    </tr>
+                                    <tr>
+                                        <td>512</td>
+                                        <td>256</td>
+                                        <td>128</td>
+                                        <td>64</td>
+                                        <td>32</td>
+                                        <td>16</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>2</td>
+                                        <td>0</td>
+                                        <td>and add to get decimal 1,010</td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div> <!-- /small-table -->
+
+                    </div> <!-- /table large -->
+
+                    <div class="pagebreak pageNumber">304</div>
+
+                    <p><span class="paragraph-header">Converting a binary number to a decimal number.</span> Because the bit is either 0 or 1, the "multiply the digit times the place value" rule is especially easy in binary &dash; a 1 means include the place value and a 0 means "forget it." So, to convert a binary number to its decimal equivalent, just add the place values for the places with l's. Thus, in Table 11.3, if we start with the highest place value, we have 512 + 256 + 128 + 64 + 32 + 16 + 2 is decimal 1,010.</p>
+
+                    <div class="fluency-tip">
+                        <strong class="fluency-tip-title">Spacing Out.</strong> When writing long decimal numbers, North Americans usually separate groups of three digits with a comma for readability. Binary numbers, which are usually even longer, are grouped in four-digit units, separated by a space, as in, "The binary number 11 1111 0010 represents the decimal number 1,010."
+                    </div>
+
+                    <div class="try-it">
+                        <p><strong>11.1 Alternating.</strong> What decimal number is the binary number 1 0101 0101?</p>
+                    </div>
+
+                </section>
+
+                <section class="subsection" data-number="2" data-name="Black and White Colors">
+                    <h3>Black and White Colors</h3>
+
+                    <p><span class ="first-sentence">Returning to the representation of color, the fact that a byte &dash;8 bits &dash; is allocated to each of the RGB intensities means that the smallest intensity is 0000 0000, which is 0, of course, and the largest value is 1111 1111.</span> To figure out what decimal number this is, we add up the place values for the 1's,</p>
+
+                    <p><code>1111 1111 = 2<sup>7</sup> + 2<sup>6</sup> + 2<sup>5</sup> + 2<sup>4</sup>+2<sup>3</sup> + 2<sup>2</sup> + 2<sup>1</sup> + 2<sup>0</sup><br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 128 + 64 + 32 + 16 + 8 + 4 + 2 + 1<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 255
+                    </code></p>
+
+                    <p>which explains why the range of values is 0 through 255 for each color.</p>
+
+                    <p><code><strong><font color='red'>0000 0000</font> <font color='green'>0000 0000</font> <font color='blue'>0000 0000</font></strong></code> &nbsp;&nbsp;&nbsp;&nbsp;<span class="paragraph-header"><em>RGB bit assignment for black</em></span><br/>
+                        <code>&nbsp;&nbsp;&nbsp;red &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;green &nbsp;&nbsp;&nbsp;&nbsp;blue<br/>
+                        &nbsp;&nbsp;byte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte</code>
+                    </p>
+
+                    <p><code><strong><font color='red'>1111 1111</font> <font color='green'>1111 1111</font> <font color='blue'>1111 1111</font></strong></code> &nbsp;&nbsp;&nbsp;&nbsp;<span class="paragraph-header"><em>RGB bit assignment for white</em></span><br/>
+                        <code>&nbsp;&nbsp;&nbsp;red &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;green &nbsp;&nbsp;&nbsp;&nbsp;blue<br/>
+                        &nbsp;&nbsp;byte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte</code>
+                    </p>
+
+                    <p>has full intensity for each color. Between these extremes is a whole range of intensity.</p>
+
+                </section>
+
+                <section class="subsection" data-number="3" data-name="Changing a Decimal Number to a Binary Number">
+                    <h3>Changing a Decimal Number to a Binary Number</h3>
+
+                    <p><span class ="first-sentence">As you've seen, to convert a binary number to decimal representation you add up the powers of 2 corresponding to 1 bits.</span> Converting a decimal number into a binary representation is only slightly harder, and is essentially the opposite process. We proceed by filling in the following table, which works for numbers less than 1,000.</p>
+
+                    <div class="pagebreak pageNumber">305</div>
+
+                    <div class="table large">
+
+                        <div class="small-table">
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>                                        
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>Number being converted</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Place value</td>
+                                        <td>512</td>
+                                        <td>256</td>
+                                        <td>128</td>
+                                        <td>64</td>
+                                        <td>32</td>
+                                        <td>16</td>
+                                        <td>8</td>
+                                        <td>4</td>
+                                        <td>2</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td><em>Subtract</em></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Binary Number</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div> <!-- /small-table -->
+
+                    </div> <!-- /table large -->
+
+                    <p>Start by placing the number to be converted, say 200, in the first cell.</p>
+
+                    <div class="table large">
+
+                        <div class="small-table">
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>                                        
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>Number being converted</td>
+                                        <td>200</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Place value</td>
+                                        <td>512</td>
+                                        <td>256</td>
+                                        <td>128</td>
+                                        <td>64</td>
+                                        <td>32</td>
+                                        <td>16</td>
+                                        <td>8</td>
+                                        <td>4</td>
+                                        <td>2</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td><em>Subtract</em></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Binary Number</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div> <!-- /small-table -->
+
+                    </div> <!-- /table large -->
+
+                    <p>Then we work across the table performing one of the following operations in each column depending on how large the number being converted is com- pared to the place value.</p>
+
+                        <ul>
+                            <li><strong>Smaller:</strong> If the number being converted is smaller than the place value below it, copy the number into the next cell to its right; enter a 0 as the binary digit.</li>
+                            <li><strong>Equal or Larger:</strong> If the number being converted is equal to or larger than the place value below it, subtract the place value from the number and copy the result into the first cell of the next column; enter a 1 as the binary digit.</li>
+                        </ul>
+
+                    <p>Thus, the first step in converting 200 to binary is</p>
+
+                    <div class="table large">
+
+                        <div class="small-table">
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>                                        
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>Number being converted</td>
+                                        <td>200</td>
+                                        <td>200</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Place value</td>
+                                        <td>512</td>
+                                        <td>256</td>
+                                        <td>128</td>
+                                        <td>64</td>
+                                        <td>32</td>
+                                        <td>16</td>
+                                        <td>8</td>
+                                        <td>4</td>
+                                        <td>2</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td><em>Subtract</em></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Binary Number</td>
+                                        <td>0</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div> <!-- /small-table -->
+
+                    </div> <!-- /table large -->
+
+                    <p>and the completed table</p>
+
+                    <div class="table large">
+
+                        <div class="small-table">
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>                                        
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>Number being converted</td>
+                                        <td>200</td>
+                                        <td>200</td>
+                                        <td>200</td>
+                                        <td>72</td>
+                                        <td>8</td>
+                                        <td>8</td>
+                                        <td>8</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Place value</td>
+                                        <td>512</td>
+                                        <td>256</td>
+                                        <td>128</td>
+                                        <td>64</td>
+                                        <td>32</td>
+                                        <td>16</td>
+                                        <td>8</td>
+                                        <td>4</td>
+                                        <td>2</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td><em>Subtract</em></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>72</td>
+                                        <td>8</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>0</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Binary Number</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div> <!-- /small-table -->
+
+                    </div> <!-- /table large -->
+
+                    <div class="pagebreak pageNumber">306</div>
+
+                    <p>indicates that the result is 1100 1000. Like decimal representation, we can drop any leading zeros.</p>
+
+                    <div class="try-it">
+                        <p><strong>11.2 86 Confusion.</strong> What is the binary representation of the decimal 86? (Use the table if you wish.)</p>
+                    </div>
+
+                </section>
+
+                <section class="subsection" data-number="4" data-name="Lighten Up: Changing Color by Addition">
+                    <h3>Lighten Up: Changing Color by Addition</h3>
+
+                    <p><span class ="first-sentence">Returning to our discussion of color representation, the extreme colors of black and white are easy, but what color does the following represent?</span></p>
+
+                    <p><code><strong><font color='red'>1100 1000</font> <font color='green'>1100 1000</font> <font color='blue'>1100 1000</font></strong><br/>
+                        &nbsp;&nbsp;&nbsp;red &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;green &nbsp;&nbsp;&nbsp;&nbsp;blue<br/>
+                        &nbsp;&nbsp;byte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte</code>
+                    </p>
+
+                    <p>First, notice that each byte contains the decimal value 200, which you recognize from the conversion just explained. So the mystery color is the color produced by the specification <code>RGB (200, 200, 200)</code>. Like black and white, the mystery color has equal amounts of red, green, and blue, and it is closer to white than black. In fact, it is a medium gray <font color="#6E6E6E">&#9689;</font>. All colors with equal amounts of RGB are gray if they are not black or white. It's just a question of whether they're closer to black or white.</p>
+
+                </section>
+
+                <section class="subsection" data-number="5" data-name="To Increase Intensity: Add in Binary">
+                    <h3>To Increase Intensity: Add in Binary</h3>
+
+                    <p><span class ="first-sentence">To make a lighter color of gray, we obviously change the common value to be closer to white.</span> Suppose we do this by increasing each of the RGB values by 16 &dash; that is, by adding 16 to each byte &dash; as shown in Figure 11.1.</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/figure11.1.png">
+                        <figcaption><span class="figureId">Figure 11.1</span> Adding 16 to an RGB value.</figcaption>
+                    </figure>
+
+                    <p>The result in Figure 11.1 is found by simply setting the 16's place value &dash; that is, changing it from 0 to 1. When the increase is applied to each color, the result is</p>
+
+                    <p><code><strong><font color='red'>1101 1000</font> <font color='green'>1101 1000</font> <font color='blue'>1101 1000</font></strong><br/>
+                        &nbsp;&nbsp;&nbsp;red &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;green &nbsp;&nbsp;&nbsp;&nbsp;blue<br/>
+                        &nbsp;&nbsp;byte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte</code>
+                    </p>
+
+                    <p>which is a lighter shade of gray <font color="#848484">&#9689;</font>. By the way, we can add or subtract any amount as long as the result is not less than 0 or greater than 255.</p>
+
+                </section>
+
+                <div class="pagebreak pageNumber">307</div>
+
+                <section class="subsection" data-number="6" data-name="Lighter Still: Adding with Carry Digits">
+                    <h3>Lighter Still: Adding with Carry Digits</h3>
+
+                    <p><span class ="first-sentence">Imagine that we want the color lighter still by another 16 units of intensity for each RGB byte.</span> Adding another 16 isn't quite as easy this time. The 16's position in the binary representation 1101 1000 of decimal 216 is already filled with a 1. So we "carry" to the next higher place. Thus,</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/extra11.1.png">
+                    </figure>
+
+                    <p>So our color intensities are</p>
+
+                    <p><code><strong><font color='red'>1110 1000</font> <font color='green'>1110 1000</font> <font color='blue'>1110 1000</font></strong><br/>
+                        &nbsp;&nbsp;&nbsp;red &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;green &nbsp;&nbsp;&nbsp;&nbsp;blue<br/>
+                        &nbsp;&nbsp;byte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;byte</code>
+                    </p>
+
+                    <p>Notice that if we'd simply added 32 to 200 originally, we'd have ended up with the same result &dash; the gray with each intensity set at 232 <font color="#BDBDBD">&#9689;</font>.</p>
+
+                    <p>We just illustrated the binary addition process. As with other aspects of binary, binary addition is similar to decimal addition. We work from right to left, adding corresponding digits in each place position and writing the sum below. Like decimal addition, there are two cases. Sometimes, we can add the two numbers in a place and the result is expressed as a single digit. That was the case the first time we added 16 to the RGB byte: we added 1 + 0 in the place and the result was 1. Other times, when we add two digits in a place their sum is larger than can be expressed by a single digit, so we must carry to the next higher place. That was the case the second time we added 16 to the RGB byte: we added 1 + 1 in the place, which is 10 in binary, and wrote a 0 the place and carried a 1 to the next higher digit. Because there may be a carry involved, it is best to think of adding as involving three digits in each place: the two digits being added plus (possibly) a carry.</p>
+
+                    <p>The rules for binary addition can be learned using an example for each case.</p>
+
+                    <p>The first example &dash; called the "no carry&dash;in" case &dash; adds A + B when A is the binary number 1100, which is 12 in decimal, and B is 1010, which as you know is 10 in decimal.</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/extra11.2.png">
+                    </figure>
+
+                    <p>This illustrates the four no carry&dash;in cases of adding binary digits &dash; all combinations of 0 and 1. In each case there is no <em>carry&dash;in</em> &dash; that is, no carry from the</p>
+
+                    <div class="pagebreak pageNumber">308</div>
+
+                    <p>previous place. The only interesting case is 1 + 1. Of course, in decimal 1 + 1 = 2, which is 10 in binary, so we put down the 0 in the place and carry the 1 to the next higher position. The carry to the next higher digit is called a <em>carry&dash;out</em>, and we notice that the carry&dash;out of one place becomes the carry-in of the next higher place. (Verify that the sum is the binary representation of 22 = 12 + 10.)</p>
+
+                    <p>The next example, the "carry&dash;in" case, adds A + B when A is 1011, which is 11 in decimal, and B is 111, which is 7 in decimal. Leading 0's are shown to complete the picture, and the rightmost place adds 1 + 1 to get the "carrying process" started.</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/extra11.3.png">
+                    </figure>
+
+                    <p>The four cases illustrate adding binary digits with a carry&dahs;in. Three of the four have the property that the sum of the two digits and the carry are too large to be expressed by a single binary digit, so there is a carry&dash;out to the next higher place. Only the leftmost case, 0 + 0 with a carry&dash;in, can be expressed by a single digit, 1. The new case is the second from right position, which adds 1 + 1 with a carry&dash;in yielding the decimal 3 or binary 11. We write down the 1 in the place and carry a 1 to the next higher position. (Verify that the sum is the binary representation of 18 = 11 + 7.)</p>
+
+                    <p>The rules from these examples are summarized in Table 11.4. We can now apply the rules to add the binary numbers 110 1001 and 110 0011. (What decimal numbers are these?) This time, we follow the usual procedure of showing only the nonzero carries.</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/extra11.4.png">
+                    </figure>
+
+                    <div class="table large">
+
+                        <div class="small-table">
+
+                            <div class="small-table-title"><span class="tableNum">Table 11.4</span> Summary of the rules for binary addition. The carry&dash;in is added to the two operands, A and B, to give the place digit and carry&dash;out.</div>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>                                        
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>Carry&dash;in</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>A</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>B</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Place digit</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Carry&dash;out</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>1</td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div> <!-- /small-table -->
+
+                    </div> <!-- /table large -->
+
+                    <div class="pagebreak pageNumber">309</div>
+
+                    <p>Binary addition is so easy, even computers can do it.</p>
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">One and One.</strong><br/>
+                        <figure>
+                            <img src="/contents/fluency/images/extra11.5.png" align="right"/>One and One. Sometimes we rhetorically ask if a clueless person knows that 1 + 1 = 2.<br/><br/>
+                            How clueless are computers?
+                        </figure>
+                    </div>
+
+                </section>
+
+                <section class="subsection" data-number="7" data-name="Overflow">
+                    <h3>Overflow</h3>
+
+                    <p><span class ="first-sentence">Because computers use fixed&dash;size bit sequences (for example, a byte is 8 bits long), an interesting question is what happens when there is a carry&dash;out of the most significant bit &dash; that is, the leftmost bit.</span> For example, 255 + 5 in binary is</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/extra11.6.png">
+                    </figure>
+
+                    <p>But 260 needs 9 bits, one bit too many to fit into a byte. Such situations are called <strong>overflow exceptions</strong>. Computers report them when the computation they're told to perform overflows; it's up to programmers to recover from the error. Usually programmers try to avoid the situation by choosing large bit fields that will not overflow.</p>
+
+                    <div class="try-it">
+                        <p><strong>11.3 Summing Up.</strong> Add these two binary numbers: 
+                        <center><figure>
+                            <img src="/contents/fluency/images/extra11.7.png">
+                        </figure></center>
+                        </p>
+                    </div>
+
+                </section>
+
+            </section> <!-- /section1 -->
+
+            <section class="section" data-number="8" data-name="Computing on Representations"> <!-- section2 -->
+                <h2>Computing on Representations</h2>
+
+                <p><span class="first-sentence">Though we have focused on binary representation, conversions between decimal and binary, and binary addition, the previous sections have also introduced another fundamental concept of digital representation: the idea of <em>computing on representations</em>.</span> When we made gray lighter, we showed how digital information &dash; for example, the RGB settings of a pixel &dash; can be changed through computation. For a better understanding of the idea, consider the more involved example that follows.</p>
+
+                <section class="subsection" data-number="9" data-name="Changing the Colors of a Moon Photo">
+                    <h3>Changing the Colors of a Moon Photo</h3>
+
+                    <p><span class ="first-sentence">Suppose you have scanned a beautiful black&dash;and&dash;white photo of the moon into your computer, similar to Figure 11.2(a).</span> Unfortunately, it misses the gorgeous orange of the close&dash;to&dash;the&dash;horizon moon that you and your friends saw the previous weekend. As a memento for them, you decide to colorize it yourself.</p>
+
+                    <div class="pagebreak pageNumber">310</div>
+
+                    <figure>
+                        <img src="/contents/fluency/images/figure11.2.png">
+                        <figcaption><span class="figureId">Figure 11.1</span> Moon photos. (a) The original black&dash;and&dash;white picture, (b) tinted version of original, (c) with boosted highlights.</figcaption>
+                    </figure>
+
+                    <p>In the computer, the pixels of your photo form a long sequence of RGB triples. What values do they have? Because they are all black, white, or gray, it's easy to guess. There is the (0,0,0) of the black night sky, the (255,255,255) of the brightest part of the moon, some light gray values very close to white &dash; for example, (234,234,234) &dash; of the craters and <em>marae</em> (dry oceans) of the moon, and some dark gray values in the corner very close to black &dash; for example, (28,28,28) &dash; from a smudge left on the glass of your scanner. How can you colorize it?</p>
+
+                    <p><span class="paragraph-header">Removing the smudge.</span> To create the picture, you must remove the smudge and transform the pixels of the black&dash;and&dash;white image into the colors that you remember. The first task is easy because any value "close" to black can be changed to true black by replacing it with (0,0,0). But what does <em>close</em> mean? The sample dark gray value (28,28,28) is represented in binary as</p>
+
+                    <p><code><strong><font color='red'>0001 1100</font> <font color='green'>0001 1100</font> <font color='blue'>0001 1100</font></strong></code></p>
+
+                    <p>Though other dark gray values may be somewhat larger or smaller, it is a safe guess that any dark gray pixel will have the most significant (leftmost) 2 bits of each of its RGB bytes set to 00. That's because, from the binary representation, a byte whose most significant two bits are 00 is less than 64 &dash; that is, less than one quarter of the magnitude of full intensity &dash; and any pixel, all of whose colors are less than a quarter magnitude, must be a darker color.</p>
+
+                    <p>To change the smudge to pure black, the process is to go through the image looking at each pixel and testing to see if the first 2 bits of each of its bytes are 00. If they are, set each byte to 0. Recalling our substitution arrow from Chapter 2, we describe this operation as</p>
+
+                    <p><code><strong><font color='red'>00xx xxxx</font> <font color='green'>00xx xxxx</font> <font color='blue'>00xx xxxx</font></strong> &larr; <strong><font color='red'>0000 0000</font> <font color='green'>0000 0000</font> <font color='blue'>0000 0000</font></strong></code></p>
+
+                    <p>where <em>x</em> is a standard symbol for a "don't care digit" or "wildcard" &dash; that is, a symbol matching either 0 or 1. So the substitution statement says, "Any three RGB bytes, each of whose first 2 bits are 00, are replaced with all zeros." Making that substitution throughout the image removes the digitized smudge. (Notice that this is an algorithm.)</p>
+
+                    <div class="pagebreak pageNumber">311</div>
+
+                    <p><span class="paragraph-header">Making the moon orange.</span> Similarly, shifting the color of the moon to orange involves changing the white pixels (255,255,255). You decide that the orange of the moon (<font color="#FE9A2E">&#9689;</font>) must be about the color represented by (255,213,132). Changing all of the white pixels to this orange color requires the substitution</p>
+
+                    <p><code><strong>255 255 255 &larr; 255 213 132</strong></code></p>
+
+                    <p>or, in binary,</p>
+
+                    <p><code><strong><font color='red'>1111 11111</font> <font color='green'>1111 11111</font> <font color='blue'>1111 11111</font></strong> &larr; <strong><font color='red'>1111 11111</font> <font color='green'>1101 0101</font> <font color='blue'>1000 0100</font></strong></code></p>
+
+                    <p>to produce an orange moon. But it will not change the gray of the craters, because they are not pure white and therefore won't be modified by this replacement. If, like changing the dark gray to black, the very light gray were changed to this orange too, all of the beautiful detail of the craters would be lost. How do we change the white to orange and change the gray to the appropriate orange&dash;tinted gray?</p>
+
+                    <p><span class="paragraph-header">Light gray into orange tint.</span>There are many very sophisticated ways to adjust color; we'll change light gray into orange in three steps:</p>
+
+                    <ul>
+                        <li>Red byte &dash; leave unchanged</li>
+                        <li>Green byte &dash; subtract 42 from the green value; that is, reduce the green slightly</li>
+                        <li>Blue byte &dash; subtract 123 from the blue value; that is, reduce the blue quite a bit</li>
+                    </ul>
+
+                    <p>Thus, the light gray color (234,234,234) is changed into (234,192,111), and the slightly darker light gray (228,228,228) is changed into (228,186,105), a slightly grayer orange. These numbers are computed by noting how white (255,255,255) changed into the chosen orange (255,213,132): the red byte was unchanged, the green byte was reduced by 42, and the blue byte was reduced by 123. If all pixels having the most significant bit of each RGB byte equal 1 (that is, the white pixels and all the light gray pixels) are changed by this three-step process, the white areas would become orange and the gray parts would become grayish orange.</p>
+
+                    <p>You have cleaned up the smudge and colorized the moon, as shown in Figure 11.2(b).</p>
+
+                    <p><span class="paragraph-header">Boosting the red.</span> Now you inspect your work and decide that the gray parts of the moon are really not as luminous as you remembered. So, you decide to boost the red. If the red in all of the orange pixels is shifted to 255, the moon's craters look too red and "unnatural." But a compromise is to "split the difference." That is, if the current value of the red byte in an orange tint is 234, say, half the difference between it and pure red &dash; (255 &dash; 234)/2 = 10.5 &dash; could be added to get 244. (You need whole numbers, so drop the "point 5.") Thus, the two sample tints (234,192,111) and (228,186,105) become (244,192,111) and (241,186,105), respectively. This process brightens the craters, as demonstrated in Figure 11.2(c), without making them appear</p>
+
+                    <div class="pagebreak pageNumber">312</div>
+
+                    <p>unnatural. The resulting image looks great, and you can attach it to your email to your friends.</p>
+
+                </section>
+
+                <section class="subsection" data-number="10" data-name="Image Processing Summary">
+                    <h3>Image Processing Summary</h3>
+
+                    <p><span class ="first-sentence">We have computed on a digital representation.</span> We scanned a real photograph into the computer and created an artificial image. First, we improved it by removing the smudge from the scanning process. Then, we colorized it by changing white and light gray into orange and corresponding shades of orange&dash;gray. Finally, we boosted the red in the orange&dash;gray tints to make it a little brighter. We discussed these changes as if you were programming them, which you could do, but image processing software like Photoshop accomplishes these modifications through menu choices like changing <em>Saturation, Brightness, Hue,</em> and so forth. Such software manipulates the pixels with transformations like those described here, as well as in much more sophisticated ways. The result is not the photograph of the moon as it might have been taken last weekend, but rather a different image, a synthetic image closer to what you remember or prefer. It is definitely not reality. . . because we can just as easily make "the man in the moon" smile.</p>
+
+                </section>
+
+            </section> <!-- /section2 -->
+
+            <section class="section" data-number="11" data-name="Digitizing Sound"><!-- section3 -->
+                <h2>Digitizing Sound</h2>
+
+                <p><span class ="first-sentence">In this section we discuss digitizing, though this time we focus on digitizing sound rather than images because it is slightly easier and equally interesting.</span> The principles are the same when digitizing any "continuous" information.</p>
+
+                <p>An object &dash; think of a cymbal &dash; creates sound by vibrating in a medium such as air. The vibrations push the air, causing pressure waves to emanate from the object, which in turn vibrate our eardrums. The vibrations are transmitted by three tiny bones to the fine hairs of our cochlea, stimulating nerves that allow us to sense the waves and "hear" them as sound. The force, or intensity of the push, determines the volume, and the <strong>frequency</strong> (the number of waves per second) of the pushes is the pitch. Figure 11.3 shows a graph of a pure tone sound wave. The horizontal axis shows time and the vertical axis shows the amount of positive or negative sound pressure.</p>
+
+                <figure>
+                    <img src="/contents/fluency/images/figure11.3.png">
+                    <figcaption><span class="figureId">Figure 11.3</span> Sound wave. The horizontal axis is time; the vertical axis is sound pressure.</figcaption>
+                </figure>
+
+                <div class="pagebreak pageNumber">313</div>
+
+                <p>From a digitization point of view, the key is that the object vibrates <em>continuously</em>, producing a continuously changing wave, which is called <strong>analog</strong> information. As the wave moves past, say, a microphone, the measured pressure changes smoothly. When this pressure variation is recorded directly, as it was originally by Thomas Edison with a scratch on a wax cylinder, and then later with vinyl records, we have a continuous (<strong>analog</strong>) representation of the wave. In principle, all of the continuous variation of the wave is recorded. Digital representations work differently.</p>
+
+                <section class="subsection" data-number="12" data-name="Analog to Digital">
+                    <h3>Analog to Digital</h3>
+
+                    <p><span class ="first-sentence">To digitize continuous information, we must convert to bits.</span> For a sound wave, we can record with a binary number the amount by which the wave is above or below the 0 line at a given point on our graph, that is, the amount of positive or negative sound pressure. But at what point do we measure? There are infinitely many points along the line, too many to record every position of the wave.</p>
+
+                    <p><span class="paragraph-header">Sampling.</span> So, we <strong>sample</strong>, which means we take measurements at regular intervals. The number of samples in a second is called the <strong>sampling rate</strong>, and the faster the rate, the more accurately the wave is recorded (see Figure 11.4).</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/figure11.4.png">
+                        <figcaption><span class="figureId">Figure 11.4</span> Two sampling rates; the rate on the right is twice as fast as that on the left.</figcaption>
+                    </figure>
+
+                    <p><span class="paragraph-header">How fast a sampling rate?</span> To get a good recording of the wave, we need a sampling rate that is related to the wave's frequency. For example, if a sampling were too slow, sound waves could "fit between" the samples and we'd miss important segments of the sound.</p>
+
+                    <p>Fortunately, we have guidelines for the sampling rates. In electrical engineering, the <strong>Nyquist rule</strong> says that a sampling rate must be at least twice as fast as the fastest frequency. And what is the fastest frequency we can expect? Because human perception can hear sound up to roughly 20,000 Hz, a 40,000 Hz sampling rate fulfills the Nyquist rule for digital audio recording. For technical reasons, however, a somewhat faster-than-two-times sampling rate was chosen for digital audio, 44,100 Hz.</p>
+
+                    <div class="pagebreak pageNumber">314</div>
+
+                    <p><span class="paragraph-header">ADC, DAC.</span> The digitizing process works as follows: Sound is picked up by a microphone (called a <em>transducer</em> because it converts the sound wave into an electrical wave). This electrical signal is fed into an <strong>analog&dash;to&dash;digital converter (ADC)</strong>, which takes the continuous wave and samples it at regular intervals, outputting for each sample binary numbers to be written to memory.</p>
+
+                    <p>The process is reversed to play the sound: The numbers are read from mem- ory into a <strong>digital&dash;to&dash;analog converter (DAC)</strong>, which creates an electrical wave by interpolation between the digital values &dash; that is, filling in or smoothly moving from one value to another. The electrical signal is then input to a speaker, which converts it into a sound wave, as shown in Figure 11.5.</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/figure11.5.png">
+                        <figcaption><span class="figureId">Figure 11.5</span> Schematic for analog&dash;to&dash;digital and digital&dash;to&dash;analog conversion.</figcaption>
+                    </figure>
+
+                    <p><span class="paragraph-header">How many bits per sample?</span> The problem of digitizing is solved except for describing how accurate the samples must be. To make the samples perfectly accurate, we would need an unlimited number of bits for each sample, which is impossible. But to start, we know that the bits must represent both positive and negative values, because the wave has both positive and negative sound pressure. Second, the more bits there are, the more accurate the measurement is. For example, with only 3 bits, one of which is used to indicate whether the sign is + or &dash;, we can encode one of four positions in either direction (they align at 0). With so few bits, we can only get an approximate measurement, as shown in Figure 11.6(a). If we used another bit, the sample would be twice as accurate. (In Figure 11.6(b), each interval is half as wide, making the illustrated crossing in the "upper" half of the interval.)</p>
+
+                    <p>Using more bits yields a more accurate digitization. The digital representation of audio CDs uses 16 bits, meaning that 2<sup>16</sup> = 65,536 levels are recorded, 2<sup>15</sup> = 32,768 for positive values and 32,768 for negative values.</p>
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">Unforgiving Minute.</strong> How many bits does it take to record a minute of digital audio? There are 60 seconds of 44,100 samples of 16 bits each, times 2 for stereo. That's 84,672,000 bits, or 10,584,000 bytes, more than 10.5 megabytes. An hour is 635 MB!</div>
+
+                </section>
+
+                <section class="subsection" data-number="13" data-name="Advantages of Digital Sound">
+                    <h3>Advantages of Digital Sound</h3>
+
+                    <p><span class ="first-sentence">A key advantage of digital information (as demonstrated in the last section) is that we can compute on the representation.</span></p>
+
+                    <div class="pagebreak pageNumber">315</div>
+
+                    <figure>
+                        <img src="/contents/fluency/images/figure11.6.png">
+                        <figcaption><span class="figureId">Figure 11.6</span> (a) Three&dash;bit precision for samples requires that the indicated reading is approximated as +10. (b) Adding another bit makes the sample twice as accurate.</figcaption>
+                    </figure>
+
+                    <p><span class="paragraph-header">MP3 compression.</span> One computation of value is to <em>compress</em> the digital audio; that is, reduce the number of bits needed to represent the information. For example, an orchestra produces many sounds that the human ear can't hear &dash; some are too high and some too low. Our ADC still encodes these frequencies &dash; not to annoy our dog, but simply as part of the encoding process. By computing special functions on the digital audio representation, it's possible to remove these waves without harming the way the audio sounds to us. This is the sort of compression used for MP3. In MP3 we typically get a <strong>compression ratio</strong> of more than 10:1, which means that the number of bits is reduced to less than one&dash;tenth of what it was. So a minute of MP3 music typically takes less than a megabyte to represent. This makes MP3 popular for Internet transmission, because it has lower bandwidth requirements. We discuss bandwidth &dash; the rate at which bits are transmitted &dash; shortly.</p>
+
+                    <p>Another computation is to "fix" a recording in the same way we "fixed" our moon picture. If someone coughs during a quiet moment of Verdi's <strong>Requiem</strong>, we can remove the offending noise from the recording. Performances can be sped up or slowed down without affecting pitch, volume, and so on.</p>
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">MP3.</strong> The "sound track" of a digital video in the MPEG representation is known as MPEG level 3, or MP3.</div>
+
+                    <p><span class="paragraph-header">Reproducing the sound recording.</span> Another key advantage of digital representations over analog is that they can be reproduced exactly. We can copy the file of bits that make up an audio performance without losing a single bit of information. When the original and the copy are played by the same system, they sound exactly the same. With analog representation, the copy is never as exact as the original, and because of wear, a second (or third or hundredth) playing of the same version is never as good as the first. Digital recordings never have these problems as long as the bits remain stable.</p>
+
+                    <div class="pagebreak pageNumber">316</div>
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">Word Search.</strong> Searching digital audio for a segment of sound, though possible in principle, is impossible in practice because we have to specify the search string.Thus, in Chapter 6, we searched Fuller's <em>Everything I Know</em> recordings not by searching the audio, but by searching the textual transcript of the audio, which is in ASCII.</div>
+
+                </section>
+
+            </section><!-- /section3 -->
+
+            <section class="section" data-number="14" data-name="Digital Images and Video"><!-- section4 -->
+                <h2>Digital Images and Video</h2>
+
+                <p><span class ="first-sentence">Recall from our discussion of the moon picture that an image is a long sequence of RGB pixels.</span> Of course, the picture is two-dimensional, but we think of the pixels stretched out one row after another in memory, which is one&dash;dimensional. How many pixels are there? For an 8 x 10 image scanned at 300 pixels per inch, there are 80 square inches, each requiring 300 x 300 = 90,000 pixels for a grand total of 7.2 megapixels. At 3 bytes per pixel, it takes 21.6 MB of memory to store one 8 x 10 color image. That's more memory than personal computers came with not so long ago. Sending such a picture across a standard 56 Kb/s phone connection &dash; that's kilo<em>bits</em> per second &dash; would take at least 21,600,000 x 8/56,000 = 3,085 seconds, or more than 51 minutes (longer than the average college class). So, how can people without fast connections see screen&dash;size pictures in seconds when surfing the Web?</p>
+
+                <section class="subsection" data-number="15" data-name="Image Compression">
+                    <h3>Image Compression</h3>
+
+                    <p><span class ="first-sentence">First, a typical computer screen has fewer than 100 pixels per inch (ppi), not 300, so storing the picture digitized at 100 ppi is a factor of 9 savings immediately.</span> Hand&dash;held devices have even smaller screens. But this isn't quite the simplification we need, first because a 100ppi picture that size still takes more than five and a half minutes to send, and second because once received, we might want to print the picture, requiring the resolution again. Luckily, electrical engineers invented the JPEG compression scheme. JPEG stands for "Joint Photographic Experts Group," a nickname for an International Standards Organization (ISO) team that guides the development of digital representation of still photographs.</p>
+
+                    <p><strong>Compression</strong> means to change the representation in order to use fewer bits to store or transmit information. For example, faxes are usually long sequences of 0's and 1's that encode where the page is white (0) or black (1). Rather than sending all the 0's and 1's, we can use run&dash;length encoding to take advantage of the fact that the sequences of 0's and 1's tend to be long. <strong>Run&dash;length encoding</strong> uses binary numbers to specify how long the first sequence (run) of 0's is, then how long the following sequence of 1's is, then how long the following sequence of 0's is, and so on. This works best for long, not short, sequences of 0's and 1's, and most of the time run&dash;length compression is a big win.</p>
+
+                    <p>Run&dash;length encoding is a <strong>lossless compression</strong> scheme, meaning that the original representation of 0's and 1's can be perfectly reconstructed from the compressed version. The first number says how many 0's to write down, the</p>
+
+                    <div class="pagebreak pageNumber">317</div>
+
+                    <p>second number says how many l's to write down next, the third number says how many 0's to write down next, and so forth. The opposite of lossless compression is <strong>lossy compression</strong>, meaning that the original representation cannot be exactly reconstructed from the compressed form. MP3 is lossy because the high notes cannot be recovered &dash; but it doesn't matter since we can't hear them anyway.</p>
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">GIF Encoding.</strong>
+                        <img src="/contents/fluency/images/extra11.8.png" align="left" />The Graphics Interchange Format (GIF) is the recommended encoding for icons, cartoons, and simple art. GIF (pronounced <em>jif</em>, according to the inventors, but both soft and hard g are heard) is a lossless encoding scheme that pushes the idea of run&dash;length encoding beyond the runs&dash;of&dash;0s and runs&dash;of&dash;1s idea. There are three ideas that make GIF encodings work. First, the number of colors is limited to 256, which is plenty for simple art. (Transparent is also allowed so the background can show through.)The use of 256 allows for the second idea: Do not represent colors as 3&dash;byte <img src="/contents/fluency/images/extra11.9.png" align="left" />RGB triples, but make a table of colors, put the RGB into the table, and refer to the colors by their one&dash;byte index &dash; their number in the table (see the table at the left). These two ideas give a simple encoding, which records runs of colors.<br/>
+                        For example, the file <code>huFlag</code>, which gives the size of the image in pixels followed by the list of runs expressed as <em>length:color</em> pairs (lc&dash;pairs), where <em>color</em> is an index into the table<br/>
+                        <code>huFlag: [15x9] 45:1, 45:2, 45:3</code><br/>
+                        can be decoded into a 15 x 9 pixel Hungarian flag. The flag's first three rows are each 15 consecutive red pixels, making a run &dash; when we stretch out the pixels into a sequence &dash; of 45; the white and green bands are similar. Italy's flag, however, is not encoded as succinctly.<br/>
+                        <code>itFlag: [15x9] 5:3,5:2,5:1,5:3,5:2,5:1,5:3,5:2,5:1,<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5:3,5:2,5:1,5:3,5:2,5:1,5:3,5:2,5:1,<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5:3,5:2,5:1,5:3,5:2,5:1,5:3,5:2,5:1</code><br/>
+                        and requires groups of three of the length:color pairs to encode a row in the flag, implying that it needs nine groups of three. This illustrates GIF's preference for horizontal bands of color rather than vertical bands. Computing the costs we have<br/>
+                        Direct pixel encoding&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9 x 15 pixels x 3 RGB bytes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 405 bytes<br/>
+                        HungarianFlag3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lc pairs x 2 bytes + 12 bytes (table)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 18 bytes<br/>
+                        Italian Flag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9 x 3 lc pairs x 2 bytes + 12 bytes (table)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 66 bytes<br/>
+                        showing the advantage of even this simple scheme. (A table entry is 4 bytes.)<br/>
+                        The third idea is to add Lempel&dash;Ziv&dash;Welch (LZW) compression, which looks for pixel patterns like 5 green, followed by 5 white, followed by 5 red, and encodes them into the table so the pattern can be indexed, just like the colors. This idea gets the Italian flag to an encoding approximating that of the Hungarian flag. LZW is rather involved, but the idea will obviously help, especially with vertical bands like the Italian flag.<br/>
+                        The Portable Network Graphics (PNG) format is emerging as a more advanced lossless replacement for GIF.
+                    </div>
+
+                    <div class="pagebreak pageNumber">318</div>
+
+                    <p>JPEG compression is used for still images. Our eyes are not very sensitive to small changes in hue (chrominance), but we are quite sensitive to small changes in brightness (luminance). This means we can store a less accurate description of the hue of a picture (fewer bits) and, although this compression technique is lossy, our eyes won't notice the difference. With JPEG compression we can get a 20:1 compression ratio, compared to an uncompressed still image, without being able to see a difference. For example, the digital image in Figure 11.7(a) has been compressed 45:1 in Figure 11.7(b) with almost no detectable difference on a computer screen; but at 125:1 compression in Figure 11.7(c) the image is ruined &dash; or perhaps is art of a new form.</p>
+
+                    <p>The idea behind JPEG compression is visible in Figure 11.7(c), which has purposely been excessively compressed. Large areas of similar hues are "lumped together" as the same hue, so a whole area can be colored with a single set of RGB values. If the differences are slight, compression is not noticeable, but if the differences are significant and the regions are large, the quality of the image degrades.</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/figure11.7.png">
+                        <figcaption><span class="figureId">Figure 11.7</span> Detail from a 493 x 527 image compressed using JPEG. (a) Essentially full resolution (b) 45:1 compression, (c) 125:1 compression. View images at <code>www.aw.com/snyder</code>.</figcaption>
+                    </figure>
+
+                    <p>The repeated values can be run-length compressed to reduce the memory required even further. The handy feature of JPEG compression is that we can control the amount of compression: Image compression software gives us a control &dash; a slider or dial, say &dash; so we can choose the amount of compression we want. Fiddling with the control allows us to determine visually how much more compression can be applied without seriously affecting the look of the image.</p>
+
+                </section>
+
+                <section class="subsection" data-number="16" data-name="MPEG Compression Scheme">
+                    <h3>MPEG Compression Scheme</h3>
+
+                    <p><span class ="first-sentence"><strong>MPEG</strong>, the compression scheme of the Motion Picture Experts Group of the ISO, is the same idea applied to motion pictures.</span> On the one hand, it seems like an easier task because each image &dash; each frame &dash; is not seen for very long,</p>
+
+                    <div class="pagebreak pageNumber">319</div>
+
+                    <p>so we should be able to get away with even greater levels of single&dash;image compression. On the other hand, the problem seems more difficult because it takes many stills to make a movie. In MPEG compression, JPEG&dash;type compression is applied to each frame, but then "interframe coherency" is used. Because two consecutive video images are usually very similar, MPEG compression only has to record and transmit the "differences" between frames. This results in huge amounts of compression. So, MPEG and other compression schemes only need moderate amounts of bandwidth, allowing us to watch videos on YouTube and Vimeo.</p>
+
+                </section>
+
+            </section><!-- /section4 -->
+
+            <section class="section" data-number="17" data-name="Optical Character Recognition"><!-- section5 -->
+                <h2>Optical Character Recognition</h2>
+
+                <p><span class ="first-sentence">On certain toll roads, computers watch cars pass, read their license plates, find the "car's" account in a database, and deduct the toll from its account.</span> It sure beats stopping every few miles to pay another toll! The interesting aspect of this technology is that there is no bar code or electronic transponder; a computer simply recognizes the letters of the license plate. Reading license plates is very easy for humans, but it's a big deal for computers.</p>
+
+                <p>Consider some of the difficulties. First, the computer must capture an image of the license plate, but the camera points at the highway and picks up many images that are not license plates &dash; the scene, parts of cars, trailers, litter, road&dash;kill before it is road&dash;kill, and so on. An electronic device called a <strong>frame grabber</strong> recognizes when to "snap" the image and send it to the computer for processing. Assuming a frame with a license plate in it has been snapped, the computer must figure out where in the image it is, because there is no standard location for a license plate on a vehicle, and even if there were, the vehicle could be changing lanes. Looking for letters and numbers doesn't work, because some vehicles display bumper stickers or advertising. Once the license plate is found, recognizing its characters is the most significant challenge, because they're not yet characters, but thousands of pixels.</p>
+
+                <p>License plate colors are chosen because of their high contrast (for example, dark letters on a light background). The computer scans groups of pixels looking for edges where the color changes and it forms these into features. A <strong>feature</strong> is a part of a character to be recognized. For example, a <em>P</em> might be described by the features of a "vertical stroke" and a "hole" at the top of the stroke, because lines and holes are patterns that can be recognized by noting where color changes. Given the features, a <strong>classifier</strong> matches the features to the alphabet to determine which are close, perhaps finding a strong correlation with <em>P</em>, a weaker one with <em>9</em>, and an even weaker one with <em>D</em>. Finally, after picking the most likely characters, an optical character recognizer checks the context, trying to decide if the combination makes sense; for example, if a license plate exists with that combination of letters. Finding the number in the database, the computer determines that it has read the plate correctly and debits the owner's account.</p>
+
+                <div class="pagebreak pageNumber">320</div>
+
+                <div class="fluency-flashback">
+                    <p><strong class="fluency-flashback-title">Text&dash;to&dash;Speech Technology.</strong> 
+                    <img src="/contents/fluency/images/extra11.10.png" align="left" />Perhaps the most significant application of optical character recognition is Raymond Kurzweil 's text&dash;to&dash;speech reading machines developed for the blind and partially sighted. First produced in 1976, the reading machine uses a flatbed scanner &dash; a technology originally developed by Kurzweil &dash; to scan <img src="/contents/fluency/images/extra11.11.png" align="left" />reading material, recognize it as text, and then speak it using a voice synthesizer. Scanning, font&dash;independent optical character recognition, large&dash;vocabulary dictionaries, and speech synthesis, which Kurzweil had to create for his devices, are now standard technologies. For the disabled, the reader and its inverse, the speech&dash;to&dash;text machine, have dramatically improved personal lives and career opportunities. Says the blind musician Stevie Wonder, who credits the reader with changing his life, "It gave blind people the one life goal that everyone treasures, and that is independence.'</p>
+                    <p>Raymond Kurzweil received the National Medal of Technology and the Lemelson- MIT Award for Innovation, which is like a Nobel Prize for inventors. (See the inter- view following this chapter for observations by Ray Kurzweil.)</p>
+               </div>  
+
+               <div class="fluency-bit"><strong class="fluency-bit-title">Beginning Reader.</strong> In 1954, J. Rainbow demonstrated an optical charactel reader that could recognize uppercase typewritten characters at the rate of onE letter per minute.
+               </div>
+
+                <section class="subsection" data-number="18" data-name="OCR Technology">
+                    <h3>OCR Technology</h3>
+
+                    <p><span class="first-sentence"><strong>Optical character recognition (OCR)</strong> is a very sophisticated technology that enables a computer to "read" printed characters.</span> OCR's business applications include sorting mail and banking. The U.S. Postal Service uses a system that locates the address block on an envelope or card, reads it in any of 400 fonts, identifies its zip code, generates a nine&dash;digit bar code, sprays the bars on the envelope, sorts it, and, with only a 2 percent error rate, processes up to 45,000 pieces of mail per hour. In banking, the magnetic numbers at the bottom of the check have been read by computers since the 1950s; now OCR is used to read the <em>handwritten</em> digits of the numeric check amount to verify that a data entry person has interpreted the amount correctly. That is, the computer checks the person.</p>
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">Human Character Recognition.</strong> 
+                        <img src="/contents/fluency/images/extra11.12.png" align="left" />As you probably know, those "fuzzy, wiggly" text deciphering problems we must solve to access some Web sites are called <strong>captchas</strong>. They are there to keep out "spambots," the programs that post ads, bait visitors to malware sites, and deliver other undesirable junk. As annoying as captchas are, they successfully protect sites most of the time.<br/>
+                        But it is a battle of wits. While some programmers work hard to make captchas easy for humans to recognize but difficult for computers, the hackers who write</div>
+
+                        <div class="pagebreak pageNumber">321</div>
+
+                    <div class="fluency-bit">
+                        spambot programs are working hard to recognize them. It's a war in which the advantage shifts back and forth. Reports say some spambot programs can answer 35 percent of first&dash;generation captchas right. Captchas have gotten "fuzzier" to keep the spambots at bay, but before they get so fuzzy even people can't read them, sites are implementing a new system called <strong>reCaptcha</strong>.<br/>
+                        <figure>
+                            <img src="/contents/fluency/images/extra11.13.png">
+                        </figure>
+                        This idea works as follows: Instead of purposely creating fuzzed-up words, reCaptcha uses words from real books with poor printing that OCR systems can't figure out and have problems interpreting. The reCaptcha system asks a group of people two words—one known and one unknown. If those who got the known word right generally agree on the unknown word (a few errors are okay), they are allowed to enter the site, and the reCaptcha can add that word to its "known" word list. This process then helps the digitized book to be corrected.
+                    </div>
+
+                </section>
+
+            </section><!-- /section5 -->
+
+            <section class="section" data-number="19" data-name="Virtual Reality: Footinci the Senses"><!-- section6 -->
+                <h2>Virtual Reality: Footinci the Senses</h2>
+
+                <p><span class ="first-sentence">The ultimate form of digital representation is to create an entire digital world.</span> The idea has become known as <strong>virtual reality (VR)</strong>. So far, VR has less to do with representing the world and more to do with fooling our senses into per- ceiving something that doesn't exist.</p>
+
+                <p>Rapidly displaying still images is a standard way to fool our eyes and brain into seeing motion. Virtual reality applies that idea to our other senses and tries to eliminate the cues that keep us grounded in reality. For example, when we see a TV scene of a train coming toward us, we know by various cues, such as peripheral vision, that we're watching a TV; we see the motion but we're not fooled. However, if we're wearing a helmet with a TV in front of each eye that shows the train in a complete scene, gives us three&dash;dimensional vision, and fills in our peripheral vision as well, so that when we move our head we can look at other parts of the scene, the cues are reduced or eliminated. Add high&dash;quality audio in each ear and a treadmill so that we seem to be walking or running through the scene, and it's easy to imagine how a computer can effectively fool us into thinking the train is chasing us.</p>
+
+                <section class="subsection" data-number="20" data-name="Haptic Devices">
+                    <h3>Haptic Devices</h3>
+
+                    <p><span class="first-sentence">Certain deceptions are more useful.</span> <strong>Haptic devices</strong> are input/output technology for interacting with our sense of touch and feel. For example, a haptic glove enables a computer to detect where our fingers are and to apply force against them. When we bring our fingers close enough together, the glove stops their movement, and leaves us with the feeling of holding something. With haptic gloves and the VR helmet, a computer can depict Legos in space, which, when we grab them, gives us the sensation of holding them and makes</p>
+
+                    <div class="pagebreak pageNumber">322</div>
+
+                    <p>us think we are assembling them. When the glove pulls down on our fingers, we think the Legos are heavy, perhaps made of metal. The world is virtual, but credible. Such technology is used to train surgeons for complex operations.</p>
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">Virtual Meaning.</strong> 
+                        The term <em>virtual</em> is used often in computing &dash; for example, virtual memory &dash; because the computer produces a believable illusion of something that doesn't exist. <strong>Virtual</strong> means "not actually but just as if."
+                    </div>
+
+                </section>
+
+                <section class="subsection" data-number="21" data-name="The Challenge of Latency">
+                    <h3>The Challenge of Latency</h3>
+
+                    <p><span class="first-sentence">The challenge with virtual reality and other sophisticated output devices like video, is for the system to operate fast enough and precisely enough to appear natural.</span> When still images are presented too slowly in an animation, the illusion of motion is lost. When that happens in a VR system &dash; when we turn our head but the scene doesn't smoothly change &dash; we can get dizzy, maybe even sick. Our sensation of touch and feel actually operates faster than the 30 Hz standard for visual perception, closer to 1,000 Hz. Therefore, for the illusion to work, when we "see" our virtual hand going to pick up a virtual Lego, we must "feel" that we've touched it before we "see" that we've touched it.</p>
+
+                    <p>This phenomenon is called <strong>latency</strong> &dash; the time it takes for information to be delivered. We are familiar with long latencies, such as when Web pages are not delivered instantly, but the phenomenon arises wherever information is generated or transmitted. In most cases, as with Web pages, long latencies just make us wait, but in video, VR, voice communication, and so on, long latency can ruin the medium. Reducing latency is a common engineering goal, but there is an <em>absolute limit</em> to how fast information can be transmitted &dash; the speed of light. Eventually, the virtual world is constrained by the physical world.</p>
+
+                </section>
+
+                <section class="subsection" data-number="22" data-name="The Challenge of Bandwidth">
+                    <h3>The Challenge of Bandwidth</h3>
+
+                    <p><span class="first-sentence">Closely related to latency is <strong>bandwidth</strong> &dash; a measure of how much information is transmitted per unit time.</span> Bandwidth is related to latency in that a given amount of information (for example, 100 KB) transmitted with a given bandwidth (for example, 50 KB/s) determines the (best) latency by dividing the amount by the bandwidth; in this case, 100/50 = 2, or 2 seconds of latency. Other delays can extend the latency beyond this theoretical best. Higher bandwidth usually means lower latency. (The rule eventually fails for speed&dash;of&dash;light and switching&dash;delay reasons.) So, faster modems mean that Web pages load faster.</p>
+
+                    <p>VR is a developing technology. It is still challenged by both latency and bandwidth limitations &dash; it takes many, many bytes to represent a synthetic world. Creating them and delivering them to our senses is a difficult technical problem. Nevertheless, it is an exciting future application of computing.</p>
+
+                </section>
+
+            </section><!-- /section6 -->
+
+            <div class="pagebreak pageNumber">323</div>
+
+            <section class="section" data-number="23" data-name="Bits Are It"><!-- section7 -->
+                <h2>Bits Are It</h2>
+
+                <p><span class ="first-sentence">Looking back over this and previous chapters, you have seen that 4 bytes can represent many kinds of information, from four ASCII keyboard characters to numbers between zero and about 4 billion.</span> This is not an accident, but rather a fundamental property of information, which we summarize in this principle:</p>
+
+                <p><em><strong>Bias-Free Universal Medium Principle:</strong> Bits can represent all discrete information; bits have no inherent meaning.</em></p>
+
+                <section class="subsection" data-number="24" data-name="Bits: The Universal Medium">
+                    <h3>Bits: The Universal Medium</h3>
+
+                    <p><span class="first-sentence">The first half of the principle &dash; all discrete information can be represented by bits &dash; is the universality aspect.</span> Discrete things &dash; things that can be separated from each other &dash; can be represented by bits. At the very least, we can assign numbers to each one and represent those numbers in binary. But, as we saw with color, it's possible to be much smarter. We assigned the RGB colors so the intensity could be increased or decreased using binary arithmetic. This representation of color is much more organized than simply saying, "Black will be 0, purple will be 1, yellow will be 2," and so on. As a result of organizing the representation in a sensible way, we can <em>easily</em> compute on it, making changes like brightening the image. Of course, if the information is continuous &dash; that is, if it is analog information like sound &dash; it must first be made discrete by an analog&dash;to&dash;digital conversion. But once digitized, this information, too, can be represented by bits.</p>
+
+                </section>
+
+                <section class="subsection" data-number="25" data-name="Bits: Bias-Free">
+                    <h3>Bits: Bias&dash;Free</h3>
+
+                    <p><span class="first-sentence">The second half of the principle &dash; bits have no inherent meaning &dash; is the bias&dash;free aspect. Given a bit sequence</span></p>
+
+                    <p><code>0000 0000 1111 0001 0000 1000 0010 0000</code></p>
+
+                    <p>there is no way to know what information it represents. The meaning of the bits comes entirely from the <strong>interpretation</strong> placed on them by us or by the computer through our programs. For example, the 4 bytes could be a zero byte followed by the RGB intensities (241,8,32) <font color="red">&#9689;</font>. Or, the 4 bytes could be an instruction to add two binary numbers. As a binary number, the bits work out to 15,796,256.</p>
+
+                    <p>So, bits are bits. What they mean depends on how the software interprets them, which means they work for any kind of information. Storage media need to store one pair of patterns only: 0 and 1. The principle explains why, for example, a single transmission medium &dash; the TCP/IP packet &dash; is all that's needed to deliver any kind of digital information across the Internet to your computer: text, photos, or MP3 tunes. It delivers bits and that's enough.</p>
+
+                </section>
+
+                <div class="pagebreak pageNumber">324</div>
+
+                <section class="subsection" data-number="26" data-name="Bits Are Not Necessarily Binary Numbers">
+                    <h3>Bits Are Not Necessarily Binary Numbers</h3>
+
+                    <p><span class="first-sentence">Since the public first became aware of computers, it has been "common knowledge" that computers represent information as binary <em>numbers</em>.</span> Experts reinforce this view, but it's not quite right. Computers represent information as bits. Bits can be <em>interpreted</em> as binary numbers, as you've seen, which is why the experts are not wrong. But the bits do not always represent binary numbers. They can be interpreted as ASCII characters, RGB colors, or an unlimited list of other things (see Figure 11.8). Programs often perform arithmetic on the bits, as you saw when we modified the moon image; but often they do not, because it doesn't make sense with the intended interpretation of the information. Computers represent information with bits. They are an amazing medium.</p>
+
+                    <figure>
+                        <p><strong><code>0000 0000 1111 0001 0000 1000 0010 0000</code></strong><br/>
+                        <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 15,796,256 interpreted as a binary number<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = <font color="red">&#9689;</font> interpreted as  an RGB(241,8,32) color (last 3 bytes)<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = ADD 1,7,17 interpreted as a  MIPS machine instruction<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = &#9216; &#9224; &ntilde; b interpreted as 8&dash;bit ASCII &dash; null, backspace, n&dash;tilde, blank<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = L: +241, R: +280 interperted as sound samples<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 0.241.8.32 interpreted as an IP address<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 00 F1 08 20 interpreted as a hexadecimal number</small></p>
+                        <figcaption><span class="figureId">Figure 11.8</span> Illustration of the principle that "bits are bits." The same 4 bytes shown can be interpreted differently.</figcaption>
+                    </figure>
+
+                </section>
+
+            </section><!-- /section7 -->
+
+           <section class="section" data-number="27" data-name="Summary">
+                <h2>Summary</h2>
+                <p><span class="first-sentence">In this chapter we considered how different forms of information are represented in the computer.</span> You learned that:</p>
+                <ul>
+                    <li>With RGB color, each intensity is a 1&dash;byte numeric quantity represented as a binary number.</li>
+                    <li>Binary representation and binary arithmetic are like they are for decimal numbers, but they are limited to two digits.</li>
+                    <li>The decimal equivalent of binary numbers is determined by adding their powers of 2 corresponding to 1's.</li>
+                    <li>We can use arithmetic on the intensities to "compute on the representation," for example, making gray lighter and colorizing a black&dash;and&dash;white picture of the moon.</li>
+                    <li>When digitizing sound, sampling rate and measurement precision determine how accurate the digital form is; uncompressed audio requires more than 80 million bits per minute.</li>
+                </ul>
+
+                <div class="pagebreak pageNumber">325</div>
+
+                <ul>
+                    <li>Compression makes large files manageable: MP3 for audio, JPEG for still pictures, and MPEG for video. These compact representations work because they remove unnecessary information.</li>
+                    <li>Optical character recognition is a technology that improves our world.</li>
+                    <li>Virtual reality illustrates the complexities of conveying information to all of our senses simultaneously.</li>
+                    <li>The Bias&dash;3Free Universal Medium Principle embodies the magic of computers through universal bit representations and unbiased encoding.</li>
+                </ul>
+
+            </section> <!-- /summary -->
+
+        </section> <!-- /page1 -->
+
+        <section id="conclusion" data-number="28" data-name="Try It Solutions">
+            <div class="content">
+
+                <h2>Try It Solutions</h2>
+
+                <ol id="try-it-solutions">
+                    <li class="eleven-one"><span class="first-sentence">The binary number 1 0101 0101 is 256 + 64 + 16 + 4 + 1 = 341.</span></li>
+                    <li class="eleven-two">The decimal number 86 is <code>1 0 1 0 1 1 0</code>.</li>
+                    <li class="eleven-three">The sum is <code>1 1100 1101</code>.</li>
+                </ol>
+
+
+                <h2>Review Questions</h2>
+                <section id="multiple-choice" data-number="29" data-name="Multiple Choice">
+                    <h3>Multiple Choice</h3>
+                
+                    <ol>
+                        <li><span class="first-sentence">Each RGB color intensity ranges from</span>
+                            <ol>
+                                <li>0-15</li>
+                                <li>0-255</li>
+                                <li>1-16</li>
+                                <li>1-256</li>
+                            </ol>
+                        </li>
+                        <li>The RGB setting for blue is (0 is off, 1 is on)
+                            <ol>
+                                <li>0000 0000 0000 0000 0000 0000</li>
+                                <li>1111 1111 0000 0000 0000 0000</li>
+                                <li>0000 0000 1111 1111 0000 0000</li>
+                                <li>0000 0000 0000 0000 1111 1111</li>
+                            </ol>
+                        </li>
+                        <li>Analog information is
+                            <ol>
+                                <li>discrete</li>
+                                <li>continuous</li>
+                                <li>random</li>
+                                <li>digital</li>
+                            </ol>
+                        </li>
+                        <li>According to the Nyquist rule, the sampling rate of sound is roughly
+                            <ol>
+                                <li>half of what humans can hear</li>
+                                <li>the same as what humans can hear</li>
+                                <li>twice what humans can hear</li>
+                                <li>three times what humans can hear</li>
+                            </ol>
+                        </li>
+                        <li>The accuracy of a digitized sound is determined by
+                            <ol>
+                                <li>the sampling rate</li>
+                                <li>he precision of the sample</li>
+                                <li>the size of the digitized file</li>
+                                <li>all of the above</li>
+                            </ol>
+                        </li>
+                        <li>A digital&dash;to&dash;analog converter
+                            <ol>
+                                <li>changes digital information to analog waves</li>
+                                <li>converts continuous sound to digital sound</li>
+                                <li>converts sound to an electrical signal</li>
+                                <li>sets approximated values</li>
+                            </ol>
+                        </li>
+                        <li>MP3 is the sound information of
+                            <ol>
+                                <li>MPEG movies</li>
+                                <li>all digital movies</li>
+                                <li>all computer sound</li>
+                                <li>all digital computer sound</li>
+                            </ol>
+                        </li>
+                        <li>Jessica Simpson's "A Little Bit" is 3 minutes 47 seconds long. How many bits is that?
+                            <ol>
+                                <li>1,411,200</li>
+                                <li>40,042,800</li>
+                                <li>84,672,000</li>
+                                <li>320,342,400</li>
+                            </ol>
+                        </li>
+                        <li>OCR is used in all of the following areas except
+                            <ol>
+                                <li>text&dash;to&dash;speech recognition</li>
+                                <li>ZIP code recognition</li>
+                                <li>supermarket checkout</li>
+                                <li>bank account recognition</li>
+                            </ol>
+                        </li>
+                        <li>Raymond Kurzweil is known as the inventor of
+                            <ol>
+                                <li>OCR</li>
+                                <li>text&dash;to&dash;speech recognition</li>
+                                <li>image compression</li>
+                                <li>virtual reality</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </section>
+
+                <section id="short-answer" data-number="30" data-name="Short Answer">
+                    <h3>Short Answer</h3>
+                
+                    <ol>
+                        <li class="review-question"><span class="first-sentence">When all the RGB color settings are set to 0, the color displayed is ________.</span></li>
+                        <li class="review-question">The first digit of a binary number is always ________.</li>
+                        <li class="review-question">________ is the term used when digital values are converted to create an analog sound.</li>
+                        <li class="review-question">________ sound removes the highest and lowest samplings as part of its compression algorithm.</li>
+                        <li class="review-question">A(n) ________ is used to convert analog sound to digital values.</li>
+                        <li class="review-question">________ is a compression scheme for digital video while ________ is the scheme for digital images.</li>
+                        <li class="review-question">________ is the group that oversees the development of digital media standards.</li>
+                        <li class="review-question">On the computer, ________ means to store or transmit information with fewer bits.</li>
+                        <li class="review-question">A process that allows the computer to "read" printed characters is called ________.</li>
+                        <li class="review-question">Conversion of the written word to speech is called ________.</li>
+                        <li class="review-question">The creation of a digital representation of the world is called ________.</li>
+                        <li class="review-question">JPEG is to still images what ________ is to motion pictures.</li>
+                        <li class="review-question">________ are used with computers to control a person's sense of touch</li>
+                        <li class="review-question">________ is the time it takes information to be delivered.</li>
+                        <li class="review-question">The ________ states that bits can represent all discrete information even though the bits have no meaning of their own.</li>
+                        <li class="review-question">GIF stands for ________.</li>
+                    </ol>
+
+                </section>
+
+                <section id="exercises" data-number="31" data-name="Exercises">
+                    <h3>Exercises</h3>
+                
+                    <ol>
+                        <li class="review-question"><span class="first-sentence">Write the algorithm for converting from decimal to binary.</span></li>
+                        <li class="review-question">Write the algorithm for converting from binary to decimal.</li>
+                        <li class="review-question">Add 1492 and 1776 in binary and display the answer in binary.</li>
+                        <li class="review-question">In binary, add 1011, 1001, 110, and 1100.</li>
+                        <li class="review-question">Convert RGB 200, 200, 200 to hex C8C8C8 by converting it to binary and then to hex.</li>
+                        <li class="review-question">Add 168 and 123 in binary. How many bytes does it take to represent each number? How many bytes are needed for the answer? What happens if there aren't enough bytes to store the answer?</li>
+                        <li class="review-question">Software is now in use that can let you "try on" a dress virtually. What process would be used to change that bright red, taffeta dress into a soft pink? What would be needed to change it to sea foam (light green)? What would it take to turn it into a color to match your eyes?</li>
+                        <li class="review-question">Explain how a picture at 300 pixels per inch could be converted to a picture with 100 pixels per inch.</li>
+                        <li class="review-question">Most music is now sold on CD&dash;ROM. Explain how a singer's voice in the recording studio goes to the earphones on your computer. Why are both processes needed for this to succeed?</li>
+                        <li class="review-question">Digitally, what would need to be done to raise (or lower) a singer's voice an octave?</li>
+                        <li class="review-question">Why are JPEG, MPEG, and MP3 considered algorithms?</li>
+                        <li class="review-question">Convert the following binary numbers to decimal:
+                            <ol>
+                                <li>10100101</li>
+                                <li>11011011</li>
+                                <li>00100100</li>
+                                <li>10000000</li>
+                                <li>11111111</li>
+                            </ol>
+                        </li>
+                        <li class="review-question">Convert the following decimal numbers to binary:
+                            <ol>
+                                <li>106</li>
+                                <li>9</li>
+                                <li>202</li>
+                                <li>123</li>
+                                <li>255</li>
+                            </ol>
+                        </li>
+                        <li class="review-question">Explain RGB as it applies to flat&dash;panel displays. Explain why mixing equal proportions of paint and light produce different results. What do they produce?</li>
+                        <li class="review-question">Give the ASCII symbol corresponding to the binary numbers in Exercise 12. What principle does this question illustrate?</li>
+                    </ol>
+
+                </section>
+
+            </div> <!-- /content -->
+
+        </section> <!-- /conclustion -->
+
+    </div> <!-- /container -->
+
+</body>
+</html>

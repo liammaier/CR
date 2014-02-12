@@ -1,0 +1,394 @@
+<html lang='en'>
+<head>
+	<title>Introducing Regular Expressions</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="regexp">
+
+		<div class="container">
+
+			<h3>CHAPTER 5</h3>
+			<div class="border"></div>
+
+			<section class="intro" data-number="0" data-name="Chapter 5 Introduction">
+
+				<h1>Character Classes</h1>
+
+				<p><span class="first-sentence">I’ll now talk more about character classes or what are sometimes called <em>bracketed expressions</em>.</span>
+				Character classes help you match specific characters, or sequences of specific
+				characters. They can be just as broad or far-reaching as character shorthands—for
+				example, the character shorthand <code>\d</code> will match the same characters as:</p>
+
+				<p class="indented"><code>0-9</code></p>
+
+				<p>But you can use character classes to be even more specific than that. In this way, they
+				are more versatile than shorthands.</p>
+
+				<p>Try these examples in whatever regex processor you prefer. I’ll use Rubular in Opera
+				and Reggy on the desktop.</p>
+
+				<p>To do this testing, enter this string in the subject or target area of the web page:</p>
+
+				<p class="indented"><code>
+					! " # $ % & ' ( ) * + , - . /<br/>
+					0 &nbsp;&nbsp;&nbsp;&nbsp;1 &nbsp;&nbsp;&nbsp;&nbsp;2 &nbsp;&nbsp;&nbsp;&nbsp;3 &nbsp;&nbsp;&nbsp;&nbsp;4 &nbsp;&nbsp;&nbsp;&nbsp;5 			&nbsp;&nbsp;&nbsp;&nbsp;6 &nbsp;&nbsp;&nbsp;&nbsp;7 &nbsp;&nbsp;&nbsp;&nbsp;8 &nbsp;&nbsp;&nbsp;&nbsp;9<br/>
+					: ; < = > ? @<br/>
+					A B C D E F G H I J K L M N O P Q R S T U V W X Y Z<br/>
+					[ \ ] ^ _ `<br/>
+					a b c d e f g h i j k l m n o p q r s t u v w x y z<br/>
+					{ | } ~<br/>
+				</code></p>
+
+				<p>You don’t have to type all that in. You’ll find this text stored in the file <em>asciigraphic.
+				txt</em> in the code archive that comes with this book.</p>
+
+				<p>To start out, use a character class to match a set of English characters—in this case,
+				the English vowels:</p>
+
+				<p class="indented"><code>[aeiou]</code></p>
+
+				<p>The lowercase vowels should be highlighted in the lower text area (see <strong>Figure 5-1</strong>).
+				How would you highlight the uppercase vowels? How would you highlight or match
+				both?</p>
+
+				<p>With character classes, you can also match a range of characters:</p>
+
+				<p class="indented"><code>[a-z]</code></p>
+
+				<div class="pagebreak pageNumber right">53</div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure5-1.png">
+					<figcaption>Figure 5-1. Character class with Rubular in the Opera browser</figcaption>
+				</figure>
+
+				<p>This matches the lowercase letters <em>a</em> through <em>z</em>. Try matching a smaller range of those
+				characters, something like <em>a</em> through <em>f</em>:</p>
+
+				<p class="indented"><code>[a-f]</code></p>
+
+				<p>Of course, you can also specify a range of digits:</p>
+
+				<p class="indented"><code>[0-9]</code></p>
+
+				<p>Or an even smaller range such as 3, 4, 5, and 6:</p>
+
+				<p class="indented"><code>[3-6]</code></p>
+
+				<p>Now expand your horizon. If you wanted to match even numbers in the range 10
+				through 19, you could combine two character classes side by side, like this:</p>
+
+				<p class="indented"><code>\b[1][24680]\b</code></p>
+
+				<p>Or you could push things further and look for even numbers in the range 0 through 99
+				with this (yes, as we learned in high school, zero by itself is even):</p>
+
+				<p class="indented"><code>\b[24680]\b|\b[1-9][24680]\b</code></p>
+
+				<p>If you want to create a character class that matches hexadecimal digits, how would
+				you do it? Here is a hint:</p>
+
+				<p class="indented"><code>[a-fA-F0-9]</code></p>
+
+				<p>You can also use shorthands inside of a character class. For example, to match whitespace
+				and word characters, you could create a character class like this:</p>
+
+				<div class="pagebreak left"><span class="pageNumber">54</span> | Chapter 5: Character Classes</div>
+
+				<p class="indented"><code>[\w\s]</code></p>
+
+				<p>Which is the same as:</p>
+
+				<p class="indented"><code>[_a-zA-Z \t\n\r]</code></p>
+
+				<p>but easier to type.</p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Negated Character Classes">
+
+				<h2>Negated Character Classes</h2>
+
+				<p><span class="first-sentence">You have already seen syntax a number of times, so I’ll be brief.</span> A negated character
+				class matches characters that do not match the content of the class. For example, if you
+				didn’t want to match vowels, you could write (try it in your browser, then see <strong>Figure
+				5-2</strong>):</p>
+
+				<p class="indented"><code>[^aeiou]</code></p>
+
+				<p>In essence, the caret (^) at the beginning of the class means “No, I don’t want these
+				characters.” (The caret <em>must</em> appear at the beginning.)</p>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure5-2.png">
+					<figcaption>Figure 5-2. Negated character class with Regexpal in Opera</figcaption>
+				</figure>
+
+				<div class="pagebreak right">Negated Character Classes | <span class="pageNumber">55</span></div>
+
+			</section>
+
+			<section class="section" data-number="2" data-name="Union and Difference">
+
+				<h2>Union and Difference</h2>
+
+				<p><span class="first-sentence">Character classes can act like sets.</span> In fact, one other name for a character class is a
+				<em>character set</em>. This functionality is not supported by all implementations. But Java supports
+				it.</p>
+
+				<p>I’ll now show you a Mac desktop application called Reggy (see <strong>“Technical
+				Notes” on page 60</strong>). Under Preferences (<strong>Figure 5-3</strong>), I changed the Regular Expression
+				Syntax to <em>Java</em>, and in Font (under Format), I changed the point size to 24 points for
+				readability.</p>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure5-3.png">
+					<figcaption>Figure 5-3. Reggy preferences</figcaption>
+				</figure>
+
+				<p>If you wanted a union of two character sets, you could do it like this:</p>
+
+				<p class="indented"><code>[0-3[6-9]]</code></p>
+
+				<p>The regex would match 0 through 3 or 6 through 9. <strong>Figure 5-4</strong> shows you how this
+				looks in Reggy.</p>
+
+				<p>To match a difference (in essence, subtraction):</p>
+
+				<p class="indented"><code>[a-z&&[^m-r]]</code></p>
+
+				<p>which matches all the letters from <em>a</em> to <em>z</em>, except <em>m</em> through <em>r</em> (see <strong>Figure 5-5</strong>).</p>
+
+			</section>
+
+			<section class="section" data-number="3" data-name="POSIX Character Classes">
+
+				<h2>POSIX Character Classes</h2>
+
+				<p><span class="first-sentence">POSIX or Portable Operating System Interface is a family of standards maintained by
+				IEEE.</span> It includes a regular expression standard, (ISO/IEC/IEEE 9945:2009), which
+				provides a set of named character classes that have the form:</p>
+
+				<div class="pagebreak left"><span class="pageNumber">56</span> | Chapter 5: Character Classes</div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure5-4.png">
+					<figcaption>Figure 5-4. Union of two character sets in Reggy</figcaption>
+				</figure>
+
+				<p class="indented"><code>[[:<em>xxxx</em>:]]</code></p>
+
+				<p>where <em>xxxx</em> is a name, such as <em>digit</em> or <em>word</em>.</p>
+
+				<p>To match alphanumeric characters (letters and digits), try:</p>
+
+				<p class="indented"><code>[[:alnum:]]</code></p>
+
+				<p><strong>Figure 5-6</strong> shows the alphanumeric class in Rubular.</p>
+
+				<p>An alternative for this is simply the shorthand <code>\w</code>. Which is easier to type, the POSIX
+				character class or the shorthand? You know where I’m going: The least amount of
+				typing wins. I admit I don’t use POSIX classes very often. But they’re still worth knowing
+				about.</p>
+
+				<p>For alphabetic characters in either upper- or lowercase, use:</p>
+
+				<p class="indented"><code>[[:alpha:]]</code></p>
+
+				<p>If you want to match characters in the ASCII range, choose:</p>
+
+				<p class="indented"><code>[[:ascii:]]</code></p>
+
+				<p>Of course, there are negated POSIX character classes as well, in the form:</p>
+
+				<p class="indented"><code>[[:^<em>xxxx</em>:]]</code></p>
+
+				<div class="pagebreak right">POSIX Character Classes | <span class="pageNumber">57</span></div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure5-5.png">
+					<figcaption>Figure 5-5. Difference of two characters sets in Reggy</figcaption>
+				</figure>
+
+				<p>So if you wanted to match non-alphabetic characters, you could use:</p>
+
+				<p class="indented"><code>[[:^alpha:]]</code></p>
+
+				<p>To match space and tab characters, do:</p>
+
+				<p class="indented"><code>[[:space:]]</code></p>
+
+				<p>Or to match all whitespace characters, there’s:</p>
+
+				<p class="indented"><code>[[:blank:]]</code></p>
+
+				<p>There are a number of these POSIX character classes, which are shown in <strong>Table 5-1</strong>.</p>
+
+				<table>
+					<caption>Table 5-1. POSIX character classes</caption>
+
+					<tr>
+						<th>Character Class</th>
+						<th>Description</th>
+					</tr>
+
+					<tr>
+						<td>[[:alnum:]]</td>
+						<td>Alphanumberic characters (letters and digits)</td>
+					</tr>
+
+					<tr>
+						<td>[[:alpha:]]</td>
+						<td>Alphabetic characters (letters)</td>
+					</tr>
+
+					<tr>
+						<td>[[:ascii:]]</td>
+						<td>ASCII characters (all 128)</td>
+					</tr>
+
+					<tr>
+						<td>[[:blank:]]</td>
+						<td>Blank characters</td>
+					</tr>
+
+					<tr>
+						<td>[[:ctrl:]]</td>
+						<td>Control characters</td>
+					</tr>
+				</table>
+
+				<div class="pagebreak left"><span class="pageNumber">58</span> | Chapter 5: Character Classes</div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure5-6.png">
+					<figcaption>Figure 5-6. POSIX alphanumeric character class in Reggy</figcaption>
+				</figure>
+
+				<table>
+					<tr>
+						<th>Character Class</th>
+						<th>Description</th>
+					</tr>
+
+					<tr>
+						<td>[[:digit:]]</td>
+						<td>Digits</td>
+					</tr>
+
+					<tr>
+						<td>[[:graph:]]</td>
+						<td>Graphic characters</td>
+					</tr>
+
+					<tr>
+						<td>[[:lower:]]</td>
+						<td>Lowercase letters</td>
+					</tr>
+
+					<tr>
+						<td>[[:print:]]</td>
+						<td>Printable characters</td>
+					</tr>
+
+					<tr>
+						<td>[[:punct:]]</td>
+						<td>Punctuation characters</td>
+					</tr>
+
+					<tr>
+						<td>[[:space]]</td>
+						<td>Whitespace characters</td>
+					</tr>
+
+					<tr>
+						<td>[[:upper:]]</td>
+						<td>Uppercase letters</td>
+					</tr>
+
+					<tr>
+						<td>[[:word:]]</td>
+						<td>Word characters</td>
+					</tr>
+
+					<tr>
+						<td>[[:xdigit:]]</td>
+						<td>Hexadecimal digits</td>
+					</tr>
+				</table>
+
+				<p>The next chapter is dedicated to matching Unicode and other characters.</p>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="What You Learned in Chapter 5">
+
+				<h2>What You Learned in Chapter 5</h2>
+
+				<ul>
+
+					<li><span class="first-sentence">How to create a character class or set with a bracketed expression</span></li>
+
+					<li>How to create one or more ranges within a character class</li>
+
+					<li>How to match even numbers in the range 0 through 99</li>
+
+				</ul>
+
+				<div class="pagebreak right">What You Learned in Chapter 5 | <span class="pageNumber">59</span></div>
+
+				<ul>
+
+					<li>How to match a hexadecimal number</li>
+
+					<li>How to use character shorthands within a character class</li>
+
+					<li>How to negate a character class</li>
+
+					<li>How to perform union, and difference with character classes</li>
+
+					<li>What POSIX character classes are</li>
+
+				</ul>
+
+			</section>
+
+			<section class="section" data-number="5" data-name="Technical Notes">
+
+				<h2>Technical Notes</h2>
+
+				<ul>
+
+					<li><span class="first-sentence">The Mac desktop application Reggy can be downloaded for free at <span class="url">http://www
+					.reggyapp.com</span>.</span> Reggy shows you what it has matched by changing the color of the
+					matched text. The default is blue, but you can change this color in Preferences
+					under the Reggy menu. Under Preferences, choose Java under Regular Expression
+					Syntax.</li>
+
+					<li>The Opera Next browser, currently in beta, can be downloaded from <span class="url">http://www
+					.opera.com/browser/next/</span>.</li>
+
+					<li>Rubular is an online Ruby regular expression editor created by Michael Lovitt that
+					supports both versions 1.8.7 and 1.9.2 of Ruby (see <span class="url">http://www.rubular.com</span>).</li>
+
+					<li>Read more about even numbers, of which zero is one, at <span class="url">http://mathworld.wolfram
+					.com/EvenNumber.html</span>.</li>
+
+					<li>The Java (1.6) implementation of regular expressions is documented at <span class="url">http://docs
+					.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html</span>.</li>
+
+					<li>You can find out more about IEEE and its family of POSIX standards at <span class="url">http://www
+					.ieee.org</span>.</li>
+
+				</ul>
+
+			</section>
+
+		</div> <!--/container-->
+
+	</div> <!--/regexp-->
+</body>
+</html>

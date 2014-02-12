@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h1>13</h1>
+				<h2>Program Verification</h2>
+				<div class="border"></div>
+
+				<p><span class="first-sentence">Up to this point, we have taken a modeling approach to the design of concurrent programs.</span> Models are constructed, so that we can focus on actions, interaction and concurrency before proceeding to implementation and adding the details concerned with data representation, resource usage and user interface. We use the model as a basis for program construction by identifying a mapping from model processes to Java threads and monitor objects. However, we do not demonstrate other than by testing and observation that the behavior of the implementation corresponds to the behavior predicted by the model. Essentially, we rely on a systematic translation of the model into Java to ensure that the program satisfies the same safety and progress properties as the model.</p>
+
+				<p class="i">In this chapter, we address the problem of verifying implementations, using <em>FSP</em> and its supporting <em>LTSA</em> tool. In doing verification, we translate Java programs into a set of <em>FSP</em> processes and show that the resulting <em>FSP implementation</em> model satisfies the same safety and progress properties that the design model satisfied. In this way, we can show that the program is a satisfactory implementation of its design model.</p>
+
+				<p class="i">Chapter 4 of the book took exactly this approach of translating a Java program into an <em>FSP</em> model to investigate the problem of interference. To perform verification, we need to model the Java program at the level of variables, monitor locks and condition synchronization. In Chapter 4, we showed how to model variables and monitor locks. This chapter develops a model for condition synchronization so that we can verify Java programs that use <code>wait()</code> , <code>notify()</code> and <code>notifyAll()</code>. This implementation model is used in verifying the bounded buffer and Readers-Writers Java programs from Chapters 5 and 7. To allow us to structure the more complex sequences of actions that arise in verification of implementations, we first introduce sequential composition of <em>FSP</em> processes.</p>
+
+				<div class="pagebreak pageNumber">320</div>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Sequential Processes">
+
+				<h3>13.1 Sequential Processes</h3>
+
+				<p><span class="first-sentence">Although abstractly a process always means the same thing, for pragmatic implementation reasons <em>FSP</em> divides processes into three types: local processes that define a state within a primitive process, primitive processes defined by a set of local processes and composite processes that use parallel composition, relabeling and hiding to compose primitive processes.</span> A local process is defined using <code>STOP</code>, <code>ERROR</code>, action prefix and choice. We now extend our definition of processes to include sequential processes.</p>
+
+				<div class="definition">A sequential process is a process that can terminate. A process can terminate if the local process <code>END</code> is reachable from its start state.</div>
+
+				<section class="subsection" data-number="2" data-name="Local Process END">
+
+					<h4>13.1.1 Local Process END</h4>
+
+					<p><span class="first-sentence">The local process <code>END</code> denotes the state in which a process successfully terminates.</span> A process engages in no further actions after <code>END</code>. In this respect it has the same semantics as <code>STOP</code>. However, <code>STOP</code> denotes a state in which a process has halted prematurely, usually due to communication deadlock. In earlier chapters, to simplify presentation, we used <code>STOP</code> to indicate termination of a process. It would be more precise to replace these uses of <code>STOP</code> with <code>END</code>. With the introduction of a state describing successful termination, the need to use <code>STOP</code> explicitly in process description largely disappears. Figure 13. 1 depicts an example of a sequential process together with its <em>LTS</em>, where <code>E </code>is used to denote <code>END</code>.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure13-1.png">
+						<figcaption><strong>Figure 13.1</strong> Sequential process <code>BOMB</code>.</figcaption>
+					</figure>
+
+				</section>
+
+				<section class="subsection" data-number="3" data-name="Sequential Composition">
+
+					<h4>13.1.2 Sequential Composition;</h4>
+
+					<div class="definition"><span class="first-sentence">If <code>P</code> is a sequential process and <code>Q</code> is a local process, then <code>P;Q</code> represents the sequential composition such that when <code>P</code> terminates, <code>P;Q</code> becomes the process <code>Q</code>.</span></div>
+
+					<div class="pagebreak pageNumber">321</div>
+
+					<p class="i">If we define a process <code>SKIP &equiv; END</code> then <code>P;SKIP &equiv; P</code> and <code>SKIP;P &equiv; P</code>. A sequential composition in <em>FSP</em> always takes the form:</p>
+
+					<pre>
+SP1;SP2;..SPn;LP
+					</pre>
+
+					<p>where <code>SP1,..,SPn</code> are sequential processes and <code>LP</code> is a local process. A sequential composition can appear anywhere in the definition of a primitive process that a local process reference can appear (for example, processes <code>P123</code> and <code>LOOP</code> in Figure 13.2).</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure13-2.png">
+						<figcaption><strong>Figure 13.2</strong> Sequential composition <code>LOOP</code>.</figcaption>
+					</figure>
+
+					<p>Sequential composition can be used in a recursive context as in Figure 13.3, where process <code>R</code> is defined as the sequential composition of sequential processes <code>R(I)</code> for values of <code>I</code> from a to 2 and the local process <code>END</code> when <code>I=3</code>.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure13-3.png">
+						<figcaption><strong>Figure 13.3</strong> Sequential composition and recursion.</figcaption>
+					</figure>
+
+				</section>
+
+				<section class="subsection" data-number="4" data-name="Parallel Composition and Sequential Processes">
+
+					<h4>13.1.3 Parallel Composition and Sequential Processes</h4>
+
+					<div class="definition"><span class="first-sentence">The parallel composition <code>SP1||SP2</code> of two sequential processes <code>SP1</code> and <code>SP2</code> terminates when both of these processes terminate.</span> If termination is reachable in <code>SP1||SP2</code> then it is a sequential process.</div>
+
+					<div class="pagebreak pageNumber">322</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure13-4.png">
+						<figcaption><strong>Figure 13.4</strong> Parallel composition of sequential processes.</figcaption>
+					</figure>
+
+					<p>Figure 13.4 gives an example of parallel composition of sequential processes. Note that a composite process that terminates can appear in the definition of a primitive process.</p>
+
+				</section>
+
+				<section class="subsection" data-number="5" data-name="Sequential Processes and Analysis">
+
+					<h4>13.1.4 Sequential Processes and Analysis</h4>
+
+					<p><span class="first-sentence">While a reachable <code>STOP</code> state is a safety violation resulting in the <em>LTSA</em> generating a counter example trace, a reachable <code>END</code> state is not a safety violation.</span> However, a trace to a reachable <code>END</code> state will be generated during progress analysis since the <code>END</code> state violates all progress properties.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="6" data-name="Modeling Condition Synchronization">
+
+				<h3>13.2 Modeling Condition Synchronization</h3>
+
+				<p><span class="first-sentence">In Chapter 5, we explained how a guarded action in a design model can be translated into a synchronized method as shown below:</span></p>
+
+				<pre>
+FSP:  <strong>when</strong> <em>cond act</em> -> NEWSTAT
+
+Java: <strong>public synchronized</strong> void act()
+             <strong>throws</strong> InterruptedException
+      {
+         <strong>while</strong> (!cond) wait();
+         <span>// modify monitor data</span>
+         notifyAll()
+       }
+				</pre>
+
+				<p>We noted that if an action modifies the data of the monitor, it can call <code>notifyAll()</code> to awaken all other threads that may be waiting for a particular condition to</p>
+
+				<div class="pagebreak pageNumber">323</div>
+
+				<p>hold with respect to this data. We also noted that if it is not certain that only a single thread needs to be awakened, it is safer to call <code>notifyAll()</code> than <code>notify()</code> to make sure that threads are not kept waiting unnecessarily. We use an implementation model to investigate this particular aspect further in the rest of this chapter.</p>
+
+				<section class="subsection" data-number="7" data-name="Wait, Notify and NotifyAll">
+
+					<h4>13.2.1 Wait, Notify, and NotifyAll</h4>
+
+					<p><span class="first-sentence">To verify that a program using this translation satisfies the required safety and progress properties, we must model the behavior of <code>wait()</code>, <code>notify()</code> and <code>notifyAll()</code>.</span> We can then rigorously check the use of <code>notify()</code> versus <code>notifyAll()</code>. A model for the interaction of these methods is developed in the following. Firstly, we define a process <code>ELEMENT</code> to manage the <code>BLOCKED</code> state of each thread that accesses a monitor.</p>
+
+					<pre>
+ELEMENT
+  = (wait -> BLOCKED | unblockAll -> ELEMENT),
+BLOCKED
+  = ({unblock,unblockAll} -> UNBLOCK),
+UNBLOCK
+  = (endwait -> ELEMENT).
+					</pre>
+
+					<p>The <code>wait</code> action, representing a call to <code>wait()</code>, puts the process into the <code>BLOCKED</code> state. Then either an <code>unblock</code> action caused by a <code>notify()</code> or an <code>unblockAll</code> action caused by a <code>notifyAll()</code> causes the process to move to <code>UNBLOCK</code> and signal the return of the <code>wait()</code> method by the <code>endwait</code> action. We will deal with the way that the monitor lock is released and acquired by <code>wait()</code> later.</p>
+
+					<p class="i">The <code>CONTROL</code> process manages how <code>notify</code> and <code>notifyAll</code> actions, representing the eponymous Java methods, cause <code>unblock</code> and <code>unblockAll</code> actions:</p>
+
+					<pre>
+CONTROL = EMPTY,
+EMPTY   = (wait -> WAIT[1]
+
+          | {notifyAll,notify} -> EMPTY
+          ),
+WAIT[i:1..Nthread]
+        = (<strong>when</strong> (i&lt;Nthread) wait -> WAIT[i+1]
+          |notifyAll -> unblockAll -> EMPTY
+
+          |notify -> unblock ->
+           <strong>if</strong> (i==1) <strong>then</strong> EMPTY <strong>else</strong> WAIT[i-1]
+          ).
+					</pre>
+
+					<div class="pagebreak pageNumber">324</div>
+
+					<p>Since we can only check systems with a finite set of states, we must define a static set of identifiers <code>Threads</code> to represent the set of threads that can potentially access a monitor object. The cardinality of this set is defined by the constant <code>Nthread</code>. The <code>CONTROL</code> process maintains a count of the number of processes in the <code>BLOCKED</code> state. If there are no blocked processes then <code>notify</code> and <code>notifyAll</code> have no effect. If there are many blocked processes then a <code>notify</code> action unblocks any one of them. The set of threads waiting on a monitor and the effect of the <code>wait()</code>, <code>notify()</code> and <code>notifyAll()</code> methods are modeled by the composition:</p>
+
+					<pre>
+<strong>const</strong> Nthread = 3       <span>//cardinality of Threads</span>
+<strong>set</strong>   Threads = {a,b,c} <span>//set of thread indentifiers</span>
+<strong>set</strong>   SyncOps = {notify,notifyAll,wait}
+
+||WAITSET
+      = (Threads:ELEMENT || Threads::CONTROL)
+        /{unblockAll/Threads.unblockAll}.
+					</pre>
+
+					<p>The composition defines an <code>ELEMENT</code> process for each thread identifier in the set <code>Threads</code>. The <code>CONTROL</code> process is shared by all the threads in this set. The relabeling ensures that when any thread calls <code>notifyAll()</code>, then all waiting threads are unblocked. The behavior of <code>WAITSET</code> is best illustrated using the animation facilities of <em>LTSA</em>.</p>
+
+					<p class="i">Figure 13.5 shows a trace in which thread <strong><code>b</code></strong> calls <code>wait</code>, then thread <strong><code>a</code></strong> calls <code>wait</code>. A call by thread <strong><code>c</code></strong> to <code>notify</code> unblocks thread <strong><code>a</code></strong>. Note that while thread <strong><code>b</code></strong> was blocked before <strong><code>a</code></strong>, it is <strong><code>a</code></strong> that is unblocked first. In other words, the model does not assume that blocked threads are held in a FIFO queue, although many Java Virtual</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure13-5.png">
+						<figcaption><strong>Figure 13.5</strong> <code>WAITSET</code> trace for notify.</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">325</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure13-6.png">
+						<figcaption><strong>Figure 13.6</strong> <code>WAITSET</code> trace for <code>notifyAll</code>.</figcaption>
+					</figure>
+
+					<p>Machines implement thread blocking this way. The Java Language Specification specifies only that blocked threads are held in a set and consequently may be unblocked in any order by a sequence of notifications. An implementation that assumes FIFO blocking may not work correctly on a LIFO implementation. The <code>WAITSET</code> model permits all possible unblocking orders and consequently, when we use it in verification, it ensures that if an implementation model is correct, it is correct for all possible orders of blocking/unblocking actions.</p>
+
+					<p class="i">Figure 13.6 illustrates the behavior for <code>notifyAll</code> when threads <strong><code>a</code></strong> and <strong><code>b</code></strong> are blocked.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="8" data-name="Modeling Variables and Synchronized Methods">
+
+				<h3>13.3 Modeling Variables and Synchronized Methods</h3>
+
+				<section class="subsection" data-number="9" data-name="Variables">
+
+					<h4>13.3.1 Variables</h4>
+
+					<p><span class="first-sentence">Variables are modeled in exactly the same way as presented in Chapter 4.</span> However, for convenience, we add actions to model incrementing and decrementing integer variables. An integer variable is modeled as follows:</p>
+
+					<pre>
+<strong>const</strong> Imax = 5  <span>// a maximum value that variable can take</span>
+<strong>range</strong> Int  = 0..Imax
+<strong>set</strong>   VarAlpha = {read[Int],write[Int],inc,dec}
+					</pre>
+
+				<div class="pagebreak pageNumber">326</div>
+
+					<pre>
+VAR(Init=0)= VAR[Init],
+VAR[v:Int] = (read[v]     ->VAR[v]    <span>// v</span>
+             |inc         ->VAR[v+1]  <span>// ++v</span>
+             |dec         ->VAR[v-1]  <span>// --v</span>
+             |write[c:Int]->VAR[c]    <span>// v = c</span>
+             ).
+					</pre>
+
+					<p>A boolean variable is modeled by:</p>
+
+					<pre>
+<strong>const</strong> False = 0
+<strong>const</strong> True  = 1
+<strong>range</strong> Bool  = False..True
+<strong>set</strong>   BoolAlpha = {read[Bool],write[Bool]}
+
+BOOLVAR(Init=False) = BOOLVAR[Init],
+BOOLVAR[b:Bool]     = (read[b]      ->BOOLVAR[b] <span>// b</span>
+                      |write[c:Bool]->BOOLVAR[c] <span>// b = c</span>
+                      ).
+					</pre>
+
+				</section>
+
+				<section class="subsection" data-number="10" data-name="Monitor Exit and Entry">
+
+					<h4>13.3.2 Monitor Exit and Entry</h4>
+
+					<p><span class="first-sentence">In Chapter 4, we noted that synchronized methods acquire the monitor lock before accessing the variables of a monitor object and release the lock on exit.</span> We will use the same simple model of a lock used in Chapter 4, ignoring the detail that locks in Java support recursive locking:</p>
+
+					<pre>
+<strong>set</strong> LockOps = {acquire,release}
+LOCK = (acquire -> release ->LOCK).
+					</pre>
+
+					<p>We can now model the state of a monitor by the set of processes that represent
+					its wait set, lock and variables. For example, the state for a monitor <em>M</em> that
+					encapsulates a single boolean variable <em>cond</em> is modeled as follows:</p>
+
+					<pre>
+||Mstate = (Threads::LOCK  || WAITSET
+           || Threads::(cond:BOOLVAR)
+           ).
+					</pre>
+
+					<p>The definition of the Java <code>wait()</code> operation in Chapter 5 requires that a waiting thread releases the synchronization lock. We model this as a sequential process that releases the lock when it blocks and acquires it again when it unblocks and finishes waiting.</p>
+
+					<pre>
+WAIT = (wait ->release ->endwait ->acquire ->END).
+					</pre>
+
+					<p>In Java, the notification and waiting operations are only valid when the thread calling these operations holds the lock for the monitor object on which the</p>
+
+					<div class="pagebreak pageNumber">327</div>
+
+					<p>operations are invoked. The following safety property checks that this is the case in the implementation models we construct:</p>
+
+					<pre>
+<strong>property</strong> SAFEMON
+   = ([t:Threads].acquire -> HELDBY[t]),
+HELDBY[t:Threads]
+   = ([t].{notify,notifyAll,wait} -> HELDBY[t]
+     |[t].release -> SAFEMON
+     ).
+					</pre>
+
+				</section>
+
+				<section class="subsection" data-number="11" data-name="Synchronized Methods">
+
+					<h4>13.3.3 Synchronized Methods</h4>
+
+					<p><span class="first-sentence">A synchronized method of the form:</span>/p>
+
+					<pre>
+<strong>synchronized</strong> void act() <strong>throws</strong> InterruptedException {
+      <strong>while</strong> (!cond) wait();
+      <span>// modify monitor data</span>
+      notifyAll()
+}
+					</pre>
+
+					<p>can now be modeled by the following <em>FSP</em> sequential process. As in Chapter 4, alphabet extension ensures that only intended interactions occur since it is usually the case that a process modeling a synchronized method will only use a subset of the data access actions (in this case only <code>read</code> is used on the boolean condition) and synchronization actions (in this case only <code>notifyAll</code> is used).</p>
+
+					<pre>
+ACT   <span>// act()</span>
+  = (acquire -> WHILE),    <span>// monitor entry– acquire lock</span>
+WHILE
+  = (cond.read[b:Bool] ->  <span>// while (!cond) wait();</span>
+    <strong>if</strong> !b <strong>then</strong> WAIT;WHILE <strong>else</strong> CONTINUE
+    ),
+
+CONTINUE
+  = (                      <span>// modify monitor data</span>
+    notifyAll              <span>// notifyAll()</span>
+    -> release             <span>// monitor exit– release lock</span>
+    -> END
+  ) + {SyncOps, LockOps, cond.BoolAlpha}.
+					</pre>
+
+					<p>Note that with the above constructions, while we can now model monitors in some detail, we are still ignoring the effect of InterruptException occurrence and</p>
+
+					<div class="pagebreak pageNumber">328</div>
+
+					<p>handling. In the book, we have only used this mechanism to terminate all the threads that constitute the concurrent Java program. At the end of this chapter we discuss the problems that can arise if only a subset of threads is terminated in this way.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="12" data-name="Bounded Buffer Example">
+
+				<h3>13.4 Bounded Buffer Example</h3>
+
+				<p><span class="first-sentence">Program 13.1 below reproduces the bounded buffer implementation from Chapter 5, Program 5.6 published in the first printing and first edition of this book.</span> In this section, we develop a detailed model of the synchronization of this program and investigate its properties. As usual, we abstract from the details of what items are stored in the buffer and how these items are stored. Consequently, the only variable that we need to consider modeling is the variable <em>count</em> that stores the number of items currently stored in the buffer. The state of the buffer monitor implementation is as follows with the count variable initialized to zero:</p>
+
+				<pre>
+<strong>const</strong> Size = 2 <span>// number of buffer slots</span>
+||BUFFERMON  = ( Threads::LOCK || WAITSET || SAFEMON
+               ||Threads::(count:VAR(0))
+               ).
+				</pre>
+
+				<p>The alphabet for each thread is defined by:</p>
+
+				<pre>
+set BufferAlpha = {count.VarAlpha, LockOps, SyncOps}
+				</pre>
+
+				<section class="subsection" data-number="13" data-name="put() and get() Methods">
+
+					<h4>13.4.1 put() and get() Methods</h4>
+
+					<p><span class="first-sentence">We can now translate the <code>put()</code> and <code>get()</code> methods of Program 13.1 into <em>FSP</em> into a reasonably straightforward way.</span> Since we have abstracted from the details of storing items in the buffer, we replace the actions to place an item in the buffer with the action <code>put</code> and the actions to remove an item with the action <code>get</code>.</p>
+
+				<pre class="program">
+  <strong>public</strong> void put(Object o)
+     <strong>throws</strong> InterruptedException; <span>//put object into buffer</span>
+  <strong>public</strong> Object get()
+     <strong>throws</strong> InterruptedException; <span>//get object from buffer</span>
+}
+
+<strong>class</strong> BufferImpl <strong>implements</strong> Buffer {
+  <strong>protected</strong> Object[] buf;
+				</pre>
+
+				<p class="program-caption"><strong>Program 13.1</strong> <code>Buffer</code> interface and <code>BufferImpl</code> class.</p>
+
+				<div class="pagebreak pageNumber">329</div>
+
+					<pre class="program">
+<strong>protected</strong> int in = 0;
+<strong>protected</strong> int out= 0;
+<strong>protected</strong> int count= 0;
+<strong>protected</strong> int size;
+
+BufferImpl(int size) {
+  this.size = size; buf = <strong>new</strong> Object[size];
+}
+
+<strong>public synchronized</strong> void put(Object o)
+          <strong>throws</strong> InterruptedException {
+  <strong>while</strong> (count==size) wait();
+  buf[in] = o;
+  ++count;
+  in=(in+1) %size;
+  notify();
+}
+
+<strong>public synchronized</strong> Object get()
+          <strong>throws</strong> InterruptedException {
+  <strong>while</strong> (count==0) wait();
+  Object o =buf[out];
+  buf[out]=null;
+  --count;
+  out=(out+1) %size;
+  notify();
+  return (o);
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 13.1</strong> (<em>Continued</em>).</p>
+
+					<pre>
+<span>/* put method */</span>
+PUT
+  = (acquire -> WHILE),
+WHILE
+  = (count.read[v:Int] ->   <span>// while (count == size) wait();</span>
+     if v==Size then WAIT;WHILE else CONTINUE
+    ),
+CONTINUE
+  = (put                    <span>// buf [in] = o; in=(in+1) %size;</span>
+     -> count.inc           <span>// ++count;</span>
+     -> notify -> release -> END
+    ) + BufferAlpha.
+					</pre>
+
+				<div class="pagebreak pageNumber">330</div>
+
+					<pre>
+<span>/* get method */</span>
+GET
+  = (acquire -> WHILE),
+WHILE
+  = (count.read[v:Int] ->   <span>// while (count == 0 ) wait()</span>
+      if v==0 then WAIT;WHILE else CONTINUE
+    ),
+CONTINUE
+    = (get                <span>// Object[o] = buf [out]; buf [out]=null;</span>
+     -> count.dec         <span>// --count;</span>
+     -> notify -> release -> END
+     ) + BufferAlpha.
+					</pre>
+
+				</section>
+
+				<section class="subsection" data-number="14" data-name="Producer and Consumer Threads">
+
+					<h4>13.4.2 Producer and Consumer Threads</h4>
+
+					<p><span class="first-sentence">To investigate the properties of the bounded buffer implementation, we model systems consisting of one or more producer threads and one or more consumer threads.</span> The producer threads call <code>put()</code> and the consumer threads call <code>get()</code> as shown below.</p>
+
+					<pre>
+PRODUCER = PUT;PRODUCER.
+CONSUMER = GET;CONSUMER.
+					</pre>
+
+					<p>We noted in section 13.2.1 that we must explicitly define the set of threads that will access the monitor being modeled. For the bounded buffer example, we have a set of producer threads, which put items into the buffer, and a set of consumer threads, which take items out of the buffer, identified as follows:</p>
+
+					<pre>
+<strong>const</strong> Nprod = 2                <span>// #producers</span>
+<strong>const</strong> Ncons = 2                <span>// #consumers</span>
+<strong>set</strong>   Prod  = {prod[1..Nprod]} <span>// producer threads</span>
+<strong>set</strong>   Cons  = {cons[1..Ncons]} <span>// consumer threads</span>
+
+<strong>const</strong> Nthread = Nprod + Ncons
+<strong>set</strong>   Threads = {Prod,Cons}
+					</pre>
+
+					<p>The producer and consumer processes are composed with the processes modeling the buffer monitor by:</p>
+
+					<pre>
+||ProdCons = (Prod:PRODUCER || Cons:CONSUMER
+             || BUFFERMON).
+					</pre>
+
+					<div class="pagebreak pageNumber">331</div>
+
+				</section>
+
+				<section class="subsection" data-number="15" data-name="Analysis">
+
+					<h4>13.4.3 Analysis</h4>
+
+					<p><span class="first-sentence">To verify our implementation model of the bounded buffer, we need to show that it satisfies the same safety and progress properties as the design model.</span> However, the bounded buffer design model was specified in Chapter 5, which preceded the discussion of how to specify properties. Consequently, we simply inspected the <em>LTS</em> graph for the model to see that it had the required synchronization behavior. The <em>LTS</em> of the implementation model is much too large to verify by inspection. How then do we proceed? The answer with respect to safety is to use the design model itself as a safety property and check that the implementation satisfies this property. In other words, we check that the implementation cannot produce any executions that are not specified by the design. Clearly, this is with respect to actions that are common to the implementation and design models - the <code>put</code> and <code>get</code> actions. The property below is the same <code>BUFFER</code> process shown in Figure 5.11, with the addition of a relabeling part that takes account of multiple producer and consumer processes.</p>
+
+					<pre>
+<strong>property</strong>
+      BUFFER = COUNT[0],
+      COUNT[i:0..Size]
+            = (<strong>when</strong> (i&lt;Size)    put->COUNT[i+1]
+              |<strong>when</strong> (i>0)       get->COUNT[i-1]
+              )/{Prod.put/put,Cons.get/get}.
+					</pre>
+
+					<p>The <em>LTS</em> for this property with two producer processes, two consumer processes and a buffer with two slots <code>(Size = 2)</code> is shown in Figure 13.7.</p>
+
+					<p class="i">We are now in a position to perform a safety analysis of the bounded buffer implementation model using the composition:</p>
+
+					<pre>
+||ProdConsSafety = (ProdCons || BUFFER).
+					</pre>
+
+					<p>With two producer processes <code>(Nprod=2)</code>, two consumer processes <code>(Ncons=2)</code> and a buffer with two slots <code>(Size=2)</code>, safety analysis by the <em>LTSA</em> reveals no property violations or deadlocks. In this situation, the implementation satisfies the design. However, safety analysis with two producer processes <code>(Nprod=2)</code>, two consumer processes <code>(Ncons=2)</code> and a buffer with only one slot <code>(Size=1)</code> reveals the following deadlock:</p>
+
+					<pre>
+Trace to DEADLOCK:
+  cons.1.acquire
+  cons.1.count.read.0
+					</pre>
+
+					<div class="pagebreak pageNumber">332</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure13-7.png">
+						<figcaption><strong>Figure 13.7</strong> <em>LTS</em> for <code>property BUFFER</code>.</figcaption>
+					</figure>
+
+					<pre>
+cons.1.wait          <span>// consumer 1 blocked</span>
+cons.1.release
+cons.2.acquire
+cons.2.count.read.0
+cons.2.wait          <span>// consumer 2 blocked</span>
+cons.2.release
+prod.1.acquire
+prod.1.count.read.0
+prod.1.put           <span>// producer 1 inserts item</span>
+prod.1.count.inc
+prod.1.notify        <span>// producer 1 notifies item available</span>
+prod.1.release
+prod.1.acquire
+prod.1.count.read.1
+cons.1.unblock       <span>// consumer 1 unblocked by notify</span>
+prod.1.wait          <span>// producer 1 blocks trying to insert 2nd item</span>
+prod.1.release
+prod.2.acquire
+prod.2.count.read.1
+prod.2.wait          <span>// producer 2 blocks trying to insert item</span>
+prod.2.release
+cons.1.endwait
+cons.1.acquire
+cons.1.count.read.1
+					</pre>
+
+					<div class="pagebreak pageNumber">333</div>
+
+					<pre>
+cons.1.get           <span>// consumer 1 gets item</span>
+cons.1.count.dec
+cons.1.notify        <span>// consumer 1 notifies space available</span>
+cons.1.release
+cons.1.acquire
+cons.1.count.read.0
+cons.2.unblock       <span>// consumer 2 unblocked by notify</span>
+cons.1.wait
+cons.1.release
+cons.2.endwait
+cons.2.acquire
+cons.2.count.read.0
+cons.2.wait          <span>// consumer 2 blocks since buffer is empty</span>
+cons.2.release
+					</pre>
+
+					<p>The deadlock occurs because at the point that the consumer process calls <code>notify</code> to indicate that a space is available in the buffer, the wait set includes the second consumer process as well as both the producer processes. The consumer is unblocked and finds that the buffer is empty and goes back to waiting. At this point no further progress can be made and the system deadlocks since neither of the producer processes can run. This deadlock occurs if either the number of producer processes or the number of consumer processes is greater than the number of slots in the buffer. Clearly in this situation, the implementation given in the first printing of Chapter 5 was incorrect!</p>
+
+					<p class="i">To correct the bounded buffer program of Chapter 5, to handle the situation of a greater number of producer or consumer threads than buffer slots, we need to replace the calls to <code>notify()</code> with calls to <code>notifyAll()</code>. This unblocks both consumer and the producer threads, allowing an insertion or removal to occur. Replacing the corresponding actions in the implementation model removes the deadlock and verifies that the Java program is now correct.</p>
+
+					<p class="i">The lesson here is that it is always safer to use <code>notifyAll()</code> unless it can be rigorously shown that <code>notify()</code> works correctly. We should have followed our own advice in Chapter 5! The general rule is that <code>notify()</code> should only be used if at most one thread can benefit from the change of state being signaled and it can be guaranteed that the notification will go to a thread that is waiting for that particular state change. An implementation model is a good way of doing this.</p>
+
+					<p class="i">The corrected model satisfies the following progress properties, which assert lack of starvation for <code>put</code> and <code>get</code> actions:</p>
+
+					<pre>
+<strong>progress</strong> PUT[i:1..Nprod] = {prod[i].put}
+<strong>progress</strong> GET[i:1..Ncons] = {cons[i].get}
+					</pre>
+
+					<div class="pagebreak pageNumber">334</div>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="16" data-name="Readers-Writers Example">
+
+				<h3>13.5 Readers-Writers Example</h3>
+
+				<p><span class="first-sentence">Program 13.2 reproduces the version of the Readers-Writers program from
+				Chapter 7, Program 7.8 that gives Writers priority.</span> This version is again taken
+				from the first printing, first edition of this book.</p>
+
+				<pre class="program">
+<strong>class</strong> ReadWritePriority <strong>implements</strong> ReadWrite{
+  <strong>private</strong> int readers =0;
+  <strong>private</strong> boolean writing = false;
+  <strong>private</strong> int waitingW = 0; <span>// no of waiting Writers.</span>
+
+  <strong>public synchronized</strong> void acquireRead()
+             <strong>throws</strong> InterruptedException {
+    <strong>while</strong> (writing || waitingW>0) wait();
+     ++readers;
+  }
+
+  <strong>public synchronized</strong> void releaseRead() {
+    --readers;
+    <strong>if</strong> (readers==0) notify();
+  }
+
+  <strong>public synchronized</strong> void acquireWrite()
+             <strong>throws</strong> InterruptedException {
+    ++waitingW;
+    <strong>while</strong> (readers>0 || writing) wait();
+    --waitingW;
+    writing = true;
+  }
+
+  <strong>public synchronized</strong> void releaseWrite() {
+    writing = false;
+    notifyAll();
+  }
+}
+				</pre>
+
+				<p class="program-caption"><strong>Program 13.2</strong> Class <code>ReadWritePriority</code>.</p>
+
+				<p>To verify this program, we proceed as before and translate the Java into <em>FSP</em> using the model construction developed in sections 13.2 and 13.3. The first step is to model the state of the monitor. This consists of the wait set, the monitor lock and the variables specific to the <code>ReadWritePriority</code> class. The class</p>
+
+				<div class="pagebreak pageNumber">335</div>
+
+				<p>has three variables - <code>readers</code>, <code>writing</code> and <code>waitingW</code> - which all play a part
+				in synchronization. Consequently, in this example, we model the state of the
+				monitor by:</p>
+
+				<pre>
+||RWPRIORMON = ( Threads::LOCK || WAITSET || SAFEMON
+               ||Threads::( readers:VAR
+                          ||writing:BOOLVAR
+                          ||waitingW:VAR
+                          )
+               ).
+				</pre>
+
+				<p>The set <code>Threads</code> is defined by:</p>
+
+				<pre>
+<strong>const</strong> Nread  = 2                   <span>// #readers</span>
+<strong>const</strong> Nwrite = 2                   <span>// #writers</span>
+<strong>set</strong> Read     = {reader[1..Nread]}  <span>// reader threads</span>
+<strong>set</strong> Write    = {writer[1..Nwrite]} <span>// writer threads</span>
+
+<strong>const</strong> Nthread =  Nread + Nwrite
+<strong>set</strong> Threads   =  {Read,Write}
+				</pre>
+
+				<p>The alphabet that must be added to each monitor method is:</p>
+
+				<pre>
+<strong>set</strong> ReadWriteAlpha =
+ {{readers,waitingW}.VarAlpha, writing.BoolAlpha,
+   LockOps, SyncOps,
+   acquireRead,acquireWrite,releaseRead,releaseWrite
+ }
+				</pre>
+
+				<section class="subsection" data-number="17" data-name="ReadWritePriority Methods">
+
+					<h4>13.5.1 ReadWritePriority Methods</h4>
+
+					<p><span class="first-sentence">The next step in verifying an implementation is to derive an <em>FSP</em> sequential process for each monitor method.</span> These processes for <code>acquireRead()</code>, <code>releaseRead()</code>, <code>acquireWrite()</code> and <code>releaseWrite()</code> are listed below.</p>
+
+					<pre>
+<span>/*
+* acquireRead() method
+*/</span>
+ACQUIREREAD
+  = (acquire -> WHILE),
+WHILE                   <span>// while (writing —— waitingW>0) wait();</span>
+  = (writing.read[v:Bool] -> waitingW.read[u:Int] ->
+					</pre>
+
+					<div class="pagebreak pageNumber">336</div>
+
+					<pre>
+     <strong>if</strong> (v || u>0) <strong>then</strong> WAIT;WHILE else CONTINUE
+    ),
+CONTINUE
+  = (acquireRead
+     -> readers.inc           <span>// ++readers;</span>
+     -> release -> END
+     ) + ReadWriteAlpha.
+
+<span>/*
+* releaseRead() method
+*/</span>
+RELEASEREAD
+  = (acquire -> releaseRead
+    -> readers.dec            <span>// --readers;</span>
+    -> readers.read[v:Int] -> <span>// if (readers==0) notify();</span>
+       <strong>if</strong> (v==0) <strong>then</strong> (notify -> CONTINUE) else CONTINUE
+     ),
+CONTINUE
+  = (release -> END) + ReadWriteAlpha.
+
+<span>/*
+* acquireWrite() method
+*/</span>
+ACQUIREWRITE               <span>// ++waitingW;</span>
+  = (acquire -> waitingW.inc -> WHILE),
+WHILE                      <span>// while (readers>0 —— writing) wait();</span>
+  = (writing.read[b:Bool] -> readers.read[v:Int]->
+     <strong>if</strong> (v>0 || b) <strong>then</strong> WAIT;WHILE else CONTINUE
+    ),
+CONTINUE
+  = (acquireWrite
+     -> waitingW.dec        <span>// --waitingW;</span>
+     -> writing.write[True] <span>// writing = true;</span>
+     -> release -> END
+    )+ ReadWriteAlpha.
+
+<span>/*
+* releaseWrite() method
+*/</span>
+RELEASEWRITE
+   = (acquire -> releaseWrite
+     -> writing.write[False] <span>// writing = false;</span>
+     -> notifyAll            <span>// notifyAll();</span>
+     -> release-> END
+     ) + ReadWriteAlpha.
+					</pre>
+
+					<div class="pagebreak pageNumber">337</div>
+
+					<p>We have included the actions <code>acquireRead</code>, <code>acquireWrite</code>, <code>releaseRead</code> and <code>releaseWrite</code> in the model, which correspond to the actions in the design model of Chapter 7.</p>
+
+					<h5><code>READER</code> and <code>WRITER</code> Processes</h5>
+
+					<p>Models for <code>READER</code> and <code>WRITER</code> processes are listed below. In this case, we have included actions to represent the calling of the monitor method in addition to modeling the execution of the method. We will see in the next section that these actions are needed to define the required progress property analysis conditions.</p>
+
+					<pre>
+READER  = (acquireRead.call -> ACQUIREREAD;READING),
+READING = (releaseRead.call -> RELEASEREAD;READER).
+
+WRITER  = (acquireWrite.call -> ACQUIREWRITE;WRITING),
+WRITING = (releaseWrite.call -> RELEASEWRITE;WRITER).
+					</pre>
+
+				</section>
+
+				<section class="subsection" data-number="18" data-name="Analysis">
+
+					<h4>13.5.2 Analysis</h4>
+
+					<p><span class="first-sentence">To verify that the implementation model satisfies the desired safety properties, we use the safety property <code>RW_SAFE</code> originally specified in section 7.5.1 to check the correct behavior of the design model.</span></p>
+
+					<pre>
+<strong>property</strong> SAFE_RW
+  = (acquireRead -> READING[1]
+    |acquireWrite->WRITING
+    ),
+
+READING[i:1..Nread]
+  = (acquireRead -> READING[i+1]
+    |<strong>when</strong>(i>1) releaseRead -> READING[i-1]
+    |<strong>when</strong>(i==1) releaseRead -> SAFE_RW
+    ),
+WRITING = (releaseWrite -> SAFE_RW).
+					</pre>
+
+					<p>The system we perform safety analysis on consists of the reader and writer threads, the monitor state and the safety property as shown below:</p>
+
+					<pre>
+||RWSYS = (Read:READER || Write:WRITER
+          || RWPRIORMON
+          || Threads::SAFE_RW
+          ).
+					</pre>
+
+					<div class="pagebreak pageNumber">338</div>
+
+					<p>Safety analysis detects the following deadlock:</p>
+
+					<pre>
+Trace to DEADLOCK:
+      reader.1.acquireRead.call
+      reader.1.acquire
+      reader.1.writing.read.0
+      reader.1.waitingW.read.0
+      reader.1.acquireRead
+      reader.1.readers.inc
+      reader.1.release         <span>// reader 1 acquires RW lock</span>
+      reader.1.releaseRead.call
+      reader.2.acquireRead.call
+      writer.1.acquireWrite.call
+      writer.1.acquire
+      writer.1.waitingW.inc
+      writer.1.writing.read.0
+      writer.1.readers.read.1
+      writer.1.wait  <span>// writer 1 blocked as reader has RW lock</span>
+      writer.1.release
+      reader.2.acquire
+      reader.2.writing.read.0
+      reader.2.waitingW.read.1
+      reader.2.wait  <span>// reader 2 blocked as writer 1 waiting</span>
+      reader.2.release
+      writer.2.acquireWrite.call
+      writer.2.acquire
+      writer.2.waitingW.inc
+      writer.2.writing.read.0
+      writer.2.readers.read.1
+      writer.2.wait  <span>// writer 2 blocked as reader has RW lock</span>
+      writer.2.release
+      reader.1.acquire
+      reader.1.releaseRead
+      reader.1.readers.dec
+      reader.1.readers.read.0
+      reader.1.notify  <span>// reader 1 releases RW lock &amp; notifies</span>
+      writer.2.release
+      reader.1.release
+      reader.1.acquireRead.call
+      reader.1.acquire
+      reader.1.writing.read.0
+      reader.1.waitingW.read.2
+      reader.2.unblock  <span>// reader 2 unblocked by notify</span>
+      reader.1.wait
+					</pre>
+
+					<div class="pagebreak pageNumber">339</div>
+
+					<pre>
+      reader.1.release
+      reader.2.endwait
+      reader.2.acquire
+      reader.2.writing.read.0
+      reader.2.waitingW.read.2
+      reader.2.wait     /<span>/ reader 2 blocks as writers waiting</span>
+      reader.2.release
+					</pre>
+
+					<p>The deadlock happens because the <code>notify</code> operation performed by Reader 1 when it releases the read-write lock unblocks another Reader rather than a Writer. This unblocked Reader subsequently blocks again since there are Writers waiting. The solution is again to use a <code>notifyAll</code> to awake all waiting threads and thus permit a Writer to run. Changing the <code>notify</code> action to <code>notifyAll</code> in the <code>RELEASEREAD</code> part of the model and rerunning the safety analysis confirms that the deadlock does not occur and that the implementation model satisfies the safety property.</p>
+
+					<p class="i">Why did we not observe this deadlock in the actual implementation of <code>ReadWritePriority</code> when running the demonstration applet? The reason is quite subtle. In most Java Virtual Machines, the set of threads waiting on notification is implemented as a first-in-first-out (FIFO) queue. With this queuing discipline, the deadlock cannot occur as for the second Reader to block, a Writer must have previously blocked. This Writer will be unblocked by the notification when the first Reader releases the read -write lock and, consequently, the deadlock does not occur. However, although the implementation works for some JVMs, it is not guaranteed to work on all JVMs since, as noted earlier, the Java Language Specification specifies only that blocked threads are held in a set. Our implementation would exhibit the deadlock on a JVM that used a stack for the wait set. Consequently, the implementation is clearly erroneous and the <code>notify()</code> in the <code>releaseRead()</code> method should be replaced with <code>notifyAll()</code>. Again the lesson is that <code>notify()</code> should only be used with extreme care! However, it should be noted that the use of <code>notify()</code> in the <code>ReadWriteSafe</code> version of the read-write lock is correct since it is not possible in that implementation to have both Readers and Writers waiting simultaneously.</p>
+
+					<h5>Progress Analysis</h5>
+
+					<p>Having demonstrated that the implementation model satisfies the required safety properties, it now remains to show that it exhibits the same progress properties as the design model. These properties assert lack of starvation for <code>acquireRead</code> and <code>acquireWrite</code> actions.</p>
+
+					<pre>
+<strong>progress</strong> WRITE[i:1..Nwrite] = writer[i].acquireWrite
+<strong>progress</strong> READ [i:1..Nwrite] = reader[i].acquireRead
+					</pre>
+
+					<div class="pagebreak pageNumber">340</div>
+
+					<p>The adverse scheduling conditions needed to check progress in the presence of competition for the read-write lock are arranged by making the actions, representing calls to release read and write access to the lock, low priority:</p>
+
+					<pre>
+||RWPROGTEST = RWSYS >> {Read.releaseRead.call,
+                         Write.releaseWrite.call}.
+					</pre>
+
+					<p>Progress analysis reveals that the <code>RWPROGTEST</code> system satisfies the <code>WRITE</code> progress properties but violates the <code>READ</code> progress properties. In other words, the Writers priority implementation of the read -write lock satisfies its design goal of avoiding Writer starvation, but, as with the design model, it permits Reader starvation.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="19" data-name="Summary">
+
+				<h3>Summary</h3>
+
+				<p><span class="first-sentence">This chapter has presented a way of verifying that Java implementations satisfy the same safety and progress properties as the design models from which they were developed.</span> The approach is to translate the Java program into a detailed <em>FSP</em> model that captures all aspects of the Java synchronization mechanisms - in particular, monitor locks and notification. This <em>implementation</em> model is then analyzed with respect to the same safety and progress properties used in analyzing the design model. We also showed in the bounded buffer example that the design model itself can be used as a safety property when verifying the implementation model.</p>
+
+				<p class="i">Implementation models are considerably more detailed than design models and as such generate much larger state spaces during analysis. It is in general only possible to analyze small parts of an implementation. This is why in the book we have advocated a model-based design approach in which properties are investigated with respect to a design model and then this model is used as a basis for program implementation. Clearly, as we have demonstrated in the examples contained in this chapter, errors can be introduced in going from design model to implementation. Interestingly, the two bugs discovered both arise from the use of <code>notify()</code> in place of <code>notifyAll()</code>. Perhaps the most important lesson from this supplement is that strict attention must be paid to the rule that <code>notify()</code> should only be used if at most one thread can benefit from the change of state being signaled and it can be guaranteed that the notification will go to a thread that is waiting for that particular state change in the monitor class itself or in any subclasses.</p>
+
+				<p class="i">Finally, as illustrated in the implementation models, sequential composition can be seen to provide a convenient means for structuring complex sequences of actions from simpler fragments of sequential processes.</p>
+
+				<div class="pagebreak pageNumber">341</div>
+
+			</section>
+
+			<section class="section" data-number="20" data-name="Notes and Further Reading">
+
+				<h3>Notes and Further Reading</h3>
+
+				<p><span class="first-sentence">We are indebted to David Holmes for initially pointing out the problems with the bounded buffer and read-write lock that we have exposed in this chapter.</span> He also motivated this chapter by suggesting that we should address the problem of verifying implementations. David is a Senior Research Scientist at the Cooperative Research Centre for Enterprise Distributed Systems Technology (DSTC Pty Ltd.), located in Brisbane, Australia.</p>
+
+				<p class="i">We pointed out in this chapter that our model of notification ignores the effect of an interrupt exception. It is possible, for a thread waiting to be notified, to be interrupted before actually returning from the <code>wait()</code> call. As a result it returns via an <code>InterruptedException</code> not a normal return and essentially, the notification is lost even though other uninterrupted threads may be waiting. This means that programs that use <code>notify()</code> and allow <code>InterruptedException</code> to be thrown directly are not guaranteed to work correctly. Although we use this technique in the book, it does not result in inconsistencies since in all cases, the interrupt exception is used to terminate all active threads. However, it is another reason for using <code>notifyAll()</code> rather than <code>notify()</code>. This may sometimes result in a large number of unnecessary thread activations and consequently be inefficient. For example, in the semaphore program of section 5.2.2, a better way to deal with the lost notification problem is to catch the <code>InterruptedException</code> and perform an additional <code>notify()</code> before rethrowing the exception. Thanks again to David for pointing this out.</p>
+
+				<p class="i">The earliest attempt to prove a program correct appears to be that of Turing who presented a paper, <em>Checking a large routine</em>, on 24 June 1949 at the inaugural conference of the EDSAC computer at the Mathematical Laboratory, Cambridge. He advocated the use of assertions "about the states that the machine can reach". The formal foundations for techniques for program correctness were laid in the 1960s with contributions by pioneers such as McCarthy, Naur, Floyd, Dijkstra and Hoare (Morris and Jones, 1984). Again, the essence of the approach is to associate logical assertions, pre-and post-conditions, with the statement blocks in a program. Invariants are used to characterize the properties preserved by loops, later extended to characterize objects and monitors (see Chapter 5). This work was initially targeted at proving the correctness of sequential programs, and involved both a proof of satisfaction of the program post-condition and a proof of termination. The correctness of concurrent programs is more complex, requiring that the techniques deal with nonterminating and nondeterministic programs. The foundations were again laid in the 1960s by the insights of researchers such as Dijkstra and Petri, but it was in 1977 that Lamport proposed that correctness of concurrent programs should be argued for two sorts of properties: safety and liveness.</p>
+
+				<div class="pagebreak pageNumber">342</div>
+
+				<p class="i">Since those early pioneering days, much research work and experience have been gained. The 1996 state-of-the-art papers on concurrency (Cleaveland, Smolka, <em>et al</em>.) and formal methods (Clarke, Wing, <em>et al</em>.) provide an excellent overview. All
+				these techniques have had major impact on the design of programming languages and programming methods. However, because of the effort involved, the impact on practice has been limited to a relatively small number of specific circumstances, such as safety-critical software, software which is difficult or impossible to update or software to be used in vast numbers of consumer products. The advance of techniques and technology in theorem proving and model checking over the last ten years has made program verification more accessible and practical.</p>
+
+				<p class="i">The approach adopted by many current researchers is to try to extract a model directly from the code. Techniques used vary from code annotation, which provides the mapping between code and model, to various abstraction techniques which hide program detail irrelevant to the particular property or concern. Notable amongst these are the FeaVer Toolset for C programs (Holzmann and Smith, 2002), FLA VERS for Ada programs (Cobleigh, Clarke and Osterweil, 2002), the Java PathFinder tool (Havelund and Pressburger, 2000) and the Bandera toolset (Corbett, Dwyer, Hatcliff, <em>et al</em>., 2000) for Java programs.</p>
+
+				<p class="i">Other approaches are attempting to develop verification tools tailored to work directly on a program in a specific programming language. A second version of the Java Pathfinder tool (Brat, Havelund, Park, <em>et al</em>., 2000), Microsoft's SLAM project for C (Ball and Rajamani, 2002), and the Blast tool for C (Henzinger, Jhala, Majumdar, <em>et al</em>., 2003) are examples of this work.</p>
+
+			</section>
+
+			<section class="section" data-number="21" data-name="Exercises">
+
+				<h3>Exercises</h3>
+
+				<ol id="thirteen">
+
+					<li><span class="first-sentence">Simplify the verification model developed in section 13.5 such that it is a model of the Java program <code>ReadWriteSafe</code> (Program 7.7).</span> Show that this model does not violate the property <code>SAFE_RW</code> and that it violates the <code>WRITE</code> progress property.</li>
+
+					<li>
+						Develop a verification model for the <code>Semaphore</code> class (Program 5.3) and use it in verifying that the <code>SEMADEMO</code> program of Chapter 5 preserves the mutual exclusion property (section 7.1.2):
+
+						<pre>
+<strong>property</strong> MUTEX = (p[i:1..3].enter->p[i].exit->MUTEX).
+						</pre>
+
+						In addition, generate an error trace for the situation in which the semaphore is initialized to 2.
+					</li>
+
+					<div class="pagebreak pageNumber">343</div>
+
+					<li>
+						The following <em>FSP</em> specifies the safety property for barrier synchronization. Each process must execute its <code>before</code> action before all processes execute the common <code>sync</code> action.
+
+						<pre>
+Pspec = (before -> sync -> Pspec).
+property
+   ||SAFEBARRIER = (p[1..3]:Pspec)
+                   /{sync/p[1..3].sync}\{sync}.
+						</pre>
+
+						Verify that the monitor <code>Barrier</code> with a <code>sync</code> method that implements barrier synchronization (as required in the solution to Exercise 5.5) satisfies the above property.
+					</li>
+
+					<li>
+						Verify that the <code>SimpleAllocator</code> monitor of Program 9.1 satisfies the property <code>ALLOCATOR</code> in the system <code>CHECK</code>, both shown below:
+
+						<pre>
+<strong>property</strong>
+  ALLOCATOR(M=3) = BALL[M],
+  BALL[b:0..M]   = (when (b>0) get[i:1..b] -> BALL[b-i]
+                   |put[j:1..M]      -> BALL[b+j]
+                   ).
+
+PLAYER(I=1) = (get.call -> GET(I);PLAYING),
+PLAYING     = (put.call -> PUT(I);PLAYER).
+
+||CHECK = (player[1..3]:PLAYER(1)
+          ||player[4..Nthread]:PLAYER(3)
+          ||SimpleAllocator(N)
+          ||player[1..N]::ALLOCATOR(N)
+          ).
+						</pre>
+
+						In addition, determine which of the following progress properties are satisfied by the system <code>CHECKLIVE</code> shown below:
+
+						<pre>
+<strong>progress</strong> EXPERT = {player[1..3].get[1..N]}
+<strong>progress</strong> NOVICE = {player[4..N].get[1..N]}
+||CHECKLIVE = CHECK >> {player[1..N].put.call}.
+						</pre>
+					</li>
+
+				</ol>
+
+			</section>
+
+		</div>
+
+	</div>
+
+</body>
+</html>

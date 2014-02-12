@@ -1,0 +1,16 @@
+.docHTML{
+	maxWidth:520px;
+	color:#324674;
+	font-family: Verdana;
+	font-size: 70%;
+}
+.docHTML .pageheadline {
+	margin: 0px;
+	font-family: Verdana;
+	font-size: large;
+	font-weight: bold;
+}
+.docHTML p{
+	font-size: small;
+	font-family: Arial, Helvetica, sans-serif;
+}

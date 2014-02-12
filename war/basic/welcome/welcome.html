@@ -1,0 +1,101 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.min.css">
+		<script language="javascript" type="text/javascript" src="/lib/jquery-1.7.2.min.js"></script>
+		<script language="javascript" type="text/javascript" src="/lib/modernizr.js"></script>
+		<script language="javascript" type="text/javascript" src="/basic/welcome/welcome.js"></script>
+
+
+		<title>Login</title>
+		<style type="text/css">
+			.div1{
+				width:60%;
+				background-color:lightgrey;
+			}
+			.login{
+				position:relative;
+				left:60%;
+				width:40%;
+			}
+			#spinnerbox {
+				display:none; /* Hide the DIV */
+				position:fixed;
+				height:20%;
+				width:100%;
+				align:center;
+				left: -30px;
+				top: 170px;
+				z-index:100;
+				margin-left: 15px;
+				padding:15px;
+			}
+			#browser-info {
+				background-color: #A7C9E2;
+				box-shadow: 10px 10px 5px #888888;
+			}
+		</style>
+	<a href="/admin/actions.html">Admins Log in here</a><br>
+	<!--a href="/b/reader">Go to Reader</a><br><br-->
+	</head>
+	<body>
+
+		<center>
+				<img src= "/images/CR.png"></img>
+				<br>
+				<br>
+				<div class = "div1">
+				  Welcome to CampusReader. <strong>You will need to be logged-in to your Google account to access the site.</strong>
+				</div>
+
+				<!--<img src= "/images/enter.png" onclick = "window.location = '/groups'" width="15%" height="20%"></img>-->
+				<br>
+				<br>
+				<input type="button" id="login" class="btn-success btn-large" value="Start Using Campus Reader">
+				<br>
+				<br>
+
+				<div class = "div1">CampusReader is a 5-year project funded by the NSF. The goal is to build reading-support for material in the areas of Science, Technology, Engineering, and Mathematics (STEM). For more information, contact the Project Leader, Stephen Fickas, at fickas@cs.uoregon.edu.</div>
+			    <br>
+			    <br>
+	
+				<div id="browser-info" class= "well well-large" style="width: 500px; margin-bottom: 30px;" >
+					<h2 style="margin-bottom:20px;">Browser Recommendations </h2>
+					
+					<p>CampusReader works best with Chrome or Safari browsers.<br>
+					CampusReader will run with Firefox, but some features may be limited.<br>
+					CampusReader generally does not run well with IE (Internet Explorer).</p>
+					
+					<p>The browser you are using is <strong><span id="browser"></span></strong></p>
+					
+					<div id="notchrome">
+						<p>The following features may not work with this browser:</p>
+						<p id="tts"><strong>Text to speech may not work</strong></p>
+						<p id="css"><strong>Well-rendered content: may not work</strong></p>
+						
+						<br>
+						
+						<p> Download <a href="https://www.google.com/intl/en/chrome/browser/">Google Chrome</a> to get the full functionality </p>
+					</div>
+					
+					<br>
+					
+					<p id="internet">Your internet speed is slow and this may cause delays in loading pages</p>
+					
+				</div>
+
+			    <img src= "/images/NSF.png" onclick = "window.open('http://www.nsf.gov/')" ></img>
+
+			    </center>
+
+
+				<div id="spinnerbox">
+					<center><img src="/images/spinner.gif"/></center>
+				</div>
+
+
+</body>
+</html>
+

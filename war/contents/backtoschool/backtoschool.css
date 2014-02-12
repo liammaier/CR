@@ -1,0 +1,56 @@
+#backtoschool{
+	max-width:850px;
+	width: 90%;
+ 	margin-left: 5%;
+ 	margin-right: 5%;
+ 	zoom: 1;
+ 	margin-top: 40px;
+ 	background-color: white;
+}
+.subsection p{
+	margin-left: 20px;
+}
+#backtoschool th{
+	background-color:#00447C;
+	color: white;
+}
+section{
+	font-family: Arial, serif;
+	font-style: normal;
+}
+.subsection > .sectionHeading{
+	font-weight: bold;
+	text-decoration: none;
+	font-size: 16pt;
+	color: #DF7627;
+}
+.section > .sectionHeading{
+	font-size: 30pt;
+	color: #DF7627;
+}
+
+.subsection > .subsection > .sectionHeading{
+	font-size: 12pt;
+	color:#00447C;
+}
+.tipContainer{
+	border: #c5d1ea solid 6px;
+	background-color: #e5edff;
+	border-radius: 15px;
+	padding: 21px 10px 12px 10px;
+	margin-left: 150px;
+	margin-right: 125px;
+	color: #00447C;
+}
+#backtoschool .pagebreak {
+	border-top: 3px solid #AAAAAA;
+	color: #AAAAAA;
+	padding-top: 10px;
+	margin: 50px 0;
+	width: 100%;
+}
+
+#tableOfContents a{
+	color:inherit;
+  	text-decoration: none;
+}

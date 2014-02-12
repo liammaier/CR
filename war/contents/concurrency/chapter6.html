@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h1>6</h1>
+				<h2>Deadlock</h2>
+				<div class="border"></div>
+
+				<p><span class="first-sentence">Deadlock occurs in a system when all its constituent processes are blocked. Another way of saying this is that the system is deadlocked because there are no eligible actions that it can perform.</span> We have already seen an example of deadlock in the nested monitor example of the last chapter. There, neither producer nor consumer process could make further progress since the consumer was blocked waiting for characters from the producer and the producer was blocked waiting for the monitor lock held by the consumer. In other words, each process was blocked waiting for a resource held by the other, sometimes referred to as a "deadly embrace". Coffman, Elphick and Shoshani (1971) identified four necessary and sufficient conditions for the occurrence of deadlock:</p>
+
+				<ul>
+
+					<li>
+						<em>Serially reusable resources: the processes involved share resources which they use under mutual exclusion.</em><br/>
+						For example, monitors encapsulate resources which are accessed using mutual exclusion (i.e. synchronized methods).
+					</li>
+
+					<li>
+						<em>Incremental acquisition: processes hold on to resources already allocated to them while waiting to acquire additional resources.</em><br/>
+						This is exactly the situation in the nested monitor deadlock where the consumer holds the monitor lock while waiting for the producer to put a character into the buffer.
+					</li>
+
+					<li>
+						<em>No preemption: once acquired by a process, resources cannot be preempted (forcibly withdrawn) but are only released voluntarily.</em><br/>
+						Again, the relevance of this to the nested monitor deadlock can easily be seen since if the consumer thread could be forced to release the monitor lock then execution of the producer could proceed.
+					</li>
+
+					<li>
+						<em>Wait-for cycle: a circular chain (or cycle) of processes exists such that each process holds a resource which its successor in the cycle is waiting to acquire.</em><br/>
+						The nested monitor deadlock is a specific example of this with a chain of length two. The consumer holds the monitor lock for which the producer is waiting and the producer has a character for which the consumer is waiting.
+					</li>
+
+				</ul>
+
+				<div class="pagebreak pageNumber">108</div>
+
+				<p>Strategies for dealing with deadlock involve ensuring that one of these four conditions does not hold. For example, consider a system which allows deadlocked cycles of processes to occur but then detects these cycles and aborts the deadlocked processes, perhaps by operator action. Such a system is denying the third condition (no preemption), since the aborted processes are forced to release the resources they hold. The system implements <em>deadlock detection and recovery</em>.
+				</p>
+
+				<p class="i">In this chapter, we are concerned with an alternative strategy. Our aim is to design programs such that deadlock cannot occur. We describe how to analyze models for deadlock and how to show that a model is free from deadlock. Finally, both the model and implementation of a classic concurrent programming problem, the Dining Philosophers, is presented.
+				</p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Deadlock Analysis">
+
+				<h3>6.1 Deadlock Analysis</h3>
+
+				<p><span class="first-sentence">In the finite state model of a process, a deadlocked state is, simply, a state with no outgoing transitions.</span> A process in such a state can engage in no further actions. In <em>FSP</em> this deadlocked state is represented by the local process <code>STOP</code>. An example of a process which can lead to a deadlocked state is depicted in Figure 6.1.</p>
+
+				<p class="i">The <code>MOVE</code> process of Figure 6.1 can engage in alternating <code>north</code> and <code>south</code> actions. However, an action sequence of <code>north</code> followed by <code>north</code> leads to a deadlocked state in which no further actions are possible. This can be seen using the Animator. We can ask the <em>LTSA</em> analyzer tool to find deadlock states and to produce a sample trace of how these states can be reached from the start state. By performing a breadth-first search of the <em>LTS</em> graph, the <em>LTSA</em> tool guarantees that the sample trace is the shortest trace to the deadlock state. In the example of Figure 6.1, <em>LTSA</em> produces the following output:</p>
+
+				<pre>
+Trace to DEADLOCK:
+	north
+	north
+				</pre>
+
+				<p>In general, the deadlocks which interest us are not those that are declared explicitly in primitive processes using <code>STOP</code> as above, but those that arise from the parallel composition of a number of interacting primitive processes. The deadlock check that the analyzer performs for composite processes is, of course, the same as the</p>
+
+				<div class="pagebreak pageNumber">109</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure6-1.png">
+					<figcaption><strong>Figure 6.1</strong> <code>MOVE</code> process.</ficaption>
+				</figure>
+
+				<p>check it performs for primitive processes since a composition is also described by an <em>LTS</em> graph. The check remains a search for states with no outgoing transitions.</p>
+
+				<p class="i">The example of Figure 6.2 is a system in which two processes, <code>P</code> and <code>Q</code>, perform the same task, that of scanning a document and printing it, by using a shared printer and shared scanner. Each process acquires both the printer and the scanner, performs the scanning and printing and then releases the scanner and printer resources. The <em>LTS</em> diagrams for process <code>P</code> and for the shared printer are given in Figures 6.3 and 6.4 respectively.</p>
+
+				<p class="i">The only difference between the processes <code>P</code> and <code>Q</code> is that <code>P</code> acquires the printer first and <code>Q</code> acquires the scanner first. This system satisfies the four necessary and sufficient conditions for deadlock which were outlined in the introduction to this chapter: the scanner and printer resources are serially reused; each process holds on to either the scanner or printer while waiting to get the second resource it requires; these resources are not preempted; and the wait-for cycle is apparent from the following deadlock discovered by <em>LTSA:</em></p>
+
+				<pre>
+Trace to DEADLOCK:
+	p.printer.get
+	q.scanner.get
+				</pre>
+
+				<div class="pagebreak pageNumber">110</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure6-2.png">
+					<figcaption><strong>Figure 6.2</strong> Printer-scanner system.</figcaption>
+				</figure>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure6-3.png">
+					<figcaption><strong>Figure 6.3</strong> <em>LTS</em> for process <code>P</code>.</figcaption>
+				</figure>
+
+				<p>This is the situation in which the process <code>P</code> has the printer and is waiting for the scanner and the process <code>Q</code> has the scanner and is waiting for the printer. The deadlock is easily fixed in the example by ensuring that both processes ask for the printer and the scanner in the same order. (The reader should verify, using <em>LTSA</em>, that if the model of Figure 6.2 is modified in this way, deadlock no longer occurs.) In fact, where processes share different classes of resources, such as printers and scanners, a general-purpose strategy for avoiding deadlock is to <em>order</em> the resource</p>
+
+				<div class="pagebreak pageNumber">111</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure6-4.png">
+					<figcaption><strong>Figure 6.4</strong> <em>LTS</em> for the shared <code>printer</code> process.</figcaption>
+				</figure>
+
+				<p>classes; i.e. if processes use resources from different classes, all processes acquire these resources in the same order. For our example, this can be achieved by, for example, always requesting printers before scanners.</p>
+
+				<p class="i">Another solution to avoiding deadlock, in this example, is to set a timeout on waiting for the second resource. If the resource has not been acquired within the timeout period then the first resource is released and the process starts afresh as shown below:</p>
+
+				<pre>
+P          = (printer.get-> GETSCANNER),
+GETSCANNER = (scanner.get->COPY->printer.put
+                         ->scanner.put->P
+             |timeout -> printer.put->P
+             ).
+Q          = (scanner.get-> GETPRINTER),
+GETPRINTER = (printer.get->copy->printer.put
+                         ->scanner.put->Q
+             |timeout -> scanner.put->Q
+             ).
+				</pre>
+
+				<p>This denies the second deadlock condition of incremental acquisition. The solution can be implemented in Java using a timed wait. However, it is not a good solution as both processes can continually acquire the first resource, time out and then repeat this cycle without making any progress towards accomplishing the copy action. <em>LTSA</em> detects this progress problem, returning the following:</p>
+
+				<pre>
+Progress violation for actions:
+{p.scanner.get, p.copy, p.scanner.put,
+q.printer.get, q.copy, q.printer.put}
+				</pre>
+
+				<p>We deal with this class of problems in the next chapter.</p>
+
+				<div class="pagebreak pageNumber">112</div>
+
+			</section>
+
+			<section class="section" data-number="2" data-name="Dining Philosophers Problem">
+
+				<h3>6.2 Dining Philosophers Problem</h3>
+
+				<p><span class="first-sentence">The Dining Philosophers problem (Dijkstra, 1968a) is a classic concurrent-programming problem in which the deadlock is not quite so apparent as in the previous examples.</span> We develop both the model and Java implementation. The problem is stated as follows: five philosophers share a circular table (as depicted in Figure 6.5) at which they have allotted seats. Each philosopher spends his life alternately thinking and eating. In the center of the table is a large plate of tangled spaghetti. A philosopher needs two forks to eat a helping of spaghetti. Unfortunately, as philosophy is not as well paid as computing, the philosophers can only afford five forks. One fork is placed between each pair of philosophers and they agree that each will only use the forks to his immediate right and left.</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure6-5.png">
+					<figcaption><strong>Figure 6.5</strong> The Dining Philosophers table.</figcaption>
+				</figure>
+
+				<p>The resources in this system are the forks shared between the philosophers. We model a fork in the same way that we modeled the scanner and printer resources in the previous section:</p>
+
+				<pre>
+FORK = (get -> put -> FORK).
+				</pre>
+
+				To use a fork, a philosopher must first pick up <code>(get)</code> that fork and when finished with the fork, the philosopher puts it down <code>(put)</code>. Each philosopher is modeled by the process:
+
+				<pre>
+PHIL = (sitdown->right.get->left.get
+           ->eat->left.put->right.put
+           ->arise->PHIL).
+				</pre>
+
+				<div class="pagebreak pageNumber">113</div>
+
+				<p>In other words, when a philosopher becomes hungry, he (or she) sits down at the table, picks up the fork to his right, if it is free, and then picks up the fork to his left, if it is free. The philosopher can then eat. When finished eating, the philosopher releases the forks and leaves the table. The Dining Philosophers system can now be described by the composition of five fork processes and five philosopher processes as depicted in Figure 6.6.</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure6-6.png">
+					<figcaption><strong>Figure 6.6</strong> Dining Philosophers composite model.</figcaption>
+				</figure>
+
+				<p>The diagram of Figure 6.6 can be expressed concisely as the composite process:</p>
+
+				<pre>
+|| DINERS(N=5)=
+    forall [i:O .. N-1]
+    (phil[i]:PHIL
+    || {phil[i].left,phil[((i-1 )+N)%N].right}::FORK).
+				</pre>
+
+				<p>The expression <code>((i-1)+N)%N</code> is subtraction modulo N so that, for example, a fork is shared between <code>phil[0]</code> and <code>phil[4]</code>. Analysis of this system reveals the following deadlock:</p>
+
+				<pre>
+Trace to DEADLOCK:
+	phil.O.sitdown
+	phil.O.right. get
+	phil.1.sitdown
+				</pre>
+
+				<div class="pagebreak pageNumber">114</div>
+
+				<pre>
+	phil.1.right.get
+	phil.2.sitdown
+	phil.2.right.get
+	phil.3.sitdown
+	phil.3.right.get
+	phil.4.sitdown
+	phil.4.right.get
+				</pre>
+
+				<p>This is the situation where all the philosophers become hungry at the same time, sit down at the table and then each philosopher picks up the fork to his (or her) right. The system can make no further progress since each philosopher is waiting for a fork held by his neighbor. In other words, a wait-for cycle exists, as described in the introduction.</p>
+
+				<section class="subsection" data-number="3" data-name="Dining Philosophers Implementation">
+
+					<h4>6.2.1 Dining Philosophers Implementation</h4>
+
+					<p><span class="first-sentence">It is generally not a good idea to implement an erroneous model.</span> However, in this section, our objective is to show that, while deadlock can be detected easily in a model, it is not so apparent in the running program which corresponds to that model. In translating the Dining Philosophers model into an implementation, we must consider which processes in the model will be represented by passive objects (monitors) and which by active objects (threads), as outlined in the previous chapter. The decision is reasonably obvious; forks are the passive entities and philosophers are the active entities in this system.</p>
+
+					<p class="i">The relationships between the various classes involved in the Dining Philosophers program is shown in the class diagram of Figure 6.7.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure6-7.png">
+						<figcaption><strong>Figure 6.7</strong> Dining Philosophers class diagram.</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">115</div>
+
+					<pre class="program">
+<strong>class</strong> PhilCanvas <strong>extends</strong> Canvas {
+
+  <em>// set state of philosopher <strong>id</strong> to display state <strong>s</strong>,</em>
+  <em>// method blocks calling thread if display is frozen</em>
+  <strong>synchronized</strong> void setPhil(int id, int s):
+      <strong>throws</strong> java.lang.InterruptedException{}
+
+  <em>// "freeze" display</em>
+  <strong>synchronized</strong> void freeze() {}
+
+  <em>// "un-freeze" display</em>
+  <strong>synchronized</strong> void thaw() {}
+
+  <em>// set state of fork <strong>id</strong> to <strong>taken</strong></em>
+  <strong>synchronized</strong> void setFork(int id, boolean taken){}
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 6.1</strong> Outline of <code>PhilCanvas</code> class.</p>
+
+					<p>The display is implemented by the <code>PhilCanvas</code> class. The interface offered by this class is given in Program 6.1.</p>
+
+					<p class="i">The Java implementation of the <code>Fork</code> monitor is listed in Program 6.2. The boolean variable, <code>taken</code>, encodes the state of the fork. When the fork is on the table, <code>taken</code> is false. When the fork has been picked up by a philosopher, <code>taken</code> is true.</p>
+
+					<pre class="program">
+<strong>class</strong> Fork {
+  <strong>private</strong> boolean taken=false;
+  <strong>private</strong> PhilCanvas display;
+  <strong>private</strong> int identity;
+
+  Fork(PhilCanvas disp, int id)
+    { display = disp; identity = id;}
+
+  <strong>synchronized</strong> void put() {
+    taken=false;
+    display.setFork(identity, taken);
+    notify()
+  }
+					</pre>
+
+					<p class="program-caption"><strong>Program 6.2</strong> <code>Fork</code> monitor.</p>
+
+					<div class="pagebreak pageNumber">116</div>
+
+					<pre class="program">
+  <strong>synchronized</strong> void get()
+      <strong>throws</strong> java.lang.InterruptedException {
+    <strong>while</strong> (taken) wait();
+    taken=true;
+    display.setFork(identity, taken);
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 6.2</strong> <em>(Continued.)</em></p>
+
+					<p>The code for the <code>Philosopher</code> thread is listed in Program 6.3. It follows directly from the model. The detail of the philosopher sitting down and leaving the table has been omitted; philosophers think while sitting at the table.</p>
+
+					<p class="i">The time that a philosopher spends thinking and eating is controlled by the slider in the applet display (Figure 6.8).
+					</p>
+
+					<pre class="program">
+<strong>class</strong> Philosopher <strong>extends</strong> Thread {
+  <strong>private</strong> int identity;
+  <strong>private</strong> PhilCanvas view;
+  <strong>private</strong> Diners controller;
+  <strong>private</strong> Fork left;
+  <strong>private</strong> Fork right;
+
+  Philosopher(Diners ctr, int id, Fork l, Fork r){
+    controller = ctr; view = ctr.display;
+    identity = id; left = l; right = r;
+  }
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      <strong>while</strong> (true) {
+        <em>// thinking</em>
+        view.setPhil(identity, view.THINKING);
+        sleep(controller.sleepTime());
+        <em>// hungry</em>
+        view.setPhil(identity, view.HUNGRY);
+        right.get();
+        <em>// gotright fork</em>
+        view.setPhil(identity, view.GOTRIGHT);
+        sleep(500);
+        left.get();
+					</pre>
+
+					<p class="program-caption"><strong>Program 6.3</strong> <code>Philosopher</code> thread class.</p>
+
+					<div class="pagebreak pageNumber">117</div>
+
+					<pre class="program">
+        <em>// eating</em>
+        view.setPhil(identity, view.EATING);
+        sleep(controller.eatTime());
+        right.put();
+        left.put();
+      }
+    } <strong>catch</strong> (java.lang.InterruptedException e) {}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 6.3</strong> <em>(Continued).</em></p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure6-8.png">
+						<figcaption><strong>Figure 6.8</strong> Dining Philosophers applet - executing.</figcaption>
+					</figure>
+
+					<p>The code to create the <code>Philosopher</code> threads and <code>Fork</code> monitors is:</p>
+
+					<pre>
+<strong>for</strong> (int i =0; i&lt;N; ++i)
+  fork[i] = <strong>new</strong> Fork(display,i); 
+<strong>for</strong> (int i =0; i&lt;N; ++i){ 
+  phil[i] = 
+    <strong>new</strong> Philosopher(<strong>this</strong>,i,fork[(i-1+N)%N],fork[i]); 
+  phil[i].start(); 
+}
+					</pre>
+
+					<div class="pagebreak pageNumber">118</div>
+
+					<p>Figure 6.8 depicts the Dining Philosophers applet running. The applet may run for a long time before deadlock occurs. To ensure deadlock occurs eventually, the slider control may be moved to the left. This reduces the time philosophers spend thinking and eating and this "speedup" increases the probability of deadlock occurring. Figure 6.9 depicts the applet when deadlock occurs. It is clear that each philosopher is holding on to the fork on his right.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure6-9.png">
+						<figcaption><strong>Figure 6.9</strong> Dining Philosophers applet - deadlocked.</figcaption>
+					</figure>
+
+				</section>
+
+				<section class="subsection" data-number="4" data-name="Deadlock-Free Philosophers">
+
+					<h4>6.2.2 Deadlock-Free Philosophers</h4>
+
+					<p><span class="first-sentence">There are many different solutions to the Dining Philosophers problem.</span> Some of these are referenced in <em>Notes and Further Reading</em> at the end of this chapter. All of the solutions involve denying one of the four necessary and sufficient conditions for deadlock identified at the beginning of the chapter. The solution we outline here depends on ensuring that a <em>wait-for</em> cycle cannot exist. To do this, we introduce some asymmetry into the definition of a philosopher. Up to now, each philosopher has had an identical definition. We make odd-numbered philosophers get the right fork first and even-numbered philosophers get the left fork first. The revised</p>
+
+					<div class="pagebreak pageNumber">119</div>
+
+					<p>model is listed below:</p>
+
+					<pre>
+FORK = (get -> put -> FORK).
+
+PHIL(I=0) 
+    = (<strong>when</strong> (I%2==0) sitdown
+         ->left.get->right.get 
+         ->eat->left.put->right.put->arise->PHIL
+      |<strong>when</strong> (I%2==1) sitdown 
+         ->right.get->left.get 
+         ->eat->left.put->right.put->arise->PHIL
+      ).
+
+||DINERS(N=5)= 
+  forall [i:0 .. N-1] 
+  (phil[i]:PHIL(i) 
+  || {phil[i].left,phil[((i-1)+N)%N].right}::FORK).
+					</pre>
+
+					<p>This specification for the Dining Philosophers is deadlock-free since it is no longer possible for the wait-for cycle to exist, in which each philosopher holds the right fork. The reader should verify using <em>LTSA</em> that the above model is in fact deadlockfree. The same change can of course be made to the Java implementation and the result is a deadlock-free program.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="5" data-name="Summary">
+
+				<h3>Summary</h3>
+
+				<p><span class="first-sentence">In this chapter, we have seen that deadlock is a system state in which all of the processes in a system are blocked and the system can consequently make no further progress.</span> Deadlock is modeled by a state with no outgoing transitions. Deadlock analysis of a model involves performing an exhaustive search of the labeled transition system for such states. If none are found, the model is shown to be deadlock-free.</p>
+
+				<p class="i">We identified four necessary and sufficient conditions for deadlock. Strategies for dealing with deadlock involve ensuring that at least one of these conditions does not hold. The conditions are:</p>
+
+				<ul>
+
+					<li><em>Serially reusable resources: the processes involved share resources which they use under mutual exclusion.</em></li>
+
+					<li><em>Incremental acquisition: processes hold on to resources already allocated to them while waiting to acquire additional resources.</em></li>
+
+				</ul>
+
+				<div class="pagebreak pageNumber">120</div>
+
+				<ul>
+
+					<li><em>No preemption: once acquired by a process, resources cannot be preempted (forcibly withdrawn) but are only released voluntarily.</em></li>
+
+					<li><em>Wait-for cycle: a circular chain (or cycle) of processes exists such that each process holds a resource which its successor in the cycle is waiting to acquire.</em></li>
+				</ul>
+
+				<p>The Dining Philosophers problem was used to illustrate the point that while deadlocks are easily found in models, they are not so readily apparent in programs. Indeed, the reason for modeling is to remove problems such as deadlock during design.</p>
+
+			</section>
+
+			<section class="section" data-number="6" data-name="Notes and Further Reading">
+
+				<h3>Notes and Further Reading</h3>
+
+				<p><span class="first-sentence">The Dining Philosophers problem has been widely used to compare both process synchronization primitives and strategies for dealing with deadlock.</span> The problem was introduced by Dijkstra (1968a) in a paper which shows how to use semaphores to solve a variety of synchronization problems. We have used asymmetry to avoid deadlock. A second way to avoid deadlock is to allow at most four philosophers to sit down together at the table. Another approach is to ensure that the act of picking up both forks is atomic. Chandy and Misra (1984) proposed a fully distributed solution which passes tokens between philosophers. All of these approaches to the Dining Philosophers problem are deterministic: each process takes a predetermined set of actions. Lehman and Rabin (1981) showed that any deterministic solution has to be asymmetric or use an outside agent (such as the butler in exercise 6.2). They also presented a probabilistic solution to the problem which is perfectly symmetric. Philosophers toss a coin to determine the order of picking up forks and defer to a neighbor if it has used the fork less recently.</p>
+
+			</section>
+
+			<section class="section" data-number="7" data-name="Exercises">
+
+				<h3>Exercises</h3>
+
+				<ol id="six">
+
+					<li>
+						<span class="first-sentence">The figure below depicts a maze. Write a description of the maze in <em>FSP</em> which, using deadlock analysis, finds the shortest path out of the maze starting at any square.</span>
+						<figure>
+							<img src="/contents/concurrency/images/exercise6-1.png">
+						</figure>
+						(<em>Hint</em>: At each numbered square in the maze, a directional action can be used to indicate an allowed path to another square.)
+					</li> 
+
+					<div class="pagebreak pageNumber">121</div>
+
+					<li>
+						One solution to the Dining Philosophers problem permits only four philosophers to sit down at the table at the same time. Specify a <code>BUTLER</code> process which, when composed with the model of section 6.2, permits a maximum of four philosophers to engage in the <code>sitdown</code> action before an <code>arise</code> action occurs. Show that this system is deadlock-free.
+					</li>
+
+					<li>
+						Using the Java timed wait primitive:
+
+						<pre>
+<strong>public final</strong> void wait(long timeout)
+		<strong>throws</strong> InterruptedException
+						</pre>
+
+						modify the <code>Fork</code> monitor such that after a wait of 1 second, the call to <code>get</code> times
+						out and returns the result false. The <code>Philosopher</code> should release the other fork, if it
+						holds it, and try again. Observe the behavior of the resulting system.
+					</li>
+
+					<li>
+						It is possible for the following system to deadlock. Explain how this deadlock occurs and relate it to one of the four necessary and sufficient conditions for deadlock to occur.
+
+						<pre>
+Alice = (call.bob -> wait.chris -> Alice).
+Bob   = (call.chris -> wait.alice -> Bob).
+Chris = (call.alice -> wait.bob -> Chris).
+
+||S = (Alice || Bob || Chris) / {call/wait}.
+						</pre>
+
+						The following model attempts to fix the problem by allowing Alice, Bob and Chris to time out from a call attempt. Is a deadlock still possible? If so, describe how the deadlock can occur and give an execution trace leading to the deadlock.
+
+						<pre>
+Alice = (call.bob -> wait.chris -> Alice
+       | timeout.alice -> wait.chris ->Alice).
+Bob   = (call.chris -> wait.alice -> Bob
+       | timeout.bob -> wait.alice ->Bob).
+Chris = (call.alice -> wait.bob -> Chris
+       | timeout.chris -> wait.bob ->Chris).
+
+||S = (Alice || Bob || Chris) / {call/wait}.
+						</pre>
+
+					</li>
+
+				</ul>
+
+			</section>
+
+		</div> <!--container-->
+
+	</div> <!--concurrency-->
+
+</body>
+</html>

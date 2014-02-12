@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h1>2</h1>
+				<h2>Processes and Threads</h2>
+				<div class="border"></div>
+
+				<p><span class="first-sentence">In Chapter 1, we noted that in concurrent programs, computational activities are permitted to overlap in time and that the subprogram executions describing these activities proceed concurrently.</span> The execution of a program (or subprogram) is termed a <em>process</em> and the execution of a concurrent program thus consists of multiple processes. In this chapter, we define how processes can be modeled as finite state machines. We then describe how processes can be programmed as <em>threads</em>, the form of process supported by Java.</p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Modeling Processes">
+
+				<h3>2.1 Modeling Processes</h3>
+
+				<p><span class="first-sentence">A process is the execution of a sequential program.</span> The state of a process at any point in time consists of the values of explicit variables, declared by the programmer, and implicit variables such as the program counter and contents of datal address registers. As a process executes, it transforms its state by executing statements. Each statement consists of a sequence of one or more <em>atomic actions</em> that make indivisible state changes. Examples of atomic actions are uninterruptible machine instructions that load and store registers. A more abstract model of a process, which ignores the details of state representation and machine instructions, is simply to consider a process as having a state modified by indivisible or atomic actions. Each action causes a transition from the current state to the next state. The order in which actions are allowed to occur is determined by a transition graph that is an abstract representation of the program. In other words, we can model processes as finite state machines.</p>
+
+				<p class="i">Figure 2.1 depicts the state machine for a light switch that has the actions <code>on</code> and <code>off</code>. We use the following diagrammatic conventions. The initial state is always numbered <em>0</em> and transitions are always drawn in a clockwise direction. Thus in Figure 2.1, <code>on</code> causes a transition from <em>state</em>(0) to <em>state</em>(l) and <code>off</code> causes a transition from <em>state</em>(l) to <em>state</em>(0). This form of state machine description is known</p>
+
+				<div class="pagebreak pageNumber">12</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure2-1.png">
+					<figcaption><strong>Figure 2.1</strong> Light switch state machine.</figcaption>
+				</figure>
+
+				<p>as a Labeled Transition System (<em>LTS</em>), since transitions are labeled with action names. Diagrams of this form can be displayed in the <em>LTS</em> analysis tool, <em>LTSA</em>. Although this representation of a process is finite, the behavior described need not be finite. For example, the state machine of Figure 2.1 allows the following sequence of actions:</p>
+
+				<pre>
+on &rarr; off &rarr; on &rarr; off &rarr; on &rarr; off &rarr; &hellip;
+				</pre>
+
+				<p>The graphical form of state machine description is excellent for simple processes; however, it becomes unmanageable (and unreadable) for large numbers of states and transitions. Consequently, we introduce a simple algebraic notation called <em>FSP</em> (Finite State Processes) to describe process models. Every <em>FSP</em> description has a corresponding state machine (<em>LTS</em>) description. In this chapter, we will introduce the action prefix and choice operators provided by <em>FSP</em>. The full language definition of <em>FSP</em> may be found in Appendix B.</p>
+
+				<section class="subsection" data-number="2" data-name="Action Prefix">
+
+					<h4>2.1.1 Action Prefix</h4>
+
+					<div class="definition"><span class="first-sentence">If <code>x</code> is an action and <code>P</code> a process then the action prefix (<code>x -> P</code>) describes a process that initially engages in the action <code>x</code> and then behaves exactly as described by <code>P</code>.</span></div>
+
+					<p>The action prefix operator "<code>-></code>" always has an action on its left and a process on its right. In <em>FSP</em>, identifiers beginning with a lowercase letter denote actions and identifiers beginning with an uppercase letter denote processes. The following example illustrates a process that engages in the action <code>once</code> and then stops:</p>
+
+					<pre>
+ONESHOT = (once -> STOP).
+					</pre>
+
+					<div class="pagebreak pageNumber">13</div>
+
+					<p>Figure 2.2 illustrates the equivalent <em>LTS</em> state machine description for <code>ONESHOT</code>. It shows that the action prefix in <em>FSP</em> describes a transition in the corresponding state machine description. <code>STOP</code> is a special predefined process that engages in no further actions, as is clear in Figure 2.2. Process definitions are terminated by ".".</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-2.png">
+						<figcaption><strong>Figure 2.2</strong> <code>ONESHOT</code> state machine.</figcaption>
+					</figure>
+
+					<p>Repetitive behavior is described in <em>FSP</em> using recursion. The following <em>FSP</em> process describes the light switch of Figure 2.1:</p>
+
+					<pre>
+SWITCH = OFF,
+OFF    = (on -> ON),
+ON     = (off -> OFF).
+					</pre>
+
+					<p>As indicated by the "," separators, the process definitions for <code>ON</code> and <code>OFF</code> are part of and local to the definition for <code>SWITCH</code>. It should be noted that these local process definitions correspond to states in Figure 2.1. <code>OFF</code> defines <em>state</em>(0) and ON defines <em>state</em>(l). A more succinct definition of <code>SWITCH</code> can be achieved by substituting the definition of <code>ON</code> in the definition of <code>OFF</code>:</p>
+
+					<pre>
+SWITCH = OFF,
+OFF    = (on -> (off -> OFF)).
+					</pre>
+
+					<p>Finally, by substituting <code>SWITCH</code> for <code>OFF</code>, since they are defined to be equivalent, and dropping the internal parentheses we get:</p>
+
+					<pre>
+SWITCH = (on -> off -> SWITCH).
+					</pre>
+
+					<p>These three definitions for <code>SWITCH</code> generate identical state machines (Figure 2.1). The reader can verify this using the <em>LTS</em> analysis tool, <em>LTSA</em>, to draw the state machine that corresponds to each <em>FSP</em> definition. The definitions may also be animated using the LTSA Animator to produce a sequence of actions. Figure 2.3 shows a screen shot of the LTSA Animator window. The animator lets the user control the actions offered by a model to its environment. Those actions that can be chosen for execution are ticked. In Figure 2.3, the previous sequence of actions, shown on the left, has put the <code>SWITCH</code> in a state where only the on action can occur next. We refer to the sequence of actions produced by the execution of a process (or set of processes) as a <em>trace</em>.</p>
+
+					<div class="pagebreak pageNumber">14</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-3.png">
+						<figcaption><strong>Figure 2.3</strong> LTSA Animator window for SWITCH.</figcaption>
+					</figure>
+
+					<p>The process <code>TRAFFICLIGHT</code> is defined below with its equivalent state machine representation depicted in Figure 2.4.</p>
+
+					<pre>
+TRAFFICLIGHT = (red -> orange -> green -> orange -> TRAFFICLIGHT).
+					</pre>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-4.png">
+						<figcaption><strong>Figure 2.4</strong> TRAFFICLIGHT.</figcaption>
+					</figure>
+
+					<p>In general, processes have many possible execution traces. However, the only possible trace of the execution of <code>TRAFFICLIGHT</code> is:</p>
+
+					<pre>
+red &rarr; orange &rarr; green &rarr; orange &rarr; red &rarr; orange &rarr; green &hellip;
+					</pre>
+
+					<p>To allow a process to describe more than a single execution trace, we introduce the choice operator.</p>
+
+					<div class="pagebreak pageNumber">15</div>
+
+				</section>
+
+				<section class="subsection" data-number="3" data-name="Choice">
+
+					<h4>2.1.2 Choice</h4>
+
+					<div class="definition"><span class="first-sentence">If <code>x</code> and <code>y</code> are actions then (<code>x->P|y->Q</code>)
+					initially engages in either of the actions <code>x</code> or <code>y</code>.</span> After the first action has
+					occurred, the subsequent behavior is described by <code>P</code> if the first action was
+					<code>x</code> and <code>Q</code> if the first action was <code>y</code>.</div>
+
+					<p>The following example describes a drinks dispensing machine which dispenses hot coffee if the red button is pressed and iced tea if the blue button is pressed.</p>
+
+					<pre>
+DRINKS = (red -> coffee -> DRINKS 
+         |blue -> tea -> DRINKS
+         ).
+					</pre>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-5.png">
+						<figcaption><strong>Figure 2.5</strong> <code>DRINKS</code> state machine.</figcaption>
+					</figure>
+
+					<p>Figure 2.5 depicts the graphical state machine description of the drinks dispenser. Choice is represented as a state with more than one outgoing transition. The initial state has two possible outgoing transitions labeled <code>red</code> and <code>blue</code>. Who or what makes the choice as to which action is executed? In this example, the environment makes the choice - someone presses a button. We will see later that a choice may also be made internally within a process. The reader may also question at this point if there is a distinction between input and output actions. In fact, there is no semantic difference between an input action and an output action in the models</p>
+
+					<div class="pagebreak pageNumber">16</div>
+
+					<p>we use. However, input actions are usually distinguished by forming part of a choice offered to the environment while outputs offer no choice. In the example, <code>red</code> and <code>blue</code> model input actions and <code>coffee</code> and <code>tea</code> model output actions. Possible traces of <code>DRINKS</code> include:</p>
+
+					<pre>
+red &rarr; coffee &rarr; red &rarr; coffee &rarr; red &rarr; coffee &hellip;
+blue &rarr; tea &rarr; blue &rarr; tea &rarr; blue &rarr; tea &hellip;
+blue &rarr; tea &rarr; red &rarr; coffee &rarr; blue &rarr; tea &rarr; blue &rarr; tea &hellip;
+					</pre>
+
+					<p>As before, the LTSA Animator can be used to animate the model and produce a trace, as indicated in Figure 2.6. In this case, both <code>red</code> and <code>blue</code> actions are ticked as both are offered for selection.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-6.png">
+						<figcaption><strong>Figure 2.6</strong> LTSA Animator window for DRINKS.</figcaption>
+					</figure>
+
+					<p>A state may have more than two outgoing transitions; hence the choice operator "|" can express a choice of more than two actions. For example, the following process describes a machine that has four colored buttons only one of which produces an output.</p>
+
+					<pre>
+FAULTY = (red -> FAULTY 
+         |blue -> FAULTY 
+         |green -> FAULTY 
+         |yellow -> candy -> FAULTY
+         ).
+					</pre>
+
+					<p>The order of elements in the choice has no significance. The <code>FAULTY</code> process may be expressed more succinctly using a <em>set</em> of action labels. The set is interpreted as</p>
+
+					<div class="pagebreak pageNumber">17</div>
+
+					<p>being a choice of one of its members. Both definitions of <code>FAULTY</code> generate exactly the same state machine graph as depicted in Figure 2.7. Note that <code>red</code>, <code>blue</code> and <code>green</code> label the same transition back to <em>state</em>(0).</p>
+
+					<pre>
+FAULTY = ({red, blue, green} -> FAULTY 
+         |yellow -> candy -> FAULTY
+         ).
+					</pre>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-7.png">
+						<figcaption><strong>Figure 2.7</strong> <code>FAULTY</code>.</figcaption>
+					</figure>
+
+					<h5>Non-Deterministic Choice</h5>
+
+					<p>The process (<code>x->P | x->Q</code>) is said to be <em>non-deterministic</em> since after the action <code>x</code>, it may behave as either <code>P</code> or <code>Q</code>. The <code>COIN</code> process defined below and drawn as a state machine in Figure 2.8 is an example of a non-deterministic process.</p>
+
+					<pre>
+COIN = (toss -> heads -> COIN 
+       |toss -> tails -> COIN
+       ).
+					</pre>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-8.png">
+						<figcaption><strong>Figure 2.8</strong> <code>COIN</code>.</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">18</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-9.png">
+						<figcaption><strong>Figure 2.9</strong> LTSA Animator window for <code>COIN</code>.</figcaption>
+					</figure>
+
+					<p>After a toss action, the next action may be either heads or tails. Figure 2.9 gives a sample trace for the <code>COIN</code> process.</p>
+
+				</section>
+
+				<section class="subsection" data-number="4" data-name="Indexed Processes and Actions">
+
+					<h4>2.1.3 Indexed Processes and Actions</h4>
+
+					<p><span class="first-sentence">In order to model processes and actions that can take multiple values, both local processes and action labels may be indexed in <em>FSP</em>.</span> This greatly increases the expressive power of the notation. Indices always have a finite range of values that they can take. This ensures that the models we describe in <em>FSP</em> are finite and thus potentially mechanically analyzable. The process below is a buffer that can contain a single value - a single-slot buffer. It inputs a value in the range 0 to 3 and then outputs that value.</p>
+
+					<pre>
+BUFF = (in[i:0 .. 3] -> out[i] -> BUFF).
+					</pre>
+
+					<p>The above process has an exactly equivalent definition in which the choice between input values is stated explicitly. The state machine for both of these definitions is depicted in Figure 2.10. Note that each index is translated into a dot notation" ." for the transition label, so that <code>in[0]</code> becomes <code>in.0</code>, and so on.</p>
+
+					<pre>
+BUFF = (in[0] -> out[0] -> BUFF 
+       |in[1] -> out[1] -> BUFF 
+       |in[2] -> out[2] -> BUFF 
+       |in[3] -> out[3] -> BUFF
+       ).
+					</pre>
+
+					<div class="pagebreak pageNumber">19</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-10.png">
+						<figcaption><strong>Figure 2.10</strong> <code>BUFF</code>.</figcaption>
+					</figure>
+
+					<p>Another equivalent definition, which uses an indexed local process, is shown below. Since this uses two index variables with the same range, we declare a <code>range</code> type.</p>
+
+					<pre>
+<strong>range</strong> T = 0..3
+
+BUFF        = (in[i:T] -> STORE[i]),
+STORE[i:T]  = (out[i] -> BUFF).
+					</pre>
+
+					<p>The scope of a process index variable is the process definition. The scope of an action label index is the choice element in which it occurs. Consequently, the two definitions of the index variable <code>i</code> in <code>BUFF</code> above do not conflict. Both processes and action labels may have more than one index. The next example illustrates this for a process which inputs two values, <code>a</code> and <code>b</code>, and outputs their sum. Note that the usual arithmetic operations are supported on index variables.</p>
+
+					<pre>
+<strong>const</strong> N = 1
+<strong>range</strong> T = 0..N
+<strong>range</strong> R = 0..2*N
+
+SUM        = (in[a:T][b:T] -> TOTAL[a+b]),
+TOTAL[s:R] = (out[s] -> SUM).
+					</pre>
+
+					<div class="pagebreak pageNumber">20</div>
+
+					<p>We have chosen a small value for the constant <code>N</code> in the definition of <code>SUM</code> to ensure that the graphic representation of Figure 2.11 remains readable. The reader should generate the <code>SUM</code> state machine for larger values of <code>N</code> to see the limitation of graphic representation.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-11.png">
+						<figcaption><strong>Figure 2.11</strong> SUM.</figcaption>
+					</figure>
+
+				</section>
+
+				<section class="subsection" data-number="5" data-name="Process Parameters">
+
+					<h4>2.1.4 Process Parameters</h4>
+
+					<p><span class="first-sentence">Processes may be parameterized so that they may be described in a general form and modeled for a particular parameter value.</span> For instance, the single-slot buffer described in section 2.1.3 and illustrated in Figure 2.10 can be described as a parameterized process for values in the range 0 to <code>N</code> as follows:</p>
+
+					<pre>
+BUFF(N=3) = (in[i:0..N] -> out[i] -> BUFF).
+					</pre>
+
+					<p>Parameters must be given a default value and must start with an uppercase letter. The scope of the parameter is the process definition. Alternatively, <code>N</code> may be given a fixed, constant value. This may be more appropriate if <code>N</code> is to be used in more than one process description.</p>
+
+					<pre>
+<strong>const</strong> N = 3
+BUFF = (in[i:0..N] -> out[i] -> BUFF).
+					</pre>
+
+					<div class="pagebreak pageNumber">21</div>
+
+				</section>
+
+				<section class="subsection" data-number="6" data-name="Guarded Actions">
+
+					<h4>2.1.5 Guarded Actions</h4>
+
+					<p><span class="first-sentence">It is often useful to define particular actions as conditional, depending on the current state of the machine.</span> We use Boolean guards to indicate that a particular action can only be selected if its guard is satisfied.</p>
+
+					<div class="definition">The choice (<code><strong>when</strong> B x->P|y->Q</code>) means that when the guard <code>B</code> is true then the actions <code>x</code> and <code>y</code> are both eligible to be chosen, otherwise if <code>B</code> is false then the action <code>x</code> cannot be chosen.</div>
+
+					<p>The example below (with its state machine depicted in Figure 2.12) is a process that encapsulates a count variable. The count can be increased by <code>inc</code> operations and decreased by <code>dec</code> operations. The count is not allowed to exceed <code>N</code> or be less than zero.</p>
+
+					<pre>
+COUNT (N=3)   = COUNT[0],
+COUNT[i:0..N] = (<strong>when</strong>(i&lt;N) inc -> COUNT[i+1] 
+                |<strong>when</strong>(i&gt;0) dec -> COUNT[i-1]
+                ).
+					</pre>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-12.png">
+						<figcaption><strong>Figure 2.12</strong> <code>COUNT</code>.</figcaption>
+					</figure>
+
+					<p><em>FSP</em> supports only integer expressions; consequently, the value zero is used to represent false and any non-zero value represents true. Expression syntax is the same as C, C++ and Java.</p>
+
+					<p class="i">In section 2.2, which describes how processes can be implemented in Java, we outline the implementation of a countdown timer. The timer, once started, outputs a tick sound each time it decrements the count and a beep when it reaches zero. At any point, the countdown may be aborted by a <code>stop</code> action. The model for the countdown timer is depicted below; the state machine is in Figure 2.13.</p>
+
+					<pre>
+COUNTDOWN (N=3)   = (start -> COUNTDOWN[N]),
+COUNTDOWN[i:0..N] = (<strong>when</strong>(i&gt;0) tick -> COUNTDOWN[i-1] 
+                    |<strong>when</strong>(i==0) beep -> STOP 
+                    stop -> STOP
+                    ).
+					</pre>
+
+					<div class="pagebreak pageNumber">22</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-13.png">
+						<figcaption><strong>Figure 2.13</strong> <code>COUNTDOWN</code>.</figcaption>
+					</figure>
+
+					<p>The set of possible traces of <code>COUNTDOWN</code> are as given below.</p>
+
+					<pre>
+start &rarr; stop
+start &rarr; tick &rarr; stop
+start &rarr; tick &rarr; tick &rarr; stop
+start &rarr; tick &rarr; tick &rarr; tick &rarr; stop
+start &rarr; tick &rarr; tick &rarr; tick &rarr; beep
+					</pre>
+
+					<p>(Note that the LTSA Animator reports the <code>STOP</code> state as <code>DEADLOCK</code>. Deadlock is a more general situation where a system of processes can engage in no further actions. It is discussed later, in Chapter 6.)</p>
+
+				</section>
+
+				<section class="subsection" data-number="7" data-name="2.1.6 Process Alphabets">
+
+					<h4>2.1.6 Process Alphabets</h4>
+
+					<div class="definition">The alphabet of a process is the set of actions in which it can engage.</div>
+
+					<p><span class="first-sentence">For example, the alphabet of the <code>COUNTDOWN</code> process of the previous section is <code>{start, stop, tick, beep}</code>.</span> A process may only engage in the actions in its alphabet; however, it may have actions in its alphabet in which it never engages. For example, a process that writes to a store location may potentially write any 32-bit value to that location; however, it will usually write a more restricted set of values. In <em>FSP</em>, the alphabet of a process is determined implicitly by the set of actions referenced in its definition. We will see later in the book that it is important to be precise about the alphabet of a process.</p>
+
+					<p class="i">How do we deal with the situation described above in which the set of actions in the alphabet is larger than the set of actions referenced in its definition? The answer is to use the alphabet extension construct provided by <em>FSP</em>. The process <code>WRITER</code> defined below uses the actions <code>write[1]</code> and <code>write[3]</code> in its definition</p>
+
+					<div class="pagebreak pageNumber">23</div>
+
+					<p>but defines an alphabet extension "+{...}" of the actions <code>write[0..3]</code>. The alphabet of a process is the union of its implicit alphabet and any extension specified. Consequently, the alphabet of <code>WRITER</code> is <code>write[0..3]</code>.</p>
+
+					<pre>
+WRITER = (write[1] -> write[3] -> WRITER) + {write[0..3]}.
+					</pre>
+
+					<p>It should be noted that where a process is defined using one or more local process definitions, the alphabet of each local process is exactly the same as that of the enclosing process. The alphabet of the enclosing process is simply the union of the set of actions referenced in all local definitions together with any explicitly specified alphabet extension.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="8" data-name="Implementing Processes">
+
+				<h3>2.2 Implementing Processes</h3>
+
+				<p><span class="first-sentence">At the beginning of this chapter, we introduced a process as being the execution of a program or subprogram.</span> In the previous section, we described how a process could be modeled as a finite state machine. In this section, we will see how processes are represented in computing systems. In particular, we describe how processes are programmed in Java.</p>
+
+				<section class="subsection" data-number="9" data-name="Operating System Processes">
+
+					<h4>2.2.1 Operating System Processes</h4>
+
+					<p><span class="first-sentence">The term process, meaning the execution of a program, originates in the literature on the design of operating systems.</span> A process in an operating system is a unit of resource allocation both for CPU time and for memory. A process is represented by its code, data and the state of the machine registers. The data of the process is divided into global variables and local variables organized as a stack. Generally, each process in an operating system has its own address space and some special action must be taken to allow different processes to access shared data. The execution of an application program in an operating system like Unix involves the following activities: allocating memory (global data and stack) for the process, loading some or all of its code into memory and running the code by loading the address of the initial instruction into the program counter register, the address of its stack into the stack pointer register and so on. The operating system maintains an internal data structure called a process descriptor which records details such as scheduling priority, allocated memory and the values of machine registers when the process is not running.</p>
+
+					<p class="i">The above description does not conflict with our previous conception of a process, it is simply more concrete. This traditional operating system process</p>
+
+					<div class="pagebreak pageNumber">24</div>
+
+					<p>has a single thread of control -it has no internal concurrency. With the advent of shared memory multiprocessors, operating system designers have catered for the requirement that a process might require internal concurrency by providing <em>lightweight processes</em> or <em>threads</em>. The name <em>thread</em> comes from the expression "thread of control". Modern operating systems like Windows NT permit an operating system process to have multiple threads of control.</p>
+
+					<p class="i">The relationship between <em>heavyweight</em> operating system (OS) processes and lightweight processes or threads is depicted in Figure 2.14. The OS process has a data segment and a code segment; however, it has multiple stacks, one for each thread. The code for a thread is included in the OS process code segment and all the threads in a process can access the data segment. The Java Virtual Machine, which of course usually executes as a process under some operating system, supports multiple threads as depicted in Figure 2.14. Each Java thread has its own local variables organized as a stack and threads can access shared variables.</p>
+
+					<p class="i">In the previous section, we modeled processes as state machines. Since threads are simply a particular implementation of the general idea of a process as an executing program, they too can be modeled as state machines. They have a state, which they transform by performing actions (executing instructions). To avoid confusion in the rest of the book, we will use the term <em>process</em> when referring to models of concurrent programs and the term <em>thread</em> when referring to implementations of processes in Java.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-14.png">
+						<figcaption><strong>Figure 2.14</strong> Operating system threads.</figcaption>
+					</figure>
+
+				</section>
+
+				<section class="subsection" data-number="10" data-name="Threads in Java">
+
+					<h4>2.2.2 Threads in Java</h4>
+
+					<p><span class="first-sentence">The operations to create and initialize threads and to subsequently control their execution are provided by the Java class <code>Thread</code> in the package <code>java.lang</code>.</span> The program code executed by a thread is provided by the method <code>run()</code> . The actual</p>
+
+					<div class="pagebreak pageNumber">25</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-15.png">
+						<figcaption><strong>Figure 2.15</strong> Implementing <code>run()</code> using inheritance.</figcaption>
+					</figure>
+
+					<p>code executed depends on the implementation provided for <code>run()</code> in a derived class, as depicted in the class diagram of Figure 2.15.</p>
+
+					<p class="i">The class diagrams we use in this book are a subset of the Unified Modeling Language, UML (Fowler and Scott, 1997; Booch, Rumbaugh and Jacobson, 1998). For those unfamiliar with this notation, a key may be found in Appendix D.</p>
+
+					<p class="i">Since Java does not permit multiple inheritance, it is sometimes more convenient to implement the <code>run()</code> method in a class not derived from <code>Thread</code> but from the interface <code>Runnable</code> as depicted in Figure 2.16.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-16.png">
+						<figcaption><strong>Figure 2.16</strong> Implementing <code>run()</code> using the <code>Runnable</code> interface.</figcaption>
+					</figure>
+
+				</section>
+
+				<section class="subsection" data-number="11" data-name="Thread Life Cycle">
+
+					<h4>2.2.3 Thread Life Cycle</h4>
+
+					<p><span class="first-sentence">A Java <code>Thread</code> object is created by a call to <code><strong>new</strong></code> in the same way that any other
+					Java object is constructed.</span> The two ways of creating a thread corresponding to
+					Figures 2.15 and 2.16 respectively are:</p>
+
+					<div class="pagebreak pageNumber">26</div>
+
+					<pre>
+Thread a = <strong>new</strong> MyThread();
+Thread b = <strong>new</strong> Thread(<strong>new</strong> MyRun());
+					</pre>
+
+					<p>The thread constructor may optionally take a string argument to name the thread. This can be useful for debugging but has no other role. The following outlines the states (in <em>italics</em>) in which a thread may exist and the operations provided by the <code>Thread</code> class to control a thread.</p>
+
+					<ul>
+
+						<li>Once <em>created</em>, <code>start()</code> causes a thread to call its <code>run()</code> method and execute it as an independent activity, concurrent with the thread which called <code>start()</code>.</li>
+
+						<li>A thread terminates when the <code>run()</code> method returns or when it is stopped by <code>stop()</code>. A <em>terminated</em> thread may not be restarted. A thread object is only garbage collected when there are no references to it and it has terminated.</li>
+
+						<li>The predicate <code>isAlive()</code> returns true if a thread has been started but has not yet terminated.</li>
+
+						<li>When started, a thread may be currently <em>running</em> on the processor, or it may be <em>runnable</em> but waiting to be scheduled. A running process may explicitly give up the processor using <code>yield()</code>.</li>
+
+						<li>A thread may be <em>non-runnable</em> as a result of being suspended using <code>suspend()</code>. It can be made <em>runnable</em> again using <code>resume()</code>.</li>
+
+						<li><code>sleep()</code> causes a thread to be suspended (made <em>non-runnable</em>) for a given time (specified in milliseconds) and then automatically resume (be made <em>runnable</em>).</li>
+
+					</ul>
+
+					<p>This is not a complete list of operations provided by the <code>Thread</code> class. For example, threads may be given a scheduling priority. We will introduce these extra operations later in the book, as they are required.</p>
+
+					<p class="i">We can use <em>FSP</em> to give a concise description of the thread life cycle as shown below. The actions shown in <em>italics</em> are not methods from class Thread. Taking them in order of appearance: <em><code>end</code></em> represents the action of the <code>run()</code> method returning or exiting, <em><code>run</code></em> represents a set of application actions from the <code>run()</code> method and <em><code>dispatch</code></em> represents an action by the Java Virtual Machine to run a thread on the processor.</p>
+
+					<pre>
+THREAD       = CREATED,
+CREATED      = (start            -> RUNNABLE 
+               |stop             -> TERMINATED),
+RUNNING      = ({suspend, sleep} -> NON_RUNNABLE 
+               |yield            -> RUNNABLE 
+               |{stop, <em>end</em>}      -> TERMINATED 
+               |<em>run</em>              -> RUNNING),
+RUNNABLE     = (suspend          -> NON_RUNNABLE
+					</pre>
+
+					<div class="pagebreak pageNumber">27</div>
+
+					<pre>
+               |<em>dispatch</em>         -> RUNNING
+               |stop             -> TERMINATED),
+NON_RUNNABLE = (resume           -> RUNNABLE
+               |stop             -> TERMINATED),
+TERMINATED   = STOP.
+					</pre>
+					
+
+					<p>The corresponding state machine is depicted in Figure 2.17. States 0 to 4 correspond to <code>CREATED, TERMINATED, RUNNABLE, RUNNING</code> and <code>NON_RUNNABLE</code> respectively.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-17.png">
+						<figcaption><strong>Figure 2.17</strong> <code>THREAD</code> life cycle.</figcaption>
+					</figure>
+
+				</section>
+
+				<section class="subsection" data-number="12" data-name="Countdown Timer Example">
+
+					<h4>2.2.4 Countdown Timer Example</h4>
+
+					<p><span class="first-sentence">The model for a timer which counts down to zero and then beeps was described in section 2.1.5 (Figure 2.13).</span> In this section, we describe the implementation of the countdown timer as a thread that is created by a Java applet. The class diagram for the timer is depicted in Figure 2.18.</p>
+
+					<p class="i"><code>NumberCanvas</code> is a display canvas that paints an integer value on the screen. An outline of the class, describing the methods available to users, is presented in Program 2.1. It is the first of a set of display classes that will be used throughout the book. The full code for these classes can be found on the website that accompanies this book (<span class="url">http://www.wileyeurope.com/college/magee</span>).</p>
+
+					<div class="pagebreak pageNumber">28</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure2-18.png">
+						<figcaption><strong>Figure 2.18</strong> Countdown timer class diagram.</figcaption>
+					</figure>
+
+					<pre class="program">
+<strong>public class</strong> NumberCanvas <strong>extends</strong> Canvas {
+  <em>// create canvas with title and optionally set background color</em>
+  <strong>public</strong> NumberCanvas(String title) {...}
+  <strong>public</strong> NumberCanvas(String title, Color c) {...}
+
+  <em>//set background color</em>
+  <strong>public</strong> void setcolor(Color c) {...}
+
+  <em>//display </em><code>newval </code><em>on screen</em>
+  <strong>public </strong>void setvalue(int newval) {...}
+}
+					</pre>
+
+					<div class="program-caption"><strong>Program 2.1</strong> <code>NumberCanvas</code> class.</div>
+
+					<p>The code for the <code>CountDown</code> applet is listed in Program 2.2.</p>
+
+					<pre class="program">
+<strong>public class</strong> CountDown <strong>extends</strong> Applet <strong>implements</strong> Runnable {
+  Thread counter; int i;
+  <strong>final static</strong> int N = 10;
+  AudioClip beepSound, tickSound;
+  NumberCanvas display;
+
+  <strong>public</strong> void init() {
+    add(display=<strong>new</strong> NumberCanvas("CountDown"));
+					</pre>
+
+					<div class="program-caption"><strong>Program 2.2</strong> <code>CountDown</code> applet class.</div>
+
+					<div class="pagebreak pageNumber">29</div>
+
+					<pre class="program">
+    display.resize(150, 100);
+    tickSound = 
+      getAudioClip(getDocumentBase(), "sound/tick.au");
+    beepSound = 
+      getAudioClip(getDocumentBase(), "sound/beep.au");
+  }
+
+  <strong>public</strong> void start() {
+    counter = <strong>new</strong> Thread(this);
+    i = N; counter.start();
+  }
+
+  <strong>public</strong> void stop() {
+    counter = null;
+  }
+
+  <strong>public</strong> void run() {
+    <strong>while</strong>(true) {
+      <strong>if</strong> (counter == null) <strong>return</strong>;
+      <strong>if</strong> (i&gt;0) { tick(); --i; }
+      <strong>if</strong> (i==0) { beep(); return;}
+    }
+  }
+
+  <strong>private </strong>void tick() {
+    display.setvalue(i); tickSound.play();
+    <strong>try</strong>{ Thread.sleep(1000);}
+    <strong>catch</strong> (InterruptedExecution e){}
+  }
+
+  <strong>private</strong> void beep(){
+    display.setvalue(i); beepSound.play();
+  }
+}
+					</pre>
+
+					<div class="program-caption"><strong>Program 2.2</strong> (<em>Continued</em>).</div>
+
+					<p>The <code>counter</code> thread is created and started running by the <code>start()</code> method when the <code>CountDown</code> applet is started by the Web browser in which it executes. <code>CountDown</code> implements the <code>Runnable</code> interface by providing the method <code>run()</code> which defines the behavior of the thread. To permit easy comparison between the <code>COUNTDOWN</code> model and the behavior implemented by the <code>run()</code> method, the model is repeated below:</p>
+
+					<div class="pagebreak pageNumber">30</div>
+
+					<pre>
+COUNTDOWN (N=3)   = (start -> COUNTDOWN[N]),
+COUNTDOWN[i:0..N] = (<strong>when</strong>(i&gt;0) tick -> COUNTDOWN[i-1] 
+                    |<strong>when</strong>(i==0) beep -> STOP 
+                    |stop -> STOP
+                    ).
+					</pre>
+
+					<p>The <code>thread counter.start()</code> method causes the <code>run()</code> method to be invoked. Hence, just as the <code>start</code> action in the model is followed by <code>COUNTDOWN[i]</code>, so the <code>run()</code> method is an implementation of the <code>COUNTDOWN[i]</code> process. The index of the process <code>COUNTDOWN[i]</code> is represented by the integer field <code>i</code>. The recursion in the model is implemented as a Java <strong>while</strong> loop. Guarded choice in <code>COUNTDOWN[i]</code> is implemented by Java <strong>if</strong> statements. Note that we have reordered the conditions from the model, since in the implementation, they are evaluated sequentially. If the thread is stopped, it must not perform any further actions. In Chapters 4 and 5, we will see a different way of implementing choice when a model process is not implemented as a thread.</p>
+
+					<p class="i">When <code>run()</code> returns the thread terminates - this corresponds to the model process <code>STOP</code>. This can happen for two reasons: either <code>i==O</code> or the thread reference <code>counter</code> becomes null. It can become null if the browser invokes the <code>stop()</code> method -usually as a result of a user requesting a change from the Web page in which the applet is active. The <code>stop()</code> method sets <code>counter</code> to null. This method of stopping a thread is preferable to using the <code>Thread.stop()</code> method since it allows a thread to terminate gracefully, performing cleanup actions if necessary. <code>Thread.stop()</code> terminates a thread whatever state it is in, giving it no opportunity to release resources. Melodramatically, we may think of <code>Thread.stop()</code> as killing the thread and the technique we have used as equivalent to requesting the thread to commit suicide! For these reasons, Sun have suggested that <code>Thread.stop()</code> be "deprecated". This means that it may not be supported by future Java releases.</p>
+
+					<p class="i">The implementation of <code>tick()</code> displays the value of <code>i</code>, plays the tick sound and then delays the calling thread for 1000 milliseconds (one second) using <code>Thread.sleep()</code>. This is a class method since it always operates on the currently running thread. The method <code>sleep()</code> can terminate abnormally with an <code>InterruptedException</code>. The code of Program 2.2 simply provides an exception handler that does nothing.</p>
+
+					<p class="i">The implementation of <code>beep()</code> displays <code>i</code> and plays the beep sound. The <code>tick()</code> and <code>beep()</code> methods correspond to the <code>tick</code> and <code>beep</code> actions of the model. An implementation must fill in the details that are abstracted in a model.</p>
+
+					<div class="pagebreak pageNumber">31</div>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="13" data-name="Summary">
+
+				<h3>Summary</h3>
+
+				<p><span class="first-sentence">This chapter has introduced the concept of a process, explained how we model processes and described Java threads as implementations of processes.</span> In particular:</p>
+
+				<ul>
+
+					<li>The execution of a program (or subprogram) is termed a <em>process</em>. Processes are the units of concurrent activity used in concurrent programming.</li>
+
+					<li>A process can be modeled as a state machine in which the transitions are atomic or indivisible actions executed by the process. We use <em>LTS</em>, Labeled Transition Systems, to represent state machines.</li>
+
+					<li>State machines are described concisely using <em>FSP</em>, a simple process algebra. The chapter introduced the action prefix, "<code>-></code>" , and choice, "<code>|</code>", operators in addition to the use of recursion, index sets and guards.</li>
+
+					<li>Our notations do not distinguish input actions from outputs. However, inputs usually form part of a choice offered to the environment of a process while outputs do not.</li>
+
+					<li>We have used Java <em>threads</em> to show how processes are implemented and how they are used in programs. Java threads are an example of lightweight processes, in the terminology of operating systems.</li>
+
+				</ul>
+
+			</section>
+
+			<section class="section" data-number="14" data-name="Notes and Further Reading">
+
+				<h3>Notes and Further Reading</h3>
+
+				<p><span class="first-sentence">The use of state machines as an abstract model for processes is widely used in the study of concurrent and distributed algorithms.</span> For example, in her book <em>Distributed Algorithms</em>, Nancy Lynch (1996) uses I/O automata to describe and reason about concurrent and distributed programs. I/O automata are state machines in which input, output and internal actions are distinguished and in which input actions are always enabled (i.e., they are offered as a choice to the environment in all states). The interested reader will find an alternative approach to modeling concurrent systems in that book.</p>
+
+				<p class="i">State machines are used as a diagrammatic aid (usually as State Transition Diagrams, STD) in most design methods to describe dynamic activity. They can be extended to cater for concurrency. An interesting and widely used form is statecharts (Harel, 1987), designed by David Harel and incorporated in the STATEMATE software tool (Harel, Lachover, Naamad, <em>et al.</em>, 1990) for
+				the design of reactive systems. A form of this notation has been adopted in the Unified Modeling Language, UML, of Booch, Rumbaugh and Jacobson (1998). See <span class="url">http://www.uml.org/.</span></p>
+
+				<div class="pagebreak pageNumber">32</div>
+
+				<p class="i">The association of state machines with process algebra is due to Robin Milner (1989) who gives an operational semantics for a Calculus of Communicating Systems (CCS) using Labeled Transition Systems in his inspirational book <em>Communication and Concurrency</em>. While we have adopted the CCS approach to semantics, the syntax of <em>FSP</em> owes more to C.A.R. Hoare's CSP presented in <em>Communicating Sequential Processes</em> (1985). The semantic differences between <em>FSP</em> and its antecedents, CCS and CSP, are documented and explained in succeeding chapters. The syntactic differences are largely due to the requirement that <em>FSP</em> be easily parsed by its support tool <em>LTSA</em>.</p>
+
+				<p class="i">Process algebra has also been used in formal description languages such as LOTOS (ISO/IEC, 1988). LOTOS is an ISO standard language for the specification of distributed systems as interacting processes. As in <em>FSP</em>, process behavior is described using action prefix and choice operators, guards and recursion. However, unlike <em>FSP</em>, LOTOS includes facilities for defining abstract data types. Naive use of the data type part of LOTOS quickly leads to intractable models.</p>
+
+				<p class="i"><em>FSP</em> was specifically designed to facilitate modeling of finite state processes as Labeled Transition Systems. <em>LTS</em> provides the well-defined mathematical properties that facilitate formal analysis. <em>LTSA</em> provides automated support for displaying and animating the examples in this chapter. Later in the book we will see how <em>LTSA</em> can be used for verifying properties using model checking.</p>
+
+				<p class="i">The reader interested in more details on Java should consult the information on-line from JavaSoft. For more on the pragmatics of concurrent programming in Java, see Doug Lea's book <em>Concurrent Programming in Java™: Design Principles and Patterns</em> (1999).</p>
+
+			</section>
+
+			<section class="section" data-number="15" data-name="Exercises">
+
+				<h3>Exercises</h3>
+
+				<ol id="two">
+
+					<li><span class="first-sentence">For each of the following processes, give the Finite State Process (<em>FSP</em>) description of the Labeled Transition System (<em>LTS</em>) graph.</span> The <em>FSP</em> process descriptions may be checked by generating the corresponding state machines using the analysis tool, <em>LTSA</em>.
+
+						<p class="i">I. MEETING</p>
+						<figure>
+							<img src="/contents/concurrency/images/exercise2-1.png">
+						</figure>
+
+						<div class="pagebreak pageNumber">33</div>
+
+						<p class="i">II. JOB</p>
+						<figure>
+							<img src="/contents/concurrency/images/exercise2-2.png">
+						</figure>
+
+						<p class="i">III. GAME</p>
+						<figure>
+							<img src="/contents/concurrency/images/exercise2-3.png">
+						</figure>
+
+						<p class="i">IV. MOVE</p>
+						<figure>
+							<img src="/contents/concurrency/images/exercise2-4.png">
+						</figure>
+
+						<p class="i">V. DOUBLE</p>
+						<figure>
+							<img src="/contents/concurrency/images/exercise2-5.png">
+						</figure>
+
+						<div class="pagebreak pageNumber">34</div>
+
+						<p class="i">VI. FOURTICK</p>
+						<figure>
+							<img src="/contents/concurrency/images/exercise2-6.png">
+						</figure>
+
+						<p class="i">VII. PERSON</p>
+						<figure>
+							<img src="/contents/concurrency/images/exercise2-7.png">
+						</figure>
+
+					</li>
+
+					<li>A variable stores values in the range O..<em>N</em> and supports the actions <em>read</em> and <em>write</em>. Model the variable as a process, <code>VARIABLE</code>, using <em>FSP</em>.
+						<p class="i">For N=2, check that it can perform the actions given by the trace:</p>
+						<pre>
+write.2 &rarr; read.2 &rarr; read.2 &rarr; write.1 &rarr; write.0 &rarr; read.0
+						</pre>
+					</li>
+
+					<li>A bistable digital circuit receives a sequence of <em>trigger</em> inputs and alternately outputs a and 1. Model the process <code>BISTABLE</code> using <em>FSP</em>, and check that it produces the required output; i.e., it should perform the actions given by the trace:
+						<pre>
+trigger &rarr; 1 &rarr; trigger &rarr; 0 &rarr; trigger &rarr;1 &rarr; trigger &rarr; 0 &hellip;</pre>
+
+						<p class="i">(<em>Hint:</em> The alphabet of <code>BISTABLE</code> is {[0], [1], trigger}.)</p>
+					</li>
+
+					<li>A sensor measures the water <em>level</em> of a tank. The level (initially 5) is measured in units 0..9. The sensor outputs a <em>low</em> signal if the level is less than 2 and a <em>high</em> signal if the level is greater than 8 otherwise it outputs <em>normal</em>. Model the sensor as an <em>FSP</em> process, <code>SENSOR</code>.
+						<p class="i">(<em>Hint:</em> The alphabet of <code>SENSOR</code> is {level [0..9] , high, low, normal}.)</p>
+					</li>
+
+					<li>A drinks dispensing machine charges l5p for a can of Sugarola. The machine accepts coins with denominations 5p, lap and 20p and gives change. Model the machine as an <em>FSP</em> process, <code>DRINKS</code>.</li>
+
+					<div class="pagebreak pageNumber">35</div>
+
+					<li>A miniature portable FM radio has three controls. An onloff switch turns the device on and off. Tuning is controlled by two buttons <code>scan</code> and <code>reset</code> which operate as follows. When the radio is turned on or <code>reset</code> is pressed, the radio is tuned to the top frequency of the FM band (108 MHz). When <code>scan</code> is pressed, the radio scans towards the bottom of the band (88 MHz). It stops scanning when it <code>locks</code> on to a station or it reaches the bottom (<code>end</code>). If the radio is currently tuned to a station and <code>scan</code> is pressed then it starts to scan from the frequency of that station towards the bottom. Similarly, when <code>reset</code> is pressed the receiver tunes to the top. Using the alphabet <code>{on, off, scan, reset, lock, end}</code>, model the FM radio as an FSP process, <code>RADIO</code>.
+						<p class="i">For each of the exercises 2.2 to 2.6, draw the state machine diagram that corresponds to your <em>FSP</em> specification and check that it can perform the required actions. The state machines may be drawn manually or generated using the analysis tool, <em>LTSA</em>. <em>LTSA</em> may also be used to animate (run) the specification to produce a trace.</p>
+					</li>
+
+					<li>Program the radio of exercise 2.6 in Java, complete with graphic display.</li>
+
+				</ol>
+
+			</section>
+
+		</div> <!--container-->
+
+	</div> <!--concurrency-->
+
+</body>
+</html>

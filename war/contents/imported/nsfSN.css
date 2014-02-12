@@ -1,0 +1,28 @@
+.docHTML{
+	border: 5px solid lightgrey;
+	padding: 0;
+	width: 600px;
+	word-wrap:break-word;
+}
+
+.docHTML div.pagebreak p:first-child {
+	float: left;
+	margin-left: 2em;
+}
+
+.docHTML div.pagebreak p:nth-child(2) {
+	float:right;
+	margin-right: 2em;
+}
+.docHTML div.pagebreak {
+	height:22px;
+	margin: 1em;
+	border-bottom: 3px grey dashed;
+	text-align: center;
+	font-family: Arial;
+	font-size: 75%;
+}
+.docHTML .pagenumber {
+	font-size: 13pt;
+	font-weight: bold;
+}

@@ -1,0 +1,1826 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+
+	<title>Chapter 3. Events, Handlers and All that Jazz: A Little Interaction</title>
+	
+	
+	<META name="javascript" javascript="/contents/html5/html5.js">
+	
+
+</head>
+
+<body>
+
+	<div id="html51" class="html5 container">
+
+		<section class="section" data-number="0" data-name="Events, Handlers, and All that Jazz: A Little Interaction">
+			
+			<div class="pagebreak pageNumber">85</div>
+
+			<h1>Chapter 3. Events, Handlers and All that Jazz: A Little Interaction</h1>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/085fig01.png">
+			</figure>
+			
+			<p>
+				<strong>You still haven’t reached out to touch your user.</strong> You’ve learned the basics of
+				JavaScript but can you get interactive with your users? When pages respond to user input, they aren’t
+				just documents anymore, they’re living, reacting applications. In this chapter you’re going to learn
+				how to handle one form of user input (excuse the pun), and wire up an old-fashioned HTML &lt;form&gt;
+				element to actual code. It might sound dangerous, but it’s also powerful. Strap yourself in, this is
+				a fast moving to-the-point-chapter where we go from zero to interactive app in no time.
+			</p>
+
+		</section> <!-- Section 0 -->
+			
+		<section class="section" data-number="1" data-name="Get ready for Webville Tunes">
+
+<!-- Page 86 -->
+
+			<div class="pagebreak pageNumber">86</div>
+
+			<h2>Get ready for Webville Tunes</h2>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/086fig01.png">
+			</figure>
+			
+			<p>
+				Okay, we’ve dragged you through a lot of JavaScript fundamentals so far in this book, and while
+				we’ve talked a good game on building web apps, we don’t have a lot to show for it, yet. So, now
+				we’re going to get serious (no really! we mean it this time!) and build something real world.
+			</p>
+		
+			<p>
+				How about a playlist manager. We’ll call it something original, like... hmm, say Webville Tunes.
+			</p>
+		
+			<figure>
+				<img src="/contents/html5/figs/web/086fig02.png">
+			</figure>
+			
+			<div class="sidebar-left">
+				<figure>
+					<img src="/contents/html5/figs/web/brainpower.png">
+				</figure>
+				
+				<p>Given what you know about this code:</p>
+				
+<pre><strong>window.onload = init;</strong></pre>
+				
+				<p>Can you guess what this code might do?</p>
+			
+<pre><strong>button.onclick = handleButtonClick;</strong></pre>
+			</div>
+
+			<div class="clear"></div>
+
+		</section> <!-- Section 1 -->
+
+		<section class="section" data-number="2" data-name="Getting started...">
+
+<!-- Page 87 -->
+
+			<div class="pagebreak pageNumber">87</div>
+				
+			<h2>Getting started...</h2>
+			
+			<p>
+				We don’t need to create a big, complex web page to get this started. In fact we can start very
+				simply. Let’s just create an HTML5 document with a form and a list element to hold the playlist:
+			</p>
+		
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/087fig01.png">
+					
+					<div class="caption">
+						<p>
+							* Remember you can download the stylesheet (and all the code) from
+							<a class="ulink" href="http://wickedlysmart.com/hfhtml5" target="_top">
+							http://wickedlysmart.com/hfhtml5</a>
+						</p>
+					</div>
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  <div class="modal-body">
+						<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>	&lt;title&gt;Webville Tunes&lt;/title&gt;</pre>
+<pre>	&lt;meta charset="utf-8"&gt;</pre>
+<pre>	&lt;link rel="icon" type="image/ico" href="http://wickedlysmart.com/favicon.ico"&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;form&gt;</pre>
+<pre>		&lt;input type="text" id="songTextInput" size="40" placeholder="Song name"&gt;</pre>
+<pre>		&lt;input type="button" id="addButton" value="Add Song"&gt;</pre>
+<pre>	&lt;/form&gt;</pre>
+<pre>	&lt;ul id="playlist"&gt;</pre>
+							<br />
+<pre>	&lt;/ul&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<section class="subsection" data-number="3" data-name="Give it a test drive">
+				
+				<h3 class="left">Give it a test drive</h3>
+				
+				<figure>
+					<img src="/contents/html5/figs/web/common-10.png">
+				</figure>
+
+				<div class="clear"></div>
+				
+				<p>
+					Go ahead and type in the code above, load it into your favorite browser and give it a spin
+					before moving on to the next page.
+				</p>
+			
+				<figure class="right">
+					<img src="/contents/html5/figs/web/087fig02.png">
+				</figure>
+
+				<div class="clear"></div>
+
+				<aside>*Remember you can download the stylesheet (and all the code) from http://wickedlysmart.com/hfhtml5</aside>
+
+			</section> <!-- Section 3 -->
+
+		</section> <!-- Section 2 -->
+		
+		<section class="section" data-number="4" data-name="But nothing happens when I click "Add Song"">
+				
+<!-- Page 88 -->
+
+			<div class="pagebreak pageNumber">88</div>
+				
+
+			<h2>But nothing happens when I click “Add Song”</h2>
+		
+			<p>
+				Well, yes and no. Nothing <em>appears</em> to happen, but your
+				browser knows you clicked on the button (depending on your browser, you will also see the button depress).
+			</p>
+		
+			<p>
+				The real question is how do we get the button to do something when you click on it? And what
+				that question really means is, how do we get some JavaScript code invoked when you click on a button?
+			</p>
+		
+			<p><strong>We need two things:</strong></p>
+		
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p>
+							We need a bit of JavaScript code that will get evaluated when the user clicks on the
+							“Add Song” button. This code will (once we’ve written it) add a song to your playlist.
+						</p>
+					</li>
+				
+					<li class="listitem">
+						<p>
+							We need a way to hook up that bit of code so that when the button is clicked, JavaScript
+							knows to run your “add song” code.
+						</p>
+					</li>
+				</ol>
+			</div> <!-- /orderedlist -->
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/088fig01.png">
+			</figure>
+			
+			<div class="blockquote">
+				<blockquote class="blockquote">
+					<h3>
+						<strong>When the user clicks (or touches on a gesture-based device) a button, we want to
+							know about it. We’re interested in the “<u>button was just clicked event</u>”.</strong>
+					</h3>
+				</blockquote>
+			</div>
+
+			<div class="clear"></div>		
+
+<!-- Page 89 -->
+
+			<div class="pagebreak pageNumber">89</div>
+				
+			<figure class="left">
+				<img src="/contents/html5/figs/web/089fig01.png">
+			</figure>
+		
+			<figure>
+				<img src="/contents/html5/figs/web/089fig02.png">
+			</figure>
+		
+		</section> <!-- Section 4 -->
+
+		<section class="section" data-number="5" data-name="Handling Events">
+			
+			<h2>Handling Events</h2>
+		
+			<p>
+				You’re going to see that many things are happening in the browser while your page is being
+				displayed—buttons are being clicked, additional data your code requested from the network may
+				be arriving, timers may be going off (we’ll get to all that). All these things cause events to
+				happen, a button click event, a data available event, a time expired event, and so on (there are many more).
+			</p>
+		
+			<p>
+				Whenever there is an event, there is an opportunity for your code to <em>handle it</em>; that is, to
+				supply some code that will be invoked when the event occurs. Now, you’re not required to handle any of
+				these events, but you’ll need to handle them if you want interesting things to happen when they occur—like,
+				 say, when the button click event happens, you might want to add a new song to the playlist; when new
+				 data arrives you might want to process it and display it on your page; when a timer fires you might
+				 want to tell the user their hold on front row tickets is going to expire, and so on.
+			</p>
+		
+			<p>
+				So, we know we want to handle the button click event, let’s see how we do that.
+			</p>
+			
+		</section> <!-- Section 5 -->
+
+		<section class="section" data-number="6" data-name="Making a Plan...">
+				
+<!-- Page 90 -->
+
+			<div class="pagebreak pageNumber">90</div>
+				
+			<h2>Making a Plan...</h2>
+			
+			<p>
+				Let’s step back for a second before we lose ourselves in handlers and events. The goal here is to
+				click on “Add Song” and have a song added to a playlist on the page. Let’s attack the task like this:
+			</p>
+		
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p><strong>Set up a handler to handle the user’s click on the “Add Song” button.</strong></p>
+					</li>
+				
+					<li class="listitem">
+						<p><strong>Write the handler to get the song name the user typed in, and then...</strong></p>
+					</li>
+				
+					<li class="listitem"><p><strong>Create a new element to hold the new song, and...</strong></p></li>
+				
+					<li class="listitem"><p><strong>Add the element to the page’s DOM.</strong></p></li>
+				</ol>
+			</div>
+			
+			<p>
+				If these steps aren’t clear to you, don’t worry, we’ll explain it as we go... for now, just get
+				a feel for the steps and follow along as we get that handler written. Go ahead and open up a new file,
+				<code class="literal">playlist.js</code> for all your JavaScript code.
+			</p>
+	
+		</section> <!-- Section 6 -->
+
+		<section class="section" data-number="7" data-name="Getting access to the "Add Song" button">
+			
+			<h2>Getting access to the “Add Song” button</h2>
+			
+			<p>
+				To ask the button to let us know when a click event occurs, we first need to get access to the button.
+				Luckily we created the button using HTML markup and that means...you guessed it, it is represented in
+				the DOM, and you already know how to get elements in the DOM. If you look back at the HTML you’ll see we
+				gave the button an id of <code class="literal">addButton</code>. So, we’ll use <code class="literal">
+				getElementById</code> to get a reference to the button:
+			</p>
+			
+<pre><strong>var button = document.getElementById("addButton");</strong></pre>
+			
+			<p>
+				Now we just need to give the button some code to call when a click occurs. To do that we’re going
+				to create a function, named <code class="literal">handleButtonClick</code>, that will handle the
+				event. We’ll get into functions in a bit; for now, here’s the function:
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/090fig01.png">
+			</figure>
+
+		</section> <!-- Section 7 -->
+		
+		<section class="section" data-number="8" data-name="Giving the button a click handler">
+			
+<!-- Page 91 -->
+
+			<div class="pagebreak pageNumber">91</div>
+				
+			<div class="sidebar-right-borderless">
+				<div class="orderedlist">
+					<ol class="orderedlist" type="1">
+						<li class="listitem">
+							<p>
+								<span class="gray-background"><strong>Set up a handler to handle the user’s click</strong></span>
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								<strong>Write the handler to get the song name</strong>
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								<strong>Create a new element to hold the new song</strong>
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								<strong>Add the element to the page’s DOM</strong>
+							</p>
+						</li>
+					</ol>
+				</div>
+			</div>	
+
+			<h2>Giving the button a click handler</h2>
+			
+			<p>
+				Okay, we’ve got a button and we’ve got a function that will act as a handler, <code class="literal">
+				handleButtonClick</code>, so let’s put them together. To do that we’re going to use a property of the
+				button, <code class="literal">onclick</code>. We set the <code class="literal">onclick</code> property
+				like this:
+			</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/091fig01.png">
+			</figure>
+			
+			<p>
+				You might remember that we did something similar when we used the
+				<code class="literal">window.onload</code> property to call a function after the window was loaded
+				 In this case though, we’ll call the function when the button is clicked. Now let’s put all of this together:
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/091fig02.png">
+			</figure>
+			
+			<section class="subsection" data-number="9" data-name="Putting it to the test...">
+				<h3 class="left">Putting it to a test...</h3>
+			
+				<figure>
+					<img src="/contents/html5/figs/web/common-10.png">
+				</figure>
+			
+				<div class="clear"></div>
+
+				<p>
+					Go ahead and type in the code above (in your <code class="literal">playlist.js</code> file),
+					load the page, click on that button as much as you want and you’ll see an alert each time.
+				</p>
+
+				<figure class="right">
+					<img src="/contents/html5/figs/web/091fig03.png">
+				</figure>
+	
+				<p>
+					After you’re finished testing your new button click handler, sit back and study the code
+					and think through how all this works.
+				</p>
+			
+				<p>
+					When you think you’ve got it in your head, turn the page and we’ll step through the details
+					to make sure it really sticks.
+				</p>
+	
+				<div class="clear"></div>
+
+			</section> <!-- Section 9 -->
+
+		</section> <!-- Section 8 -->
+		
+		<section class="section" data-number="10" data-name="A closer look at what just happened...">
+
+<!-- Page 92 -->
+
+			<div class="pagebreak pageNumber">92</div>
+				
+
+			<h2>A closer look at what just happened...</h2>
+			
+			<p>
+				We just introduced a lot of new ideas over the last few pages, let’s step through the code again
+				and make sure we’ve got it clear in our heads. Here we go:
+			</p>
+			
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p>
+							The first thing you did was throw a button in your HTML form. And with that in place, you needed
+							a way to capture a user’s click on that button so that you could have some code executed. To do
+							that we created a handler and assigned it to the onclick property of our button.
+						</p>
+						
+						<div class="informalfigure">
+							<div class="mediaobject">
+								<img src="/contents/html5/figs/web/092fig01.png">
+							</div>
+						</div>
+					</li>
+					
+					<li class="listitem">
+						<div class="informalfigure right">
+							<div class="mediaobject">
+								<img src="/contents/html5/figs/web/092fig02.png">
+							</div>
+						</div>
+						
+						<p>
+							You also wrote a simple handler that just alerts the user that the button was clicked. We’ll
+							be writing the real code for the handler in a sec, but this one works well for testing.
+						</p>
+						</li>
+				</ol>
+			</div> <!-- /orderedlist -->
+
+			<div class="clear"></div>
+
+<!-- Page 93 -->
+
+			<div class="pagebreak pageNumber">93</div>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1" start="3">
+					<li class="listitem">
+						<div class="informalfigure right">
+							<div class="mediaobject">
+								<img src="/contents/html5/figs/web/093fig01.png">
+							</div>
+						</div>
+
+						<p>
+							With the code written, the page is loaded and displayed by the browser, the handler is
+							installed...it’s all up to the user now...
+						</p>
+					</li>
+
+					<div class="clear"></div>
+
+					<li class="listitem">
+						<p>
+							Finally, the user clicks on your button, the button springs into action, notices it
+							has a handler, and calls it...
+						</p>
+
+						<div class="informalfigure">
+							<div class="mediaobject">
+								<img src="/contents/html5/figs/web/093fig02.png">
+							</div>
+						</div>
+					</li>
+				</ol>
+			</div> <!-- /orderedlist -->
+
+		</section> <!-- Section 10 -->
+		
+		<section class="section" data-number="11" data-name="Getting the song name">
+
+<!-- Page 94 -->
+
+			<div class="pagebreak pageNumber">94</div>
+
+			<div class="orderedlist sidebar-right-borderless">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p>
+							<strong>Set up a handler to handle the user’s click</strong>
+						</p>
+					</li>
+					
+					<li class="listitem">
+						<p>
+							<span class="gray-background"><strong>Write the handler to get the song name</strong></span>
+						</p>
+					</li>
+					
+					<li class="listitem">
+						<p>
+							<strong>Create a new element to hold the new song</strong>
+						</p>
+					</li>
+					
+					<li class="listitem">
+						<p>
+							<strong>Add the element to the page’s DOM</strong>
+						</p>
+					</li>
+				</ol>
+			</div>
+
+			<h2>Getting the song name</h2>
+			
+			<p>
+				We’re ready to move on to the second step of our task: getting the song name that the user has typed in.
+				Once we have that, we can think about how we’re going to display the playlist in the browser.
+			</p>
+			
+			<p>
+				But how are we going to get the song name? That’s something the user has typed in, right? Ah,
+				but anything that happens in the web page gets reflected in the DOM, so the text the user typed must be there too.
+			</p>
+			
+			<p>
+				To get the text from a form text input element, you first have to get the input element from the
+				DOM, and you know how to do that: <code class="literal">getElementById</code>. And, once you’ve
+				done that you can use the <code class="literal">value</code> property of the text input element
+				to access the text the user types into the form field, here’s how:
+			</p>
+		
+			<figure>
+				<img src="/contents/html5/figs/web/094fig01.png">
+			</figure>
+		
+			<div class="sidebar">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/sharpenpencil.png">
+				</figure>
+				
+				<p>
+					Rework the handleButtonClick function below to obtain the name of the song the user has typed into
+					the form input element. Check your answer with the solution on page 96</a>.
+				</p>
+
+				<div class="clear"></div>
+				
+<pre><strong>function handleButtonClick() {</strong></pre>
+
+<pre>	<strong>var textInput = document.getElementById("_________________");</strong></pre>
+
+<pre>	<strong>var songName = _________________.value;</strong></pre>
+
+<pre>	<strong>alert("Adding " + _________________ );</strong></pre>
+
+<pre><strong>}</strong></pre>
+			</div>
+
+<!-- Page 95 -->
+
+			<div class="pagebreak pageNumber">95</div>
+			
+			<div class="sidebar">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/sharpenpencil.png">
+				</figure>
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web/bonus.png">
+				</figure>
+				
+				<p>
+					What if you wanted to test to make sure the user actually entered some text before clicking the
+					button? How might you do that? (Again, find the solution on page 96.)
+				</p>
+				
+				<p>_______________________________________________________________________</p>
+			
+				<p>_______________________________________________________________________</p>
+			</div>
+			
+			<div class="sidebar">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+				</figure>
+				
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<table style="border: 0;">
+							<colgroup>
+								<col style="text-align: left; width: 1%;">
+								<col>
+							</colgroup>
+							
+							<tbody>
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q:</strong>
+										</p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q: What is the value of the value property of the text input if the user
+												didn’t type anything? Is the value null? Or does the “Add Song” button not invoke
+												the handler if the user hasn’t entered anything?</strong>
+										</p>
+									</td>
+								</tr>
+							
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong>
+										</p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> The “Add Song” button isn’t that smart. If you want to determine
+											if the user typed something, that’s up to your code. And, to know if the text input is
+											empty (that is, the user didn’t type anything), you can check to see if its value is equal
+											to a string with nothing in it, otherwise known as the empty string, which is written as “”,
+											or two double quotes with nothing in between. We see why you’d think it might be null, because
+											we said that is the value of a variable that has no value, but from the text input field’s 
+											perspective, it isn’t holding nothing, it’s holding on to a string with nothing in it yet.
+											Go figure. ;-)
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q:</strong>
+										</p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q: I thought that the text input “value” was an attribute. You’re calling it a
+												property, why?</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong>
+										</p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> You’re right, value <em>is</em> an
+											attribute of the HTML text input element. You can initialize the value of a text input
+											element using the value attribute. But in JavaScript, to access the value that a user has
+											typed in, you need to use the value <em>property</em> of the input element we get from the DOM.
+										</p>
+									</td>
+								</tr>
+							
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q:</strong>
+										</p>
+									</td>
+								
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q: What other kinds of events can I handle in JavaScript other than button clicks?</strong>
+										</p>
+									</td>
+								</tr>
+							
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong>
+										</p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> There are a whole slew of other mouse events you can handle.
+											For instance, you can detect and handle a key press, a mouse moving over or out of
+											an element, the mouse dragging, even a mouse press and hold (different from a mouse
+											click). And then there are many other types of events we’ve mentioned in passing, like
+											events when new data is available, timer events, events related to the browser window,
+											and so on. You’ll see quite a few other kinds of event handling in the rest of the book;
+											once you know how to do one, you can pretty much do them all!
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q:</strong>
+										</p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q: What is JavaScript doing while it’s waiting for events?</strong>
+										</p>
+									</td>
+								</tr>
+							
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong>
+										</p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> Unless you’ve programmed your JavaScript to do something, it sits
+											idle until something happens (the user interacts with the interface, data comes in from
+											the Web, a timer goes off, and so on). This is a good thing; it means the processing power
+											of your computer is going to other things, like making your browser responsive. Later in
+											the book, you’ll learn how to create tasks that run in the background so your browser can
+											run the task code and respond to events at the same time.
+										</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 96 -->
+
+			<div class="pagebreak pageNumber">96</div>
+		
+			<div class="sidebar">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/sharpenyourpencilsolution.png">
+				</figure>
+				
+				<p>
+					Rework the handleButtonClick function below to obtain the name of the song the user has typed
+					into the form input element. Here’s our solution:
+				</p>
+
+				<div class="clear"></div>
+			
+				<figure class="left">
+					<img src="/contents/html5/figs/web/096fig01.png">
+				</figure>
+			
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/096fig02.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>function handleButtonClick() {</pre>
+<pre>	var textInput = document.getElementById("songTextInput");</pre>
+<pre>	var songName = textInput.value;</pre>
+<pre>	alert("Adding " + songName);</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+			<div class="sidebar">
+				<figure class="right">
+					<img src="/contents/html5/figs/web/bonus.png">
+				</figure>
+
+				<figure class="left">
+					<img src="/contents/html5/figs/web/sharpenyourpencilsolution.png">
+				</figure>
+				
+				<p>
+					What if you wanted to test to make sure the user actually entered some text before clicking
+					the button? How might you do that? Here’s our solution:
+				</p>
+			
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/096fig03.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>function handleButtonClick() {</pre>
+<pre>	var textInput = document.getElementById("songTextInput");</pre>
+<pre>	var songName = textInput.value;</pre>
+<pre>	if (songName == "") {</pre>
+<pre>		alert("Please enter a song");</pre>
+<pre>	}	else {</pre>
+<pre>		alert("Adding " + songName);</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 11 -->
+
+		<section class="section" data-number="12" data-name="How do we add a song to the page?">
+
+<!-- Page 97 -->
+
+			<div class="pagebreak pageNumber">97</div>
+			
+			<div class="sidebar-right-borderless">
+				<div class="orderedlist">
+					<ol class="orderedlist" type="1">
+						<li class="listitem">
+							<p>
+								<strong>Set up a handler to handle the user’s click</strong>
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								<strong>Write the handler to get the song name</strong>
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								<strong><span class="gray-background">Create a new element to hold the new song</span></strong>
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								<strong>Add the element to the page’s DOM</strong>
+							</p>
+						</li>
+					</ol>
+				</div>
+			</div> <!-- /sidebar -->
+			
+			<h2>How do we add a song to the page?</h2>
+
+			<p>
+				We’ve already got a lot working! You can type a song name into a form, click the Add Song button
+				and get the text you typed into the form, <em>all within your code</em>. Now we’re going to display
+				the playlist on the page itself. Here’s what it’s going to look like:
+			</p>
+		
+			<figure>
+				<img src="/contents/html5/figs/web/097fig01.png">
+			</figure>
+		
+			<p>
+				<strong>Here’s what we need to do:</strong>
+			</p>
+		
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<div class="informalfigure right">
+							<div class="mediaobject">
+								<img src="/contents/html5/figs/web/097fig02.png">
+							</div>
+						</div>
+
+						<p>
+							You might have noticed that we already put an empty list in the HTML markup (an empty &lt;ul&gt;
+							element to be exact) back when we first typed it in. Given that, here’s what the DOM looks like
+							right now.
+						</p>
+					</li>
+					
+					<div class="clear"></div>
+
+					<li class="listitem">
+						<div class="informalfigure right">
+							<div class="mediaobject">
+								<img src="/contents/html5/figs/web/097fig03.png">
+							</div>
+						</div>
+
+						<p>
+							Every time we enter a new song, we want to add a new item to the unordered list. To do that,
+							we’ll create a new &lt;li&gt; element that will hold the song name. Then we’ll take the new
+							&lt;li&gt; element and add it to the &lt;ul&gt; in the DOM. Once we do that, the browser will do
+							its thing and you’ll see the page update, just like the &lt;li&gt; was there all along. And of
+							course, we’ll do all this in code. Check out the DOM one more time and make sure you understand
+							what we need to do.
+						</p>
+					</li>
+				</ol>
+			</div>
+
+			<div class="clear"></div>
+
+<!-- Page 98 -->
+
+			<div class="pagebreak pageNumber">98</div>
+			
+			<div class="sidebar">
+				<figure class="right">
+					<img src="/contents/html5/figs/web/098fig01.png">
+				</figure>
+
+				<figure>
+					<img src="/contents/html5/figs/web/exercise.png">
+				</figure>
+				
+				<p>
+					For the playlist shown here, draw the DOM as it looks after you’ve added all these songs. Notice
+					the order in which the songs are added to the page, and make sure the elements are in the right
+					places in the DOM too. We’ve gone ahead and done one for you. Check the solution at the end of the
+					chapter before you go on.
+				</p>
+			
+				<figure>
+					<img src="/contents/html5/figs/web/098fig02.png">
+				</figure>
+			
+				<figure class="right">
+					<aside>Draw the rest of the DOM here for the playlist above.</aside>
+				</figure>
+			
+				<p>
+					Did you have to make any assumptions about the order in which the &lt;li&gt; elements are added to the parent?
+				</p>
+			</div>
+
+		</section> <!-- Section 12 -->
+
+		<section class="section" data-number="13" data-name="How to create a new element">
+
+<!-- Page 99 -->
+
+			<div class="pagebreak pageNumber">99</div>
+			
+			<h2>How to create a new element</h2>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/099fig01.png">
+			</figure>
+		
+			<p>
+				You’ve already seen how to get access to <em>existing elements</em> through the DOM. But you can also use
+				the DOM to create <em>new elements</em> (and then as a second step, <em>add them to</em> the DOM, which
+				we’ll get to in a sec).
+			</p>
+		
+			<p>
+				Let’s say we want to create a <code class="literal">&lt;li&gt;</code> element. Here’s how we do that:
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/099fig02.png">
+			</figure>
+		
+			<p>
+				So now we have a new <code class="literal">&lt;li&gt;</code> element with nothing in it.
+				You already know one way to get text into an element:
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/099fig03.png">
+			</figure>
+		
+		</section> <!-- Section 13 -->
+
+		<section class="section" data-number="14" data-name="Adding an element to the DOM">
+
+<!-- Page 100 -->
+
+			<div class="pagebreak pageNumber">100</div>
+		
+			<div class="sidebar-right-borderless">
+				<div class="orderedlist">
+					<ol class="orderedlist" type="1">
+						<li class="listitem">
+							<p>
+								<strong>Set up a handler to handle the user’s click</strong>
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								<strong>Write the handler to get the song name</strong>
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								<strong>Create a new element to hold the new song</strong>
+							</p>
+						</li>
+						
+						<li class="listitem">
+							<p>
+								<strong><span class="gray-background">Add the element to the page’s DOM</span></strong>
+							</p>
+						</li>
+					</ol>
+				</div>
+			</div> <!-- /sidebar -->	
+
+			<h2>Adding an element to the DOM</h2>
+	
+			<p>
+				To add a new element to the DOM you have to know where you want to put it. Well, we do know where
+				to put it: we’re going to put the <code class="literal">&lt;li&gt;</code> element in the
+				<code class="literal">&lt;ul&gt;</code> element. But how do we do that? Let’s take another look
+				at the DOM. Remember how we said it was like a tree? Think <em>family tree</em>:
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/100fig01.png">
+			</figure>
+			
+			<p>
+				So, to add our <code class="literal">&lt;li&gt;</code> element, we need to make it a child of the
+				<code class="literal">&lt;ul&gt;</code> element. To do that, we first need to find the
+				<code class="literal">&lt;ul&gt;</code> element in the tree (we gave it an id of “playlist” to make
+				that easy) and then to add the <code class="literal">&lt;li&gt;</code>, we tell the
+				<code class="literal">&lt;ul&gt;</code> element to add a new child to itself. Here’s how we do that:
+			</p>
+		
+			<figure>
+				<img src="/contents/html5/figs/web/100fig02.png">
+			</figure>
+		
+		</section> <!-- Section 14 -->
+
+		<section class="section" data-number="15" data-name="Put it all together...">
+
+<!-- Page 101 -->
+
+			<div class="pagebreak pageNumber">101</div>
+		
+			<h2>Put it all together...</h2>
+		
+			<p>
+				Let’s put all that code together and add it to the <code class="literal">handleButtonClick</code>
+				function. Go ahead and type it in if you haven’t already so you can test it.
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/101fig01.png">
+			</figure>
+
+		</section> <!-- Section 15 -->
+		
+		<section class="section" data-number="16" data-name="...and take it for a test drive">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/101fig02.png">
+			</figure>
+			
+			<h2 class="left">...and take it for a test drive</h2>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png">
+			</figure>
+		
+			<br />
+
+			<p>
+				Put Webville Tunes through its paces, add a few songs. Here are our results.
+			</p>
+		
+			<figure>
+				<img src="/contents/html5/figs/web/101fig03.png">
+			</figure>
+
+		</section> <!-- Section 16 -->
+
+		<section class="section" data-number="17" data-name="Review-what we just did">
+
+<!-- Page 102 -->
+
+			<div class="pagebreak pageNumber">102</div>
+			
+			<h2>Review — what we just did</h2>
+			
+			<p>
+				You did a lot in this chapter (and in a short amount of time!). You built a playlist app that
+				you can use to enter a song, click a button and add that song to a list on the page, all using JavaScript code.
+			</p>
+		
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p>
+							The first thing you did was set up an event handler to handle the user’s click on the
+							“Add Song” button. You created a function, handleButtonClick, and set the onclick property
+							of the “Add Song” button to this function.
+						</p>
+					
+						<div class="informalfigure">
+							<div class="mediaobject">
+								<img src="/contents/html5/figs/web/102fig01.png">
+							</div>
+						</div>
+					</li>
+					
+					<li class="listitem">
+						<p>
+							Next, you wrote code for the button click handler to get the song name from the input
+							text field. You used the input.value property to get the text, and you even added a check
+							to make sure the user had typed in a song. If they didn’t, you alerted them.
+						</p>
+					
+						<div class="informalfigure">
+							<div class="mediaobject">
+								<img src="/contents/html5/figs/web/102fig02.png">
+							</div>
+						</div>
+					</li>
+				
+					<li class="listitem">
+						<p>
+							To add the song to the playlist, you then created a &lt;li&gt; element using
+							document.createElement, and set the content of the element to the song name using innerHTML.
+						</p>
+					
+						<div class="informalfigure">
+							<div class="mediaobject">
+								<img src="/contents/html5/figs/web/102fig03.png">
+							</div>
+						</div>
+					</li>
+				
+					<li class="listitem">
+						<div class="informalfigure right">
+							<div class="mediaobject">
+								<img src="/contents/html5/figs/web/102fig04.png">
+							</div>
+						</div>
+
+						<p>
+							Finally, you added the new &lt;li&gt; element to the DOM by adding it as a child of
+							the parent &lt;ul&gt; element. You did this using appendChild, telling the &lt;ul&gt;
+							element to “append the &lt;li&gt; element as a child”, which added it to the DOM. When
+							the element is added to the DOM, the browser updates the page the user sees, and the playlist
+							contains the song.
+						</p>
+					</li>
+				</ol>
+			</div>
+
+<!-- Page 103 -->
+
+			<div class="pagebreak pageNumber">103</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/103fig01.png">
+			</figure>
+
+			<p>
+				<strong>We agree, the playlist should be persistent;</strong> after all, what’s the point of
+				entering all those songs if they don’t stick around? And there’s a lot of other functionality you
+				might want to add as well. You might, for instance, want to add an audio interface using the
+				audio/video API so you can actually listen to the songs, share songs out to friends using a web
+				service (like Facebook and Twitter), find other people in the local area that like the same artists
+				(using the geolocation APIs), and we’re sure you can come up with more.
+			</p>
+			
+			<p>
+				But back to the playlist...we wanted to get you up and running by building a small interactive app,
+				and the playlist does a good job of that. Plus, storing the songs requires the HTML5 Web Storage API,
+				which is a few chapters away.
+			</p>
+		
+			<p>
+				Hmm, on the other hand we really don’t want to under-deliver here...
+			</p>
+
+			<div class="right">
+				<aside>Turn page</aside>
+			</div>
+
+<!-- Page 104 -->
+
+			<div class="pagebreak pageNumber">104</div>
+	
+			<figure class="right">
+				<img src="/contents/html5/figs/web/readybakecode.png">
+			</figure>
+
+			<div class="clear"></div>
+		
+			<figure class="left">
+				<img src="/contents/html5/figs/web/104fig01.png">
+			</figure>
+		
+			<p>
+				We’ve gone ahead and baked a little code for you to save your playlists. For now you just need
+				to type it in and make two tiny changes to your existing code and you’ll have an HTML5-stored playlist.
+			</p>
+		
+			<p>
+				We’ll be covering all the specifics of storing things locally in your browser in the Web Storage
+				chapter, but for now you can get your playlist up and running.
+			</p>
+			
+			<p>
+				Of course, it never hurts to look over the Ready Bake code. You might be surprised how much you
+				already know, not to mention how much of it you can figure out if you don’t know it.
+			</p>
+			
+			<div class="sidebar-left-pair">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/watchit.png">
+				</figure>
+				
+				<p><strong>The Ready Bake Code won’t work in IE 6 or 7.</strong></p>
+			
+				<p>
+					<em>IE versions 6 and 7 don’t support localStorage. So if you’re using IE, make sure you’re using
+						version 8 or above.</em>
+				</p>
+			</div>
+		
+			<div class="sidebar-right-pair">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/watchit.png">
+				</figure>
+			
+				<p>
+					<strong>The Ready Bake Code won’t work in some browsers if you’re serving your pages from
+						file:// instead of a server like localhost:// or an online hosted server.</strong>
+				</p>
+				
+				<p>
+					<em>We’ll deal with this situation more in future chapters (it pops up fairly often with new
+						HTML5 features). For now, if you don’t want to run a server or copy the files to a hosted
+						server online, try using Safari or Chrome.</em>
+				</p>
+			</div>
+			
+			<div class="clear"></div>
+
+		</section> <!-- Section 17 -->
+
+		<section class="section" data-number="18" data-name="How to add the Ready Bake Code...">
+
+<!-- Page 105 -->
+
+			<div class="pagebreak pageNumber">105</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/readybakecode.png">
+			</figure>
+
+			<h2>How to add the Ready Bake Code...</h2>
+		
+			<p>
+				Here’s the Ready Bake code for you to add to your Webville Tunes app so you can save that fabulous
+				playlist you’ve created. All you have to do is make a new file,
+				<code class="literal">playlist_store.js</code>, type in the code below, and then make a couple of
+				changes to your existing code (on the next page).
+			</p>
+			
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/105fig01.png">
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  <div class="modal-body">
+						<code>
+<pre>function save(item) {</pre>
+<pre>	var playlistArray = getStoreArray("playlist");</pre>
+<pre>	playlistArray.push(item);</pre>
+<pre>	localStorage.setItem("playlist", JSON.stringify(playlistArray));</pre>
+<pre>}</pre>
+							<br />
+<pre>function loadPlaylist() {</pre>
+<pre>	var playlistArray = getSavedSongs();</pre>
+<pre>	var ul = document.getElementById("playlist");</pre>
+<pre>	if (playlistArray != null) {</pre>
+<pre>		for (var i = 0; i < playlistArray.length; i++) {</pre>
+<pre>			var li = document.createElement("li");</pre>
+<pre>			li.innerHTML = playlistArray[i];</pre>
+<pre>			ul.appendChild(li);</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							<br />
+<pre>function getSavedSongs() {</pre>
+<pre>	return getStoreArray("playlist");</pre>
+<pre>}</pre>
+							<br />
+<pre>function getStoreArray(key) {</pre>
+<pre>	var playlistArray = localStorage.getItem(key);</pre>
+<pre>	if (playlistArray == null || playlistArray == "") {</pre>
+<pre>		playlistArray = new Array();</pre>
+<pre>	}</pre>
+<pre>	else {</pre>
+<pre>		playlistArray = JSON.parse(playlistArray);</pre>
+<pre>	}</pre>
+<pre>	return playlistArray;</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 18 -->
+	
+		<section class="section" data-number="19" data-name="Integrating your Ready Bake Code">
+
+<!-- Page 106 -->
+
+			<div class="pagebreak pageNumber">106</div>
+	 		
+	 		<figure class="right">
+				<img src="/contents/html5/figs/web/readybakecode.png">
+			</figure>
+			
+			<h2>Integrating your Ready Bake Code</h2>
+			
+			<p>
+				We need to make a few little tweaks to integrate the storage code. First, add a reference to
+				<code class="literal">playlist_store.js</code> in your <code class="literal">&lt;head&gt;</code>
+				element in <code class="literal">playlist.html</code>:
+			</p>
+		
+			<figure>
+				<img src="/contents/html5/figs/web/106fig01.png">
+			</figure>
+		
+			<p>
+				Now you just need to add two lines to your code, in <code class="literal">playlist.js</code>,
+				that will load and save the playlist:
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/106fig02.png">
+			</figure>
+			
+			<section class="subsection" data-number="20" data-name="Test drive the saved songs">
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web/106fig03.png">
+				</figure>
+				
+				<h3 class="left">Test drive the saved songs</h3>
+				
+				<figure>
+					<img src="/contents/html5/figs/web/common-10.png">
+				</figure>
+
+				<br />
+				
+				<p>
+					Okay, reload the page and type in some songs. Quit the browser. Open the browser and load the
+					page again. You should see all the songs stored safely in your playlist.
+				</p>
+			
+				<aside>
+					Okay, are you tired of your playlist and want to delete it? You’ll
+					have to check out the Web Storage chapter!
+				</aside>
+			
+<!-- Page 107 -->
+
+			<div class="pagebreak pageNumber">107</div>
+				
+				<figure class="left">
+					<img src="/contents/html5/figs/web/107fig01.png">
+				</figure>
+				
+				<p><strong>Perfect timing.</strong></p>
+				
+				<p>
+					We really wanted to take you through a complete interactive example of HTML markup and JavaScript
+					working together to build the first part of a web application. If you think about it, you’ve already done a lot:
+				</p>
+				
+				<div class="orderedlist">
+					<ol class="orderedlist" type="1">
+						<li class="listitem">
+							<p>
+								Inserted code into your page.
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								Set up a button click event and written the code to capture and handle the button click.
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								Asked the DOM for information.
+							</p>
+						</li>
+						
+						<li class="listitem">
+							<p>
+								Created and added new elements to the DOM.
+							</p>
+						</li>
+					</ol>
+				</div>
+			
+				<p>
+					Not bad! And now that you have a bit of an intuitive sense of how this all works together,
+					let’s take a little detour down JavaScript Avenue to see how things like functions and objects
+					<em>really work</em>.
+				</p>
+			
+				<p>
+					This isn’t going to be the regular tour, oh no, we’re going to pull up the manhole covers and get
+					a rare look at how Webville functions.
+				</p>
+				
+				<p>Interested? Come on, join us in Chapter&nbsp;4...</p>
+
+<!-- Page 108 -->
+
+			<div class="pagebreak pageNumber">108</div>
+				
+				<div class="sidebar">
+					<img src="/contents/html5/figs/web/bulletpoints.png">
+				
+					<div class="itemizedlist">
+						<ul class="itemizedlist">
+							<li class="listitem">
+								<p>
+									There are lots of events happening in your browser all the time. If you want to
+									respond to these events, you need to handle the events with event handlers.
+								</p>
+							</li>
+						
+							<li class="listitem">
+								<p>
+									A button click event is triggered when you click on a button in a web page.
+								</p>
+							</li>
+						
+							<li class="listitem">
+								<p>
+									You handle a button click event by registering a function to handle the event.
+									You do this by writing a function, and setting the button’s onclick property to the function name.
+								</p>
+							</li>
+						
+							<li class="listitem">
+								<p>
+									If a button click event handler is registered, that function will be called when you
+									click on the button.
+								</p>
+							</li>
+							
+							<li class="listitem">
+								<p>
+									You write code in the handler function to respond to the button click event. You
+									can alert the user or update the page or something else.
+								</p>
+							</li>
+						
+							<li class="listitem">
+								<p>
+									To get the text a user has typed into a form input text field, you use the input’s value property.
+								</p>
+							</li>
+							
+							<li class="listitem">
+								<p>
+									If a user has not entered anything into a form input text field, the value of the
+									field will be the empty string (“”).
+								</p>
+							</li>
+						
+							<li class="listitem">
+								<p>
+									You can compare a variable to the empty string using an if test and ==.
+								</p>
+							</li>
+						
+							<li class="listitem">
+								<p>
+									To add a new element to the DOM, you first need to create the element and then
+									add it as a child of an element.
+								</p>
+							</li>
+						
+							<li class="listitem">
+								<p>
+									Use document.createElement to create a new element. Pass the tag name (e.g., “li”)
+									into the function call to indicate what element to create.
+								</p>
+							</li>
+						
+							<li class="listitem">
+								<p>
+									To add an element as a child of a parent element in the DOM, get a reference to the
+									parent, and call appendChild on the parent, passing in the child element you’re adding.
+								</p>
+							</li>
+						
+							<li class="listitem">
+								<p>
+									If you add multiple children to a parent by using appendChild, each new child is
+									appended after the other children, so they appear after or below the other children
+									in the page (assuming you’re not changing the layout with CSS).
+								</p>
+							</li>
+						
+							<li class="listitem">
+								<p>
+									You can use the Web Storage API (localStorage) to store data in a user’s browser.
+								</p>
+							</li>
+						
+							<li class="listitem">
+								<p>
+									We used localStorage to save playlist songs, using Ready Bake Code. You’ll
+									learn more about localStorage in Chapter&nbsp;9.
+								</p>
+							</li>
+						
+							<li class="listitem">
+								<p>
+									You’ll learn more about the DOM and JavaScript features like functions and objects in the next chapter.
+								</p>
+							</li>
+						</ul>
+					</div>
+				</div> <!-- /sidebar -->
+
+<!-- Page 109 -->
+
+			<div class="pagebreak pageNumber">109</div>
+				
+				<div class="sidebar">
+					<img src="/contents/html5/figs/web/html5cross2.png">
+				
+					<p>
+						Give yourself some time to understand the interactions between HTML and JavaScript. Think
+						through how it all works together. While you’re doing that mix it up a little by doing this
+						crossword. All the words are from this chapter.
+					</p>
+					
+					<figure>
+						<img src="/contents/html5/figs/web/109fig01.png">
+					</figure>
+					
+					<div class="informaltable">
+						<table style="border-collapse: collapse;">
+							<colgroup>
+								<col class="c1">
+								<col class="c2">
+								<col class="c3">
+								<col class="c4">
+							</colgroup>
+							
+							<thead>
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;" colspan="2">
+										<p>
+											Across
+										</p>
+									</td>
+								
+									<td style="vertical-align: top; border-bottom: 0.5pt solid ;" colspan="2">
+										<p>
+											Down
+										</p>
+									</td>
+								</tr>
+							</thead>
+							
+							<tbody>
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											2.
+										</p>
+									</td>
+								
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											DOM’s method for creating new elements.
+										</p>
+									</td>
+								
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											1.
+										</p>
+									</td>
+								
+									<td style="vertical-align: top; border-bottom: 0.5pt solid ;">
+										<p>
+											Code that takes care of events.
+										</p>
+									</td>
+								</tr>
+							
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											3.
+										</p>
+									</td>
+								
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											DOM’s method for adding new elements.
+										</p>
+									</td>
+								
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											2.
+										</p>
+									</td>
+							
+									<td style="vertical-align: top; border-bottom: 0.5pt solid ;">
+										<p>
+											Insert new elements as a ________.
+										</p>
+									</td>
+								</tr>
+							
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											5.
+										</p>
+									</td>
+								
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											Happens when the user clicks on a button.
+										</p>
+									</td>
+							
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											4.
+										</p>
+									</td>
+								
+									<td style="vertical-align: top; border-bottom: 0.5pt solid ;">
+										<p>
+											Artist used in our example song.
+										</p>
+									</td>
+								</tr>
+						
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											6.
+										</p>
+									</td>
+							
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											The DOM is like a family _______.
+										</p>
+									</td>
+							
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											8.
+										</p>
+									</td>
+							
+									<td style="vertical-align: top; border-bottom: 0.5pt solid ;">
+										<p>
+											What’s ahead? Functions and ________.
+										</p>
+									</td>
+								</tr>
+						
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											7.
+										</p>
+									</td>
+								
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											The grand matriarch of the DOM tree.
+										</p>
+									</td>
+							
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											9.
+										</p>
+									</td>
+							
+									<td style="vertical-align: top; border-bottom: 0.5pt solid ;">
+										<p>
+											A button click is an __________.
+										</p>
+									</td>
+								</tr>
+						
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											9.
+										</p>
+									</td>
+							
+									<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										<p>
+											The default value of a form input element if the user doesn’t type anything is the ______ string.
+										</p>
+									</td>
+							
+									<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+										&nbsp;
+									</td>
+						
+									<td style="border-bottom: 0.5pt solid ;">
+										&nbsp;
+									</td>
+								</tr>
+						
+								<tr>
+									<td style="vertical-align: top; border-right: 0.5pt solid ;">
+										<p>
+											10.
+										</p>
+									</td>
+						
+									<td style="vertical-align: top; border-right: 0.5pt solid ;">
+										<p>
+											Used in Ready Bake to enable storage.
+										</p>
+									</td>
+						
+									<td style="border-right: 0.5pt solid ;">
+										&nbsp;
+									</td>
+									<td>
+										&nbsp;
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div> <!-- /sidebar -->
+
+<!-- Page 110 -->
+
+			<div class="pagebreak pageNumber">110</div>
+			
+				<div class="sidebar">
+					<figure class="right">
+						<img src="/contents/html5/figs/web/110fig01.png">
+					</figure>
+
+					<img src="/contents/html5/figs/web/exercisesolution.png">
+				
+					<p>
+						For the playlist shown here, draw the DOM as it looks after you’ve added all these songs. Notice
+						the order in which the songs are added to the page, and make sure the elements are in the right
+						places in the DOM too. Here’s our solution.
+					</p>
+					
+					<figure>
+						<img src="/contents/html5/figs/web/110fig02.png">
+					</figure>
+				
+					<p>
+						Did you have to make any assumptions about the order in which the &lt;li&gt; elements are added to the parent?
+					</p>
+				</div> <!-- /sidebar -->
+
+<!-- Page 111 -->
+
+			<div class="pagebreak pageNumber">111</div>
+			
+				<div class="sidebar">
+					<img src="/contents/html5/figs/web/html5crosssolution.png">
+				
+					<figure>
+						<img src="/contents/html5/figs/web/111fig01.png">
+					</figure>
+				</div> <!-- /sidebar -->
+
+			</section> <!-- Section 20 -->
+
+		</section> <!-- Section 19 -->
+
+	</div> <!-- /container -->
+
+</body>
+</html>

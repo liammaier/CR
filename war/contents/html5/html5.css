@@ -1,0 +1,900 @@
+@charset "UTF-8";
+
+/* O'Reilly Media, 2012; version 2.6 */
+
+/* reset */
+
+.html5 html, .html5 body, .html5 div, .html5 span, .html5 applet, .html5 object, .html5 iframe, .html5 h1, .html5 h2,
+.html5 h3, .html5 h4, .html5 h5, .html5 h6, .html5 p, .html5 blockquote, .html5 pre, .html5 a, .html5 abbr,
+.html5 acronym, .html5 address, .html5 big, .html5 cite, .html5 code, .html5 del, .html5 dfn, .html5 em, .html5 font,
+.html5 img, .html5 ins, .html5 kbd, .html5 q, .html5 s, .html5 samp, .html5 small, .html5 strike, .html5 strong, .html5 sub,
+.html5 sup, .html5 tt, .html5 var, .html5 b, .html5 u, .html5 i, .html5 center, .html5 dl, .html5 dt, .html5 dd, .html5 ol,
+.html5 ul, .html5 li, .html5 fieldset, .html5 form, .html5 label, .html5 legend, .html5 table, .html5 caption,
+.html5 tbody, .html5 tfoot, .html5 thead, .html5 tr, .html5 th, .html5 td { 
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;}
+
+.html5 .clear {
+  clear: both;
+}
+
+.html5 .clearleft {
+  clear: left;
+}
+
+.html5 .clearright {
+  clear: right;
+}
+
+/* end reset */
+
+div.html5.container {
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  zoom: 1;
+  margin-top: 40px;
+  background-color: white;
+  
+  font-family: sans-serif;
+  font-size: 18px;
+  line-height: 1.5em;
+  max-width: 1000px;
+}
+
+.html5 aside {  
+  font-size: .9em;
+  line-height: 1.5em;
+  font-family: "Comic Sans MS";
+  color: #999;
+  padding: .5em;
+}
+
+.html5 aside.left, .html5 aside.right {
+  width: 30%;
+}
+
+.html5 .linebreak {
+  border-top: 3px solid #AAAAAA;
+  color: black;
+  padding-top: 10px;
+  margin: 50px 0;
+  width: 100%;
+}
+
+.html5 .pagebreak.pageNumber {
+  border-top: 3px solid #AAAAAA;
+  color: black;
+  padding-top: 10px;
+  margin: 50px 0;
+  width: 100%;
+}
+
+.html5 .pagebreak.pageNumber span{
+  color: #AAAAAA;
+  padding-left: 2em;
+  } /*this is for non-number text in pagebreaks*/
+
+.html5 .center {
+  text-align: center;
+}
+
+.html5 .left {
+  float: left;
+}
+
+.html5 .right {
+  float: right;
+
+}
+
+.html5 .full {
+  width:100%;
+}
+
+/* p margin */
+
+.html5 p { 
+  margin: 8px 0 0px;
+  padding-bottom:10px;
+}
+
+.html5 .asided { 
+  width: 65%;
+  margin: 8px 0 0px;
+  padding-bottom:10px;
+}
+
+/* headings */
+
+.html5 h1 {
+  font-size: 150%;
+  text-align: left;
+  font-weight: bold;
+  font-family: "Free Sans Bold", sans-serif;
+  margin-top: 20px;
+  margin-bottom:30px;
+}
+
+.html5 h2 { 
+  font-size: 180%;
+  font-weight: bold;
+  font-family: "Marker Felt", sans-serif;
+  font-style: italic;
+  color: black;
+  text-align: left;
+  margin-bottom:30px;
+}
+
+.html5 h2.first{ 
+  text-align: center;
+  font-size: 200%;
+  font-weight: bold;
+  font-family: "Arial black", sans-serif;
+  font-style: italic;
+  color: black;
+  margin-bottom:30px;
+}
+
+.html5 h3 {
+  font-size: 150%;
+  font-weight: bold;
+  font-family: "Marker Felt", sans-serif;
+  text-align: left;
+  margin-bottom:30px;
+  display: inline;
+}
+
+.html5 h4.inline{
+  font-size: 1.1em;
+  font-weight: bold;
+  font-family: "Free Sans Bold", sans-serif;
+  text-align: left;
+  margin-bottom: 0em;
+}
+
+.html5 h4 {
+  font-size: bold;
+  font-weight: 1em;
+  font-family: "Free Sans Bold", sans-serif;
+  color: #555;
+  margin: 9px 0;
+  text-align: left;
+  margin-bottom:30px;
+}
+
+/* Appropriate heading hyphenation suppression for different ereaders
+.html5 h1, .html5 h2, .html5 h3, .html5 h4 { 
+  -webkit-hyphens: none;
+  hyphens: none;
+  adobe-hyphenate: none;
+  page-break-after: avoid;
+}*/
+  
+/* images  */
+
+.html5 img {
+  max-width: 95%;
+  margin: 0 auto;
+  padding: 0;
+  margin-left: 0;
+}
+
+.html5 .carimg {
+  margin-left: 20px;
+}
+
+.html5 figure.right {
+  margin-right:0px;
+  margin-left: 20px;
+} /*puts space between content and figure which is on the right*/
+
+.html5 figure.lefthalf {
+  float: left;
+  width: 50%;
+  margin: 2em 0px;
+} /* When two images should be split 50-50 on the same line */
+
+.html5 figure.righthalf {
+  float: right;
+  width: 50%;
+  margin: 2em 0px;
+} /* When two images should be split 50-50 on the same line */
+
+/*.html5 div.figure {
+  margin: 10px 0 ;
+  text-align: center;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  background-color: transparent;
+  padding: 5px ;
+  page-break-inside: avoid;
+}*/
+
+/*.html5 div.figure p.title .html5 div.informalfigure div.caption {
+  font-size: 90%;
+  text-align: center;
+  font-weight: normal;
+  font-style: italic;
+  font-family: "Free Serif", serif;
+  color: #000;
+  padding: 5px ;
+  page-break-before: avoid;
+  page-break-after: avoid;
+}*/
+
+.html5 div.informalfigure {
+  text-align: center;
+  padding: 5px 0 ;
+}
+
+/* sidebars */
+
+.html5 div.sidebar {
+  margin: 20px 0 ;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  background-color: transparent;
+  font-size: 90%;
+  padding: 20px 30px ;
+  page-break-inside: avoid;
+}
+
+.html5 div.sidebar-left {
+  margin: 10px 0 ;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  background-color: transparent;
+  font-size: 90%;
+  padding: 10px 8px ;
+  page-break-inside: avoid;
+  width: 65%;
+  float: left;
+}
+
+.html5 div.sidebar-right {
+  margin: 10px 0 ;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  background-color: transparent;
+  font-size: 90%;
+  padding: 10px 8px ;
+  page-break-inside: avoid;
+  width: 30%;
+  float: right;
+}
+
+.html5 div.sidebar-left-pair {
+  margin: 10px 0 ;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  background-color: transparent;
+  font-size: 90%;
+  padding: 10px 8px ;
+  page-break-inside: avoid;
+  width: 48%;
+  float: left;
+}
+
+.html5 div.sidebar-right-pair {
+  margin: 10px 0 ;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  background-color: transparent;
+  font-size: 90%;
+  padding: 10px 8px ;
+  page-break-inside: avoid;
+  width: 48%;
+  float: right;
+}
+
+.html5 div.sidebar-left-pair-borderless {
+  margin: 10px 0 ;
+  background-color: transparent;
+  font-size: 90%;
+  padding: 10px 8px ;
+  page-break-inside: avoid;
+  width: 48%;
+  float: left;
+}
+
+.html5 div.sidebar-right-pair-borderless {
+  margin: 10px 0 ;
+  background-color: transparent;
+  font-size: 90%;
+  padding: 10px 8px ;
+  page-break-inside: avoid;
+  width: 48%;
+  float: right;
+}
+
+.html5 div.sidebar-right-borderless {
+  margin: 10px 0 ;
+  background-color: transparent;
+  font-size: 90%;
+  padding: 10px 8px ;
+  page-break-inside: avoid;
+  width: 30%;
+  float: right;
+}
+
+.html5 div.sidebar-left-dotted {
+  margin: 10px 0 ;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px dotted #000;
+  background-color: transparent;
+  font-size: 90%;
+  padding: 10px 8px ;
+  page-break-inside: avoid;
+  width: 50%;
+  float: left;
+}
+
+.html5 div.sidebar p.title {
+  font: bold 1em;
+  font-family: "Free Sans Bold", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  margin: 4px 0 6px 0 ;
+  page-break-inside: avoid;
+}
+
+.html5 div.sidebar div.informaltable td.checkbox {
+  vertical-align: middle;
+  border-right: 0.5pt solid;
+  border-bottom: 0.5pt solid;
+}
+
+.html5 div.sidebar div.informaltable td.item {
+  vertical-align: top;
+  border-right: 0.5pt solid;
+  border-bottom: 0.5pt solid;
+}
+
+.html5 div.sidebar-dotted {
+  margin: 20px 0 ;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px dotted #000;
+  background-color: transparent;
+  font-size: 90%;
+  padding: 20px 30px ;
+  page-break-inside: avoid;
+}
+
+.html5 div.sidebar-yellowed {
+  margin: 20px 0 ;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  background-color: #FFFFC8;
+  font-size: 90%;
+  padding: 20px 30px ;
+  page-break-inside: avoid; 
+  width: 30%;
+}
+
+.html5 div.sidebar-yellowed h2 {
+  font-style: normal;
+}
+
+.html5 div.sidebar-yellowed-nofloat {
+  margin: 20px 0 ;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  background-color: #FFFFC8;
+  font-size: 90%;
+  padding: 20px 30px ;
+  page-break-inside: avoid; 
+}
+
+.html5 div.sidebar-greyed {
+  margin: 20px 0 ;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  background-color: #D4D4D4;
+  padding: 20px 30px ;
+  page-break-inside: avoid; 
+  width: 30%;
+}
+
+.html5 div.sidebar-greyed h4 {
+  color: black;
+  font-style: italic;
+}
+
+/* code */
+
+.html5 pre {
+  white-space: pre-wrap;
+  font-family: "Ubuntu Mono", monospace;
+  margin: 10px 0 10px 20px;
+  display: block;
+  background-color: white;
+  -webkit-hyphens: none;
+  hyphens: none;
+  adobe-hyphenate: none;
+}
+
+.html5 table pre {
+  background-color: inherit;
+}
+
+.html5 code {
+  font-family: "Ubuntu Mono", monospace;
+  color: black;
+  background-color: white;
+}
+
+.html5 code strong em, .html5 code em strong, .html5 pre em strong, .html5 pre strong em,
+.html5 strong code em code, .html5 em code strong code, .html5 span.bolditalic code { /* yes, all of these variations are needed */
+  font-weight: bold;
+  font-style: italic;
+  font-family: "Ubuntu Mono BoldItal", monospace;
+}
+
+.html5 code em, .html5 em code, .html5 pre em, em.replaceable {
+  font-family: "Ubuntu Mono Ital", monospace;
+  font-style: italic;
+}
+
+.html5 code strong, .html5 strong code, .html5 pre strong, .html5 strong.userinput {
+  font-family: "Ubuntu Mono Bold", monospace;
+  font-weight: bold;
+}
+
+.html5 div.example {
+  margin: 10px 0 15px 0 ;
+}
+
+.html5 div.example p. {
+  font-style: italic;
+  font-weight: normal;
+  font-family: "Free Serif", serif;
+  margin: 10px 0 5px 0 ;
+}
+
+.html5 li pre.example {
+  padding: 10px 0 ;
+}
+
+
+/* modal */
+.html5 .modal-body {
+  max-height: 100%;
+  font-size: 80%;
+}
+
+.html5 .modal {
+  width: 80%;
+  height: 50%;
+  left: 10%;
+}
+
+.html5 .modal.fade.in {
+  top: 15%;
+}
+
+.html5 .modal textarea{
+	width: 100%;
+	cursor: auto;
+	height: 100%
+}
+
+/*.html5 div.example-contents pre.programlisting, .html5 div.example-contents pre.screen { margin: 0; }
+*/
+
+/* title and copyright page */
+
+.html5 div.book div.titlepage h1.title {
+  font-size: 3em;
+  font-family: "Emilys Candy", sans-serif;
+  margin: 50px 0 10px 0 ;
+  line-height: 1;
+  text-align: center;
+}
+
+.html5 div.book div.titlepage h2.subtitle {
+  text-align: center;
+  color: #000;
+  margin: 0 ;
+  font-style: italic;
+  font-family: serif;
+  font-size: 1.5em;
+}
+
+.html5 div.book div.titlepage div.author h3 {
+  font-size: 2em;
+  font-family: "Free Sans Bold", sans-serif;
+  color: #8e0012;
+  margin: 50px 0 ;
+  text-align: center;
+}
+
+.html5 div.book div.titlepage div.publishername {
+  margin-top: 60%;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.25em;
+}
+
+.html5 div.book div.titlepage div.locations p {
+  margin: 0;
+  text-align: center;
+}
+
+.html5 div.book div.titlepage div.locations p.cities {
+  font-size: 80%;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.html5 div.preface[title="Dedication"] > div.titlepage h1.title { 
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 1.5em;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.html5 div.preface[title="Dedication"] p {
+  font-style: italic;
+  text-align: center;
+}
+
+.html5 div.colophon h1.title {
+  font-size: 1.3em;
+  margin: 0 ;
+  font-family: "Free serif", serif;
+  font-weight: normal;
+}
+
+.html5 div.colophon h2.subtitle {
+  margin: 0 ;
+  color: #000;
+  font-family: "Free serif", serif;
+  font-size: 1em;
+  font-weight: normal;
+}
+ 
+.html5 div.colophon div.author h3.author {
+  font-size: 1.1em;
+  font-family: "Free serif", serif;
+  margin: 10px 0 0 ;
+  font-weight: normal;
+}
+
+.html5 div.colophon div.editor h4, .html5 div.colophon div.editor h3.editor {
+  color: #000;
+  font-size: 0.8em;
+  margin: 15px 0 0 ;
+  font-family: "Free serif", serif;
+  font-weight: normal;
+}
+
+.html5 div.colophon div.editor h3.editor {
+  font-size: 0.8em;
+  margin: 0 ;
+  font-family: "Free serif", serif;
+  font-weight: normal;
+}
+
+.html5 div.colophon div.publisher {
+  margin-top: 10px;
+}
+
+.html5 div.colophon div.publisher p,
+.html5 div.colophon div.publisher span.publishername {
+  margin: 0;
+  font-size: 0.8em;
+}
+
+.html5 div.legalnotice p, .html5 div.timestamp p {
+  font-size: 0.8em;
+}
+
+.html5 div.timestamp p {
+  margin-top: 10pt;
+}
+
+.html5 div.colophon[title="About the Author"] h1.title, .html5 div.colophon[title="Colophon"] h1.title {
+  font-size: 1.5em;
+  margin: 0 ;
+  font-family: "Free Sans", sans-serif;
+  font-weight: bold;
+}
+
+/* epigraphs, blockquotes, attributions */
+
+.html5 div.attribution {
+  margin: 5px 0 0 50px ;
+}
+
+.html5 h3.author span.orgname { display: none } /* to work around bug */
+
+.html5 div.epigraph {
+  margin: 10px 0 10px 20px ;
+  page-break-inside: avoid;
+  font-size: 90%;
+}
+
+.html5 blockquote{
+  margin: 20px 0 20px 5px ;
+  page-break-inside: avoid;
+  font-size: 95%;
+}
+
+.html5 blockquote p{
+  font-style: italic;
+  font-family: "Arial Narrow", serif;
+}
+
+.html5 blockquote div.attribution {  
+  margin: 5px 0 0 30px ;
+  text-align: right;
+  width: 80%;
+}
+
+.html5 blockquote div.attribution p {  
+  font-style: normal;
+}
+
+.html5 p.right {
+  text-align: right;
+  margin: 0;
+}
+
+/* footnotes */
+
+.html5 div.footnote {
+  font-size: 90%;
+}
+
+/* lists */
+
+.html5 dt {
+  padding-top: 10px ;
+  padding-bottom: 0 ;
+}
+
+.html5 dd {
+  margin-left: 1.5em ;
+}
+
+.html5 ol {
+  list-style-type: decimal;
+  margin-top: 8px ;
+  margin-bottom: 8px ;
+  margin-left: 20px ;
+  padding-left: 25px ;
+}
+
+.html5 ul { 
+  list-style-type: square;
+  margin-top: 8px ;
+  margin-bottom: 8px ;
+  margin-left: 5px ;
+  padding-left: 20px ;
+}
+
+.html5 ul.question-left {
+  float: left;
+  width: 45%;
+  list-style-type: none;
+}
+
+.html5 ul.question-right {
+  float: left;
+  width: 45%;
+  list-style-type: none;
+}
+
+/* tables */
+
+.html5 div.table, table {
+  margin: 10px auto ;
+  max-width: 95%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.html5 div.table, .html5 div.informaltable {
+  page-break-inside: avoid;
+}
+
+.html5 tr {
+  border-bottom: 1px solid #c3c3c3;
+}
+.html5 table.qanda tr td{
+  border-bottom: 0px solid #c3c3c3;
+  border-top: 0px solid #c3c3c3;
+}
+
+.html5 tr th {
+  border-bottom: #9d9d9d 2px solid ;
+  border-top: #9d9d9d 2px solid ; 
+}
+
+.html5 tr:nth-of-type(even) {
+  background-color: #F1E6FF;
+}
+
+
+.html5 th {
+  font-family: "Free Sans Bold", sans-serif;
+  color: #000;
+  font-weight: bold;
+}
+
+.html5 td, .html5 th {
+  padding: 0.3em;
+  text-align: left;
+  vertical-align: baseline;
+  
+}
+
+.html5 div.informaltable table {
+  margin: 10px auto ;
+}
+
+.html5 div.informaltable table tr {
+  border-bottom: none;
+}
+
+.html5 div.informaltable table tr:nth-of-type(even) {
+  background-color: transparent;
+}
+
+.html5 div.table p.title {
+  font-weight: normal;
+  font-style: italic;
+  font-family: "Free Serif", serif;
+  margin: 20px 0 0 0 ;
+  text-align: center;
+  padding: 0;
+}
+
+.html5 table code {
+  background-color: inherit;
+}
+
+
+/* Equations */
+
+.html5 div.equation p.title {
+  font-weight: normal;
+  font-style: italic;
+  font-family: "Free Serif", serif;
+  margin: 20px 0 10px 0 ;
+  page-break-after: avoid;
+}
+
+.html5 div.equation-contents {
+  margin-left: 20px;
+}
+
+/* inline images and math images used fallbacks from MathML */
+
+.html5 span.inlinemediaobject { /* for iBooks, which overrides height and width on img, per the specs */
+  height: 0.85em;
+  display: inline-block;
+  margin-bottom: 0.2em;
+}
+
+.html5 span.inlinemediaobject img {
+  margin: 0;
+  height: 0.85em;
+}
+
+.html5 .sidebarimg {
+  margin: 0;
+  float: left;
+}
+
+.html5 div.informalequation {
+  margin: 20px 0 20px 20px;
+  width: 75%;
+}
+
+.html5 div.informalequation img {
+  width: 75%;
+}
+
+.html5 div.invisible {
+  display: none; 
+}
+
+.html5 img.codeimage {
+  padding: 3px;
+}
+
+.html5 img.codeimagehover {
+  border: black 3px dotted;
+  padding: 0px;
+  padding-bottom: 1px;
+}
+
+/* syntax highlighting and coloring text in general */
+
+.html5 hr {
+  border-top: 3px solid #AAAAAA;
+  color: #AAAAAA;
+  margin: 50px 0;
+  width: 100%;
+}
+
+.html5 .gray-background {
+  background-color: lightgray;
+}
+
+/* Special handling for sampler TOC entry rendering */
+
+.html5 div.blockquote_sampler_toc {
+  width: 95%;
+  margin: 5px 5px 5px 10px ;
+}
+
+/* fonts (keep at bottom); using Free Serif and Sans as a fallback for its rich set of glyphs */
+
+/*@font-face {
+  font-family: "Free Serif";
+  font-style: normal;
+  font-weight: normal;
+  src: url(FreeSerif.otf);
+}
+
+@font-face {
+  font-family: "Free Sans Bold";
+  font-style: normal;
+  font-weight: bold;
+  src: url(FreeSansBold.otf);
+}
+
+@font-face {
+  font-family: "Ubuntu Mono";
+  font-weight: normal;
+  font-style: normal;
+  src: url(UbuntuMono-R.ttf);
+}
+
+@font-face {
+  font-family: "Ubuntu Mono Bold";
+  font-style: normal;
+  font-weight: bold;
+  src: url(UbuntuMono-B.ttf);
+}
+
+@font-face {
+  font-family: "Ubuntu Mono BoldItal";
+  font-weight: bold;
+  font-style: italic;
+  src: url(UbuntuMono-BI.ttf);
+}
+
+@font-face {
+  font-family: "Ubuntu Mono Ital";
+  font-weight: normal;
+  font-style: italic;
+  src: url(UbuntuMono-RI.ttf);
+}
+*/
+
+/* keep this body statement last */
+
+.html5 body {
+  font-family: "Free Serif", serif;
+}

@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h1>12</h1>
+				<h2>Timed Systems</h2>
+				<div class="border"></div>
+
+				<p><span class="first-sentence">The programs we have developed in the previous chapters of this book are not explicitly concerned with the passage of time.</span> We have used delays to make the execution of example programs viewable in a convenient way, however the correct operation of these programs is independent of time. Correctness depends on performing actions in a certain order and not on performing an action by a certain time. This has the advantage that the programs work safely, independently of processor speed and thread scheduling.</p>
+
+				<p class="i">In this chapter, we develop programs that <em>are</em> concerned with the passage of time and in which correctness <em>does</em> depend on performing actions by specific times. In general, we deal with the relationship between the time at which program actions are executed and the time that events occur in the real world. We make the simplifying assumption that program execution proceeds sufficiently quickly such that, when related to the time between external events, it can be ignored. For example, consider a program that detects double mouse clicks. The program notes the time that passes between successive mouse clicks and causes a double-click action to be executed when this is less than some specified period. The inter-click time for such a program would be specified in tenths of a second, while the instructions necessary to recognize clicks and measure the inter-click time would require tenths of a millisecond. In modeling and developing such a program, it is reasonable to ignore the execution time of actions. We can assume that the execution of an action takes zero time, although we do not assume that executing an infinite number of actions takes zero time. A much more difficult approach to action execution time is to specify and subsequently guarantee an upper bound to execution time. This falls into a specialized area of concurrent software design termed <em>real-time</em> and it is beyond the scope of this book.</p>
+
+				<p class="i">In the following, we first examine how we can incorporate time into models and then how the behavior exhibited by these models can be implemented in Java.</p>
+
+				<div class="pagebreak pageNumber">278</div>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Modeling Timed Systems">
+
+				<h3>12.1 Modeling Timed Systems</h3>
+
+				<p><span class="first-sentence">In Chapter 3, we stated that our model of concurrent execution was <em>asynchronous</em>; processes proceed at arbitrary relative speeds.</span> Consequently, the delay between two successive actions of a process can take an arbitrarily long time. How then do we make processes aware of the passage of time and, in particular, how can we synchronize their execution with time? The answer is to adopt a discrete model of time in which the passage of time is signaled by successive ticks of a clock. Processes become aware of the passage of time by sharing a global tick action. Time is measured as a positive integer value. To illustrate the use of this model of time, we return to the double-click program described in the introduction to the chapter. Figure 12.1 depicts the relationship between discrete time and mouse clicks.</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure12-1.png">
+					<figcaption><strong>Figure 12.1</strong> Discrete time and mouse clicks.</figcaption>
+				</figure>
+
+				<p>To make the discussion concrete, assume that the unit of time represented in Figure 12.1 is a second. We specify that a double-click should be recognized when the time between two successive mouse clicks is less than, say, three seconds. We can easily see that the click during period a and the click during period 1 constitute a double-click since the interval between these clicks must be less than two seconds. The click during period 3 and the click during period 7 do not form a double-click since there is an interval between these clicks of at least three seconds. The use of discrete time means that we cannot determine precisely when an event occurs, we can only say that it occurs within some period delimited by two ticks of the clock. This gives rise to some <em>timing uncertainty</em>. For example, if the last mouse click happened in period 6, would a double-click have occurred or not? The most we could say is that the last two mouse clicks were separated by at least two seconds and not more than four seconds. We can increase the accuracy by having more ticks per second, however some uncertainty remains. For example, with two ticks per second, we could say that two clicks were separated by at least 2.5 seconds and not more than 3.5 seconds. In fact, this uncertainty also</p>
+
+				<div class="pagebreak pageNumber">279</div>
+
+				<p>exists in implementations since time is measured in computer systems using a clock that ticks with a fixed periodicity, usually in the order of milliseconds. An implementation can only detect that two events are separated by time (n ± 1) * <em>T</em>, where <em>T</em> is the periodicity of the clock and <em>n</em> the number of clock ticks between the two events. In general, despite the limitations we have discussed above, discrete time is sufficient to model many timed systems since it is also the way time is represented in implementations.</p>
+
+				<p class="i">In the example above, if we want to ensure that the clicks which form a doubleclick are never more than three seconds apart, the last click would have to happen in period 5. Consequently, after the first mouse click occurs, the clock must not tick more than two times before the second click of a double-click occurs. To capture the behavior of the double-click program as a model in <em>FSP</em>, we use the <code>tick</code> action to signal the beginning (and end) of each period. A <code>doubleclick</code> action occurs if less than three <code>tick</code> actions occur between successive mouse <code>clicks</code>. The behavior of the double-click program is modeled as follows:</p>
+
+				<pre>
+DOUBLECLICK(D=3) =
+  (tick -> DOUBLECLICK | click -> PERIOD[1]) ,
+PERIOD[t:1..D]
+  (<strong>when</strong> (t==D) tick -> DOUBLECLICK
+  |<strong>when</strong> (t&lt;D)  tick -> PERIOD[t+1]
+  |click -> doubleclick -> DOUBLECLICK
+  ).
+				</pre>
+
+				<p>The <code>DOUBLECLICK</code> process accepts a <code>click</code> action at any time, since, initially, there is a choice between <code>click</code> and <code>tick</code>. When a <code>click</code> occurs, the process starts counting the <code>tick</code>s that follow. If a <code>click</code> occurs before the third succeeding <code>tick</code>, then a <code>doubleclick</code> action is output, otherwise the process resets. Figure 12.2 shows the <em>LTS</em> for <code>DOUBLECLICK</code> and two possible traces of the model; in (a) a <code>doubleclick</code> is output after two clicks and in (b) it is not.</p>
+
+				<p class="i">In discussing the double-click program, we assumed that clock ticks occur every second. However, this is simply an interpretation of the model. We choose an interpretation for a tick that is appropriate to the problem at hand. For example, in modeling hardware circuits, ticks would delimit periods measured in nanoseconds. However, within a particular time frame, the more accurately we represent time, the larger the model. For example, if we wanted to increase the accuracy of the double-click model while retaining the same time frame, we could decide to have two ticks per second and, consequently, the parameter <code>D</code> would become 6 rather than 3. This would double the number of states in <code>DOUBLECLICK</code>.</p>
+
+				<div class="pagebreak pageNumber">280</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure12-2.png">
+					<figcaption><strong>Figure 12.2</strong> <code>DOUBLECLICK</code> <em>LTS</em> and traces.</figcaption>
+				</figure>
+
+				<section class="subsection" data-number="2" data-name="Timing Consistency">
+
+					<h4>12.1.1 Timing Consistency</h4>
+
+					<p><span class="first-sentence">The previous example dealt with how a process is made aware of the passage of time.</span> We now examine the implications of time in models with multiple processes. We look at a simple producer-consumer system in which the <code>PRODUCER</code> process produces an item every <em>T<sub>p</sub></em> seconds and the <code>CONSUMER</code> process takes <em>T<sub>c</sub></em> seconds to consume an item. The models for the <code>PRODUCER</code> and <code>CONSUMER</code> processes are listed below:</p>
+
+					<div class="pagebreak pageNumber">281</div>
+
+					<pre>
+CONSUMER(Tc=3) =
+  (item -> DELAY[1] | tick -> CONSUMER),
+DELAY[t:1..Tc] = 
+  (<strong>when</strong>(t==Tc) tick -> CONSUMER
+  |<strong>when</strong>(T&lt;Tc)  tick -> DELAY[t+1]
+  ).
+
+ PRODUCER(Tp=3) =
+   (item -> DELAY[1]),
+ DELAY[t:1..Tp] =
+   (<strong>when</strong>(t==Tp) tick -> PRODUCER
+   |<strong>when</strong>(t&lt;Tp)  tick -> DELAY[t+1]
+   ).
+					</pre>
+
+					<p>Note that the consumer initially has a choice between getting an <code>item</code> and a <code>tick</code> action. This models waiting for an action to happen while allowing time to pass. We can model the three possible situations that can occur when the <code>PRODUCER</code> and <code>CONSUMER</code> processes are combined. Firstly, the situation where items are produced at the <em>same</em> rate that they are consumed:</p>
+
+					<pre>
+||SAME = (PRODUCER(2) || CONSUMER(2)).
+					</pre>
+
+					<p>Analysis of this system does not detect any safety problems. Similarly, analysis detects no problems in the system in which items are produced at a <em>slower</em> rate that they are consumed:</p>
+
+					<pre>
+||SLOWER = (PRODUCER(3) || CONSUMER(2)) .
+					</pre>
+
+					<p>However, analysis of the system in which the producer is <em>faster</em> than the consumer detects the deadlock depicted in Figure 12.3.</p>
+
+					<pre>
+||FASTER = (PRODUCER(2) || CONSUMER(3)) .
+					</pre>
+
+					<p>The deadlock occurs because after the first item is produced and accepted by the consumer, the producer tries to produce another item after two clock ticks, while the consumer must accept a third clock tick before it can accept another item. The deadlock is caused by the timing inconsistency between producer and consumer. The producer is required to produce an item every two seconds while the consumer can only consume an item every three seconds. This kind of deadlock, caused by timing inconsistencies, is termed a <em>time-stop</em>. If we combine processes into a system and time-stop does not occur, we can say that the timing assumptions built into these processes are consistent.</p>
+
+					<div class="pagebreak pageNumber">282</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure12-3.png">
+						<figcaption><strong>Figure 12.3 </strong>Timed Producer-Consumer deadlock.</figcaption>
+					</figure>
+
+				</section>
+
+				<section class="section" data-number="3" data-name="Maximal Progress">
+
+					<h4>12.1.2 Maximal Progress</h4>
+
+					<p><span class="first-sentence">Consider a system that connects the <code>PRODUCER</code> and <code>CONSUMER</code> processes of the previous section by a store for items as shown below:</span></p>
+
+					<pre>
+STORE(N=3) = STORE[0],
+STORE[i:0..N] = (put -> STORE[i+1]
+              |<strong>when</strong>(i&gt;0) get -> STORE[i-1]
+              ).
+
+||SYS = ( PRODUCER(1)/{put/item}
+        ||CONSUMER(1)/{get/item}
+        ||STORE
+        ).
+        			</pre>
+
+        			<p>We would reasonably expect that if we specify that items are consumed at the
+        			same rate that they are produced then the store would not overflow. In fact, if a
+        			safety analysis is performed then the following violation is reported:</p>
+
+        			<div class="pagebreak pageNumber">283</div>
+
+        			<pre>
+Trace to property violation in STORE:
+       put
+       tick
+       put
+       tick
+       put
+       tick
+       put
+					</pre>
+
+					<p>This violation occurs because the consumer has a choice between getting an item from the store, by engaging in the <code>get</code> action, and engaging in the <code>tick</code> action. If the consumer always chooses to let time pass, then the store fills up and overflows. To avoid this form of spurious violation in timed models, we must ensure that an action occurs as soon as all participants are ready to perform it. This is known as ensuring <em>maximal progress</em> of actions. We can incorporate maximal progress into our timed models by making the <code>tick</code> action low priority. For the example, a system that ensures maximal progress is described by:</p>
+
+					<pre>
+||NEW_SYS = SYS>>{tick} .
+					</pre>
+
+					<p>Safety analysis of this system reveals no violations. Maximal progress means that after a tick, all actions that can occur will happen before the next tick. However, even though we assume that actions take a negligible amount of time, it would be unrealistic to allow an infinite number of actions to occur between ticks. We can easily check for this problem in a model using the following progress property, which asserts that a <code>tick</code> action must occur regularly in any infinite execution (see Chapter 7).</p>
+
+					<pre>
+<strong>progress</strong> TIME = {tick}
+					</pre>
+
+					<p>The following process violates the <code>TIME</code> progress property because it permits an infinite number of <code>compute</code> actions to occur between <code>tick</code> actions:</p>
+
+					<pre>
+PROG = (start   -> LOOP | tick -> PROG),
+LOOP = (compute -> LOOP | tick -> LOOP).
+
+||CHECK = PROG>>{tick} .
+					</pre>
+
+					<p>The progress violation is reported by the analyzer as:</p>
+
+					<pre>
+Progress violation: TIME
+Path to terminal set of states:
+    start
+Actions in terminal set:
+{compute}
+					</pre>
+
+					<div class="pagebreak pageNumber">284</div>
+
+					<p>If we include an action that terminates the loop and then engages in a <code>tick</code> action, the progress property is not violated:</p>
+
+					<pre>
+PROG = (start   -> LOOP | tick -> PROG),
+LOOP = (compute -> LOOP | tick -> LOOP 
+       |end -> tick -> PROG
+       ).
+					</pre>
+
+					<p>This may seem strange since the loop still exists in the process. However, the <code>end</code> and <code>compute</code> actions are the same priority and consequently, with the fair choice assumption of Chapter 7, the <code>compute</code> action cannot be chosen an infinite number of times without the <code>end</code> action being chosen. The revised <code>LOOP</code> now models a finite number of iterations. The <code>tick</code> action following <code>end</code> means that the <code>PROG</code> process can only execute this finite <code>LOOP</code> once every clock tick. Consequently, the <code>TIME</code> progress property is not violated.</p>
+
+				</section>
+
+				<section class="section" data-number="4" data-name="Modeling Techniques">
+
+					<h4>12.1.3 Modeling Techniques</h4>
+
+					<p><span class="first-sentence">Incorporating time in models by the simple expedient of a global <code>tick</code> action
+					is surprisingly powerful.</span> In the following, we look at modeling techniques for
+					situations that occur frequently in timed systems.</p>
+
+					<h5>Output in an Interval</h5>
+
+					<p>The examples we have seen so far produce an output or accept an input at a precise time, within the limitations of the discrete model of time. The <code>INTERVAL</code> process below produces an output at any time after <code>Min</code> ticks and before <code>Max</code> ticks. The <em>LTS</em> for the process is depicted in Figure 12.4.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure12-4.png">
+						<figcaption><strong>Figure 12.4</strong> <em>LTS</em> for <code>OUTPUT (1 ,3)</code>.</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">285</div>
+
+					<pre>
+OUTPUT(Min=1,Max=3) =
+  (start -> OUTPUT[1] | tick -> OUTPUT),
+OUTPUT[t:1..Max] =
+  (<strong>when</strong> (t>Min &amp;&amp; t&lt;=Max) output ->OUTPUT
+  |<strong>when</strong> (t&lt;Max)           tick ->OUTPUT[t+1]
+  ).
+					</pre>
+
+					<p>The technique of using choice with respect to the <code>tick</code> action allows us to model processes in which the completion time is variable, for example, due to loading or congestion .</p>
+
+					<h5>Jitter</h5>
+
+					<p>A variation on the previous technique is a process that periodically produces an output at a predictable rate. However, the output may be produced at any time within the period. In communication systems, this kind of timing uncertainty is termed <em>jitter</em>. The <code>JITTER</code> process defined below is an example of how jitter can be modeled. Figure 12.5 depicts the <em>LTS</em> for the <code>JITTER</code> process.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure12-5.png">
+						<figcaption><strong>Figure 12.5</strong> <em>LTS</em> for <code>JITTER(2)</code>.</figcaption>
+					</figure>
+
+					<pre>
+JITTER(Max=2) = 
+  (start -> JITTER[1] | tick -> JITTER), 
+JITTER[t:1..Max] =
+  (output -> FINISH[t] 
+  |<strong>when</strong> (t&lt;Max) tick -> JITTER[t+1] 
+  ),
+					</pre>
+
+					<div class="pagebreak pageNumber">286</div>
+
+					<pre>
+FINISH[t:1..Max]
+  (<strong>when</strong> (t&lt;Max)    tick -> FINISH[t+1]
+  |<strong>when</strong> (t==Max)   tick -> JITTER
+  ).
+					</pre>
+
+					<h5>Timeout</h5>
+
+					<p>Timeouts are frequently used to detect the loss of messages in communication systems or the failure of processes in distributed systems. Java provides a version of the <code>wait()</code> synchronization primitive that takes a timeout parameter - a <code>wait()</code> invocation returns either when notified or when the timeout period expires. The most elegant way to model a timeout mechanism is to use a separate process to manage the timeout, as shown below for a receive operation with a timeout. The timeout and receive processes are combined into a <code>RECEIVER</code> process.</p>
+
+					<pre>
+TIMEOUT(D=1) 
+  = (setTO          -> TIMEOUT[0]
+    |{tick,resetTO} -> TIMEOUT
+    ),
+TIMEOUT[t:0..D]
+  = (<strong>when</strong> (t&lt;D) tick    -> TIMEOUT[t+1]
+    |<strong>when </strong>(t==D)timeout -> TIMEOUT
+    |resetTO            -> TIMEOUT
+    ).
+
+RECEIVE = (start   -> setTO -> WAIT) ,
+WAIT    = (timeout -> RECEIVE 
+          |receive -> resetTO -> RECEIVE 
+          ).
+
+||RECEIVER(D=2) = (RECEIVE || TIMEOUT(D))
+                >>{receive,timeout,start,tick}
+                @{receive,tick,timeout,start}.
+					</pre>
+
+					<p>In addition to <code>tick</code>, the <code>start</code>, <code>receive</code> and <code>timeout</code> actions are declared as low priority in the <code>RECEIVER</code> composite process. This is because maximal progress requires that an action take place when all the participants in that action are ready. However, the participants in interface actions depend on the system into which <code>RECEIVER</code> is placed, so we should not apply maximal progress to these actions within the <code>RECEIVER</code> process but later at the system level. Consequently, we give interface actions the same priority as the <code>tick</code> action. All internal actions have a</p>
+
+					<div class="pagebreak pageNumber">287</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure12-6.png">
+						<figcaption><strong>Figure 12.6</strong> <em>LTS</em> for <code>RECEIVER(2)</code>.</figcaption>
+					</figure>
+
+					<p>higher priority. The minimized <em>LTS</em> for <code>RECEIVER</code>, which hides the internal actions concerned with setting and resetting the timeout, is depicted in Figure 12.6.</p>
+
+				</section>
+
+			</section>
+
+			<section class="subsection" data-number="5" data-name="Implementing Timed Systems">
+
+				<h3>12.2 Implementing Timed Systems</h3>
+
+				<p><span class="first-sentence">Timed concurrent systems can be implemented in Java by a set of threads which use <code>sleep()</code> and timed <code>wait()</code> to synchronize with time.</span> We can characterize this as a <em>thread-based</em> approach since active entities in the model are translated into threads in an implementation. This approach to translating models into programs was used in the preceding chapters for non-timed systems. In this chapter, we exploit the time-driven nature of the models and use an <em>event-based</em> approach in which active entities are translated into objects that respond to timing events. Essentially, the <code>tick</code> action in the model becomes a set of events broadcast by a time manager to all the program entities that need to be aware of the passage of time. The organization of a timed system implementation conforms to the Announcer-Listener architecture described in Chapter 11, with the time manager acting as the announcer and timed objects as the listeners. We have chosen this event-based approach for two reasons. First, the translation from timed model to timed implementation is reasonably direct; and secondly, for timed systems with many activities the resulting implementation is more efficient than the thread-based approach since it avoids context-switching overheads. However, as discussed in the following, the approach also has some limitations when compared with a thread-based approach.</p>
+
+				<div class="pagebreak pageNumber">288</div>
+
+				<section class="subsection" data-number="6" data-name="Timed Objects">
+
+					<h4>12.2.1 Timed Objects</h4>
+
+					<p><span class="first-sentence">Each process in a timed model that has <code>tick</code> in its alphabet becomes a <em>timed</em> object
+					in an implementation.</span> A timed object is created from a class that implements the
+					<code>Timed</code> interface listed in Program 12.1.</p>
+
+					<p class="i">Each timed object is registered with the time manager, which implements a two-phase event broadcast. In phase 1, the <code>pretick()</code> method of each timed object is invoked and, in phase 2, the <code>tick()</code> method is invoked. The behavior of a timed object is provided by the implementation of these two methods. In the <em>pre-tick</em> phase, the object performs all output actions that are enabled in its current state. These may modify the state of other timed objects. In the <em>tick</em> phase, the object updates its state with respect to inputs and the passage of time. Two phases are needed to ensure that communication between timed objects completes within a single clock cycle. We clarify the translation from model processes into timed objects, with <code>pretick()</code> and <code>tick()</code> methods and the use of the <code>TimeStop</code> exception, in the examples that follow.</p>
+
+					<pre class="program">
+<strong>public interface</strong> Timed {
+  void pretick()<strong> throws </strong>TimeStop;
+  void tick();
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 12.1</strong> <code>Timed</code> interface.</p>
+
+					<h5>Countdown Timer</h5>
+
+					<p>A version of the countdown timer model introduced in Chapter 2 is given below.</p>
+
+					<pre>
+COUNTDOWN (N=3)   = COUNTDOWN[N],
+COUNTDOWN[i:0..N] =
+  (<strong>when</strong>(i>0)  tick -> COUNTDOWN[i-1]
+  |<strong>when</strong>(i==0) beep -> STOP
+  ).
+					</pre>
+
+					<p>The <code>COUNTDOWN</code> process outputs a <code>beep</code> action after <em>N</em> ticks and then stops. The implementation is given in Program 12.2. The translation from the model is straightforward. Each invocation of the <code>tick()</code> method decrements the integer variable <code>i</code>. When <code>i</code> reaches zero, the next invocation of <code>pretick()</code> performs the beep action and the timer stops by removing itself from the time manager. The operation of <code>TimeManager</code> is described in the next section.</p>
+
+					<div class="pagebreak pageNumber">289</div>
+
+					<pre class="program">
+<strong>class</strong> TimedCountDown <strong>implements</strong> Timed {
+  int i; TimeManager clock;
+
+  TimedCountDown(int N, TimeManager clock) {
+    i = N; <strong>this</strong>.clock = clock;
+    clock.addTimed(this); <em>// register with time manager</em>
+  }
+
+  <strong>public</strong> void pretick() throws TimeStop {
+    <strong>if</strong> (i==0) {
+        <em>// do beep action</em>
+       clock.removeTimed(<strong>this</strong>);  <em>// unregister = STOP</em>
+    }
+  }
+
+  <strong>public</strong> void tick(){ --i; }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 12.2</strong> <code>TimedCountDown</code> class.</p>
+
+					<h5>Timed Producer-Consumer</h5>
+
+					<p>The next example implements the producer -consumer model of section 12.1.1. To keep the code succinct, the timed class definitions are nested inside the <code>ProducerConsumer</code> class of Program 12.3. The class creates the required instances of the <code>Producer</code>, <code>Consumer</code> and <code>TimeManager</code> classes.</p>
+
+					<pre class="program">
+<strong>class</strong> ProducerConsumer {
+  TimeManager clock = <strong>new</strong> TimeManager(1000);
+  Producer producer = <strong>new</strong> Producer(2);
+  Consumer consumer = <strong>new</strong> Consumer(2);
+  ProducerConsumer() {clock.start();}
+
+  <strong>class</strong> Consumer <strong>implements</strong> Timed {...}
+  <strong>class</strong> Producer <strong>implements</strong> Timed {...}
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 12.3</strong> <code>ProducerConsumer</code> class.</p>
+
+					<p>For convenience, the <code>PRODUCER</code> process is listed below:</p>
+
+					<pre>
+PRODUCER(Tp=3) =
+  (item -> DELAY[1]),
+					</pre>
+
+					<div class="pagebreak pageNumber">290</div>
+
+					<pre>
+DELAY[t:1..Tp] = 
+  (<strong>when</strong>(t==Tp) tick -> PRODUCER
+  |<strong>when</strong>(T&lt;Tp) tick -> DELAY[t+1]
+  ).
+  					</pre>
+
+  					<p>Initially, the producer outputs an item and then waits for <em>Tp</em> clock ticks before outputting another item. The timed class that implements this behavior is listed in Program 12.4.</p>
+
+  					<pre class="program">
+<strong>class</strong> Producer <strong>implements</strong> Timed {
+  int Tp,t;
+
+  Producer(int Tp) {
+    <strong>this</strong>.Tp = Tp; t = 1;
+    clock.addTimed(this);
+  }
+
+  <strong>public</strong> void pretick() <strong>throws</strong> TimeStop {
+    <strong>if</strong> (t==1) consumer.item(new Object());
+  }
+
+  <strong>public</strong> void tick() {
+    <strong>if</strong> (T&lt;Tp) { ++t; <strong>return</strong>; }
+    <strong>if</strong> (t==Tp) { t = 1; }
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 12.4</strong> <code>Producer</code> class.</p>
+
+					<p>An instance of the <code>Producer</code> class is created with <code>t = 1</code> and the <code>consumer.item()</code> method is invoked on the first pre-tick clock phase after creation. Each subsequent tick increments <code>t</code> until a state is reached when another item is output. The behavior corresponds directly with <code>PRODUCER</code>.</p>
+
+					<p class="i">Now let us examine how the <code>item()</code> method is handled by the consumer. The timed model for the consumer is shown below. The consumer waits for an item and then delays <em>Tc</em> ticks before offering to accept another item.</p>
+
+					<pre>
+CONSUMER(Tc=3) =
+  (item -> DELAY[1] | tick -> CONSUMER),
+DELAY[t:1..Tc] =
+					</pre>
+
+					<div class="pagebreak pageNumber">291</div>
+
+					<pre>
+(<strong>when</strong>(t==Tc) tick -> CONSUMER
+|<strong>when</strong>(t&lt;Tc) tick -> DELAY[t+1]
+).
+					</pre>
+
+					<p>The implementation of <code>CONSUMER</code> is listed in Program 12.5.</p>
+
+					<pre class="program">
+<strong>class</strong> Consumer <strong>implements</strong> Timed {
+  int Tc,t; Object consuming = null;
+
+  Consumer(int Tc) {
+    <strong>this</strong>.Tc = Tc; t = 1;
+    clock.addTimed(this);
+  }
+
+  void item(Object x) <strong>throws</strong> TimeStop {
+    <strong>if</strong> (consuming!=null) <strong>throw</strong> new TimeStop();
+    consuming = x;
+  }
+
+  <strong>public</strong> void pretick() {}
+
+  <strong>public</strong> void tick() {
+    <strong>if</strong> (consuming==null) <strong>return</strong>;
+    <strong>if</strong> (t&lt;Tc) { ++t; <strong>return</strong>;}
+    <strong>if</strong> (t==Tc) {consuming = null; t = 1;}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 12.5</strong> <code>Consumer</code> class.</p>
+
+					<p>In the Consumer class, the <code>tick()</code> method returns immediately if the <code>consuming</code> field has the value <code>null</code>, implementing the behavior of waiting for an item. The <code>item()</code> method sets this field when invoked by the producer. When consuming is not <code>null</code>, the <code>tick()</code> method increments <code>t</code> until <code>Tc</code> is reached and then resets <code>consuming</code> to null indicating that the item has been consumed and that another item can be accepted. Effectively, <code>consuming</code> represents the <code>DELAY</code> states in the model. If the producer tries to set <code>consuming</code> when it is not <code>null</code> then a <code>TimeStop</code> exception is thrown. This signals a timing inconsistency in exactly the same way that a <em>time-stop</em> deadlock in the model is the result of a timing inconsistency. <code>TimeStop</code> is thrown if the producer tries to output an item when</p>
+
+					<div class="pagebreak pageNumber">292</div>
+
+					<p>the previous item has not yet been consumed. As we see in the next section, a <code>TimeStop</code> exception stops the time manager and consequently, no further actions are executed. The implementation of producer-consumer has exactly the same property as the model. For correct execution, <em>Tc</em> must be less than or equal to <em>Tp</em>. Note that, in the Consumer class, the method <code>pretick()</code> has no implementation because the class has no outputs.</p>
+
+					<h5>The Two-Phase Clock</h5>
+
+					<p>The operation of the two-phase clock cycle should now be clear. Methods on other objects are invoked during the pre-tick phase and the changes in state caused by these invocations are recognized in the tick phase. This ensures that actions complete in a single clock cycle. However, this scheme only approximates the maximal progress property of timed models. Maximal progress ensures that all actions that can occur happen before the next tick. Our implementation scheme only gives each timed object one opportunity to perform an action, when its <code>pretick()</code> method is executed. A multi-way interaction between timed objects thus requires multiple clock cycles. An example of a multi-way interaction would be a request action followed by a reply followed by an acknowledgment (threeway). Maximal progress in the model ensures that such a multi-way interaction would occur within a single clock cycle if no intervening tick events were specified. We could implement a multi-phase clock scheme to allow multi-way interaction in a single clock cycle, however this complexity might be better dealt with by reverting to a thread-based implementation scheme. In fact, the examples later in the chapter show that the two-phase scheme is sufficiently powerful to implement quite complex systems that exhibit the same behavior as their models. We take care that multi-way interaction within a single clock cycle is not required. This usually means that we introduce an intervening tick in the model, for example between a request and a reply.</p>
+
+					<p class="i">In addition to the ease with which models can be translated into implementations, the event-based implementation scheme has the advantage, when compared to the thread-based scheme, that we do not have to synchronize access to shared objects. The activations of the <code>tick()</code> and <code>pretick()</code> methods of a timed object are indivisible with respect to other activations of these methods. This is because the methods are dispatched sequentially by the time manager. Method dispatch incurs much less overhead than context switching between threads. Consequently, the event-based scheme is more efficient in systems with large numbers of timedriven concurrent activities. An example of such a system is presented in the final section of the chapter.</p>
+
+					<div class="pagebreak pageNumber">293</div>
+
+				</section>
+
+				<section class="subsection" data-number="7" data-name="Time Manager">
+
+					<h4>12.2.2 Time Manager</h4>
+
+					<p><span class="first-sentence">The <code>TimeManager</code> class (Program 12.6) maintains a list of all those timed objects which have registered with it using <code>addTimed()</code>.</span> The <code>pretick()</code> and <code>tick()</code> methods are invoked on all <code>Timed</code> objects in this list by the <code>TimeManager</code> thread every <code>delay</code> milliseconds. The value of <code>delay</code> can be adjusted by an external control, such as a slider through the <code>AdjustmentListener</code> interface that the class implements.</p>
+
+					<p class="i">The data structure used to hold the list of timed objects must be designed with some care. A <code>pretick()</code> or <code>tick()</code> method may cause a timed object to remove itself from the list. To ensure that such a removal does not destroy the integrity of the list data structure, we use an immutable list that does not change during an enumeration off it. If a removal occurs during a broadcast, this removal generates a new list which is used for the next broadcast. The class implementing the immutable list is given in Program 12.7.</p>
+
+					<pre class="program">
+<strong>public class</strong> TimeManager <strong>extends</strong> Thread
+                      <strong>implements</strong> AdjustmentListener{
+  <strong>volatile</strong> int delay;
+  <strong>volatile</strong> ImmutableList&lt;Timed> clocked = null;
+
+  <strong>public</strong> TimeManager(int d) {delay = d;}
+
+  <strong>public</strong> void addTimed(Timed el) {
+    clocked = ImmutableList.add(clocked,el);
+  }
+
+  <strong>public</strong> void removeTimed(Timed el) {
+    clocked = ImmutableList.remove(clocked,el);
+  }
+
+  <strong>public</strong> void adjustmentValueChanged(AdjustmentEvent e) {
+    delay = e.getValue();
+  }
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      <strong>while</strong>(true) {
+        <strong>try</strong> {
+          <strong>for</strong> (Timed e: clocked) e.pretick(); <em>//pretick broadcast</em>
+               <strong>for</strong> (Timed e :clocked) e.tick(); <em>//tick broadcast</em>
+        } <strong>catch</strong> (TimeStop s) {
+        			</pre>
+
+        			<p class="program-caption"><strong>Program 12.6</strong> <code>TimeManager</code> class.</p>
+
+        			<div class="pagebreak pageNumber">294</div>
+
+	       			<pre class="program">
+            System.out.println("*** TimeStop");
+            <strong>return</strong>;
+        }
+        Thread.sleep(delay);
+      }
+    }  <strong>catch</strong> (InterruptedException e) {}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 12.6</strong> (<em>Continued</em>).</p>
+
+					<pre class="program">
+<strong>public class</strong> ImmutableList&lt;T> <strong>implements</strong> Iterable&lt;T> {
+  ImmutableList&lt;T> next;
+  T item;
+
+  <strong>private</strong> ImmutableList
+         (ImmutableList&lt;T> next, T item) {
+    this.next = next; this.item=item;
+  }
+
+  <strong>public static</strong>&lt;T> ImmutableList&lt;T> add
+           (ImmutableList&lt;T> list, T item) {
+    <strong>return new</strong> ImmutableList&lt;T>(list, item);
+  }
+
+  <strong>public static</strong>&lt;T> ImmutableList&lt;T> remove
+           (ImmutableList&lt;T> list, T target) {
+    <strong>if</strong> (list == null) return null;
+    <strong>return</strong> list.remove(target);
+  }
+
+  <strong>private</strong> ImmutableList&lt;T> remove(T target) {
+    <strong>if</strong> (item == target) {
+      <strong>return</strong> next;
+    } <strong>else</strong> {
+      ImmutableList&lt;T> new_next = remove(next,target);
+      <strong>if</strong> (new_next == next ) <strong>return</strong> this;
+      <strong>return new</strong> ImmutableList&lt;T>(new_next,item);
+    }
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 12.7</strong> <code>ImmutableList</code> class.</p>
+
+					<div class="pagebreak pageNumber">295</div>
+
+					<p>The <code>delay</code> and <code>clocked TimeManager</code> fields (Program 12.6) are declared to be <strong><code>volatile</code></strong> since they can be changed by external threads. The keyword <strong><code>volatile</code></strong> ensures that the <code>run()</code> method reads the actual value of these fields before every broadcast. It prevents a compiler optimizing access by storing the fields in local variables or machine registers. If such an optimization occurred, the values would be read only once, when the <code>run()</code> method started, and it would not see subsequent updates.</p>
+
+					<p class="i">The <code>pretick()</code> method allows a timed object to throw a <code>TimeStop</code> exception if it detects a timing inconsistency. This exception terminates the <code>TimeManager</code> thread. Consequently, a timing inconsistency in an implementation has the same behavior as a model with timing inconsistency - no further actions can be executed.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="8" data-name="Parcel Router Problem">
+
+				<h3>12.3 Parcel Router Problem</h3>
+
+				<p><span class="first-sentence">The parcel router problem is concerned with the simple parcel-sorting device depicted in Figure 12.7.</span>
+				</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure12-7.png">
+					<figcaption><strong>Figure 12.7 </strong>Parcel router device.</figcaption>
+				</figure>
+
+				<p>Parcels are dropped into the top of the router and fall by gravity through the chutes. Each parcel has a destination code that can be read by sensors. When a parcel passes a sensor, its code is read and the switch following the sensor is set to route the parcel to the correct destination bin. In this simple router, there are only four possible destinations numbered from zero to three. The switches can only be moved when there is no parcel in the way. The problem was originally formulated as a simple case study to show that specifications are not independent of implementation bias (Swartout and Balzer, 1982). It was called the <em>Package Router</em> problem. We have renamed packages to parcels to avoid possible confusion with Java packages.</p>
+
+				<div class="pagebreak pageNumber">296</div>
+
+				<p class="i">In the following, we develop a timed model of the parcel router and then implement a simulation based on the model. We ignore gravity and friction and assume that parcels fall at a constant rate through chutes and switches.</p>
+
+				<section class="subsection" data-number="9" data-name="Parcel Router Model">
+
+					<h4>12.3.1 Parcel Router Model</h4>
+
+					<p><span class="first-sentence">The overall structure of the parcel router model is depicted in Figure 12.8.</span> Parcels
+					are fed into the routing network by a generator process and emerge from the
+					network into one of four destination bins.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure12-8.png">
+						<figcaption><strong>Figure 12.8</strong> Parcel router model structure.</figcaption>
+					</figure>
+
+					<h5>GEN</h5>
+
+					<p>The generator process <code>GEN</code>, defined below, generates a parcel every <code>T</code> units of time. Each parcel contains the number of its destination. The generator picks a destination for a parcel using non-deterministic choice.</p>
+
+					<div class="pagebreak pageNumber">297</div>
+
+					<pre>
+<strong>range</strong> Dest = 0..3
+<strong>set</strong> Parcel = {parcel[Dest]}
+
+GEN(T=3) =
+  (enter[Parcel] -> DELAY[1] | tick -> GEN),
+DELAY[t:1..T] = 
+  (tick -> <strong>if</strong> (t&lt;T) <strong>then</strong> DELAY[t+1] <strong>else</strong> GEN) .
+					</pre>
+
+					<h5>BIN</h5>
+
+					<p>The destination bins are property processes that assert that the parcel delivered by the routing network to the bin must have the same destination number as the bin.</p>
+
+					<pre>
+<strong>property</strong>
+    BIN(D=0) = (dest[D].parcel[D] -> BIN)
+               +{dest[D][Parcel]} .
+					</pre>
+
+					<h5>STAGE</h5>
+
+					<p>We have subdivided the routing network into three stages. Each stage has an identical structure. The parameter to a stage determines its level in the routing network. The structure of the <code>STAGE</code> composite process is depicted in Figure 12.9.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure12-9.png">
+						<figcaption><strong>Figure 12.9</strong> <code>STAGE</code> structure.</figcaption>
+					</figure>
+
+					<p>The composition expression which Figure 12.9 represents graphically is:</p>
+
+					<pre>
+||STAGE(L=0) =
+   ( a:CHUTE || b:CHUTE || g:SWITCH
+   || s: SENSORCONTROLLER(L) 
+   )/{ enter/a.enter, b.enter/{s.sense,a.leave},
+					</pre>
+
+					<div class="pagebreak pageNumber">298</div>
+
+					<pre>
+       g.enter/b.leave, s.setSwitch/g.setSwitch, 
+       left/g.leave[0], right/g.leave[1], 
+       tick/{a,b,g}.tick
+     } >>{enter,left,right,tick}
+        @{enter,left,right,tick} .
+        			</pre>
+
+        			<h5>CHUTE</h5>
+
+        			<p>Each physical chute in the physical device is modeled by a set of <code>CHUTE</code> processes. A <code>CHUTE</code> process models the movement of a single parcel through a segment of a physical chute. To model a chute that can have <em>n</em> parcels dropping through it, we need <em>n</em> <code>CHUTE</code> processes. In modeling the system, we use two processes and so we are modeling a physical chute that can accommodate only two parcels. The <code>CHUTE</code> process is given below:</p>
+
+        			<pre>
+CHUTE(T=2) =
+  (enter[p:Parcel] -> DROP[p][0]
+  |tick            -> CHUTE
+  ),
+DROP[p:Parcel][i:0..T] = 
+  (<strong>when</strong> (i&lt;T)  tick     -> DROP[p][i+1]
+  |<strong>when</strong> (i==T) leave[p] -> CHUTE
+  ).
+  					</pre>
+
+  					<p>A parcel enters the chute and leaves after <code>T</code> units of time. We must be careful when composing <code>CHUTE</code> processes that the resulting composition has consistent timing. For example, the following system has a time-stop.</p>
+
+  					<pre>
+||CHUTES = (first:CHUTE(1) || second:CHUTE(2))
+           /{second.enter/first.leave,
+             tick/{first,second}.tick}.
+					</pre>
+
+					<p>It happens when a parcel tries to enter the second <code>CHUTE</code> before the previous parcel has left. Time-stop in this context can be interpreted as detecting a parcel jam in the physical device. For consistent timing in a pipeline of <code>CHUTE</code> processes, each process must have a delay which is the same or greater than the delay of its successor.</p>
+
+					<h5>SENSORCONTROLLER</h5>
+
+					<p>This process detects a parcel by observing the action caused by a parcel passing from one <code>CHUTE</code> to the next. Based on the destination of the parcel, it computes how the switch should be set. This routing function depends on the level of the stage. Because the network is a binary tree, it is simply (<em>destination>>Level</em>)&amp;1</p>
+
+					<div class="pagebreak pageNumber">299</div>
+
+					<p>(in this expression context, >> is the bit <em>shift</em> operator and &amp; the bit-wise <em>and</em> operator). The function returns either zero, indicating left, or one, indicating right. <code>SENSORCONTROLLER</code> is not a timed process since we assume that detection of the parcel and computation of the route take negligible time. Each execution occurs within a clock cycle.</p>
+
+					<pre>
+SENSORCONTROLLER (Level=0)
+  = (sense.parcel[d:Dest] -> setSwitch[(d>>Level)&amp;1]
+     -> SENSORCONTROLLER).
+					</pre>
+
+					<h5>SWITCH</h5>
+
+					<p>During the time that a parcel takes to pass through the parcel switch, it ignores commands from the <code>SENSORCONTROLLER</code>. This models the physical situation where a parcel is passing through the switch and consequently, the switch gate is obstructed from moving.</p>
+
+					<pre>
+range Dir = 0..1 <span>//Direction 0 = left, 1 = right</span>
+
+SWITCH(T=1)   = SWITCH[0],
+SWITCH[s:Dir] =
+  (setSwitch[x:Dir] -> SWITCH[x]    <span>//accept switch command</span>
+  |enter[p:Parcel]  -> SWITCH[s][p][0]
+  |tick             -> SWITCH[s]
+  ),
+SWITCH[s:Dir][p:Parcel][i:0..T] =
+  (setSwitch[Dir]          -> SWITCH[s][p][i]  <span>//ignore</span>
+  |<strong>when</strong> (i&lt;T) tick         -> SWITCH[s][p][i+1]
+  |<strong>when</strong> (i==T) leave[s][p] -> SWITCH[s]
+  ).
+					</pre>
+
+					<p>The <code>SWITCH</code> process extends the behavior of the <code>CHUTE</code> process with an additional component of its state to direct output and an extra action to set this state. <code>SWITCH</code> can be implemented by deriving its behavior, using inheritance, from the implementation of <code>CHUTE</code>.</p>
+
+					<h5>Analysis</h5>
+
+					<p>Having completed the definition of all the elements of the <code>PARCEL_ROUTER</code> model, we are now in a position to investigate its properties. We first perform a safety analysis of a minimized <code>PARCEL_ROUTER(3)</code>. This system feeds a new parcel every three timing units into the routing network. This produces the following property violation:</p>
+
+					<div class="pagebreak pageNumber">300</div>
+
+					<pre>
+Trace to property violation in BIN(0):
+       enter.parcel.O
+       tick
+       tick
+       tick
+       enter.parcel.1
+       tick
+       tick
+       tick
+       enter.parcel.0
+       tick
+       tick
+       tick
+       enter.parcel.0
+       tick
+       dest.0.parcel.0
+       tick
+       tick
+       enter.parcel.0
+       tick
+       dest.0.parcel.1
+					</pre>
+
+					<p>The trace clearly shows that a parcel intended for destination one has ended up in <code>BIN</code> zero. However, while it may be obvious to the reader why this has occurred, it is not clear from the trace since we have hidden the intermediate events that occur in each stage. We can elicit more information from the model in a number of ways. We can make internal actions visible and rerun the analysis or we can investigate the problem using the animator tool provided by <em>LTSA</em>. The second approach has the advantage that we do not need to modify the model in any way. We simply select <code>STAGE</code> as the target for analysis (with default level parameter as 0) and run the Animator using the following menu to specify the actions we wish to control.</p>
+
+					<pre>
+<strong>menu</strong> TEST = {enter[Parcel],tick}
+					</pre>
+
+					<p>The trace depicted in Figure 12.10 was produced by initially choosing an <code>enter.parcel.0</code> action followed by three <code>tick</code> actions, then <code>enter.parcel.1</code> followed by five <code>ticks</code>. This is the trace produced by the safety violation, without the subsequent parcel entries. The Animator trace clearly exposes the reason for the violation. The first parcel is still in the switch when the sensor detects the second parcel and tries to set the switch to direction 1. Since the first parcel is in the switch, the <code>s.setSwitch.1</code> action is ignored and the switch does not change. Consequently, the second parcel follows the first in going to the left when it should have been switched to the right.</p>
+
+					<div class="pagebreak pageNumber">301</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure12-10.png">
+						<figcaption><strong>Figure 12.10</strong> Animation trace for <code>STAGE(0)</code>.</figcaption>
+					</figure>
+
+					<p>The physical interpretation of the problem is that parcels are too close together to permit correct routing. We can check this intuition by analyzing a system with a slower parcel arrival rate, <code>PARCEL_ROUTER(4)</code>. Safety analysis finds no problems with this system and progress analysis demonstrates that the<code> TIME</code> property is satisfied.</p>
+
+					<p class="i">In the next section, we describe a simulation of the parcel router based on the model. This implementation faithfully follows the model in allowing parcels that are too close together to be misrouted.</p>
+
+				</section>
+
+				<section class="subsection" data-number="10" data-name="Parcel Router Implementation">
+
+					<h4>12.3.2 Parcel Router Implementation</h4>
+
+					<p><span class="first-sentence">The display for the parcel router simulation is shown in Figure 12.11.</span> A new parcel for a particular destination is generated by pressing the button beneath that destination. Parcels that arrive at the wrong destination flash until they are replaced by a correct arrival. The speed of the simulation can be adjusted using the slider control to the right of the display. This controls the <code>TimeManager</code> described in section 12.2.2.</p>
+
+					<div class="pagebreak pageNumber">302</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure12-11.png">
+						<figcaption><strong>Figure 12.11</strong> Parcel router applet display.</figcaption>
+					</figure>
+
+					<p>In describing the parcel router implementation, we concentrate on the interfaces and classes shown in Figure 12.12. These classes implement the timed behavior of the simulation. Display is implemented by the <code>ParcelCanvas</code> and <code>Parcel</code> classes. Each <code>Parcel</code> object is registered with the <code>ParcelCanvas</code>, which displays the parcel at its current position once per clock cycle. In addition, the <code>ParcelCanvas</code> displays the background and the current state of each switch. The <code>Parcel</code> and <code>ParcelCanvas</code> code can be found on the website that accompanies this book.</p>
+
+					<p class="i">To permit flexible interconnection of <code>Chute</code>, <code>Switch</code>, <code>SensorController</code> and <code>DestinationBin</code> objects, each class implements the <code>ParcelMover</code> and <code>SwitchControl</code> interfaces listed in Program 12.8. The latter interface is required to allow switches to be connected to controllers.</p>
+
+					<p class="i">The <code>Chute</code> class listed in Program 12.9 is a direct translation of the <code>CHUTE</code> process defined in the previous section using the method described in section 12.2.1. If the <code>current</code> field is not <code>null</code> then the chute contains a parcel. After <code>T</code> clock cycles this parcel is transferred to the <code>ParcelMover</code> object referenced by the <code>next</code></p>
+
+					<div class="pagebreak pageNumber">303</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure12-12.png">
+						<figcaption><strong>Figure 12.12</strong> Parcel router classes and interfaces.</figcaption>
+					</figure>
+
+					<pre class="program">
+<strong>interface</strong> ParcelMover {
+    void enter(Parcel p) <strong>throws</strong> TimeStop;
+}
+
+<strong>interface</strong> SwitchControl {
+    void setSwitch(int direction);
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 12.8</strong> <code>ParcelMover</code> and <code>SwitchControl</code> interfaces.</p>
+
+					<p>field. This field is initialized when the configuration of chutes, switches, etc. is constructed by the <code>ParcelRouter</code> applet.</p>
+
+					<p class="i">The <code>Switch</code> class listed in Program 12.10 is derived from <code>Chute</code>. A <code>Switch</code> object has references to the <code>ParcelMover</code> objects to its <code>left</code> and <code>right</code>. The <code>setSwitch</code> method sets the next field of the super class to one of these if there is no parcel currently occupying the switch. If there is, the command to switch is ignored, as in the model. Setting the <code>next</code> field means that when a parcel leaves, it is sent to the <code>ParcelMover</code> referenced by either <code>left</code> or <code>right</code>.</p>
+
+					<p class="i">The <code>SensorController</code> class is listed in Program 12.11. Parcels pass through within a single clock cycle. The class is not aware of time and does not implement the <code>Timed</code> interface. Only model processes that have <code>tick</code> in their alphabets need to be implemented as <code>Timed</code> classes.</p>
+
+					<p class="i">The <code>ParcelRouter</code> applet class contains a set of methods that create and "wire together" the parts of the simulation. The method listed below creates an assembly that corresponds to the <code>STAGE</code> composite process of the model.</p>
+
+					<div class="pagebreak pageNumber">304</div>
+
+					<pre class="program">
+<strong>class</strong> Chute <strong>implements</strong> ParcelMover, Timed {
+  <strong>protected</strong> int i,T,direction;
+  <strong>protected</strong> Parcel current = null;
+  ParcelMover next = null;
+
+  Chute(int len, int dir)
+    { T = len; direction = dir;}
+
+  <em>// parcel enters chute</em>
+  <strong>public</strong> void enter(Parcel p) <strong>throws</strong> TimeStop {
+    <strong>if</strong> (current!=null) <strong>throw new</strong> TimeStop();
+    current = p; i = 0;
+  }
+
+  <strong>public</strong> void pretick() <strong>throws</strong> TimeStop {
+    <strong>if</strong> (current==null) <strong>return</strong>;
+    <strong>if</strong> (i==T) {
+        next.enter(current); <em>// package leaves chute</em>
+        current = null;
+    }
+  }
+
+  <strong>public</strong> void tick(){
+    <strong>if</strong> (current==null) <strong>return</strong>;
+           <em>//update display position of parcel</em>
+    ++i; current.move(direction);
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 12.9</strong> <code>Chute</code> class.</p>
+
+					<pre class="program">
+<strong>class</strong> Switch <strong>extends</strong> Chute
+         <strong>implements</strong> SwitchControl {
+  ParcelMover left = null;
+  ParcelMover right = null;
+  <strong>private</strong> ParcelCanvas display;
+  <strong>private</strong> int gate;
+
+  Switch(int len, int dir, int g, ParcelCanvas d )
+    { <strong>super</strong>(len,dir); display = d; gate = g;}
+    				</pre>
+
+    				<p class="program-caption"><strong>Program 12.10</strong> <code>Switch</code> class.</p>
+
+    				<div class="pagebreak pageNumber">305</div>
+
+    				<pre class="program">
+    <strong>public</strong> void setSwitch(int direction) {
+      <strong>if</strong> (current==null) {
+        <em>// nothing passing through switch</em>
+        display.setGate(gate, direction);
+        <strong>if</strong> (direction==0)
+          next = left;
+        <strong>else</strong>
+          next = right;
+        }
+    }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 12.10</strong> (<em>Continued</em>).</p>
+
+					<pre class="program">
+<strong>class</strong> SensorController <strong>implements</strong> ParcelMover {
+  ParcelMover next;
+  SwitchControl controlled;
+  <strong>protected</strong> int level;
+  SensorController(int level){this.level=level;}
+
+  <em>//parcel enters and leaves within one clock cycle</em>
+  <strong>public</strong> void enter(Parcel p) throws TimeStop {
+    route(p.destination);
+    next.enter(p);
+  }
+
+  <strong>protected</strong> void route(int destination) {
+    int dir = (destination>>level) &amp; 1;
+    controlled.setSwitch(dir);
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 12.11</strong> <code>SensorController </code>class.</p>
+
+					<pre>
+ParcelMover makeStage 
+    (ParcelMover left, ParcelMover right,
+     int fallDir, <span>// movement direction for parcel display</span> 
+     int level,   <span>// 0 or 1 as in the model </span>
+     int gate     <span>// identity of gate for display purposes</span>
+    )
+					</pre>
+
+					<div class="pagebreak pageNumber">306</div>
+
+					<pre>
+{
+  <span>// create parts and register each with</span> TimeManager <span>ticker</span>
+  Chute a = <strong>new</strong> Chute(16,fallDir);
+  ticker.addTimed(a);
+  SensorController s = <strong>new</strong> SensorController(level);
+  Chute b = <strong>new</strong> Chute(15,fallDir);
+  ticker.addTimed(b);
+  Switch g = <strong>new</strong> Switch(12,fallDir,gate,display);
+  ticker.addTimed(g);
+  <span>// wire parts together</span>
+  a.next = s; s.next = b;    s.controlled = g; 
+  b.next = g; g.left = left; g.right = right
+  <strong>return</strong> a;
+}
+					</pre>
+
+					<p>The method exhibits a pleasing correspondence with the <code>STAGE</code> model. The model process prefix names become object references and the model relabels become reference assignments.</p>
+
+					<p class="i">The <code>DestinationBin</code> class, which may be found on the website that accompanies this book, accepts a <code>Parcel</code> object and displays it in a fixed position. When a new parcel arrives, the old parcel is removed from the display. Parcels that arrive at the wrong destination are flashed by hiding and revealing them on alternate clock cycles.</p>
+
+					<p class="i">The reader is encouraged to run the <code>PackageRouter</code> applet and observe that its behavior is as predicted by the model. The restriction that only one-way interactions can be supported by the clocking scheme has not caused a problem in this example. Even though the interaction between <code>Chute</code>, <code>SensorController</code> and <code>Switch</code> requires more than one method call in a clock cycle, it is still a uni-directional interaction in which a chute output causes an input to another chute and a switch.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="11" data-name="Space Invaders">
+
+				<h3>12.4 Space Invaders</h3>
+
+				<p><span class="first-sentence">The final example of a timed system is a simple video arcade game.</span> The display is depicted in Figure 12.13. The spaceship can be moved around the screen using the cursor keys. Pressing the space bar on the keyboard launches a missile from the spaceship. Missiles move up the display and appear as white arrows on the display. Aliens, depicted as spheres, drop from the top of the screen and explode when hit by a missile. When an alien collides with the spaceship, an explosion occurs and the shield strength of the spaceship is reduced. The game terminates</p>
+
+				<div class="pagebreak pageNumber">307</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure12-13.png">
+					<figcaption><strong>Figure 12.13</strong> Space Invaders applet display.</figcaption>
+				</figure>
+
+				<p>when the shield strength drops to zero. The objective, as is usual in this style of game, is to shoot as many aliens as possible.</p>
+
+				<p class="i">Video games involve many active entities, called <em>sprites</em>, which move around independently and concurrently. A sprite has a screen representation and a behavior. Sprites may interact when they collide. In Space Invaders, the sprites are the spaceship, aliens, missiles and explosions. Sprites are essentially concurrent activities, which we could consider implementing as threads. However, this would result in a game with poor performance due to the synchronization and context-switching overheads involved. A much better scheme is to implement sprites as timed objects. Each sprite has an opportunity to move once per clock cycle. This has the advantage that it is simple to synchronize screen updates with sprite activity. We simply repaint the screen once per clock cycle.</p>
+
+				<section class="subsection" data-number="12" data-name="Space Invaders Model">
+
+					<h4>12.4.1 Space Invaders Model</h4>
+
+					<p><span class="first-sentence">Sprites move about in the two-dimensional space depicted in Figure 12.14.</span> In an implementation, the coordinates refer to screen locations. In the model, we use a smaller space to permit analysis.</p>
+
+					<div class="pagebreak pageNumber">308</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure12-14.png">
+						<figcaption><strong>Figure 12.14</strong> Game space.</figcaption>
+					</figure>
+
+					<p>The coordinate system is represented in the model by the following definitions. In the interests of simplicity, the width of the game space is assumed to be the same as its depth. The <code>undef</code> label is used to specify the coordinate of a sprite that has not been created and consequently does not have a defined position on the screen.
+					</p>
+
+					<pre>
+<strong>const</strong> MAX = 4
+<strong>range</strong> D   = 0..MAX
+<strong>set</strong>   Coord = {[D][D],undef} //(x,y)
+					</pre>
+
+					<h5>Sprite</h5>
+
+					<p>The entities that comprise the Space Invaders game have behavior in common with respect to the way that they move about in the game space. We model this common behavior as the <code>SPRITE</code> process listed below. The behavior of the spaceship, missiles and aliens is defined using this process.</p>
+
+					<pre>
+SPRITE
+  (create[x:D][y:D] -> SPRITE[x][y]
+  |tick -> SPRITE
+  |pos.undef -> SPRITE
+  ),
+SPRITE[x:D][y:D] =
+  (pos[x][y] -> SPRITE[x][y]
+  |tick ->
+   (north -> <strong>if</strong> y>O    then SPRITE[x][y-1]  <strong>else</strong> END
+   |south -> <strong>if</strong> y&lt;MAX  then SPRITE[x][y+1]  <strong>else</strong> END
+   |west  -> <strong>if</strong> x>0    then SPRITE[x-1][y]  <strong>else</strong> END
+   |east  -> <strong>if</strong> x&lt;MAX  then SPRITE[x+1][y]  <strong>else</strong> END
+					</pre>
+
+					<div class="pagebreak pageNumber">309</div>
+
+					<pre>
+   | {rest,action[x][y]} -> SPRITE[x][y]
+   )
+  ),
+END = (end -> SPRITE).
+					</pre>
+
+					<p>Before a sprite is created, its location is undefined. A query using the action <code>pos</code> will return the <code>undef</code> value for its location. After the <code>create</code> action, <code>pos</code> returns a valid coordinate for the sprite's current location. At each clock tick, a sprite can move in one of four directions, or it can remain in the same position (<code>rest</code> action). The sprite implementation described in the next section allows a sprite to move in one of eight directions; however, four directions are sufficient detail for modeling purposes. In addition to moving, a sprite can instigate an action during a clock cycle. When a sprite moves out of the game space, it indicates that it has terminated by performing the <code>end</code> action. In an implementation, a sprite would then be garbage collected. In the model, the sprite goes back to the state in which it can be created. As described in Chapter 9, we use cyclic behavior to model dynamic creation. The set of actions that the <code>SPRITE</code> process can engage in - excluding <code>tick </code>and the position query <code>pos</code> - is specified by:</p>
+
+					<pre>
+<strong>set</strong> Sprite =
+   {north,south,west,east,rest,action[D][D],create[D][D]}
+					</pre>
+
+					<h5>Alien</h5>
+
+					<p>An alien is a sprite that moves down the screen. Consequently, we can specify its behavior by constraining the movement of the <code>SPRITE</code> process. In the model, an alien starts at the top of the screen and moves vertically down; in the implementation, it can also move diagonally down.</p>
+
+					<pre>
+ALIEN_CONSTRAINT = 
+  (create[D][0] -> MOVE),
+MOVE = 
+  (south -> MOVE | end -> ALIEN_CONSTRAINT)
+  +Sprite.
+
+ ||ALIEN = (SPRITE || ALIEN_CONSTRAINT).
+ 					</pre>
+
+ 					<p>The constraint permits an alien to be created at any x-position at the top of the screen and only permits it to move <code>south</code> and then <code>end</code> when it leaves the screen. The <code>ALIEN</code> composite process permits only these actions to occur since the constraint has the <code>Sprite</code> alphabet.</p>
+
+ 					<div class="pagebreak pageNumber">310</div>
+
+ 					<h5>Missile</h5>
+
+ 					<p>The behavior of the missile sprite is defined in exactly the same way. In this case, the missile is only permitted to move <code>north</code>, up the screen.</p>
+
+ 					<pre>
+MISSILE CONSTRAINT =
+   (create[D][MAX] -> MOVE) ,
+MOVE =
+   (north -> MOVE | end -> MISSILE_CONSTRAINT)
+   + Sprite.
+||MISSILE = (SPRITE || MISSILE_CONSTRAINT) .
+					</pre>
+
+					<h5>Spaceship</h5>
+
+					<p>The spaceship has more complex behavior. It is constrained to moving horizontally at the bottom of the screen, either <code>east</code> or <code>west</code>, or staying in the same position, <code>rest</code>. It is created in the center of the screen and is constrained not to move off the screen. The spaceship can perform an <code>action</code>, which is used to create a missile, as explained later. In fact, the implementation permits the spaceship to move up and down the screen as well. However, horizontal movement is sufficient detail for us to gain an understanding of the operation of the system from the model.</p>
+
+					<pre>
+SPACESHIP CONSTRAINT =
+   (create[MAX/2][MAX] -> MOVE[MAX/2]),
+MOVE[x:D] =
+   ( <strong>when</strong> (x>O) west -> MOVE[x-1]
+   | <strong>when</strong> (x&lt;MAX) east -> MOVE[x+1]
+   | rest -> MOVE[x]
+   | action[x][MAX] -> MOVE[x]
+   ) + Sprite.
+
+||SPACESHIP =(SPRITE || SPACESHIP_CONSTRAINT).
+					</pre>
+
+					<h5>Collision Detection</h5>
+
+					<p>Collision detection is modeled by the <code>COLLIDE</code> process which, after a <code>tick</code>, queries the positions of two sprites and signals a collision through the action <code>explode</code> if their positions coincide. Undefined positions are excluded. In the implementation, the detection of a collision results in the creation of an explosion sprite that displays a series of images to create the appropriate graphic appearance. In the model, we omit this detail.</p>
+
+					<div class="pagebreak pageNumber">311</div>
+
+					<pre>
+COLLIDE(A='a, B='b) =
+  (tick -> [A].pos[p1:Coord] -> [B].pos[p2:Coord]
+   -> <strong>if</strong> (p1==p2 &amp;&amp; p1!='undef &amp;&amp; p2!='undef) <strong>then</strong>
+         ([A][B].explode -> COLLIDE)
+      <strong>else</strong>
+         COLLIDE
+  ).
+					</pre>
+
+					<h5>Space Invaders</h5>
+
+					<p>The composite process <code>SPACE_INVADERS</code> models a game that, in addition to the spaceship, permits only a single alien and a single missile to appear on the screen. This simplification is required for a model of manageable size. However, we have defined sprites as having cyclic behavior that models recreation. Consequently, the alien can reappear in different start positions and the spaceship can launch another missile as soon as the previous one has left the screen. The model captures all possible behaviors of the combination of spaceship, alien and missile.</p>
+
+					<p class="i">To model launching a missile, we have associated the spaceship's <code>action</code> with the missile's <code>create</code> by relabeling. Two collision detectors are included to detect spaceship-alien and alien-missile collisions.</p>
+
+					<pre>
+||SPACE_INVADERS =
+   ( alien    :ALIEN
+   || spaceship:SPACESHIP
+   || missile :MISSILE
+   || COLLIDE('alien,'spaceship)
+   || COLLIDE('missile,'alien))
+   /{spaceship.action/missile.create,
+     tick/{alien,spaceship,missile}.tick}
+   >>{tick}.
+					</pre>
+
+					<h5>Analysis</h5>
+
+					<p>Safety analysis of <code>SPACE_INVADERS</code> does not detect a time-stop and progress analysis demonstrates that the <code>TIME</code> progress property is satisfied. Further, the progress properties:</p>
+
+					<pre>
+<strong>progress</strong> SHOOT_ALIEN={missile.alien.explode}
+<strong>progress</strong> ALIEN_SHIP ={alien.spaceship.explode}
+					</pre>
+
+					<p>are satisfied, showing that both alien - missile and alien - spaceship collisions can occur. To gain an understanding of the operation of the model, we can animate it to produce example execution traces. An alternative approach to producing</p>
+
+					<div class="pagebreak pageNumber">312</div>
+
+					<p>sample traces is to use safety properties as follows. Suppose we wish to find a trace that results in a collision between an alien and a missile. We specify a safety property that the action <code>missile.alien.explode</code> should not occur and analyze the system with respect to this property:</p>
+
+					<pre>
+<strong>property</strong> ALIEN_HIT = STOP + {missile.alien.explode}.
+||FIND_ALlEN_HIT = (SPACE_INVADERS || ALIEN_HIT) .
+					</pre>
+
+					<p>The trace produced is:</p>
+
+					<pre>
+Trace to property violation in ALIEN_HIT:
+     alien.create.1.0
+     spaceship.create.2.4
+     tick
+     alien.south
+     spaceship.west
+     missile.pos.undef
+     alien.pos.1.1
+     spaceship.pos.1.4
+     tick
+     alien.south
+     spaceship.action.1.4 - <span>missile launched</span>
+     missile.pos.1.4
+     alien.pos.1.2
+     spaceship.pos.1.4
+     tick
+     alien.south
+     missile.north
+     missile.pos.1.3
+     alien.pos.1.3
+     missile.alien.explode
+					</pre>
+
+					<p>Exactly the same approach can be used to find a trace leading to a spaceship - alien collision.</p>
+
+					<p class="i">The emphasis of the Space Invaders model is not so much on demonstrating that it satisfies specific safety and liveness properties but rather as a means of investigating interactions and architecture. After all, the program is far from a safety-critical application. However, in abstracting from implementation details concerned with the display and concentrating on interaction, the model provides a clear explanation of how the program should operate. In addition, it provides some indication of how the implementation should be structured. For example, it indicates that a <code>CollisionDetector</code> class is needed and confirms that a <code>Sprite</code> class can be used to implement the common behavior of missiles, aliens and the spaceship.</p>
+
+					<div class="pagebreak pageNumber">313</div>
+
+				</section>
+
+				<section class="subsection" data-number="13" data-name="Space Invaders Implementation">
+
+					<h4>12.4.2 Space Invaders Implementation</h4>
+
+					<p><span class="first-sentence">The implementation of the Space Invaders program is large in comparison to the example programs presented previously.</span> Consequently, we restrict ourselves to describing the structure of the program using class diagrams. The translation from timed processes to timed objects should be clear from examples presented in earlier sections of this chapter. The reader can find the Java code for each of the classes we mention on the website that accompanies this book.</p>
+
+					<h5>Sprite and SpriteCanvas</h5>
+
+					<p>The display for the Space Invaders program is handled by the two classes depicted in Figure 12.15. A <code>Sprite</code> is created with an initial position and an image. The <code>SpriteCanvas</code> maintains a list of sprites. Every clock tick, the <code>SpriteCanvas</code> calls the <code>paint()</code> method of each sprite on its list. The sprite then draws its image at its current position.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure12-15.png">
+						<figcaption><strong>Figure 12.15</strong> <code>Sprite</code> and <code>SpriteCanvas</code> classes.</figcaption>
+					</figure>
+
+					<p>The <code>move()</code> method has a direction parameter that specifies one of eight directions in which the sprite can move. It is called by a subclass each clock cycle to change the position of the sprite. The <code>collide()</code> method tests whether the sprite's bounding rectangle intersects with the sprite passed as a parameter. The <code>hit()</code> method is called by the collision detector when a collision is detected. <code>PosX()</code> and <code>PosY()</code> return the current x and y coordinates of the sprite.</p>
+
+					<div class="pagebreak pageNumber">314</div>
+
+					<h5>CollisionDetector</h5>
+
+					<p>The collision detector maintains a list of the alien sprites and missile sprites and a reference to the spaceship sprite as shown in Figure 12.16. Every clock cycle, the detector determines whether each alien has collided with either a missile or the spaceship. If a collision is detected, the <code>hit()</code> methods of the sprites involved in the collision are invoked.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure12-16.png">
+						<figcaption><strong>Figure 12.16</strong> <code>CollisionDetector</code> class diagram.</figcaption>
+					</figure>
+
+					<p>The method listed below is the implementation provided for the <code>hit()</code> method in the <code>Alien</code> class.</p>
+
+					<pre>
+<strong>public</strong> void hit() {
+  <strong>new</strong> Explosion(this);
+  SpaceInvaders.score.alienHit();
+  SpaceInvaders.detector.removeAlien(this) ;
+  remove(); <span>// remove from SpriteCanvas</span>
+  }
+					</pre>
+
+					<p>The method creates a new explosion sprite at the same location as the alien, records an alien hit on the scoreboard and removes the alien from the collision detector and the display. The <code>CollisionDetector</code>, <code>Alien</code>, <code>Missile</code> and <code>Spaceship</code> classes implement the essential behavior of the game. These classes correspond to the <code>COLLIDE</code>, <code>ALIEN</code>, <code>MISSILE</code> and <code>SPACESHIP</code> model processes.</p>
+
+					<h5>SpaceInvaders</h5>
+
+					<p>The <code>SpaceInvaders</code> applet class creates the spaceship, the alien generator, the missile launcher and the score board in addition to the display, time manager and collision detector as shown in Figure 12.17.</p>
+
+					<div class="pagebreak pageNumber">315</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure12-17.png">
+						<figcaption><strong>Figure 12.17</strong> <code>SpaceInvaders</code> class diagram.</figcaption>
+					</figure>
+
+					<p>The <code>AlienGenerator</code> waits for a random number of clock cycles and then creates a new alien with a randomly chosen start position and a random downward direction. The <code>MissileLauncher</code> creates a new missile when the space bar is pressed. The x-coordinate of the new missile is the current position of the spaceship. The classes included in Figure 12.17 provide the infrastructure for scoring and the creation and display of sprites.</p>
+
+					<p class="i">The collision detector and display run during the pre-tick clock phase; the remaining program actions, such as sprite movement, occur during the tick phase. This permits the display to render a consistent set of positions and for the effect of hits to be computed during tick processing. However, in reality, we could implement this sort of program using only a single-phase clock. This is because the clock ticks rapidly and, since the screen is updated every cycle, any inconsistencies which resulted from an action happening over two clock cycles rather than one would not be visible to a user.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="14" data-name="Summary">
+
+				<h3>Summary</h3>
+
+				<p><span class="first-sentence">This chapter has presented a discrete approach to modeling and implementing timed systems.</span> The passage of time is signaled by regular successive ticks of a clock. In models, this tick appears as an action that is shared by the processes for which behavior depends on the passage of time. In implementations, the tick is an event broadcast by a time manager.</p>
+
+				<div class="pagebreak pageNumber">316</div>
+
+				<p class="i">In discrete time models, we saw that the composition of processes with inconsistent timing resulted in a deadlock. This sort of deadlock is termed a <em>time-stop</em>. The order in which actions can occur in a timed model is restricted by making a <em>maximal progress</em> assumption. This ensures that an action occurs as soon as all participants are ready to perform it. Maximal progress is true for a model when we make the <code>tick</code> action low priority. This ensures that all ready actions occur within a clock cycle. Maximal progress thus reflects the implementation assumption that actions take negligible time to execute.</p>
+
+				<p class="i">We described an implementation approach for timed systems that is <em>event-based</em> rather than <em>thread-based</em>. In this approach, each model process that has <code>tick</code> in its alphabet is translated into a timed object. Timed objects are invoked regularly by a time manager that dispatches timing events. We use a two-phase scheme that requires a pre-tick and tick event dispatch. Timed objects produce outputs during the pre-tick phase and compute the next state based on received inputs during the tick phase. This scheme permits one-way communication interactions to occur atomically within a single clock cycle. It was pointed out that multi-way interactions within a single clock cycle are not supported by this scheme. However, this did not cause problems in the example programs. The advantage of using timed objects rather than threads to implement timed processes is concerned with runtime efficiency. Timed objects are activated by method invocation, which has a lower overhead than context-switching threads. Further, since the pre-tick and tick methods run sequentially, there is no synchronization overhead to ensure mutual exclusion. Lastly, for programs largely concerned with display, the approach naturally synchronizes screen updates from multiple activities.</p>
+
+				<p class="i">We should also point out some of the disadvantages of the event-based approach or the reader might wonder why we have devoted the main part of the book to a thread-based approach. Threads abstract from the detail of how activities should be scheduled to organize interaction. We saw that the timed approach was limited to uni-directional interactions in a single clock cycle. More complex interaction needs to be explicitly scheduled with either a multi-phase clock or, alternatively, over multiple clock cycles. This rapidly becomes unmanageable for complex interactions. Further, the event-based scheme required a timed object to examine its state every clock cycle to determine whether an event has occurred. A threadbased implementation may incur lower overhead for systems in which activities do not perform some action every clock cycle. The thread scheduler dispatches a thread only when there is some work for it to do.</p>
+
+				<p class="i">Finally, we note that the model-based approach to concurrent programming permits a designer the flexibility to use either an event-based or thread-based implementation scheme or indeed a hybrid. We use the same modeling and analysis techniques for both implementation approaches.</p>
+
+				<div class="pagebreak pageNumber">317</div>
+
+			</section>
+
+			<section class="section" data-number="15" data-name="Notes and Further Reading">
+
+				<h3>Notes and Further Reading</h3>
+
+				<p><span class="first-sentence">A comprehensive treatment of using discrete time in the context of CSP may be found in Roscoe's book (1998). </span>We have adapted the approach presented there to fit with the modeling tools and techniques used in this book. However, our approach is essentially the same and much credit is due to Roscoe for providing the first generally accessible introduction to this style of modeling time.</p>
+
+				<p class="i">It was explicitly stated in the introduction that the timed systems we deal with are not real-time in the sense of guaranteeing deadlines. The interested reader will find that there is a vast literature on the specification, verification and analysis of real-time systems. A good starting point is a book edited by Mathai Joseph which presents a number of techniques with respect to the same case study (1996). One of the techniques presented is Timed CSP, which uses a dense continuous model of time in contrast to the discrete model we present. Continuous time is more expressive but leads to difficulties in automated analysis.</p>
+
+			</section>
+
+			<section class="section" data-number="16" data-name="Exercises">
+
+				<h3>Exercises</h3>
+
+				<ol id="twelve">
+
+					<li><span class="first-sentence">Define a process that models a timed single-slot buffer.</span> The buffer should both wait to accept input and wait to produce output. The buffer requires a minimum of <em>T</em> time units to transfer an item from its input to its output.</li>
+
+					<li>Using the process defined in exercise 12.1, define a two-slot timed buffer and explore its properties. Determine the timing consistency relationship between the delays for the two buffers. Explore the effect of applying maximal progress by making <code>tick</code> low priority.</li>
+
+					<li>Implement the timed buffer process of exercise 12.1 as a timed object and explore the runtime behavior of a system composed of these objects with producer and consumer timed objects. (<em>Note</em>: Waiting to produce an output is implemented in timed systems by <em>balking</em> rather than throwing a time-stop. By balking, we mean that the method performing the output returns a boolean indicating whether or not the output was possible. If it fails, it is retried on the next clock cycle.)</li>
+
+					<li>An electric window in a car is controlled by two press-button switches: <strong>up</strong> and <strong>down</strong>. When the up button is pressed, then the window starts closing. If the up button is pressed for less than <em>T</em> seconds then the window closes completely. If the up button is pressed for more than <em>T</em> seconds then when the button is released, the window stops closing. The down button works in exactly the same way, except that the window opens rather than closes. A mechanical interlock prevents both buttons being pressed at the same time.
+
+					<p class="i">The window is moved by. a motor that responds to the commands <strong>start_close</strong>, <strong>stop_close</strong>, <strong>start_open</strong> and <strong>stop_open</strong>. Two sensor switches, <strong>closed</strong> and <strong>opened</strong>, detect, respectively, when the window is fully closed and when it is fully open. The window takes <em>R</em> units of time to move from the completely open position to the completely closed position or vice versa.</p>
+
+					<p class="i">Define a timed model for the electric window system in <em>FSP</em>. Specify safety properties
+					that assert that the motor is not active when the window is fully closed or fully
+					opened.</p>
+
+					</li>
+
+					<div class="pagebreak pageNumber">318</div>
+
+					<li>Translate the model of the electric window system into a Java implementation using timed objects.</li>
+
+				</ol>
+
+			</section>
+
+		</div>
+
+	</div>
+
+</body>
+</html>

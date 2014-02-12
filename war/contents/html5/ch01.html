@@ -1,0 +1,2345 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+
+	<title>Chapter 1. Getting to Know HTML5</title>
+	
+	<META name="javascript" javascript="/contents/html5/html5.js">
+	
+</head>
+
+<body>
+
+	<div id="html51" class="html5 container">
+
+		<section class="section" data-number="0" data-name="Introduction">
+
+<!-- Page 1 -->
+
+			<div class="pagebreak pageNumber">1</div> 
+
+			<h1 class="title"> Chapter 1. Getting to Know HTML5: Welcome to Webville!</h1>
+
+			<h2 class="first"> Welcome to Webville </h2>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web2/001fig01.png">
+			</figure>
+
+			<aside class="right">
+				Heads up: XHTML received a "Dear John" letter in 2009 and we'll be visiting XHTML
+				later in the "Where are they now" segment.
+			</aside> 
+
+			<p>
+				<strong>HTML has been on a wild ride.</strong> Sure, HTML started as a mere markup
+				language, but more recently HTML's put on some major muscle. Now we've got a language
+				tuned for building true web applications with local storage, 2D drawing, offline support,
+				sockets and threads, and more. The story of HTML wasn't always pretty, and it's full of
+				drama (we'll get to all that), but in this chapter, we're first going to go on a quick
+				joyride through Webville to get a sense of everything that goes into "HTML5." Come on,
+				hop in, we're headed to Webville, and we're going to start by going from zero to HTML5
+				in 3.8 pages (flat).
+			</p>
+
+<!-- Page 2 -->
+
+			<div class="pagebreak pageNumber">2</div> 
+
+		</section> <!-- Introduction -->
+
+		<section class="section" data-number="1" data-name="Upgrade to HTML5 TODAY!">
+
+			<h2>
+				Upgrade to HTML5 TODAY! Why wait? Use my <br> <strong>HTML5-o-Matic</strong><br>
+				and do it in only THREE EASY STEPS
+			</h2>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web2/002fig01.png">
+			</figure>
+
+			<p>
+				Step right up! For a limited time we'll take that grungy old HTML page of yours and
+				in <strong>JUST THREE EASY STEPS</strong> upgrade it to HTML5.
+			</p>
+
+			<p>
+				Could it really be that easy? You betcha; in fact we've got a demonstration already prepared for you.
+			</p>
+
+			<p>
+				Check out this tired, worn out, seen-better-days HTML; we're going to turn it into HTML5
+				right before your very eyes:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web2/002fig02.png">
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  <div class="modal-body">
+				    <code>
+<pre>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"&gt;</pre>
+<pre>&lt;html&gt; </pre>
+<pre>	&lt;head&gt;</pre>
+<pre>		&lt;title&gt;Head First Lounge&lt;/title&gt;</pre>
+<pre>		&lt;meta http-equiv="content-type" content="text/html; charset=UTF-8"&gt;</pre>
+<pre>	&lt;/head&gt; </pre>
+<pre>	&lt;body&gt;</pre>
+<pre>		&lt;h1&gt;Welcome to Head First Lounge&lt;/h1&gt;</pre>
+<pre>		&lt;p&gt;</pre>
+<pre>			&lt;img src="drinks.gif" alt="Drinks"&gt; </pre>
+<pre>		&lt;/p&gt;</pre>
+<pre>		&lt;p&gt;</pre>
+<pre>			Join us any evening for refreshing &lt;a href="elixirs.html"&gt;elixirs&lt;/a&gt;, </pre>
+<pre>			conversation and maybe a game or two of Tap Tap Revolution. </pre>
+<pre>			Wireless access is always provided; BYOWS (Bring Your Own Web Server).</pre>
+<pre>		&lt;/p&gt; </pre>
+<pre>	&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+				  </div>
+				</div>
+			</div>
+
+			<div class="sidebar">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/brainpower.png">
+				</figure>
+
+				<h2> Look how easy it is to write HTML5</h2>
+
+				<p class="clear">
+					Get your feet wet by reviewing this HTML, which is written in HTML 4.01 (the previous version),
+					not HTML5. Carefully look at each line and refresh your memory of what each part does. Feel
+					free to make notes right on the page. We'll look at how to transition this to HTML5 over
+					the next few pages.
+				</p>
+			</div>
+
+<!-- Page 3 -->
+
+			<div class="pagebreak pageNumber">3</div> 
+
+			<div class="sidebar">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/sharpenpencil.png">
+				</figure>
+
+				<p class="clear">
+					After taking a careful look at the HTML in "Upgrade to HTML5 TODAY! Why wait? Use my
+					HTML5-o-Matic and do it in only THREE EASY STEPS", can you see any markup that might
+					change with HTML5? Or that you'd want to change? We'll point out one for you: the
+					<strong><code class="literal">doctype</code></strong> definition:
+				</p>
+
+				<div class="hiddencode">
+					<figure class="center">
+						<img class="codeimage" src="/contents/html5/figs/web2/003fig01.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+				  		<code>
+				  <pre>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"</pre>
+				  <pre>	"http://www.w3.org/TR/html4/strict.dtd"&gt;</pre>
+				  		</code>
+				  	</div>
+				  </div>
+				 </div>
+
+				<p>
+					Remember, the <strong><code class="literal">doctype</code></strong> definition belongs
+					at the top of your HTML file and tells the browser the type of your document, in this
+					case, HTML 4.01. By using a doctype the browser is able to be more precise in the
+					way it interprets and renders your pages. Using a doctype is highly recommended.
+				</p>
+
+				<p>
+					So, using your deductive powers, what do you think the
+					<strong><code class="literal">doctype</code></strong> definition for HTML5 will
+					look like? Write it here (you can refer back to your answer when we cover this in a bit):
+				</p>
+
+				<figure class="center">
+					<img src="/contents/html5/figs/web2/003fig02.png">
+				</figure>
+			</div>
+
+<!-- Page 4 -->
+
+			<div class="pagebreak pageNumber">4</div> 
+
+		</section>
+
+		<section class="section" data-number="2" data-name="HTML5-o-Matic">
+
+			<h2> Introducing the HTML5-o-Matic, update your HTML now!</h2>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web2/004fig01.png">
+			</figure>
+
+			<p>
+				Step 1 is going to amaze you: follow along, we're going to start at the top of the Head First
+				Lounge HTML and update the doctype to give it that new HTML5 shine.
+			</p>
+
+			<p>
+				Here's the old HTML 4.01 version of the doctype:
+			</p>
+
+			<div class="clear" />
+
+<pre><strong>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"</strong></pre>
+
+<pre>	<strong>"http://www.w3.org/TR/html4/strict.dtd"&gt;</strong></pre>
+
+			<p>
+				Now you might have guessed that we're going to replace every mention of "4" with "5"
+				in the doctype, right? Oh, no. Here's the amazing part: the new doctype for HTML5 is simply:
+			</p>
+
+			<aside class="right">
+				Apologies to the crew that got the 4.01 doctype tattoo to remember it.
+			</aside>
+
+<pre><strong>&lt;!doctype html&gt;</strong></pre>
+
+			<p>
+				No more Googling to remember what the doctype looks like, or copying and pasting from
+				another file, this doctype is so simple you can just remember it.
+			</p>
+
+			<p>
+				But, wait, there's more...
+			</p>
+
+			<p>
+				Not only is this the doctype for HTML5, it's the doctype for <em>every future version</em>
+				of HTML. In other words, it's never going to change again. Not only that, it will work in your older browsers too.
+			</p>
+
+			<aside>
+				The W3C HTML Standards guys have promised us they really mean it this time. <img src="/contents/html5/figs/web2/004fig04.png">
+			</aside>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web2/004fig02.png">
+			</figure>
+
+			<p>
+				If you're a fan of the <em>Extreme Makeover</em>s or <em>The Biggest Loser</em> television
+				shows, you're going to love Step 2. In this step we have the content meta tag... here, check out
+				the before/after pictures:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web2/004fig05.png">
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+			  		<code>
+			  <pre>&lt;meta http-equiv="content-type" content="text/html; charset=UTF-8"&gt;</pre>
+			  			<br />
+			  <pre>&lt;meta charset="utf-8"&gt;</pre>
+		  			</code>
+		  		</div>
+		  	</div>
+		  </div>
+
+			<p>
+				Yes, the new meta tag <del>has lost a lot of weight</del> is much simpler. When you specify
+				the meta tag in HTML5, just supply the tag along with a character encoding. Believe it or not,
+				all browsers (old and new) already understand this meta description, so you can use it on any
+				page and it <em>just works</em>.
+			</p>
+
+<!-- Page 5 -->
+
+			<div class="pagebreak pageNumber">5</div> 
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web2/005fig01.png">
+			</figure>
+
+			<p>
+				And now for Step 3, the step that brings it all home. Here we're also going to focus on the
+				&lt;head&gt; element and upgrade the link tag. Here's what we have now: a link of type text/css
+				that points to a stylesheet:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web2/005fig03.png">
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+			  		<code>
+			  <pre>&lt;link type="text/css" rel="stylesheet" href="lounge.css"&gt;</pre>
+			  		</code>
+			  	</div>
+				</div>
+		 	</div>
+
+			<p>
+				To upgrade this for HTML5, we just need to remove the type attribute. Why? Because CSS has
+				been declared the standard, and default, style for HTML5. So, after we remove the type attribute,
+				the new link looks like this:
+			</p>
+
+			<div class="hiddencode">
+				<figure class = "center">
+					<img class="codeimage" src="/contents/html5/figs/web2/005fig04.png">
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+			  		<code>
+			  <pre>&lt;link rel="stylesheet" href="lounge.css"&gt;</pre>
+			  		</code>
+			  	</div>
+			  </div>
+			 </div>
+
+			<figure class ="left">
+				<img src="/contents/html5/figs/web2/005fig02.png">
+			</figure>
+
+			<p>
+				And, because you acted fast, we've got a special bonus for you. We're going to make your life
+				even easier by simplifying the script tag. With HTML5, JavaScript is now the standard and default
+				scripting language, so you can remove the type attribute from your script tags too. Here's what
+				the new script tag looks like without the type attribute:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web2/005fig05.png">
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+			  		<code>
+			  <pre>&lt;script src="lounge.js"&gt;&lt;/script&gt;</pre>
+			  		</code>
+			  	</div>
+			  </div>
+			 </div>
+
+			<p>
+				Or if you have some inline code, you can just write your script like this:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web2/005fig06.png">
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+			  		<code>
+			  <pre>&lt;script&gt;</pre>
+			  <pre>	var youRock = true;</pre>
+			  <pre>&lt;/script&gt;</pre>
+			  		</code>
+			  	</div>
+				</div>
+		 	</div>
+
+			<div class="sidebar">
+
+				<figure class="left">
+					<img src="/contents/html5/figs/web2/005fig07.png">  
+				</figure>
+
+				<p>
+					<strong>Congratulations, you're now certified to upgrade any HTML to HTML5!</strong>
+				</p>
+
+				<p>
+					As a trained HTML5-o-Matic user, you've got the tools you need to take any valid HTML page and to
+					update it to HTML5. Now it's time to put your certification into practice!
+				</p>
+
+				<br>
+
+			</div> <!-- sidebar -->
+
+<!-- Page 6 -->
+
+			<div class="pagebreak pageNumber">6</div> 
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web2/006fig01.png">
+			</figure>
+
+			<p>
+				<strong>Okay, okay, you got us.</strong> So far, we've been talking about updating your older HTML
+				pages so that they're ready to take advantage of everything HTML5 has to offer. And as you can see,
+				if you're familiar with HTML 4.01, then you're in great shape because HTML5 is a superset of HTML 4.01
+				(meaning practically everything in it is still supported in HTML5) and all you need to do is know
+				how to specify your <code class="literal">doctype</code> and the rest of the tags in the
+				<code class="literal">&lt;head&gt;</code> element to get started with HTML5.
+			</p>
+
+			<p>
+				But, you're right, we were being silly, of course there is more to HTML5 than just updating a few
+				elements. In fact, what everyone is excited about is the ability to build rich, interactive pages
+				(or even sophisticated web applications), and to support that, HTML5 provides a whole family
+				of technologies that works hand in hand with the HTML5 markup language.
+			</p>
+
+			<p>
+				But hang on; before we get there we've got just a bit more work to do to make sure we're ready with our markup.
+			</p>
+
+<!-- Page 7 -->
+
+			<div class="pagebreak pageNumber">7</div>
+
+		</section>
+
+		<section class="section" data-number="3" data-name="You're closer to HTML5 markup than you think">
+
+			<div class="sidebar">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/sharpenpencil.png" />
+				</figure>
+
+				<h3 class="clear"> You're closer to HTML5 markup than you think!</h3>
+
+				<p>
+					Here's some old skool HTML that needs updating. Work through the HTML5-o-Matic process and update
+					this HTML to HTML5. Go ahead and scribble in the book, scratch out the existing markup code,
+					and add any new markup code you need to. We've helped a little by highlighting the areas that need to change.
+				</p>
+
+				<p>
+					When you're done, type it in (or grab the exercise files and make your changes if you prefer),
+					load this in your browser, sit back and enjoy your first HTML5. Oh, and you'll find our answers on the next page.
+				</p>
+
+				<aside>
+					To download all the code and sample files for this book, please visit
+					<a class="ulink" href="http://wickedlysmart.com/hfhtml5" target="_top">http://wickedlysmart.com/hfhtml5</a>.
+				</aside>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/007fig01.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">				  		
+<pre><span class="gray-background">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"</span></pre>
+<pre><span class="gray-background">   "http://www.w3.org/TR/html4/strict.dtd"&gt;</span></pre>
+<pre>&lt;html&gt;</pre>
+<pre>	&lt;head&gt;</pre>
+<pre>		&lt;title&gt;Head First Lounge&lt;/title&gt;</pre>
+<pre>		<span class="gray-background">&lt;meta http-equiv="content-type" content="text/html; charset=UTF-8"&gt;</span></pre>
+<pre>		<span class="gray-background">&lt;link type="text/css" rel="stylesheet" href="lounge.css"&gt;</span></pre>
+<pre>		<span class="gray-background">&lt;script type="text/javascript" src="lounge.js"&gt;&lt;/script&gt;</span></pre>
+<pre>	&lt;/head&gt;</pre>
+<pre>	&lt;body&gt;</pre>
+<pre>		&lt;h1&gt;Welcome to Head First Lounge&lt;/h1&gt;</pre>
+<pre>		&lt;p&gt;</pre>
+<pre>			&lt;img src="drinks.gif" alt="Drinks"&gt;</pre>
+<pre>		&lt;/p&gt;</pre>
+<pre>		&lt;p&gt;</pre>
+<pre>			Join us any evening for refreshing &lt;a href="elixirs.html"&gt;elixirs&lt;/a&gt;,</pre>
+<pre>			conversation and maybe a game or two of Tap Tap Revolution.</pre>
+<pre>			Wireless access is always provided; BYOWS (Bring Your Own Web Server).</pre>
+<pre>		&lt;/p&gt;</pre>
+<pre>	&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</div>
+					</div>
+				</div>
+			</div> <!-- sidebar -->
+
+<!-- Page 8 -->
+
+			<div class="pagebreak pageNumber">8</div>
+
+			<div class="sidebar">
+				<figure>
+					<img src="/contents/html5/figs/web/sharpenyourpencilsolution.png" />
+				</figure>
+
+				<h3> You're closer to HTML5 markup than you think!</h3>
+
+				<p>
+					Here's some old skool HTML that needs updating. Work through the HTML5-o-Matic process and update
+					this HTML to HTML5. Go ahead and scribble in the book, scratch out the existing markup code, and add
+					any new markup code you need to. We've helped a little by highlighting the areas that need to change.
+				</p>
+
+				<p>
+					Here's our solution.
+				</p>
+
+				<p>
+					Here's the updated code:
+				</p>
+
+				<div class="hiddencode">
+					<figure class="center">
+						<img class="codeimage" src="/contents/html5/figs/web2/008fig01.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-body">
+							<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html&gt; </pre>
+<pre>&lt;head&gt;</pre>
+<pre>	&lt;title&gt;Head First Lounge&lt;/title&gt;</pre>
+<pre>	&lt;meta charset="utf-8"&gt;</pre>
+<pre>	&lt;link rel="stylesheet" href="lounge.css"&gt;</pre>
+<pre>	&lt;script src="lounge.js"&gt;&lt;/script&gt;</pre>
+<pre>&lt;/head&gt; </pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;h1&gt;Welcome to Head First Lounge&lt;/h1&gt;</pre>
+<pre>	&lt;p&gt;</pre>
+<pre>		&lt;img src="drinks.gif" alt="Drinks"&gt; </pre>
+<pre>	&lt;/p&gt;</pre>
+<pre>	&lt;p&gt;</pre>
+<pre>		Join us any evening for refreshing &lt;a href="elixirs.html"&gt;elixirs&lt;/a&gt;, </pre>
+<pre>		conversation and maybe a game or two of Tap Tap Revolution. </pre>
+<pre>		Wireless access is always provided; BYOWS (Bring Your Own Web Server).</pre>
+<pre>	&lt;/p&gt; </pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+				<aside class="right">
+					Don't believe us? Try
+					<a class="ulink" href="http://validator.w3.org/" target="_top">http://validator.w3.org/</a>
+					and you'll see - it validates as HTML5. For real!
+				</aside>
+
+				<br>
+
+				<br>
+
+				<br>
+
+				<br>
+
+				<br>
+
+				<br>
+			</div> <!-- sidebar -->
+
+<!-- Page 9 -->
+
+			<div class="pagebreak pageNumber">9</div>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/therearenodumbquestions.png" />
+			</figure>
+
+			<div class="blockquote">
+				<blockquote class="blockquote">
+					<table style="border: 0;">
+						<colgroup>
+							<col style="text-align: left; width: 1%;">
+							<col>
+						</colgroup>
+
+						<tbody>
+							<tr class="question" id="id36172308">
+								<td style="text-align: left; vertical-align: top;" id="ch01qa1q1">
+									<p>
+										<strong>Q:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>How does this work on the old
+										browsers? Like the new doctype, meta, and so on... somehow the older browser
+										work with this new syntax?</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer" id="ch01qa1q1a1">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>A:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										Yes, through a bit of cleverness and luck. Take the type attributes on the link and script
+										tags; now, it makes sense to get rid of this attribute with HTML5 because CSS and JavaScript
+										are now the standards (and certainly are the default technologies for style and scripting).
+										But as it turns out, the browsers already assumed the defaults of CSS and JavaScript. So the
+										stars aligned and the new markup standard just happens to have been supported in the browser
+										for years. The same is true of the doctype and the meta tag.
+									</p>
+								</td>
+							</tr>
+
+							<tr class="question" id="id36172430">
+								<td style="text-align: left; vertical-align: top;" id="ch01qa1q2">
+									<p>
+										<strong>Q:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>What about the new doctype, it seems too simple now; it doesn't even have a version
+										or DTD.</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer" id="ch01qa1q2a2">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>A:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										Yes, it does seem a little magical that after years of using complex doctypes we can now
+										just simplify it to "we're using HTML." Here's what happened: HTML used to be based on a
+										standard called SGML, and that standard required both the complex form of the doctype and
+										the DTD. The new standard has moved away from SGML as a way to simplify HTML language and
+										make it more flexible. So, we don't need the complex form anymore. Further, as we said
+										above, there is some luck here in that almost all browsers just look for HTML in the
+										doctype to ensure they are parsing an HTML document.
+									</p>
+								</td>
+							</tr>
+
+							<tr class="question">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>Q:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>Were you joking about it never changing again? I thought the versioning was
+										really important for browsers. Why not use <code class="literal">&lt;!doctype
+										html5&gt;</code>? It's not like there isn't going to be an HTML6 too. Right?</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer" id="ch01qa1q3a3">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>A:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										The use of the doctype evolved with browser makers using the doctype to tell
+										their browsers to render things in their own "standards mode." Now that we have
+										much more of a true standard, the HTML5 doctype tells any browser that this
+										document is standard HTML, be that version 5, 6 or whatever.
+									</p>
+								</td>
+							</tr>
+
+							<tr class="question" id="id36172484">
+								<td style="text-align: left; vertical-align: top;" id="ch01qa1q4">
+									<p>
+										<strong>Q:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>Well, I assume different browsers are going to have different capabilities
+										at any one time. How do I handle that?</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer" id="ch01qa1q4a4">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>A:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										True, especially until HTML5 is 100 percent supported. We'll cover both of these
+										points in the chapter and throughout the book.
+									</p>
+								</td>
+							</tr>
+
+							<tr class="question" id="id36172510">
+								<td style="text-align: left; vertical-align: top;" id="ch01qa1q5">
+									<p>
+										<strong>Q:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>Why does this even matter? I just typed a page in without a doctype and
+										meta tag and it worked just fine. Why do I need to worry if this stuff is totally correct?</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer" id="ch01qa1q5a5">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>A:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										Yes, browsers are great at overlooking small errors in HTML files. But by including
+										the correct doctype and meta tags, you'll make sure browsers know exactly what you
+										want, rather than having to guess. Plus, for people using older browsers, the new
+										doctype means they'll use standards mode, which is what you want. Remember, standards
+										mode is a mode where the browser assumes you're writing HTML that conforms to a
+										standard, so it uses those rules to interpret your page. If you don't specify a
+										doctype, some browsers may go into "quirks mode" and assume your web page is written
+										for older browsers, when the standard wasn't quite up to snuff, and may interpret
+										your page incorrectly (or assume it's just written incorrectly).
+									</p>
+								</td>
+							</tr>
+
+							<tr class="question" id="id36172530">
+								<td style="text-align: left; vertical-align: top;" id="ch01qa1q6">
+									<p>
+										<strong>Q:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>Whatever happened to XHTML? It seems like a few years ago that was the future.</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer" id="ch01qa1q6a6">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>A:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										Yeah it was. Then flexibility won out over strict syntax, and in the process XHTML
+										(XHTML 2, to be precise) died and HTML5 was born to be more accepting of the way
+										people write web pages (and the way browsers render them). That said, don't worry,
+										because knowing about XHTML is only going to make you a stronger author of HTML5
+										content (and you're going to appreciate HTML5 a whole lot more). And by the way,
+										if you really love XML, there's still a way to write your HTML5 in strict form. More on that later...
+									</p>
+								</td>
+							</tr>
+
+							<tr class="question" id="id36172558">
+								<td style="text-align: left; vertical-align: top;" id="ch01qa1q7">
+									<p>
+										<strong>Q:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>What is UTF-8?</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer" id="relax">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>A:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										UTF-8 is a character coding that has support for many alphabets, including
+										non-western ones. You've probably seen other character sets used in the past,
+										but UTF-8 is being promoted as the new standard. And it's way shorter and easier
+										to remember than previous character encodings.
+									</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</blockquote>
+			</div> <!-- /blockquote -->
+
+<!-- Page 10 -->
+
+			<div class="pagebreak pageNumber">10</div>
+
+			<div class="sidebar">
+				<figure>
+					<img src="/contents/html5/figs/web/relax.png" />
+				</figure>
+
+				<h3> We don't expect you to know HTML5, yet.</h3>
+
+				<p>
+					If you've never had exposure to HTML5 before, that's okay, but you should have worked with
+					HTML, and there are some basics you should know about like elements, tags, attributes, nesting,
+					the difference between semantic markup and adding style, and so on.
+				</p>
+
+				<p>
+					If you aren't familiar with all these, we're going to make a small suggestion (and a shameless
+					plug): there's another book that precedes this one, <em>Head First HTML with CSS &amp; XHTML</em>,
+					and you should read it. And if you're somewhat familar with markup languages, you might want to
+					skim it or use it as a reference while reading this book.
+				</p>
+
+				<aside class="left">
+					We've also put a small guide to HTML5 markup &amp; CSS3 in the appendix. If you just want
+					a quick overview of the new additions, have a quick read over them at the end of the book. 
+				</aside>
+
+				<figure class="inline-right">
+					<img src="/contents/html5/figs/web2/010fig01.png">
+				</figure>
+			</div>
+
+<!-- Page 11 -->
+
+			<div class="pagebreak pageNumber">11</div>
+
+		</section>
+
+		<section class="section" data-number="4" data-name="HTML5 Exposed">
+
+			<div>
+				<figure class="center">
+					<img src="/contents/html5/figs/web/html5exposed.png" />
+				</figure>
+
+				<h2 class="center">
+					<strong>This week's interview: Confessions of the newest version of HTML</strong>
+				</h2>
+
+				<p>
+					<span class="formalpara-title"><strong>Head First:</strong>&nbsp;</span>Welcome, HTML5. All
+					the Web is buzzing about you. To us, you look a lot like HTML 4. Why is everyone so excited?
+				</p>
+
+				<p>
+					<span class="formalpara-title"><strong>HTML5:</strong>&nbsp;</span>Everyone's excited because
+					I'm enabling a whole new generation of web applications and experiences.
+				</p>
+
+				<p>
+					<span class="formalpara-title"><strong>Head First:</strong>&nbsp;</span>Right, but again, why didn't HTML
+					4 or even the promise of "XHTML" do that?
+				</p>
+
+				<p>
+					<span class="formalpara-title"><strong>HTML5:</strong>&nbsp;</span>XHTML 2 was a dead-end.
+					Everyone who wrote real web pages hated it. XHTML reinvented the way we write markup for a web
+					page, and would have made all the pages already out there obsolete. I said, "Hey, wait a sec, I
+					can do new things and embrace everything that is already out there." I mean, if something works,
+					why reinvent the wheel? That's my philosophy.
+				</p>
+
+				<p>
+					<span class="formalpara-title"><strong>Head First:</strong>&nbsp;</span>It seems to be working.
+					But you know, some of the standards guys are still saying that the Web would be better off following
+					their "pure" standards.
+				</p>
+
+				<p>
+					<span class="formalpara-title"><strong>HTML5:</strong>&nbsp;</span>You know, I don't really care.
+					I listen to the people out there writing real web pages—how are they using me, and how can I help?
+					Second on my list are the developers creating the web browsers. And last on my list are the standards
+					guys. I'll listen to them, but not if it disagrees with what real users are doing.
+				</p>
+
+				<p>
+					<span class="formalpara-title"><strong>Head First:</strong>&nbsp;</span>Why not?
+				</p>
+
+				<p>
+					<span class="formalpara-title"><strong>HTML5:</strong>&nbsp;</span>Because if the users and
+					the browser-makers disagree with the standards guys, it is a moot point. Luckily the people
+					working on the HTML5 spec totally agree with me, and that's our philosophy.
+				</p>
+
+				<p>
+					<span class="formalpara-title"><strong>Head First:</strong>&nbsp;</span>Back to the previous
+					version of HTML, you've said you are a superset of HTML 4.01. That means you're backward-compatible,
+					right? Does that mean you're going to have to keep handling all the bad designs of the past?
+				</p>
+
+				<p>
+					<span class="formalpara-title"><strong>HTML5:</strong>&nbsp;</span>I promise I'll do my best to
+					handle anything from the past that is thrown at me. That said, it doesn't mean that is the way to
+					treat me. I do want web page authors to be educated on the latest standard and use me in the best
+					way possible. That way, they can really push me to my limits. But again, I won't totally fail, and
+					I will display an old page to the best of my ability if it's not updated.
+				</p>
+
+				<p>
+					<span class="formalpara-title"><strong>Head First:</strong>&nbsp;</span>My next question is ...
+				</p>
+
+				<p>
+					<span class="formalpara-title"><strong>HTML5:</strong>&nbsp;</span>Hold on, hold on!!! All
+					these questions about the past. We aren't talking about what is important here. As far as my
+					markup is concerned, my personal mission is to embrace the Web as it is, add some new structured
+					elements that make web author's lives easier, and to help all browser implementors support
+					consistent semantics around my markup. But I'm really here to pitch my new purpose: web applica...
+				</p>
+
+				<p>
+					<span class="formalpara-title"><strong>Head First:</strong>&nbsp;</span>...So sorry HTML5,
+					that's all we have time for. Thanks, and we'll be sure to talk about anything you want in an upcoming interview.
+				</p>
+
+				<p>
+					<span class="formalpara-title"><strong>HTML5:</strong>&nbsp;</span>Argh, I hate when that happens!!!
+				</p>
+			</div>
+
+<!-- Page 12 -->
+
+			<div class="pagebreak pageNumber">12</div>
+
+		</section>
+
+		<section class="section" data-number="5" data-name="Would the REAL HTML5 please stand up...">
+
+			<h3> Would the REAL HTML5 please stand up...</h3>
+
+			<p>
+				Okay, you've patiently humored us by sitting through our "HTML5-o-Matic" skit, and we're
+				sure you've already guessed there's a lot more to HTML5 than that. The word on the street
+				is that HTML5 removes the need for plug-ins, can be used for everything from simple pages
+				to Quake-style games and is a whipped topping for desserts. HTML5 seems to be something different to everyone...
+			</p>
+
+			<div class="left">
+				<figure class="left">
+					<img src="/contents/html5/figs/web2/012fig01.png">
+				</figure>
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web2/012fig02.png">
+				</figure>
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web2/012fig03.png">
+				</figure>
+			</div>
+
+<!-- Page 13 -->
+
+			<div class="pagebreak pageNumber left">13</div>
+
+			<div class="left">
+				<figure class="left">
+					<img src="/contents/html5/figs/web2/013fig01.png">
+				</figure>
+
+				<figure class="right">
+					<img src="/contents/html5/figs/web2/013fig02.png">
+				</figure>
+
+				<figure class="left">
+					<img src="/contents/html5/figs/web2/013fig03.png">
+				</figure>
+
+				<figure class="right">
+					<img src="/contents/html5/figs/web2/013fig04.png">
+				</figure>
+			</div>
+
+			<div class="clear"></div>
+
+			<p>
+				The good news is, HTML5 is all these things. When people talk about HTML5 they mean a
+				<em>family of technologies</em> that, when combined, gives you a whole new palette for
+				building web pages and applications.
+			</p>
+
+<!-- Page 14 -->
+
+			<div class="pagebreak pageNumber">14</div>
+
+		</section>
+
+		<section class="section" data-number="6" data-name="How HTML5 really works">
+
+			<h3>How HTML5 really works...</h3>
+
+			<aside class="right">
+				You'll find a nice Webville guide to the new HTML5 markup &amp; CSS3 properties in the appendix.
+			</aside>        
+
+			<p class="margin-right">
+				So we've said HTML5 is made up of a family of technologies, but what does that mean? Well
+				you already know there's the HTML markup itself, which has been expanded to include some new
+				elements; there are also lots of additions to CSS with CSS3 that give you even more power
+				to style your pages. And then there's the turbo charger: <em>JavaScript</em>, and a whole
+				new set of JavaScript APIs that are available to you.
+			</p>
+
+			<p>
+				Let's take a look behind the scenes and see how this all fits together:
+			</p>
+
+			<figure class="center full">
+				<img src="/contents/html5/figs/web2/014fig01a.png">
+			</figure>
+
+<!-- Page 15 -->
+
+			<div class="pagebreak pageNumber">15</div>
+
+			<figure class="center full">
+				<img src="/contents/html5/figs/web2/014fig01b.png">
+			</figure>
+
+<!-- Page 16 -->
+
+			<div class="pagebreak pageNumber">16</div>
+
+		</section>
+
+		<section class="section" data-number="7" data-name="Who Does What?<">
+
+			<div class="sidebar">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/whodoeswhat.png" />
+				</figure>
+
+				<p>
+					We've already talked about the "family of technologies" so much we feel like they're, well,
+					family. But then again we really haven't gotten to know them yet, so isn't it about time?
+					You'll find most of the family below, so go ahead mingle, see if you can figure out who is
+					who. We've gone ahead and figured one out for you. <em>And don't worry, we know this is your
+					first time meeting the HTML5 family members, so the answers are at the end of the chapter.</em>
+				</p>
+
+				<figure class="center">
+					<img src="/contents/html5/figs/web2/016fig01.png">
+				</figure>  
+			</div>
+
+<!-- Page 17 -->
+
+			<div class="pagebreak pageNumber">17</div>
+
+		</section>
+
+		<section class="section" data-number="8" data-name="Browser Reconnaisance">
+
+			<p>
+			<strong>YOUR MISSION...</strong>
+			</p>
+
+			<p>
+				...should you choose to accept it, is to do some reconnaissance on all the HTML browsers.
+				We're sure you've heard some browsers are ready for HTML5, and some aren't. We need for you
+				to get in close, because the truth is out there...
+			</p>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web2/017fig01.png">
+			</figure>
+
+<!-- Page 18 -->
+
+			<div class="pagebreak pageNumber">18</div>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web2/018fig01.png">
+			</figure>
+
+			<p>
+				Even though it will be a while before the standard gets signed, sealed and delivered,
+				you'll be using browsers that fully support HTML5 long before then. In fact, on modern
+				browsers many features are already supported across the board. That's why it's a great
+				idea to get started using HTML5 now. Plus if you start now, you'll be able to impress your
+				friends and coworkers with all your cutting edge knowledge.
+			</p>
+
+			<aside class="right">
+				And get that raise sooner!
+			</aside>
+
+<!-- Page 19 -->
+
+			<div class="pagebreak pageNumber clear">19</div>
+
+			<p>
+				<strong>Hold on, take a deep breath.</strong>
+			</p>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web2/019fig01.png">
+			</figure>
+
+			<p>
+				First of all HTML5 is a superset of HTML, and so your goal should be to write
+				<em>only one</em> HTML page. You're right in that the features supported by any one browser
+				may differ, depending on how current the browser is, and how aggressive your users are in
+				upgrading. So, we need to keep in mind that some of the newer features of HTML5 might not
+				be supported, which leads back to your question of how to handle that.
+			</p>
+
+			<p>
+				Now, one of the design principles behind HTML5 is to allow your pages to degrade gracefully—that
+				means if your user's browser doesn't provide a new feature, then you should provide a meaningful
+				alternative. In this book we're going to show you how to write your pages to do that.
+			</p>
+
+			<p class="margin-right">
+				But the good news is that all browsers are moving towards the HTML5 standard and related
+				technologies (even the mobile browsers) and so over time graceful degradation will be more
+				the exception than the rule (although you'll always want to do what you can to give your users
+				a meaningful experience no matter what browser they're on).
+			</p>
+
+<!-- Page 20 -->
+
+			<div class="pagebreak pageNumber">20</div>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+			</figure>
+
+			<div class="blockquote">
+				<blockquote class="blockquote">
+					<table style="border: 0;">
+						<colgroup>
+							<col style="text-align: left; width: 1%;">
+							<col>
+						</colgroup>
+
+						<tbody>
+							<tr class="question" id="id36173668">
+								<td style="text-align: left; vertical-align: top;" id="ch01qa2q1">
+									<p>
+										<strong>Q:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>I heard that the HTML5 Standard isn't going to be a final
+										recommendation until 2022! Is that true? And, if so, why are we bothering?</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer" id="ch01qa2q1a1">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>A:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										The W3C is the standards body that formally recommends the HTML5 standard,
+										and what you need to know about the W3C is that they are a conservative bunch,
+										so conservative that they'd prefer to wait until a few generations of HTML5 browsers
+										have come and gone before they give their signoff. That's okay; the standard should
+										be wrapped up in the next couple years and the browser makers are well on their way
+										to implementing it. So, yes, it may be quite a while before HTML5 is a "final
+										recommendation," but it's expected to be a stable standard by 2014, and for all
+										practical purposes you should get going now on HTML5.
+									</p>
+								</td>
+							</tr>
+
+							<tr class="question" id="id36173803">
+								<td style="text-align: left; vertical-align: top;" id="ch01qa2q2">
+									<p>
+										<strong>Q:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>What happens after HTML5 is final?</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer" id="ch01qa2q2a2">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>A:</strong>
+									</p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										HTML6? We have no idea, but maybe whatever it is it will come with flying cars, rocket
+										suits and dinner in a pill. Remember that even if we do adopt HTML6, the doctype won't
+										change. Assuming the W3C keeps their promise and future versions of HTML remain
+										backward-compatible, we'll be in good shape to take whatever comes next.
+									</p>
+								</td>
+							</tr>
+
+							<tr class="question" id="id36173827">
+								<td style="text-align: left; vertical-align: top;" id="ch01qa2q3">
+									<p>
+										<strong>Q:</strong>
+									</p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>Chrome, Safari, Firefox, a zillion mobile browsers...isn't the world just
+											getting worse? How will we ever make sure our pages work on all these browsers?</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer" id="ch01qa2q3a3">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>A:</strong>
+									</p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										While there is plenty of healthy competition in the marketplace for browsers (desktop and
+										mobile), in reality many of these browsers are based on a few common HTML engines. For
+										instance Chrome, Safari and the mobile browsers in the Android and iPhone are all based
+										on WebKit, an open source browser engine. So, for the most part, your pages will work
+										out of the gate on multiple browsers without a lot of effort on your part.
+									</p>
+								</td>
+							</tr>
+
+							<tr class="question" id="id36173851">
+								<td style="text-align: left; vertical-align: top;" id="ch01qa2q4">
+									<p>
+										<strong>Q:</strong>
+									</p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>Why not just use Flash to solve cross-browser issues?</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer" id="ch01qa2q4a4">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>A:</strong>
+									</p>
+								</td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										Flash is a great tool for many applications and certainly on the desktop it is
+										pervasive across operating systems and browsers. HTML5 and its family of technologies
+										is trying to allow you to do with open standards many of the same things that
+										Flash can do. So which way should you go? One thing to think about is the amount
+										of investment going into HTML5 technologies within Google, Apple, Microsoft,
+										and others. Over the long term, HTML5 is going to be a huge player, and in the
+										mobile space it already is. So, while the choice is yours, and we're sure both
+										are going to be around for a long time, the industry is heading towards open standards.
+									</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</blockquote>
+			</div>
+
+			<div class="sidebar" id="html_archaeology">
+				<h3>HTML Archaeology</h3>
+
+				<figure class="left">
+					<img src="/contents/html5/figs/web/cap.png"> 
+				</figure>
+
+				<figure class="right">
+					<img src="/contents/html5/figs/web/common.png">
+				</figure>
+
+				<p>
+					We did some digging and found some code embedded in an HTML page. We're hoping you
+					can help us crack the code to figure out what it means. Don't worry; we don't expect
+					you to understand this code, we're just trying to get your brain warmed up with a little deductive reasoning...
+				</p>
+
+				<div class="hiddencode">
+					<figure class="center">
+						<img class="codeimage" src="/contents/html5/figs/web2/020fig01.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-body">
+							<code>
+<pre>&lt;script&gt;</pre>
+<pre>	var walksLike = "duck";</pre>
+<pre>	var soundsLike = document.getElementById("soundslike");</pre>
+<pre>	if (walksLike == "dog") {</pre>
+<pre>		soundsLike.innerHTML = "Woof! Woof!";</pre>
+<pre>	} else if (walksLike == "duck") {</pre>
+<pre>		soundsLike.innerHTML = "Quack, Quack";</pre>
+<pre>	} else {</pre>
+<pre>		soundsLike.innerHTML = "Silence";</pre>
+<pre>	}</pre>
+<pre>&lt;/script&gt;</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 21 -->
+
+			<div class="pagebreak pageNumber">21</div>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web2/021fig01.png">
+			</figure>
+
+			<h3>We've gotta talk.</h3>
+
+			<div class="margin-right">
+				<p>
+					If you've been with us since <em>Head First HTML &amp; CSS</em> (or, you've read this far into
+					the book without repurposing it as firewood) we know you probably have a good understanding of
+					using markup languages and stylesheets to create great looking web pages. Knowing those two
+					technologies can get you a long way...
+				</p>
+
+				<p>
+					But, with HTML5 things are changing: web pages are becoming rich experiences (and full blown
+					applications) that have behavior, are updated on the fly, and interact with the user. Building
+					these kinds of pages requires a fair bit of programming and if you're going to write code for
+					the browser, there's only one game in town: <em>JavaScript</em>.
+				</p>
+
+				<aside class="right">
+					We can't think of a better or more fun way to learn to program!
+				</aside>
+
+				<p>
+					Now, if you've programmed or written simple scripts before, you're going to be in good shape:
+					JavaScript (despite some rumors) is a fantastic language and we'll take you through everything
+					you need to know to write the applications in this book. If you haven't programmed before,
+					we're going to do everything we can to take you along for the ride. In either case, one of
+					the huge benefits of JavaScript is how accessible it is to new programmers.
+				</p>
+
+				<p>
+					So, what now? Let's just briefly get introduced to a little JavaScript and then we'll really
+					dive in deep in Chapter 2. In fact, for now, don't worry too much about getting every detail
+					over the next few pages—we just want you to get a <em>feel for JavaScript.</em>
+				</p>
+			</div>
+
+<!-- Page 22,23 -->
+
+			<div class="pagebreak pageNumber">22-23</div>
+
+		</section>
+
+		<section class="section" data-number="9" data-name="What can you do with JavaScript?">
+
+			<h3> What can you do with JavaScript?</h3>
+
+			<p>
+				<strong>JavaScript opens up a whole new universe of expression and functionality to your
+					web pages. Let's look at just a few things you might do with JavaScript and HTML5...</strong>
+			</p>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web2/022fig01.png">
+			</figure>
+
+<!-- Page 24 -->
+
+			<div class="pagebreak pageNumber">24</div>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/javascriptexposed.png">
+			</figure>
+
+			<h3 class="clear">
+				<strong>This week's interview: Confessions of a Scripting Language</strong>
+			</h3>
+
+			<p>
+				<span class="formalpara-title"><strong>Head First:</strong>&nbsp;</span>Welcome, JavaScript.
+				We're glad you could work us into your busy schedule. Let me just put it out there: HTML5 is
+				becoming quite a celebrity—what's your take on this?
+			</p>
+
+			<p>
+				<span class="formalpara-title"><strong>JavaScript:</strong>&nbsp;</span>I'm not someone who
+				seeks the limelight, I'm a behind the scenes kinda guy. That said, a lot of the credit going
+				to HTML5 should be going to me.
+			</p>
+
+			<p>
+				<span class="formalpara-title"><strong>Head First:</strong>&nbsp;</span>Why do you say that?
+			</p>
+
+			<p>
+				<span class="formalpara-title"><strong>JavaScript:</strong>&nbsp;</span>There's a whole family
+				of technologies that makes "HTML5" work, like the 2D canvas, local storage, web workers, that
+				kind of thing. And the truth is, it takes me, JavaScript, to really make use of them. Sure,
+				HTML5 gives you a place to hold the whole experience together and present it, but without me,
+				you wouldn't have an interesting experience at all. That's okay, more power to HTML5; I'm
+				just going to keep on doing my job.
+			</p>
+
+			<p>
+				<span class="formalpara-title"><strong>Head First:</strong>&nbsp;</span>What's your advice for new HTML5 authors?
+			</p>
+
+			<p>
+				<span class="formalpara-title"><strong>JavaScript:</strong>&nbsp;</span>That's easy.
+				If you want to really master HTML5, spend your time on JavaScript and all the libraries that work with HTML5.
+			</p>
+
+			<p>
+				<span class="formalpara-title"><strong>Head First:</strong>&nbsp;</span>You know, you haven't
+				always had the best reputation. I'll quote a review from 1998: "JavaScript is at best a half-baked,
+				wimpy scripting language."
+			</p>
+
+			<p>
+				<span class="formalpara-title"><strong>JavaScript:</strong>&nbsp;</span>That hurts. I may
+				not have started life in the clean, academic environment of many programming languages, but
+				I've become one of the most widely used programming languages of all time, so I wouldn't
+				discount me so quickly. Not only that, but enormous resources have been poured into making
+				me robust and extremely fast. I'm at least 100 times faster than I was a decade ago.
+			</p>
+
+			<p>
+				<span class="formalpara-title"><strong>Head First:</strong>&nbsp;</span>That's impressive.
+			</p>
+
+			<p>
+				<span class="formalpara-title"><strong>JavaScript:</strong>&nbsp;</span>Oh, and if you haven't
+				heard, the standards guys also just told me I'm now the default scripting language for HTML5. So,
+				I'm here to stay. In fact, you don't even have to say "JavaScript" in your
+				<code class="literal">&lt;script&gt;</code> tag anymore. So they may have called me wimpy in
+				‘98, but where are JScript, VBScript, Java Applets and all those failed attempts at browser languages now?
+			</p>
+
+			<p>
+				<span class="formalpara-title"><strong>Head First:</strong>&nbsp;</span>Well it certainly
+				sounds like you are the key to creating great HTML5 experiences. You do have a reputation
+				for being a confusing language.
+			</p>
+
+			<p>
+				<span class="formalpara-title"><strong>JavaScript:</strong>&nbsp;</span>I'm a very powerful
+				language, despite some rumors, so you should really spend some time learning to use me well
+				 On the other hand, I'm popular because I'm so easy to get up and running with. The best o
+				  both worlds, don't you think?
+			</p>
+
+			<p>
+				<span class="formalpara-title"><strong>Head First:</strong>&nbsp;</span>It sounds that
+				way! Thanks, JavaScript, for joining us.
+			</p>
+
+			<p>
+				<span class="formalpara-title"><strong>JavaScript:</strong>&nbsp;</span>My pleasure, anytime.
+			</p>
+
+<!-- Page 25 -->
+
+			<div class="pagebreak pageNumber">25</div>
+
+		</section>
+
+		<section class="section" data-number="10" data-name="Writing Serious JavaScript">
+
+			<div class="left">
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web2/025fig01.png">
+			</figure>
+
+			<h3>Writing Serious JavaScript</h3>
+
+			<p>
+				With all this talk about JavaScript, we bet you're ready to jump in and see what it's all
+				about. They don't call this <em>Head First</em> for nothing, we've got a super serious
+				business application below that we're going to throw at you. For now, get started by going
+				through the code to get a feel for it. Write down what you think each line does. Don't
+				worry, we don't expect you to understand everything yet, but we bet you can make some
+				really good guesses about what this code does. And, when you're done, turn the page and
+				see how close you were...
+			</p>
+
+			<div class="hiddencode">
+				<figure class="right">
+					<img class="codeimage" src="/contents/html5/figs/web2/025fig02.png">
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>var drink = "Energy Drink";</pre>
+<pre>var lyrics = "";</pre>
+<pre>var cans = 99;</pre>
+								<br />
+<pre>while (cans > 0) {</pre>
+<pre>	lyrics = lyrics + cans + " cans of " + drink + " on the wall &lt;br&gt;";</pre>
+<pre>	lyrics = lyrics + cans + " cans of " + drink + "&lt;br&gt;";</pre>
+<pre>	lyrics = lyrics + "Take one down, pass it around, &lt;br&gt;";</pre>
+<pre>	if (cans > 1) {</pre>
+<pre>		lyrics = lyrics + (cans-1) + " cans of " + drink + " on the wall &lt;br&gt;";</pre>
+<pre>	}</pre>
+<pre>	else {</pre>
+<pre>		lyrics = lyrics + "No more cans of " + drink + " on the wall &lt;br&gt;";</pre>
+<pre>	}</pre>
+<pre>	cans = cans - 1;</pre>
+<pre>}</pre>
+<pre>document.write(lyrics);</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+<!-- Page 26 -->
+
+			<div class="pagebreak pageNumber clear">26</div>
+
+		</section>
+
+		<section class="section" data-number="11" data-name="Writing Serious JavaScript Revisited">
+
+			<div class="left">
+				<figure class="right">
+					<img src="/contents/html5/figs/web2/026fig01.png">
+				</figure>
+
+				<h3>Writing Serious JavaScript Revisited...</h3>
+
+				<p>
+					Walk through the code again and see if you were on the mark. At this point you just want to
+					get a feel for the code; we'll be stepping through everything in detail soon enough.
+				</p>
+
+				<div class="hiddencode">
+					<figure class="center">
+						<img class="codeimage" src="/contents/html5/figs/web2/026fig02.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+				  		<code>
+<pre>var drink = "Energy Drink";</pre>
+<pre>var lyrics = "";</pre>
+<pre>var cans = 99;</pre>
+								<br />
+<pre>while (cans > 0) {</pre>
+<pre>	lyrics = lyrics + cans + " cans of " + drink + " on the wall &lt;br&gt;";</pre>
+<pre>	lyrics = lyrics + cans + " cans of " + drink + "&lt;br&gt;";</pre>
+<pre>	lyrics = lyrics + "Take one down, pass it around, &lt;br&gt;";</pre>
+<pre>	if (cans > 1) {</pre>
+<pre>		lyrics = lyrics + (cans-1) + " cans of " + drink + " on the wall &lt;br&gt;";</pre>
+<pre>	}</pre>
+<pre>	else {</pre>
+<pre>		lyrics = lyrics + "No more cans of " + drink + " on the wall &lt;br&gt;";</pre>
+<pre>	}</pre>
+<pre>	cans = cans - 1;</pre>
+<pre>}</pre>
+<pre>document.write(lyrics);</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 27 -->
+
+			<div class="pagebreak pageNumber clear">27</div>
+
+			<div class="sidebar">
+				<figure>
+					<img src="/contents/html5/figs/web/common-12.png" />
+				</figure>
+
+				<h3> A Test Drive</h3>
+
+				<p>
+					You didn't think you'd do all that hard work on the exercise without giving JavaScript a
+					try for real, did you? What you'll need to do is take the code from the previous page and
+					type it (along with the HTML below) into a file (like index.html), and then load it in your
+					browser. You'll see our results below:
+				</p>
+
+				<aside>
+					Remember, to download all the code and sample files for this book, please visit
+					<a class="ulink" href="http://wickedlysmart.com/hfhtml5" target="_top">http://wickedlysmart.com/hfhtml5</a>.
+				</aside>
+
+				<div class="hiddencode">
+					<figure class="center">
+						<img class="codeimage" src="/contents/html5/figs/web2/027fig01.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+				  		<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html&gt;</pre>
+<pre>	&lt;head&gt;</pre>
+<pre>		&lt;meta charset="utf-8"&gt;</pre>
+<pre>		&lt;title&gt;My First JavaScript&lt;/title&gt;</pre>
+<pre>	&lt;/head&gt;</pre>
+<pre>	&lt;body&gt;</pre>
+<pre>		&lt;script&gt;</pre>
+								<br />
+								<br />
+<pre>		&lt;/script&gt;</pre>
+<pre>	&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+				<figure class="center">
+					<img src="/contents/html5/figs/web2/027fig02.png">
+				</figure>
+			</div>
+
+<!-- Page 28 -->
+
+			<div class="pagebreak pageNumber">28</div>            
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+			</figure>
+
+			<div class="blockquote">
+				<blockquote class="blockquote">
+					<table style="border: 0;">
+						<colgroup>
+							<col style="text-align: left; width: 1%;">
+							<col>
+						</colgroup>
+
+						<tbody>
+							<tr class="question" id="id36174690">
+								<td style="text-align: left; vertical-align: top;" id="ch01qa3q1">
+									<p>
+										<strong>Q:</strong>
+									</p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>Why was there nothing in the body of that HTML except the script?</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer" id="ch01qa3q1a1">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>A:</strong>
+									</p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										We chose to start with an empty body because we created all the content for
+										this page using JavaScript code. Now, sure, we could have just typed the song
+										lyrics directly into the body element (and that would have taken a lot of typing),
+										or we can have code do all the hard work for us (which we did), and then just have
+										the code insert the lyrics into the page with document.write.
+									</p>
+									
+									<p>
+										Keep in mind we're just getting our feet wet here; we're going to spend a
+										lot more time in this book seeing how we can take a page and dynamically fill
+										in its content with code.
+									</p>
+								</td>
+							</tr>
+
+							<tr class="question" id="id36174786">
+								<td style="text-align: left; vertical-align: top;" id="ch01qa3q2">
+									<p>
+										<strong>Q:</strong>
+									</p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>I get that we built up the entire lyrics to the song, but what exactly
+											did the document.write do and how did the text get in the document?</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer" id="ch01qa3q2a2">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>A:</strong>
+									</p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										Well, document.write takes a string of text and inserts it into the document;
+										in fact, it outputs the string precisely where the script tag is located. So,
+										in this case document.write outputs the string right into the body of the page.
+									</p>
+									
+									<p>
+										You're soon going to see more sophisticated ways to alter the text of a live
+										document with JavaScript, but this example should give you a flavor of how code
+										can dynamically change a page.
+									</p>
+								</td>
+							</tr>
+
+							<tr class="question" id="id36174812">
+								<td style="text-align: left; vertical-align: top;" id="ch01qa3q3">
+									<p>
+										<strong>Q:</strong>
+									</p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>You've been using the terms web page and web application; are they
+											two different things? What makes something a web application?</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer" id="ch01qa3q3a3">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>A:</strong>
+									</p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										That's a great question because we're using the terms loosely. There's no
+										technical difference between the two; in other words, there's nothing special
+										you do to turn a page written with HTML, JavaScript and/or CSS into a web application.
+										The distinction is more one of perspective.
+									</p>
+								
+									<p>
+										When we have a page that is acting more like an application than just a static
+										document, then we start thinking of it as a web application and less as a web page.
+										We think of applications as having a number of qualities such as holding lots of
+										state, managing more complex interactions with the user, displaying dynamic and
+										constantly updated data without a page refresh, or even doing more complex tasks or calculations.
+									</p>
+								</td>
+							</tr>
+
+							<tr class="question" id="id36174843">
+								<td style="text-align: left; vertical-align: top;" id="ch01qa3q4">
+									<p>
+										<strong>Q:</strong>
+									</p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>Hey, all this JavaScript is great, but what about CSS? I'm really itching
+											to take advantage of some of the new CSS3 stuff I've been hearing about to make my
+											pages look better.</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer" id="ch01qa3q4a4">
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>A:</strong>
+									</p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										Yes, CSS has come a long way and we're thrilled it works so well with HTML5.
+										Now, while this book isn't about CSS3, you can be sure we're going to take full
+										advantage of some of its new capabilities. As you might know, many of the tricks
+										we used to do to add rounded corners and shadows with images in HTML, and simple
+										animation with JavaScript, can now be easily done with CSS3.
+									</p>
+									
+									<p>
+										So, yes, we're going to make use of the power of CSS3 in this book, and we'll
+										point out when we're doing so.
+									</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</blockquote>
+			</div>
+
+<!-- Page 29 -->
+
+			<div class="pagebreak pageNumber">29</div>            
+
+			<div class="left"> 
+				<figure class="left">
+					<img src="/contents/html5/figs/web2/029fig01.png">
+				</figure>
+
+				<p>
+					<strong>We'll give you our unofficial answer:</strong>
+				</p>
+
+				<figure class="center">
+					<img src="/contents/html5/figs/web2/029fig02.png">
+				</figure>
+
+				<p>
+					You see, when most people are talking about the promise of HTML5, what they mean is all
+					of these technologies combined. That is, we have markup to build the core structure of our
+					pages, we have JavaScript along with all its APIs to add behavior and new functionality,
+					and we have CSS to style our pages—and together, these are the technologies we're all going
+					to use to build tomorrow's web apps.
+				</p>
+
+				<p>
+					Now, why did we say unofficial? Well, there are people who like to make hard distinctions
+					among these technologies and which standard each belongs to. And that is fine and has its
+					place. But, what we care about is this: what technologies are available in the browser, and
+					are they ready for us to use to craft our pages and applications? So, we say HTML5 is markup
+					+ JavaScript APIs + CSS, and we think that is what people generally mean when talking about
+					HTML5 as a technology.
+				</p>
+
+				<aside class="right">
+					If you're really interested in how these technologies fit together as a set of
+					standards (and we all should be) then we encourage you to visit w3.org for more information.
+				</aside>
+			</div>
+
+<!-- Page 30 -->
+
+			<div class="pagebreak pageNumber clear">30</div>  
+
+			<div class="margin-right">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/common-1.png">
+				</figure>
+
+				<aside class="right">
+					And your first JavaSript code!
+				</aside>
+
+				<h3>
+					Congratulations, you've finished Chapter 1 and written your first HTML5!
+				</h3>
+
+				<p>
+					Before you run off to the next chapter, we've got one more task for you to drive it all home.
+					Use the magnets below to fill in the formula that solves the equation of "what is HTML5?" Careful
+					now, there are some distractions thrown in with that pile of magnets. Once you've solved it,
+					get some rest and refresh yourself before moving on to Chapter 2.
+				</p>
+
+				<figure class="center">
+					<img src="/contents/html5/figs/web2/030fig01.png">
+				</figure>
+			</div>
+
+<!-- Page 31 -->
+
+			<div class="pagebreak pageNumber">31</div>  
+
+		</section>
+
+		<section class="section" data-number="12" data-name="Bullet Points">
+
+			<div class="sidebar" id="bullet_points">
+				<figure>
+					<img src="/contents/html5/figs/web/bulletpoints.png" />
+				</figure>
+
+				<div class="itemizedlist">
+					<ul class="itemizedlist">
+						<li class="listitem">
+							<p>
+								HTML5 is the newest version of HTML.
+								It introduces simplified tags, new semantic and media elements, and relies
+								on a set of JavaScript libraries that enable web applications.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								XHTML is no longer the standard for web pages. Developers and the W3C decided to
+								keep extending and improving HTML instead.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								The new, simpler HTML5 doctype is supported by older browsers—they use standards
+								mode when they see this doctype.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								The type attribute is no longer needed in the &lt;script&gt; tag or in a
+								stylesheet link to CSS. JavaScript and CSS are now the defaults.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								The &lt;meta&gt; tag used for specifying the character set has been simplified
+								to include only the character encoding.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								UTF-8 is now the standard charset in use on the Web.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								Making changes to the doctype and &lt;meta&gt; tag won't break your pages in older browsers.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								HTML5's new elements are a superset of HTML 4 elements, which means older pages will
+								continue to work in modern browsers.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								The HTML5 standard won't be officially complete until 2014, but most modern browsers
+								will support it long before then (many support it now!).
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								HTML5 introduces elements that add new semantics to your pages, giving you more
+								options for creating web page structure than we had with HTML 4.01. We aren't covering
+								these in this book, but we have a small guide to them in the appendix.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								Many of the new features in HTML5 require JavaScript to make the most of them.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								Using JavaScript, you can interact with the DOM—the Document Object Model.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								The DOM is the browser's internal representation of a web page. Using JavaScript,
+								you can access elements, change elements, and add new elements to the DOM.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								A JavaScript API is an "Application Programming Interface." APIs make it possible
+								to control all aspects of HTML5, like 2D drawing, video playback, and more.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								JavaScript is one of the most popular languages in the world. JavaScript implementations
+								have improved dramatically in recent years.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								You'll be able to detect whether a new feature is supported in a browser and
+								gracefully degrade the experience if not.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>
+								CSS is the style standard for HTML5; many people include CSS when they use the term
+								"HTML5" to describe the family of technologies used to create web applications.
+							</p>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+<!-- Page 32 -->
+
+			<div class="pagebreak pageNumber">32</div>  
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/html5cross2.png" />
+			</figure>
+
+			<p>
+				It's time to give the right side of your brain a break and put that left side to work. All these
+				words are HTML-related and from this chapter.
+			</p>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web2/032fig01.png">
+			</figure>
+
+			<div class="informaltable">
+				<table style="border-collapse: collapse;">
+					<colgroup>
+						<col class="c1">
+						<col class="c2">
+						<col class="c3">
+						<col class="c4">
+					</colgroup>
+
+					<thead>
+						<tr>
+							<td style="vertical-align: top;  " colspan="2">
+								<p>
+									Across
+								</p>
+							</td>
+							
+							<td style="vertical-align: top; " colspan="2">
+								<p>
+									Down
+								</p>
+							</td>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr>
+							<td style="vertical-align: top;  ">
+								<p>
+									2.
+								</p>
+							</td>
+
+							<td style="vertical-align: top;  ">
+								<p>
+									__________ plug could also be called spam.
+								</p>
+							</td>
+
+							<td style="vertical-align: top;  ">
+								<p>
+									1.
+								</p>
+							</td>
+
+							<td style="vertical-align: top; ">
+								<p>
+									The ________ is an internal representation of a web page.
+								</p>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="vertical-align: top;  ">
+								<p>
+									8.
+								</p>
+							</td>
+
+							<td style="vertical-align: top;  ">
+								<p>
+									Product that cleans up your HTML5 in three steps.
+								</p>
+							</td>
+
+							<td style="vertical-align: top;  ">
+								<p>
+									3.
+								</p>
+							</td>
+
+							<td style="vertical-align: top; ">
+								<p>
+									The version of HTML before HTML5.
+								</p>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="vertical-align: top;  ">
+								<p>
+									11.
+								</p>
+							</td>
+
+							<td style="vertical-align: top;  ">
+								<p>
+									Your mission was browser __________.
+								</p>
+							</td>
+
+							<td style="vertical-align: top;  ">
+								<p>
+									4.
+								</p>
+							</td>
+
+							<td style="vertical-align: top; ">
+								<p>
+									The &lt;_______&gt; tag tells the browser what follows is JavaScript, not HTML.
+								</p>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="vertical-align: top;  ">
+								<p>
+									13.
+								</p>
+							</td>
+
+							<td style="vertical-align: top;  ">
+								<p>
+									The real power of HTML5 is the JavaScript ____.
+								</p>
+							</td>
+
+							<td style="vertical-align: top;  ">
+								<p>
+									5.
+								</p>
+							</td>
+
+							<td style="vertical-align: top; ">
+								<p>
+									We want our web experiences to degrade ______.
+								</p>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="vertical-align: top;  ">
+								<p>
+									14.
+								</p>
+							</td>
+
+							<td style="vertical-align: top;  ">
+								<p>
+									JavaScript is ______ times faster than a decade ago.
+								</p>
+							</td>
+
+							<td style="vertical-align: top;  ">
+								<p>
+									6.
+								</p>
+							</td>
+
+							<td style="vertical-align: top; ">
+								<p>
+									Much simpler than the HTML 4.01 version.
+								</p>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="vertical-align: top;  ">
+								<p>
+									15.
+								</p>
+							</td>
+
+							<td style="vertical-align: top;  ">
+								<p>
+									Use a ______ loop to print verses of a song.
+								</p>
+							</td>
+
+							<td style="vertical-align: top;  ">
+								<p>
+									7.
+								</p>
+							</td>
+
+							<td style="vertical-align: top; ">
+								<p>
+									The standard scripting language of HTML5.
+								</p>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="vertical-align: top;  ">
+								<p>
+									16.
+								</p>
+							</td>
+
+							<td style="vertical-align: top;  ">
+								<p>
+									Got the Dear John letter.
+								</p>
+							</td>
+
+							<td style="vertical-align: top;  ">
+								<p>
+									9.
+								</p>
+							</td>
+
+							<td style="vertical-align: top; ">
+								<p>
+									This attribute of the link and script tags is no longer needed in HTML5.
+								</p>
+							</td>
+						</tr>
+
+						<tr>
+							<td style=" ">
+								&nbsp;
+							</td>
+
+							<td style=" ">
+								&nbsp;
+							</td>
+
+							<td style="vertical-align: top;  ">
+								<p>
+									10.
+								</p>
+							</td>
+
+							<td style="vertical-align: top; ">
+								<p>
+									The official style standard for HTML5.
+								</p>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="">
+								&nbsp;
+							</td>
+
+							<td style="">
+								&nbsp;
+							</td>
+
+							<td style="vertical-align: top; ">
+								<p>
+									12.
+								</p>
+							</td>
+
+							<td style="vertical-align: top;">
+								<p>
+									New ______ in HTML add semantics and structure.
+								</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+<!-- Page 33 -->
+
+			<div class="pagebreak pageNumber">33</div>  
+
+		</section>
+
+		<section class="section" data-number="13" data-name="Exercise Solution">
+
+			<div class="sidebar">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/whodoeswhatsolution.png" />
+				</figure>
+
+				<p>
+					We've already talked about the "family of technologies" so much we feel like they're, well,
+					family. But then again we really haven't gotten to know them yet, so isn't it about time?
+					You'll find the whole family below. Go ahead, mingle, see if you can figure out who is who.
+					We've gone ahead and figured one out for you. And don't worry, we know this is your first
+					time meeting the HTML5 family members, so here is the solution.
+				</p>
+
+				<figure class="center">
+					<img src="/contents/html5/figs/web2/033fig01.png">
+				</figure>
+			</div>
+
+<!-- Page 34 -->
+
+			<div class="pagebreak pageNumber">34</div>  
+
+			<div class="sidebar" id="html5cross_solution-id00005">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/html5crosssolution.png" />
+				</figure>
+
+				<figure class="center">
+					<img src="/contents/html5/figs/web2/034fig01.png">
+				</figure>
+			</div>
+
+		</section>
+
+</div>
+</body>
+</html>

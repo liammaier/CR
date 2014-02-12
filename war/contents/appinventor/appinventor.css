@@ -1,0 +1,771 @@
+div.appinventor.container {
+	width: 90%;
+ 	margin-left: 5%;
+ 	margin-right: 5%;
+ 	zoom: 1;
+ 	margin-top: 40px;
+ 	background-color: white;
+ 	font-family: "Myriad Pro", calibri, sans-serrif;
+ 	font-size: 17pt;
+ 	line-height: 1.3em;
+ 	max-width: 900px;
+}
+			
+/* COMMON */
+.appinventor .centeredImage {
+	text-align: center;
+	margin-top: 0px;
+	padding: 0px;
+}
+
+.appinventor .python {
+	font-family: "Courier New";
+}
+
+.appinventor .pBlock{
+	color: #6D8D24;
+	font-weight: bold;
+}
+
+.appinventor .normalFont{
+	font-style: normal;
+}
+
+.appinventor .caption {
+		font-size: 90%;
+		font-family: Minion Pro;
+		font-style: italic;
+		line-height: 1.5em;
+		margin-top: 10px;
+}
+
+.appinventor .marginBottomExtension {
+	margin-bottom: 3em;
+}
+
+.appinventor .marginLeftExtension {
+	margin-left: 2em;
+}
+
+.appinventor .centeredPython {
+	text-align: center;
+	font-family: "Courier New";
+}
+
+.appinventor .intendedText {
+	margin-left: 3em;
+}
+
+.appinventor .centeredURL {
+	text-align: center;
+	font-style: italic;
+}
+
+.appinventor .pagebreak {
+	border-bottom: .1em solid #6D8D24;
+	color: black;
+	margin-bottom: 3em;
+	margin-top: 1em;
+	float:left;
+	font-size: 90%;
+	width: 100%;
+}
+
+.appinventor .pagenumber {
+	color: #6D8D24;
+	margin-right: 1em;
+	font-weight: bold;
+	font-stretch: condensed;
+}
+
+.appinventor .first_pagebreak {
+	border-bottom: .1em solid #6D8D24;
+	color: #6D8D24;
+	float:left;
+	margin-bottom: 1em;
+	padding-top: 1em;
+	width: 100%;
+}
+
+.appinventor .page .part_head h1 {
+	font-size: 150%;
+	font-weight: bold;
+	text-align: right;
+	padding-bottom: .2em;
+	border-bottom: 1px solid #6D8D24;
+	font-stretch: condensed;
+}
+
+.appinventor h2 {
+	font-stretch: condensed;
+	line-height: 1em;
+	font-size: 120%;
+}
+
+.appinventor .page h2{
+	text-align: right;
+	font-size: 200%;
+	margin-top: .5em;
+	padding-bottom: 80px;
+	font-variant: SemiboldCondensed;
+	font-stretch: condensed;
+	font-weight: bold;
+}
+
+.appinventor .page h3{
+	font-size: 160%;
+	padding-top: 1em;
+	font-weight: bold;
+	margin-bottom: .5em;
+	font-stretch: condensed;
+}
+
+.appinventor h4 {
+	font-size: 130%;
+	margin-bottom: 0em;
+}
+.appinventor h5{
+	font-size: 100%;
+	margin-bottom: .5em;
+
+}
+
+.appinventor img {
+	max-width: none;
+}
+
+.appinventor .next_to_leftimagenowrap{
+	width: 800px;
+}
+
+.appinventor .page .part_head{
+	height: 1000px;
+}
+
+.appinventor .url{
+	font-style: italic;
+}
+
+.appinventor dt {
+	line-height: inherit;
+	font-weight: normal;
+}
+
+.appinventor dd {
+	line-height: inherit;
+	font-weight: normal;
+	margin-left: 2em;
+}
+
+/* IMAGES */
+.appinventor .reducedImage75 {
+	height: 75%;
+	width: 75%;
+}
+
+.appinventor .reducedImage90 {
+	height: 90%;
+	width: 90%;
+}
+
+.appinventor .rightImage {
+	float: right;
+	margin: 0 0 2em 2em;
+}
+
+.appinventor .leftImage {
+	float: left;
+	margin: 0 2em 2em 0;
+}
+
+.appinventor .imageUndertable {
+	margin-top: 2em;
+}
+
+/* TEST YOUR APP */
+.appinventor .test_your_app{
+	margin-top: 1em;
+	margin-bottom: 2em;
+	margin-left: 2em;
+	border-top: 1px solid #6D8D24;
+	border-bottom: 1px solid #6D8D24;
+	font-style: italic;
+	clear: both;
+}
+
+.appinventor .test_your_app img{
+	float: left;
+	margin-right: 3em;
+	margin-top: 1em;
+	margin-bottom: 1em;	
+}
+
+.appinventor .test_your_app ol {
+	margin-left: 8em;
+	margin-bottom: 2em;
+}
+
+.appinventor .test_your_app p {
+	margin-left: 8em;
+	margin-bottom: 2em;
+}
+
+.appinventor .test_your_app img.noWrapImage {
+	float: none;
+	margin-right: 0em;
+	margin-top: 0em;
+	margin-bottom: 0em;	
+}
+
+.appinventor .test_your_app figcaption {
+	font-size: 90%;
+	font-family: Minion Pro;
+	font-style: italic;
+	line-height: 1.5em;
+	margin-top: 10px;
+	margin-left:8em;
+}
+
+.appinventor .test_your_app .twoLines {
+	margin-bottom: 3em;
+}
+
+.appinventor .test_your_app .apptest_header{
+	color: #6D8D24;
+	font-weight: bold;
+	text-align: right;
+	font-style: normal;
+}
+
+.appinventor .test_your_app .leftimagenowrap{
+	text-align: left;
+	width: 200px;
+}
+
+/* NOTE */
+.appinventor .note{
+	margin-top: 1em;
+	margin-bottom: 1em;
+	border-top: 1px solid #6D8D24;
+	border-bottom: 1px solid #6D8D24;
+	font-style: italic;
+	clear: both;
+	font-size: inherit;
+}
+
+.appinventor .note .twoLines {
+	margin-bottom: 3em;
+}
+
+.appinventor .note .note_header{
+	color: #6D8D24;
+	font-weight: bold;
+	font-style: normal;
+}
+
+.appinventor .note img{
+	float: left;
+	padding: 1em;
+	margin-right: 2em;
+}
+
+.appinventor .note p {
+	margin-left: 8em;
+}
+/* LISTS */
+.appinventor ul li{
+	margin-bottom: .6em;
+}
+
+.appinventor ol li{
+	margin-bottom: .6em;
+}
+
+.appinventor ol ol{
+	list-style-type: lower-alpha;
+	margin-top: .5em;
+}
+
+.appinventor ol ul{
+	list-style-type: square;
+}
+
+.appinventor ul ul {
+	list-style-type: square;
+}
+
+.appinventor .floatingLeftList {
+	margin-left: 15em;
+}
+
+.appinventor .listFormatting {
+	list-style-type: none;
+}
+
+/* SECTION */
+.chazan section, .chazan ol {
+	float: left;
+}
+
+.chazan section.subsection{
+	float:none;
+}
+
+/*BOOK CONVENTIONS*/
+.appinventor .code {
+	font-family: "Andale Mono", "Courier New";
+	font-style: normal;
+}
+
+.appinventor code {
+	font-size: inherit;
+}
+
+.appinventor pre {
+	padding: inherit;
+	margin: inherit;
+	font-size: inherit;
+	line-height: inherit;
+	background-color: inherit;
+	border: none;
+	word-wrap: none;
+	word-break: none;
+}
+
+.appinventor .italic, .email,.new_term,.emph,.file_path_name{
+	font-style: italic;
+}
+
+.appinventor .program_block{
+	color: #6D8D24;
+	font-weight: bold;
+}
+
+.appinventor .footnote{
+	font-style: italic;
+	font-size: 80%;
+	width: 25%;
+	border-top: 1px #6D8D24 solid;
+	margin-top: 4em;
+}
+
+/* FIGURE */
+.appinventor figure {
+	margin: 0 10px;
+	margin-bottom:20px;
+}
+
+.appinventor figcaption {
+	font-size: 90%;
+	font-family: Minion Pro;
+	font-style: italic;
+	line-height: 1.5em;
+	margin-top: 10px;
+}
+
+.appinventor .centered{
+	width: 100%;
+	text-align: center;
+}
+
+.appinventor .centered figcaption{
+	text-align: left;
+}
+
+.appinventor .leftfig {
+	float: left;
+	display: table;
+	width: 17px;
+	margin-right: 1em;
+}
+
+.appinventor .leftfig .leftFigPadding {
+	padding-right: 16px;
+}
+
+.appinventor .leftfig figcaption{
+	margin-top: 1em;
+	text-align: left;
+}
+
+.appinventor .rightfig figcaption{
+	float: right;
+}
+
+.appinventor .rightfig img{
+	float: right;
+	width: 100%
+}
+
+.appinventor .rightfig{
+	max-width: 250px;
+	float: right;
+/*	margin-top: 1em;
+*/
+}
+
+.appinventor .text_next_to_rightfig{
+	max-width: 620px;
+	margin-right: 30px;
+}
+
+.appinventor .next_to_rightfig{
+	max-width: 620px;
+}
+
+.appinventor .submit img{
+	width: 30%;
+}
+
+.appinventor .floatright{
+	float: right;
+}
+
+.appinventor .centered{
+	max-width: 900px;
+}
+
+.appinventor .centered img{
+	margin: 0 auto;
+}
+
+#three_boxes figure{
+	float: right;
+	width: 150px;
+}
+
+#three_boxes img{
+	float: left;
+	width: 50px;
+}
+
+#submit_button{
+	position: relative;
+}
+
+#submit_button figure{
+	float: right;
+	width: 220px;
+	padding-top: 1em;
+}
+
+#submit_button img{
+	float: left;
+	width: 50px;
+}
+
+.appinventor .small_image{
+	float: center;
+	margin-left: 11em;
+	margin-right: 11em
+}
+
+.appinventor .centered_figure{
+	margin-right: auto;
+	margin-left: auto;
+	width: 150%;
+}
+
+.appinventor .chapter_4 .leftfig{
+	margin-bottom: 0em;
+	margin-right: 1em;
+}
+
+/* TABLE */
+.appinventor table{
+	empty-cells: show;
+	margin-bottom: 2em;
+}
+
+.appinventor table {
+	border-collapse:collapse;
+	border-color: black;
+  border-width: 1px;
+  font-size: 95%;
+}
+
+.appinventor table th {
+    white-space: nowrap;
+}
+
+.appinventor table th {
+	text-align: left;
+}
+
+.appinventor table td, table th {
+	padding: .5em;
+	padding-top: 0em;
+	padding-bottom: 0em;
+	border-width: 1px;
+	border-style: solid;
+	border-color: black; 
+	padding-left: .5em;
+	font-size: 85%;
+	vertical-align: text-top;
+}
+
+.appinventor table.noborderstyle {
+	border-style: none;
+}
+
+.appinventor th.colExpand {
+	width: 300px;
+}
+
+.appinventor th#colExpand66 {
+	width: 200px;
+}
+
+/*CHAPTER DESCRIPTIONS:*/
+.appinventor .chapter_head{
+	vertical-align: middle;
+	margin-top: 0em;
+	padding-top: .25em;
+	margin-bottom: 0em;
+	padding-right: .5em;
+	font-weight: bold;
+	text-align: right;
+	color: white;
+	background-color:#6D8D24;
+}
+
+.appinventor .chapter_description {
+	position: relative;
+	font-style: italic;
+}
+
+.appinventor .chapter_description.chapter_1 p{
+	font-style: italic;
+	margin-bottom: 3em;
+	margin-left: 280px;
+	margin-top: 100px;
+}
+
+.appinventor .chapter_description.chapter_2 p{
+	font-style: italic;
+	margin-bottom: 3em;
+	margin-top: 100px;
+	min-height: 350px;
+}
+
+.appinventor .chapter_description.chapter_3{
+	font-style: italic;
+	margin-bottom: 3em;
+	margin-top: 0px;
+	min-height: 270px;
+}
+
+.appinventor .chapter_description #kitty{
+	float: left;
+	height: 250px;
+	position: absolute;
+	bottom: 0;
+}
+
+.appinventor .chapter_description #baby{
+	float: left;
+	height: 400px;
+	margin-right: 1em;
+	position: absolute;
+	bottom: 0;
+}
+
+.appinventor .chapter_description #painter_woman{
+	float: right;
+	height: 350px;
+	bottom: 0;
+}
+
+.appinventor .wtf{
+	float: left;
+}
+
+
+/* CLEARFIX */
+.group:before,
+.group:after {
+  content: "";
+  display: table;
+}
+
+.group:after {
+  clear: both;
+}
+
+.group {
+  zoom: 1;
+}
+
+
+/* CHAPTER 7 */
+#ch07img05 {
+	margin-top: 2em;
+}
+
+/* CHAPTER 8 */
+#ch08img04 {
+	margin-top: 2em;
+}
+
+
+
+/* SPECIAL */
+#kitty_in_screen {
+	float: right;
+}
+
+.appinventor .right_float{
+	float: right;
+}
+
+#figure_2_1 {
+	float: right;
+	padding-right: 2em;
+}
+
+.appinventor td:first-child{
+	width: 5em;
+}
+
+.appinventor .widefirst td:first-child{
+	width: 14em;
+}
+
+.appinventor .widerfirst td:first-child{
+	width: 20em;
+}
+
+.appinventor .two_only_wide td{
+	width: 16em;
+}
+
+.appinventor .smaller table{
+	width: 70%;
+}
+
+.appinventor thead{
+	background-color: #D3DDBD;
+	color: black;
+	font-weight: bold;
+}
+
+.appinventor tbody{
+	background-color: white;
+}
+
+.appinventor .acknowledgments_page{
+	height: 1100px;
+}
+
+.appinventor .bordered_aside{
+	border: .1em solid #6D8D24;
+	padding: 1.5em;
+	padding-top: .5em;
+	font-size: 95%;
+	font-weight: lighter;
+}
+
+.appinventor .bordered_aside h3{
+	text-align: center;
+	margin-top: 0em;
+}
+
+.appinventor .clear {
+	clear: both;
+}
+
+.appinventor .unlisted {
+	margin-left: -1.8em;
+	clear: both;
+	list-style-type: none;
+	width: 105%;
+}
+
+.appinventor .unlisted .pagebreak{
+	margin-left: -1em;
+	clear: both;
+	list-style-type: none;
+}
+
+.appinventor .side_icon{
+	line-height: 5em;
+	vertical-align: middle;
+}
+
+.appinventor .side_icon img{
+	vertical-align: middle;
+	float: left;
+	margin-right: 1em;
+	height: 100px;
+}
+
+.appinventor .indented p{
+	margin-left: 2em;
+	margin-top: 0em;
+	margin-bottom: 0em;
+}
+
+.appinventor .indented h4{
+	font-style: italic;
+	font-size: 100%;
+	font-weight: normal;
+	margin-bottom: 0em;
+	margin-left: 0em;
+	margin-top: .5em;
+}
+
+.chazan #introduction ul li {
+	float: left;
+	width: 100%;
+	margin-bottom: 15px;
+	
+}
+
+.chazan #introduction img{
+	display: block;
+	margin: 15px auto;
+}
+
+.appinventor .event_handler_arguments h5{
+	font-family: Andale Mono;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 100%;
+	margin-top: 0em;
+	margin-bottom: 0em;
+}
+
+.appinventor .event_handler_arguments p{
+	margin-left: 2em;
+	margin-top: .2em;
+	margin-bottom: 1em;
+}
+
+/* DEACTIVATED */
+/*.appinventor .test_your_app img{
+	margin-right: 3em;
+	height: 90px;
+	}*/
+
+/*.larger_than_image figcaption {
+	position: relative;
+}
+
+.larger_than_image img{
+	position: absolute;
+	left: 0px;
+}
+
+.larger_than_image figure{
+	float: right;	
+}
+
+.larger_than_image .content{
+	text-align: left;
+}
+
+.larger_than_image{
+	position: relative;
+}*/
+
+

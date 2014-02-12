@@ -1,0 +1,83 @@
+.docHTML{
+	font-family: "Times New Roman";
+	max-width: 850px;
+	min-width: 500px;
+	border: 1px solid #999;
+	padding: 5px;
+	width: 600px;
+	word-wrap:break-word;
+}
+.docHTML .byline,.dateline {
+  font-size: 1em;
+  line-height: 1.2em;
+  color: #808080;
+}
+.docHTML .articleBody p {
+	font-size: 1.5em;
+	line-height: 1.467em;
+	color: #000;
+}
+
+.docHTML .byline {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+.docHTML .caption,.smallCaption {
+  color: #666;
+  margin-bottom: 0;
+}
+
+.docHTML .caption {
+  font-size: 1.1em;
+  line-height: 1.2727em; /* 14px*/ 
+}
+
+.docHTML .smallCaption {
+  font-size: 0.9em;
+  line-height: 1.223em; /*11px*/
+}
+.docHTML .articleInline {
+  margin: 6px 15px 10px 0 !important;
+  width: 190px;
+}
+.docHTML .runaroundRight {
+  float: right;
+  clear: right;
+  display: inline;
+}
+
+.docHTML .runaroundRight {
+  margin: 2px 0 6px 6px;
+}
+
+.docHTML .runaroundLeft {
+  float: left;
+  clear: left;
+  display: inline;
+  margin: 2px 6px 6px 0;
+}
+.docHTML #content .section{
+	margin-right: 7px;
+	margin-left: 10px;
+}
+.docHTML .playOverlay {
+	position: relative;
+	background: url(http://www.nytimes.com/images/global/icons/Play_34.png) left bottom no-repeat;
+	display: block;
+	width: 34px;
+	height: 31px;
+	z-index: 10;
+	margin: 5px 0 -37px 10px;
+	top: -45px;
+}
+.docHTML .playOverlay:hover {
+	position: relative;
+	background: url(http://www.nytimes.com/images/global/icons/Button_Play_Highlighted_100.png) left bottom no-repeat;
+	display: block;
+	width: 100px;
+	height: 31px;
+	z-index: 10;
+	margin: 5px 0 -37px 10px;
+	top: -45px;
+}
+

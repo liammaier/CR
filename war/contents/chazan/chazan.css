@@ -1,0 +1,231 @@
+
+div.chazan.container {
+	width: 90%;
+ 	margin-left: 5%;
+ 	margin-right: 5%;
+ 	zoom: 1;
+ 	margin-top: 40px;
+ 	background-color: white;
+ 	
+ 	font-family: sans-serif;
+ 	font-size: 18px;
+ 	line-height: 1.5em;
+ 	max-width: 975px;
+}
+
+/* BASIC */
+
+
+.chazan .page {
+	float:left;
+	width: 77%;
+}
+
+.chazan aside {
+	width: 28%;
+	margin-right: -30%;
+	float: right;
+	font-size: 12px;
+	line-height: 1.5em;
+}
+
+.chazan aside dt{
+	display: inline;
+	font-weight: bold;
+}
+
+.chazan aside dd{
+	display: inline;
+	margin-left: 0;
+}
+
+.chazan .pagebreak {
+	border-top: 3px solid #AAAAAA;
+	color: #AAAAAA;
+	padding-top: 10px;
+	float:left;
+	margin: 50px 0;
+
+	width: 100%;
+	
+}
+
+.chazan section, .chazan ol {
+	float: left;
+}
+
+.chazan section.subsection{
+	float:none;
+}
+
+.chazan h2 {
+	color: #B6D7A8;
+}
+
+.chazan .page h3{
+	padding-left: 15px;
+}
+
+.chazan .page h3::before {
+	content: url(images/sectionbox.png);
+	position:relative;
+	left: -15px;
+
+}
+
+.chazan h3 {
+	font-weight: bold;
+}
+
+.chazan h1 {
+	font-size: 36px;
+	line-height: 45px; 
+	margin: 24px 0;
+}
+
+.chazan h2, .chazan h3 {
+	margin: 22px 0;
+}
+
+.chazan li, .chazan tr {
+	line-height: 27px;
+}
+
+
+
+/* INTRO */
+
+.chazan #introduction ul {
+	float: left;
+	width: 36%;
+}
+
+.chazan #introduction ul.full {
+	float: left;
+	width: 100%;
+}
+
+.chazan #introduction ul li {
+	
+	width: 100%;
+	margin-bottom: 15px;
+	
+}
+
+.chazan #introduction img{
+	display: block;
+	margin: 15px auto;
+
+}
+
+.chazan .clear {
+	clear: both;
+}
+
+/* FIGURE */
+
+.chazan figure {
+	margin: 0 20px;
+	margin-bottom:20px;
+	float: left;
+}
+
+.chazan figure img {
+	max-width: 100%;
+	float:left;
+}
+
+.chazan figcaption {
+	font-size: 13px;
+	line-height: 1.5em;
+	margin-top: 10px;
+	width: 88%;
+}
+
+.chazan figure.aside {
+	float: right;
+	width: 50%;
+	margin-bottom: 0;
+}
+
+.chazan .page figure.aside {
+	margin-right: -30%;
+}
+
+.chazan figure.aside img {
+	width: 400px;
+}
+
+.chazan .page .aside figcaption {
+	float:right;
+	width: 56%;
+}
+
+.chazan figure.full figcaption{
+	margin-right: -36%;
+	float: right;
+	width: 31%;
+}
+
+
+
+
+
+/* TABLE */
+
+.chazan table {
+	width:100%;
+	border-collapse:collapse;
+}
+
+.chazan table th {
+	text-align: left;
+}
+
+.chazan table td:first-child, table th:first-child{
+	text-align: center;
+}
+
+.chazan table td, table th {
+	padding-left: 30px;
+}
+
+.chazan table td:first-child, table th:first-child {
+	padding-left: 0;
+}
+
+.chazan thead{
+	background-color: #333333;
+	color: #FFFFFF;
+}
+.chazan tbody{
+	background-color: #FFF2CC;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h1>14</h1>
+				<h2>Logical Properties</h2>
+				<div class="border"></div>
+
+				<p><span class="first-sentence">In Chapter 7, we saw that a property is an attribute of a program that is true for every possible execution of that program.</span> We used property processes to specify safety properties and progress properties to express a limited but very common form of liveness property. Here we introduce logical descriptions of properties that capture both safety and liveness.</p>
+
+				<p class="i">What do we mean by a logical description? We mean an expression composed out of propositions by logical operators such as <em>and</em>, <em>or</em>, <em>not</em>. A proposition is a statement that is either true or false. It can of course be formed from more primitive propositions by the logical operators and so the overall logical description is itself a proposition. Java already uses this form of expression in the <strong><code>assert</code></strong> construct. For example, using this construct we can assert that after executing some statements it should be true that variable <em>i </em>has the value 0 and variable <em>j</em> has the value 1:
+				<code>(<strong>assert</strong> i==O &amp;&amp; j==1)</code>.</p>
+
+				<p class="i">The Java <strong><code>assert</code></strong> construct lets us specify a proposition concerning the state of selected variables that should be true at a particular point in the execution of a program. Of course, if this point is in a loop, it will be visited repeatedly. In our models, we wish to specify propositions that are true for every possible execution of a program without explicit reference to a particular point in the execution of that program. Furthermore, we wish to specify properties independently from models. A logic that permits us to do this is linear temporal logic. A proposition in this logic describes a set of infinite sequences for which the proposition is true. A program execution is essentially a sequence of states and so a program satisfies a linear temporal logic proposition if all its executions belong to the set described by the formula.</p>
+
+				<p class="i">How can we refer to states when our <em>LT</em>S models are essentially based on actions or events? This chapter introduces fluents as a means of describing abstract states of our models. We show how logical properties for both safety and liveness can be specified in terms of fluents and analyzed using <em>LTSA</em>.</p>
+
+				<div class="pagebreak pageNumber">346</div>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Fluent Propositions">
+
+				<h3>14.1 Fluent Propositions</h3>
+
+				<p><span class="first-sentence">The primitive propositions used to construct assertions in Java are concerned with the values of variables, for example, <code>i==O</code>.</span> They are propositions concerning the state of a program as represented by the values of the program's variables. However, our models are focused on interaction and as such they describe sequences of actions and do not explicitly describe state. What should be the primitive propositions that we use in the logical description of properties? One possibility would be to make the occurrence of an action a proposition such that for an action <em>a</em>, the synonymous proposition a would be true when the action occurred and false at every other time. The problem here is that, as we saw in Chapter 3, we model concurrent execution as an interleaved sequence of actions which we call a trace. Consequently it would always be the case that only one action proposition could be true at any one instant. This makes it difficult to describe quite simple properties. As a result, we have taken an approach which allows us to map an action trace into a sequence of abstract states described by <em>fluents</em>.</p>
+
+				<section class="subsection" data-number="2" data-name="Fluents">
+
+					<h4>14.1.1 Fluents</h4>
+
+					<div class="definition"><span class="first-sentence"><code><strong>fluent</strong> FL = &lt;{s<sub>1</sub>,...s<sub>n</sub>},{e<sub>1</sub>..e<sub>n</sub>}> <strong>initially</strong> <em>B</em></code> defines a fluent <code>FL</code> that is initially true if the expression <em><code>B</code></em> is true and initially false if the expression <em><code>B</code></em> is false.</span> <code>FL</code> becomes true when any of the initiating actions <code>{s<sub>1</sub>,...s<sub>n</sub>}</code> occur and false when any of the terminating actions <code>{e<sub>1</sub>..e<sub>n</sub>}</code> occur. If the term <code><strong>initially</strong> <em>B</em></code> is omitted then <code>FL</code> is initially false. The same action may not be used as both an initiating and terminating action.</div>
+
+					<p>In other words, a fluent holds at a time instant if and only if it holds initially or some initiating action has occurred, and, in both cases, no terminating action has yet occurred. The following fragment defines a fluent <code>LIGHT</code> which becomes true when the action <code>on</code> occurs and false when the action <code>off</code> or <code>power_cut</code> occurs.</p>
+
+					<pre>
+<strong>const</strong> False = 0
+<strong>const</strong> True  = 1
+<strong>fluent</strong> LIGHT = &lt;{on}, {off, power_cut}> <strong>initially</strong> False
+					</pre>
+
+					<p>We can think of the above fluent as capturing the state of a light such that when the light is on, the fluent <code>LIGHT</code> is true and when the light is off, the fluent <code>LIGHT</code></p>
+
+					<div class="pagebreak pageNumber">347</div>
+
+					<p>is false. We can define indexed families of fluents in the same way that we define indexed families of processes:</p>
+
+					<pre>
+<strong>fluent</strong> LIGHT[i:1..2] = &lt;{on[i]}, {off[i], power_cut}>
+					</pre>
+
+					<p>This is equivalent to defining two fluents:</p>
+
+					<pre>
+<strong>fluent</strong> LIGHT_1 = &lt;{on[1]}, {off[1], power_cut}>
+<strong>fluent</strong> LIGHT_2 = &lt;{on[2]}, {off[2], power_cut}>
+					</pre>
+
+					<h5>Action Fluents</h5>
+
+					<p>Fluents are defined by a set of initiating actions and a set of terminating actions. Consequently, given the alphabet &alpha; of a system, we can define a fluent for each action <em>a</em> in that alphabet such that the initiating set of actions for the fluent <em>a</em> is
+					{<em>a</em>} and the terminating set of actions is &alpha; &#8746;{&tau;}-{<em>a</em>}. In other words, the fluent for an action becomes true immediately that action occurs and false immediately the next action occurs. The next action may be the silent action &tau;. We can also use a set of actions in a fluent expression. The logical value of this is the disjunction (<em>or</em>) of each of the actions in the set. We can freely mix action fluents and explicitly defined fluents in fluent expressions. An example is given in the next section.</p>
+
+				</section>
+
+				<section class="subsection" data-number="3" data-name="Fluent Expressions">
+
+					<h4>14.1.2 Fluent Expressions</h4>
+
+					<p><span class="first-sentence">We can combine fluents with the normal logical operators.</span> If we wished to
+					characterize the state in which two lights are on, this would be the expression
+					<code>LIGHT[1] &amp;&amp; LIGHT[2]</code>. The state in which either light is on would be <code>LIGHT[1] || LIGHT[2]</code>. This latter would also be true if both lights were on. Fluent expressions can be formed using the following logical operators:</p>
+
+					<table class="has-border">
+						<tr>
+							<td><code>&amp;&amp;</code></td>
+							<td>conjunction (<em>and</em>)</td>
+						</tr>
+
+						<tr>
+							<td><code>||</code></td>
+							<td>disjunction (<em>or</em>)</td>
+						</tr>
+
+						<tr>
+							<td><code>!</code></td>
+							<td>negation (<em>not</em>)</td>
+						</tr>
+
+						<tr>
+							<td><code>-></code></td>
+							<td>implication <code>((A->B)) &equiv; (!A||B))</code></td>
+						</tr>
+
+						<tr>
+							<td><code>&lt;-></code></td>
+							<td>equivalence <code>((A&lt;->B)) &equiv; (A->B)&amp;&amp;(B->A))</code></td>
+						</tr>
+					</table>
+
+					<div class="pagebreak pageNumber">348</div>
+
+					<p>For example, given the fluents:</p>
+
+					<pre>
+<strong>fluent</strong> POWER = &lt;power_on, power_off>
+<strong>fluent</strong> LIGHT = &lt;on, off>
+					</pre>
+
+					<p>the expression <code>LIGHT->POWER</code> states our expectation that, for the light to be on, the power must also be on. We do not expect that if the power is on the light need necessarily be on as well.</p>
+
+					<p class="i">If we wish to express the proposition that all lights are on, we can use the expression:</p>
+
+					<pre>
+<strong>forall</strong>[i:1..2] LIGHT[i]
+					</pre>
+
+					<p>This is exactly the same as <code>LIGHT[1] &amp;&amp; LIGHT[2]</code> . In a similar way, if we wish to express the proposition that at least one light is on, we can state:</p>
+
+					<pre>
+<strong>exists</strong>[i:1..2] LIGHT[i]
+					</pre>
+
+					<p>This is exactly the same as <code>LIGHT[1] || LIGHT[2]</code>.</p>
+
+					<p class="i">An expression that combines an action fluent and an explicitly defined fluent is (<code>getkey &amp;&amp; LIGHT[1]</code>) which is true when the <code>getkey</code> action occurs when the <code>LIGHT</code> fluent is true - i.e., the light has previously been turned on.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="Temporal Propositions">
+
+				<h3>14.2 Temporal Propositions</h3>
+
+				<p><span class="first-sentence">Fluents let us express properties about the abstract state of a system at a particular point in time.</span> This state depends on the trace of actions that have occurred up to that point in time. To express propositions with respect to an execution of a model, we need to introduce some temporal operators.</p>
+
+				<section class="subsection" data-number="5" data-name="Safety Properties">
+
+					<h4>14.2.1 Safety Properties</h4>
+
+					<p><span class="first-sentence">To illustrate the expression of safety properties using fluents, we return to the mutual exclusion example of section 7.1.2.</span></p>
+
+					<pre>
+<strong>const</strong> N = 2
+
+LOOP = (mutex.down -> enter -> exit -> mutex.up -> LOOP).
+
+||SEMADEMO = (p[1..N]:LOOP
+          || {p[1..N]}::mutex:SEMAPHORE(1)).
+					</pre>
+
+					<div class="pagebreak pageNumber">349</div>
+
+					<p>The abstract states of interest here are when each <code>LOOP</code> process enters its critical section. We express these states with fluents:</p>
+
+					<pre>
+<strong>fluent</strong> CRITICAL[i:1..N] = &lt;p[i].enter, p[i].exit>
+					</pre>
+
+					<p>We can express the situation in which two processes are in their critical sections at the same time as <code>CRITICAL[1]&amp;&amp;CRITICAL[2]</code>. This situation must be avoided at all costs since it violates mutual exclusion. How do we assert that this situation does not occur at any point in the execution of the <code>SEMADEMO</code> system?</p>
+
+					<div class="definition">The linear temporal logic formula <code>[]<em>F</em></code> - <em>always F</em> - is true if and only if the formula <em><code>F</code></em> is true at the current instant and at all instants in the future.</div>
+
+					<p>Given this operator, we can now express the property that at all times in any execution of the system, <code>CRITICAL[1] &amp;&amp; CRITICAL[2]</code> must not occur. This is:</p>
+
+					<pre>
+<strong>assert</strong> MUTEX = []!(CRITICAL[1] &amp;&amp; CRITICAL[2])
+					</pre>
+
+					<p>This property is checked by compiling it into a safety property process. As described in Chapter 7, the check is then performed by composing this property with the system and performing an exhaustive search for the <code>ERROR</code> state. The property process compiled from <code>MUTEX</code> above is depicted in Figure 14.1.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure14-1.png">
+						<figcaption><strong>Figure 14.1</strong> <code>MUTEX</code> property process.</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">350</div>
+
+					<p>The <code>MUTEX</code> property is not violated with the semaphore initialized to one; however if we initialize the semaphore to two (i.e. <code>SEMAPHORE(2)</code>) then a check of the <code>MUTEX</code> property against the <code>SEMADEMO</code> system produces the following trace:</p>
+
+					<pre>
+Trace to property violation in MUTEX:
+      p.1.mutex.down
+      p.1.enter           CRITICAL.1
+      p.2.mutex.down      CRITICAL.1
+      p.2.enter           CRITICAL.1 &amp;&amp; CRITICAL.2
+					</pre>
+
+					<p>The <em>LTSA </em>annotates the trace with the names of the fluents that are true when the action on the left occurs. So, when the action <code>p.2.enter</code> occurs, both of the <code>CRITICAL</code> fluents are true, violating mutual exclusion. The general expression of the mutual exclusion property for <em>N</em> processes is:</p>
+
+					<pre>
+<strong>assert</strong> MUTEX_N = []!(<strong>exists</strong> [i:1..N-1]
+                 (CRITICAL[i] &amp;&amp; CRITICAL[i+1..N]))
+					</pre> 
+
+					<p>This asserts that it is always the case that no pair of processes exist with <code>CRITICAL</code>
+					true. <code>CRITICAL[i+1..N]</code> is a short form for the disjunction <code><strong>exists</strong> [j:i+1..N]</code>
+					<code>CRITICAL[j]</code>.
+					</p>
+
+					<h5>Single-Lane Bridge Safety Property</h5>
+
+					<p>The single-lane bridge problem was described in section 7.2. The required safety property was that it should never be the case that a red car (moving from left to right) should be on the bridge at the same time as a blue car (moving from right to left). The following fluents capture the states of red cars and blue cars being on the bridge.</p>
+
+					<pre>
+<strong>const</strong> N = 3    <span>// number of each type of car</span>
+<strong>range</strong> ID= 1..N <span>// car identities</span>
+
+<strong>fluent</strong> RED[i:ID]  = &lt;red[i].enter, red[i].exit>
+<strong>fluent</strong> BLUE[i:ID] = &lt;blue[i].enter, blue[i].exit>
+					</pre>
+
+					<p>The situation in which one or more red cars are on the bridge is described
+					by the fluent expression <code><strong>exists</strong>[i:ID] RED[i]</code> and similarly for blue cars
+					<code><strong>exists</strong>[j:ID] BLUE[j]</code>. The required <code>ONEWAY</code> property asserts that these two
+					propositions should never hold at the same time.</p>
+
+					<pre>
+<strong>assert</strong> ONEWAY = []!(<strong>exists</strong>[i:ID] RED[i]
+                 &amp;&amp; <strong>exists</strong>[j:ID] BLUE[j])
+					</pre>
+
+					<div class="pagebreak pageNumber">351</div>
+
+					<p>When checked in the context described in section 7.2.1 with no <code>BRIDGE</code> process to constrain car behavior, the following safety violation is produced:</p>
+
+					<pre>
+Trace to property violation in ONEWAY:
+      red.1.enter         RED.1
+      blue.1.enter        RED.1 &amp;&amp; BLUE.1
+					</pre>
+
+					<p>Since propositions of the form <code><strong>exists</strong>[i:R] FL[i]</code> can be expressed succinctly
+					as <code>FL[R]</code>, we can rewrite <code>ONEWAY</code> above as:</p>
+
+					<pre>
+<strong>assert</strong> ONEWAY = []!(RED[ID] &amp;&amp; BLUE[ID])
+					</pre>
+
+					<p>This is a considerably more concise description of the required property than that achieved using property processes in section 7.2.1. In addition, it expresses the required property more directly. This is usually the case where a safety property can be expressed as a relationship between abstract states of the system described as fluents. Unsurprisingly where the required property is concerned with the permitted order of actions, direct specification using property processes is usually best.</p>
+
+					<p class="i">Finally, safety properties of the form <code>[]<em>P</em></code> as we have described here are by far the commonest form of safety properties expressed in temporal logic; however, there are many other forms of safety properties which use additional temporal operators. These operators are described later.</p>
+
+				</section>
+
+				<section class="subsection" data-number="6" data-name="Liveness Properties">
+
+					<h4>14.2.2 Liveness Properties</h4>
+
+					<p><span class="first-sentence">A safety property asserts that nothing bad ever happens whereas a liveness property asserts that something good eventually happens.</span> Linear temporal logic provides the <em>eventually</em> operator which allows us to directly express the progress properties we introduced in Chapter 7.</p>
+
+					<div class="definition">The linear temporal logic formula <code>&lt;><em>F</em></code> - <em>eventually F</em> - is true if and only if the formula <em><code>F</code></em> is true at the current instant or at some instant in the future.</div>
+
+					<p>We can now assert for the single-lane bridge example that eventually the first red car must enter the bridge:</p>
+
+					<pre>
+<strong>assert</strong> FIRSTRED = &lt;>red[1].enter
+					</pre>
+
+					<div class="pagebreak pageNumber">352</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure14-2.png">
+						<figcaption><strong>Figure 14.2</strong> B&uuml;chi automaton for <code>FIRSTRED</code>.</figcaption>
+					</figure>
+
+					<p>This is compiled into the transition system shown in Figure 14.2. This is a special form of transition system known as a B&uuml;chi automaton after its originator. A B&uuml;chi automaton recognizes an infinite trace if that trace passes through an acceptance state infinitely often. The example of Figure 14.2 has a single acceptance state marked by two concentric rings. It should be clear that any trace containing the action <code>red[1].enter</code> is not accepted by this automaton since the action will move the automaton irretrievably out of the initial acceptance state.</p>
+
+					<p class="i">In fact, the B&uuml;chi automaton of Figure 14.2 accepts the set of infinite traces represented by the negation of the <code>FIRSTRED</code> property - that is, <code>!&lt;>red[1].enter</code>. To check whether an assertion holds, the <em>LTSA</em> constructs a B&uuml;chi automaton for the negation of the assertion and then checks whether there are any infinite traces that are accepted when the automaton is combined with the model. This check can be performed efficiently since it is a search for acceptance states in strongly connected components. If none are found then there is no trace that satisfies the negation of the property and consequently the property holds. We discussed strongly connected components and their relationship to infinite executions in Chapter 7. In checking liveness properties, we make exactly the same fair choice assumption as was made in Chapter 7. The property is satisfied for the basic bridge model but not for the congested model defined by:</p>
+
+					<pre>
+||CongestedBridge
+         = SingleLaneBridge >> {red[ID].exit,blue[ID].exit}.
+					</pre>
+
+					<p>The following property violation is reported for a system with two red cars and two blue cars:</p>
+
+					<pre>
+Violation of LTL property: @FIRSTRED
+Trace to terminal set of states:
+      blue.1.enter
+Cycle in terminal set:
+      blue.2.enter
+      blue.1.exit
+      blue.1.enter
+      blue.2.exit
+LTL Property Check in: 10ms
+					</pre>
+
+					<div class="pagebreak pageNumber">353</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure14-3.png">
+						<figcaption><strong>Figure 14.3</strong> <code>CongestedBridge</code> showing acceptance states.</figcaption>
+					</figure>
+
+					<p>The model, combined with the <code>FIRSTRED</code> property, is shown in Figure 14.3. The connected component (states 1,2,3,4) containing acceptance states can clearly be seen.</p>
+
+					<p class="i">The property <code>FIRSTRED</code> is satisfied if the first red car enters the bridge a single time. However, the required liveness property in Chapter 7 is that red cars (and blue cars) get to enter the bridge infinitely often. In other words, it is always the case that a car eventually enters. This is exactly the condition expressed by progress properties. We can now restate those for the single lane bridge in linear temporal logic as:</p>
+
+					<pre>
+<strong>assert</strong> REDCROSS  = []&lt;>red[ID].enter
+<strong>assert</strong> BLUECROSS = []&lt;>blue[ID].enter
+<strong>assert</strong> CROSS = (REDCROSS &amp;&amp; BLUECROSS)
+					</pre>
+
+					<p>The <code>CROSS</code> property is defined as the conjunction of <code>REDCROSS</code> and <code>BLUECROSS</code> and permits these properties to be checked at the same time. The B&uuml;chi automaton for the negation of <code>REDCROSS</code> is depicted in Figure 14.4.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure14-4.png">
+						<figcaption><strong>Figure 14.4</strong> <code>REDCROSS</code> B&uuml;chi automaton.</figcaption>
+					</figure>
+
+					<p>In a parallel composition, * synchronizes the transition it labels with all other transitions in the model, i.e. excluding actions <code>red[1].enter</code> and <code>red[2].enter</code>,</p>
+
+					<div class="pagebreak pageNumber">354</div>
+
+					<p>but including those labeled by the silent action. It can be seen that the always part of the assertion is captured here by the non-deterministic choice on * which means that at any point in a trace, the automaton can move to state 1.</p>
+
+					<p class="i">It could be argued that <code>REDCROSS</code> and <code>BLUECROSS</code> are too weak a specification of the required liveness since they are satisfied if either car 1 or car 2 crosses infinitely often. For example, the properties can be satisfied if car 2 never crosses. This is because, as mentioned previously, a set of actions is treated as a disjunction and so the property <code>REDCROSS</code> is:</p>
+
+					<pre>
+<strong>assert</strong> REDCROSS = []&lt;>(red[1].enter || red[2].enter)
+					</pre>
+
+					<p>A stronger assertion would be:</p>
+
+					<pre>
+<strong>assert</strong> STRONGRED = <strong>forall</strong>[i:ID] [] &lt;>red[i].enter
+					</pre>
+
+					<h5>Response Properties</h5>
+
+					<p>Suppose we wished to assert the liveness property that if a car enters the bridge then it should eventually exit. In other words, it does not stop in the middle or fall over the side! We can specify this property for a car as follows:</p>
+
+					<pre>
+<strong>assert</strong> REDEXIT = [](red[1].enter -> &lt;>red[1].exit)
+					</pre>
+
+					<p>The corresponding B&uuml;chi automaton (for the negation) is shown in Figure 14.5.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure14-5.png">
+						<figcaption><strong>Figure 14.5</strong> <code>REDEXIT</code> B&uuml;chi automaton.</figcaption>
+					</figure>
+
+					<p>The property holds for both <code>SingleLaneBridge</code> and <code>CongestedBridge</code>. Although cars may not ever enter the congested bridge, if they do enter, they also exit. Consequently, the property is not violated. This is an extremely common form of liveness property which is sometimes termed a "response" property since it is of the form <code>[](request -> &lt;>reply)</code>. Note that this form of liveness property cannot be specified using the progress properties of Chapter 7.</p>
+
+					<div class="pagebreak pageNumber">355</div>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="7" data-name="Fluent Linear Temporal Logic (FLTL)">
+
+				<h3>14.3 Fluent Linear Temporal Logic (FLTL)</h3>
+
+				<p><span class="first-sentence">In the previous section, we saw the use of the always <strong><code>[]</code></strong> operator to express safety properties and the use of the eventually operator <strong><code>&lt;></code></strong> to express liveness properties.</span> These represent by far the most common use of linear temporal logic in expressing properties. In the following, we complete the description of our fluent linear temporal logic (FLTL) by describing the remaining operators - until <strong><code>U</code></strong>, weak until <strong><code>W</code></strong> and next time <strong><code>X</code></strong>.</p>
+
+				<section class="subsection" data-number="8" data-name="Until">
+
+					<h4>14.3.1 Until</h4>
+
+					<div class="definition"><span class="first-sentence">The linear temporal logic formula <strong><code><em>p</em> U <em>q</em></code></strong> is true if and only if <strong><code><em>q</em></code></strong> is true at the current instant or if <strong><code><em>q</em></code></strong> is true at some instant in the future and <strong><code><em>p</em></code></strong> is true until that instant.</span></div>
+
+					<p>For example, suppose we wish to assert the politeness property of Chapter 7 that we should not enter a room before knocking. We can assert:</p>
+
+					<pre>
+<strong>assert</strong> POLITE = (!enter <strong>U</strong> knock)
+					</pre>
+
+					<p>This asserts both the safety property that we cannot have an <code>enter</code> action before a <code>knock</code> action, and also that a <code>knock</code> action should eventually happen. This can be seen clearly from the B&uuml;chi automaton for this property depicted in Figure 14.6. The automaton irretrievably enters the acceptance state 1 if an <code>enter</code> action occurs before a <code>knock</code> action occurs. However, if a <code>knock</code> action never occurs, the property is violated because the automaton remains in state 0 which is also an acceptance state.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure14-6.png">
+						<figcaption><strong>Figure 14.6</strong> <code>POLITE</code> B&uuml;chi automaton.</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">356</div>
+
+					<p>Given the until operator, we can state the mutual exclusion property of section
+					14.2.1 using only action fluents:</p>
+
+					<pre>
+<strong>assert</strong> MUTEX_U = []((p[1].enter -> (!p[2].enter <strong>U</strong> p[1].exit))
+                  &amp;&amp;(p[2].enter -> (!p[1].enter <strong>U</strong> p[2].exit)))
+                  	</pre>
+
+                  	<p>This expresses the required mutual exclusion safety property and, in addition, the liveness property that if a process enters the critical section it should eventually exit. However, the property is considerably more complex than that of section 14.2.1 and is difficult to extend to more than two processes.</p>
+
+                </section>
+
+                <section class="subsection" data-number="9" data-name="Weak Until">
+
+                	<h4>14.3.2 Weak Until</h4>
+
+                	<div class="definition"><span class="first-sentence">The linear temporal logic formula <strong><code><em>p</em> W <em>q</em></code></strong> is true if and only if either <strong><code><em>p</em></code></strong> is true indefinitely or if <strong><code><em>p</em> U <em>q</em></code></strong>.</span></div>
+
+                	<p>The difference with the previous definition of until is that this definition does not insist that q eventually happens. The formula also holds if p is true indefinitely. This means that if we use weak until for the <code>POLITE</code> property:</p>
+
+                	<pre>
+<strong>assert</strong> POLITE_W = (!enter <strong>W</strong> knock)
+					</pre>
+
+					<p>the property becomes a safety property since it no longer requires that <code>knock</code> eventually happens. The safety property is depicted in Figure 14.7.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure14-7.png">
+						<figcaption><strong>Figure 14.7</strong> <code>POLITE_W</code> safety property process.</figcaption>
+					</figure>
+
+					<p>In the same way, if we replace <em>until</em> with <em>weak until</em> in the definition of the mutex property, it becomes a safety property which generates exactly the same automaton as that depicted in Figure 14.1.</p>
+
+					<pre>
+<strong>assert</strong> MUTEX_W = []((p[1].enter -> (!p[2].enter <strong>W</strong> p[1].exit))
+                  &amp;&amp;(p[2].enter -> (!p[1].enter <strong>W</strong> p[2].exit)))
+					</pre>
+
+					<div class="pagebreak pageNumber">357</div>
+
+					<p>In general, there is no need to distinguish between safety and liveness properties when using FLTL to specify properties. Since the safety check is more efficient than the connected component search used in checking general FLTL properties, the <em>LTSA</em> generates a safety property process if it detects that a property is only a safety property. In fact, determining whether a B&uuml;chi automaton can be transformed to a safety property process is non-trivial and the <em>LTSA</em> does not guarantee to perform this transformation for all automata that could be reduced.</p>
+
+					<p class="i">It should be noted that we could have specified the liveness property that was included in <code>MUTEX_U </code>in the original <code>MUTEX_N</code> property as follows:</p>
+
+					<pre>
+<strong>assert</strong> EXIT_N = <strong>forall</strong>[i:1..N][](p[i].enter -> &lt;>p[i].exit)
+<strong>assert</strong> MUTEX_LIVE = (MUTEX_N &amp;&amp; EXIT_N)
+					</pre>
+
+					<p><code>MUTEX_LIVE</code> expresses the same property for N processes that <code>MUTEX_U</code> does for two. In fact we can parameterize assertions as follows:</p>
+
+					<pre>
+<strong>assert</strong> MUTEXP(M=2)
+    = []!(<strong>exists</strong> [i:1..M-1] (CRITICAL[i] &amp;&amp; CRITICAL[i+1..M]))
+<strong>assert</strong> EXITP(M=2)
+    = <strong>forall</strong>[i:1..M] [](p[i].<strong>enter</strong> -> &lt;>p[i].<strong>exit</strong>)
+<strong>assert</strong> MUTEX_LIVEP(P=2)
+    = (MUTEXP(P) &amp;&amp; EXITP(P))
+					</pre>
+
+					<h5>Definitions</h5>
+
+					<p>We can define the temporal operators always <strong><code>[]</code></strong>, eventually <strong><code>&lt;></code></strong> and weak until <strong><code>W</code></strong> in terms of the until <strong><code>U</code></strong> operator as follows:</p>
+
+					<pre>
+<strong>&lt;> <em>p</em></strong> &equiv; <strong>True U <em>p</em></strong>
+<strong>[] <em>p</em></strong> &equiv; <strong>! &lt;> ! <em>p</em></strong>
+<strong><em>p</em> W <em>q</em></strong>&equiv; <strong>[]<em>p</em> || (<em>p</em> U <em>q</em>)</strong>
+					</pre>
+
+					<p>In fact, FLTL does not have the explicit constants True and False; instead it permits boolean expressions of constants and parameters. These expressions are termed "rigid", since, unlike fluent propositions, they do not change truth value with the passage of time as measured by the occurrence of events. Thus we can define:</p>
+
+					<pre>
+<strong>assert</strong> True  = <strong>rigid</strong>(1)
+<strong>assert</strong> False = <strong>rigid</strong>(0)
+					</pre>
+
+					<p>Rigid expressions can be used in conjunction with parameters and ranges and are essentially used to introduce boolean expressions into FLTL formulae, e.g.</p>
+
+					<pre>
+<strong>assert</strong> Even(V=3) = <strong>rigid</strong>(V/2 == 0)
+					</pre>
+
+					<div class="pagebreak pageNumber">358</div>
+
+				</section>
+
+				<section class="subsection" data-number="10" data-name="Next Time">
+
+					<h4>14.3.3 Next Time</h4>
+
+					<div class="definition"><span class="first-sentence">The linear temporal logic formula <strong><code>X <em>p</em></code></strong> is true if and only if <strong><code><em>p</em></code></strong> is true at the next instant.</span></div>
+
+					<p>By "next instant" in the above definition, we mean when the next action occurs this includes silent actions. For example, the assertion:</p>
+
+					<pre>
+<strong>assert</strong> SEQ = (a &amp;&amp; <strong>X</strong> b &amp;&amp; <strong>X X</strong> c)
+					</pre>
+
+					<p>requires that in the initial instant of system execution the action <strong><code>a</code></strong> occurs followed by the action <strong><code>b</code></strong>, followed by the action <strong><code>c</code></strong>. To check for this sequence, the property process shown in Figure 14.8 is generated:</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure14-8.png">
+						<figcaption><strong>Figure 14.8</strong> <code>SEQ</code> property process.</figcaption>
+					</figure>
+
+					<p>In fact, this form of property is not very useful. If we were to refine or extend our system (using, say, parallel composition and interleaving) such that actions could occur inbetween <strong><code>a</code></strong>, <strong><code>b</code></strong> or <strong><code>c</code></strong> then the property would no longer hold. This is because next time refers to precisely the time at which the next action occurs, whether silent or not. Consequently, it makes finer distinctions than the observational equivalence that is preserved when we minimize processes. As such, it is rarely used in property specification. In addition, it can prohibit the use of partial order reduction, a technique that can dramatically reduce the time taken to check an FLTL property.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="11" data-name="Database Ring Problem">
+
+				<h3>14.4 Database Ring Problem</h3>
+
+				<p><span class="first-sentence">To illustrate the use of logical properties, let us consider a replicated and distributed database where the database nodes are organized in a ring as depicted</span></p>
+
+				<div class="pagebreak pageNumber">359</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure14-9.png">
+					<figcaption><strong>Figure 14.9 </strong>Database ring architecture.</figcaption>
+				</figure>
+
+				<p>in Figure 14.9. Communication is uni-directional, occurring clockwise around the ring such that node 1 can send updates to node 2 and receive them from node 3, via communication pipes. Each node of the database can autonomously update its local copy of the data. Updates are circulated round the ring to update other copies. On completion of a cycle, the originator of an update removes it from the ring. When no updates are in progress the copies should be consistent - i.e., all nodes should hold exactly the same data.</p>
+
+				<p class="i">Two nodes may perform local updates at the same time and propagate their updates around the ring. This would lead to the situation where nodes receive updates in different orders, leading to inconsistent copies even after all the updates have propagated round the ring. Although we can tolerate copy inconsistency while updates are circulating, we cannot accept inconsistency that persists.</p>
+
+				<p class="i">To avoid inconsistency, an update is given a priority depending on its originating node, node i having priority over node j if i&lt;j. Thus an update from node 1 has a higher priority than an update from node 3. In the case of a conflict due to two simultaneous updates, the update from the lower priority node is discarded. A conflict occurs when a node receives an update while still having an outstanding update, which it originated, circulating around the ring.</p>
+
+				<section class="subsection" data-number="12" data-name="Database Ring Model">
+
+					<h4>14.4.1 Database Ring Model</h4>
+
+					<p><span class="first-sentence">We can simplify the problem by considering that each database stores only a single data item and by restricting the range of data values that can be stored.</span></p>
+
+					<div class="pagebreak pageNumber">360</div>
+
+					<pre>
+<strong>const</strong> N     = 3            <span>// number of nodes</span>
+<strong>range</strong> Nodes = 1..N
+<strong>set</strong>   Value = {red, green, blue}
+					</pre>
+
+					<p>We model the communication between database nodes using the <code>PIPE </code>from
+					section 11.1.1 that models a one-slot buffer:</p>
+
+					<pre>
+<strong>set</strong> S = {[Nodes][Value]}
+PIPE  = (put[x:S] -> get[x] -> PIPE) .
+					</pre>
+
+					<p>The updates that circulate round the ring are pairs consisting of the identity of the originating node and the value of the update. For example, <code>[1]['red]</code> is an update from node 1 with the value <code>red</code>. The model for each node is as follows:</p>
+
+					<pre>
+NODE(I=0)
+  = NODE[’null][False],    <span>// initially null value and not updating</span>
+NODE[v:{null,Value}][update:Bool]
+  = (<strong>when</strong> (!update) local[u:Value]     <span> // local update</span>
+   -> if (u!=v) <strong>then</strong>
+          (change[u] -> put[I][u] -> NODE[u][True])
+       <strong>else</strong>
+          NODE[v][False]
+   |get[j:Nodes][u:Value]               <span>// update [j][u]</span>
+   -> <strong>if</strong> (!update) <strong>then</strong>
+          CHANGE(j,u);NODE[u][False]    <span>// update and pass on</span>
+       <strong>else if</strong> (I==j ) <strong>then</strong>
+          (passive -> NODE[v][False])   <span>// complete update</span>
+       <strong>else</strong> if (I>j) <strong>then</strong>
+          CHANGE(j,u);NODE[u][False]    <span>// priority update</span>
+       <strong>else</strong>
+          NODE[v][update]               <span>// discard</span>
+   ).
+
+CHANGE(J=0,U=’null)
+  = (change[U] -> put[J][U] -> passive ->END).
+					</pre>
+
+					<p>Whenever a node changes the value of its stored data value, it signals this with the action <code>change[u]</code> and whenever an update is complete the node signals <code>passive</code>. The constants <code>True</code> and <code>False</code> are defined in the usual way:</p>
+
+					<pre>
+<strong>const</strong> False = 0
+<strong>const</strong> True  = 1
+<strong>range</strong> Bool  = False..True
+					</pre>
+
+					<div class="pagebreak pageNumber">361</div>
+
+					<p>The composite process for the database ring model is:</p>
+
+					<pre>
+||DATABASE_RING
+   = (node[i:Nodes]:NODE(i) || pipe[Nodes]:PIPE)
+     /{<strong>forall</strong>[i:Nodes] {
+         node[i].put/pipe[i%N+1].put,
+         node[i].get/pipe[i].get}
+      }.
+					</pre>
+
+				</section>
+
+				<section class="subsection" data-number="13" data-name="Database Ring Properties">
+
+					<h4>14.4.2 Database Ring Properties</h4>
+
+					<p><span class="first-sentence">Overall, the safety property required of the database model is as follows: when there are no updates in progress, the values held at each node should be consistent.</span> A node that is not engaged in an update signals passive. There can be no updates in progress if all nodes are passive, and the system is said to be quiescent. We can capture the state in which a node is passive by means of the following fluent:</p>
+
+					<pre>
+<strong>fluent</strong> PASSIVE[i:Nodes]
+       = &lt;node[i].passive, node[i].change[Value]>
+					</pre>
+
+					<p>The fluent holds for a node from the time that it signals passive until the time that it signals a change of value. The following assertion captures the quiescent property:</p>
+
+					<pre>
+<strong>assert</strong> QUIESCENT = <strong>forall</strong>[i:Nodes] PASSIVE[i]
+					</pre>
+
+					<p>To describe the consistency property, we need to be able to make propositions about the value held by a node as follows:
+					</p>
+
+					<pre>
+<strong>fluent</strong> VALUE[i:Nodes][c:Value]
+     = &lt;node[i].change[c],node[i].change[{Value\{[c]}}]>
+					</pre>
+
+					<p>The fluent <code>VALUE</code> is true for a node <code>i</code> and value <code>c</code> if the node has previously changed to the value <code>c</code> and has not yet changed to some other value in the set consisting of <code>Value</code> with <code>c</code> removed. Using this fluent, we can define consistency as the proposition that there exists a value such that each node has that value:</p>
+
+					<pre>
+<strong>assert</strong> CONSISTENT
+       = <strong>exists</strong>[c:Value] <strong>forall</strong>[i:Nodes] VALUE[i][c]
+					</pre>
+
+					<p>The required safety property for the database ring system can now be succinctly expressed by the following assertion, which requires that it is always the case that when the system is quiescent, then it must be consistent.</p>
+
+					<pre>
+<strong>assert</strong> SAFE = [](QUIESCENT -> CONSISTENT)
+					</pre>
+
+					<div class="pagebreak pageNumber">362</div>
+
+					<p>The model we have described does indeed satisfy this property. The reader should replace line 14 of the <code>NODE</code> process with:</p>
+
+					<pre>
+<strong>else if</strong> (/* I>j */ True) <strong>then</strong>
+					</pre>
+
+					<p>to obtain an instructive counterexample illustrating the problem of concurrent updates. This modification disables the priority-based conflict resolution in the model.</p>
+
+					<p class="i">We have specified the required safety property for the model which ensures that it does not get into a bad state; however, we must also check that the model eventually and repeatedly gets into a good state. The good state for our model is quiescence and the required liveness property is therefore</p>
+
+					<pre>
+<strong>assert</strong> LIVE = []&lt;>QUIESCENT
+					</pre>
+
+					<p>which is satisfied by our model.</p>
+
+					<h5>Witness Executions</h5>
+
+					<p>When a property is satisfied by a model, no further information is returned by the checking tool. The use of FLTL properties gives us the opportunity to generate examples of model executions (traces) which satisfy the property. Such executions are said to be witness executions since they act as a witness to the truth of the property. To generate a witness execution, we simply assert the negation of the property. If the property is satisfied then its negation cannot be satisfied and the <em>LTSA</em> will produce a counterexample trace.</p>
+
+					<pre>
+<strong>assert</strong> WITNESS_LIVE = !LIVE
+					</pre>	
+
+					<p>The above assertion provides the following witness trace for the <code>LIVE</code> property:</p>		
+
+					<pre>
+Violation of LTL property: @WITNESS_LIVE
+Trace to terminal set of states:
+      node.1.local.green
+      node.1.change.green
+      node.1.put.1.green
+      node.2.get.1.green
+      node.2.change.green
+      node.2.put.1.green
+      node.2.passive      PASSIVE.2
+      node.2.local.red    PASSIVE.2
+      node.3.get.1.green  PASSIVE.2
+      node.3.change.green PASSIVE.2
+      node.3.put.1.green  PASSIVE.2
+      node.1.get.1.green  PASSIVE.2
+					</pre>
+
+					<div class="pagebreak pageNumber">363</div>
+
+					<pre>
+      node.1.passive    PASSIVE.1 &amp;&amp; PASSIVE.2
+      node.3.passive    PASSIVE.1 &amp;&amp; PASSIVE.2 &amp;&amp; PASSIVE.3
+Cycle in terminal set:
+      . . . . . . . .
+LTL Property Check in: 281ms
+					</pre>
+
+					<p>Some care needs to be taken with witnesses for properties that contain implication. For example, the negation of the safety property <code>SAFE</code> is the property <code>&lt;>(QUIESCENT &amp;&amp; !CONSISTENT)</code>. We are expecting a counterexample in which quiescence and consistency hold while the tool produces a counterexample in which neither quiescence nor consistency holds, which also violates the property but is not very useful in explaining the operation of the system.</p>
+
+					<h5>Finite Executions</h5>
+
+					<p>Linear temporal logic is defined for infinite sequences. How do we check FLTL properties for finite executions? In fact, we can easily achieve this by a simple trick in which we add an infinite cycle of an action to the final state. For example, suppose we add the constraint to the database ring that it processes only a single local update:</p>
+
+					<pre>
+ONE_UPDATE = (node[Nodes].local[Value] -> END).
+||DATABASE_RING_ONE = (DATABASE_RING || ONE_UPDATE).
+					</pre>
+
+					<p>To permit the FLTL properties to be checked against this modified system, we change the constraint to:</p>
+
+					<pre>
+ONE_UPDATE = (node[Nodes].local[Value] -> ENDED),
+ENDED      = (ended -> ENDED).
+					</pre>
+
+					<p>The properties <code>LIVE</code> and <code>SAFE</code> hold for the systems and the following witness execution can be produced for <code>SAFE</code>:</p>
+
+					<pre>
+Violation of LTL property: @WITNESS_SAFE
+Trace to terminal set of states:
+      node.1.local.blue
+      node.1.change.blue  VALUE.1.blue
+      node.1.put.1.blue   VALUE.1.blue
+      node.2.get.1.blue   VALUE.1.blue
+      node.2.change.blue  VALUE.1.blue &amp;&amp; VALUE.2.blue
+      node.2.put.1.blue   VALUE.1.blue &amp;&amp; VALUE.2.blue
+      node.2.passive      PASSIVE.2
+                       &amp;&amp; VALUE.1.blue &amp;&amp; VALUE.2.blue
+      node.3.get.1.blue   PASSIVE.2
+                       &amp;&amp; VALUE.1.blue &amp;&amp; VALUE.2.blue
+					</pre>
+
+					<div class="pagebreak pageNumber">364</div>
+
+					<pre>
+      node.3.change.blue  PASSIVE.2
+               &amp;&amp; VALUE.1.blue &amp;&amp; VALUE.2.blue &amp;&amp; VALUE.3.blue
+      node.3.put.1.blue   PASSIVE.2
+               &amp;&amp; VALUE.1.blue &amp;&amp; VALUE.2.blue &amp;&amp; VALUE.3.blue
+      node.1.get.1.blue   PASSIVE.2
+               &amp;&amp; VALUE.1.blue &amp;&amp; VALUE.2.blue &amp;&amp; VALUE.3.blue
+      node.1.passive      PASSIVE.1 &amp;&amp; PASSIVE.2
+               &amp;&amp; VALUE.1.blue &amp;&amp; VALUE.2.blue &amp;&amp; VALUE.3.blue
+      node.3.passive      PASSIVE.1 &amp;&amp; PASSIVE.2 &amp;&amp; PASSIVE.3
+               &amp;&amp; VALUE.1.blue &amp;&amp; VALUE.2.blue &amp;&amp; VALUE.3.blue
+Cycle in terminal set:
+      ended      PASSIVE.1 &amp;&amp; PASSIVE.2 &amp;&amp; PASSIVE.3
+               &amp;&amp; VALUE.1.blue &amp;&amp; VALUE.2.blue &amp;&amp; VALUE.3.blue
+LTL Property Check in: 31ms
+					</pre>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="14" data-name="Summary">
+
+				<h3>Summary</h3>
+
+				<p><span class="first-sentence">The primitive propositions of the linear temporal logicwe described in this chapter
+				are termed "fluents".</span> A fluent is defined by a set of initiating actions and a set of
+				terminating actions. At a particular instant, a fluent is true if and only if it was
+				initially true or an initiating action has previously occurred and, in both cases, no
+				terminating action has yet occurred. Using fluents, we canmap the trace produced
+				by a model into a sequence of sets. Each set in the sequence contains the fluents
+				that are true at the point the corresponding action in the trace occurs. Fluent linear
+				temporal logic (FLTL) is defined with respect to these sequences. For each action,
+				we define a synonymous fluent which holds when the action occurs and becomes
+				false immediately the following action occurs. We termed these actions "fluents"
+				and they can be freely mixed with explicitly defined fluents in expressions. The
+				following table summarizes the temporal operators used in FLTL ("iff" abbreviates
+				"if and only if"):</p>
+
+				<table class="has-border">
+					<tr>
+						<td>next time <strong><code>X <em>F</em></code></strong></td>
+						<td>iff <strong><code><em>F</em></code></strong> holds in the next instant.</td>
+					</tr>
+
+					<tr>
+						<td>always <strong><code><em>F</em></code></strong></td>
+						<td>iff <strong><code><em>F</em></code></strong> holds now and always in the future.</td>
+					</tr>
+
+					<tr>
+						<td>eventually <strong><code>&lt;><em>F</em></code></strong></td>
+						<td>iff <strong><code><em>F</em></code></strong> holds at some point in the future.</td>
+					</tr>
+
+					<tr>
+						<td>until <strong><code><em>P</em> U <em>Q</em></code></strong></td>
+						<td>iff <strong><code><em>Q</em></code></strong> holds at some point in the future and <strong><code><em>P</em></code></strong> holds until then.</td>
+					</tr>
+
+					<tr>
+						<td>weak until <strong><code><em>P</em> W <em>Q</em></code></strong></td>
+						<td>iff P holds indefinitely or <strong><code><em>P</em> U <em>Q</em></code></strong></td>
+					</tr>
+				</table>
+
+				<div class="pagebreak pageNumber">365</div>
+
+				<p>The chapter outlined some typical ways of expressing safety and liveness properties. Using the database ring example, we also explained how to produce witness executions and how to deal with finite executions. In checking liveness properties, we make the same assumptions with respect to fair choice as those made in Chapter 7 and use the same action priority approach to generate adverse scheduling conditions.</p>
+
+			</section>
+
+			<section class="section" data-number="15" data-name="Notes and Further Reading">
+
+				<h3>Notes and Further Reading</h3>
+
+				<p><span class="first-sentence">In Chapter 7, we mentioned that the general LTL model-checking procedure - that of translating the negation of the required LTL formula into a B&uuml;chi automaton, composing this automaton with the target model and then searching for connected components containing acceptance states - is due to Gribomont and Wolper (1989).</span> We also mentioned that this technique has found widespread usage in the SPIN model checker (Holtzmann, 1991, 1997). Indeed, as far as possible, we have followed the syntax of LTL formulae used in SPIN. The use of fluents in the context of LTL model checking is due to Giannakopoulou and Magee (2003) and the component used in the <em>LTSA</em> to translate LTL formulae into B&uuml;chi automata is due to Giannakopoulou and Lerda (2002). A version of FLTL for specifying the properties of the timed models of Chapter 12 can be found in Letier, Kramer, Magee, <em>et al</em>. (2005). The term "fluent" originally comes from the time-varying quantity in Newton's calculus but has more recently been adopted by the Artificial Intelligence community with a meaning consistent with the one used here (Sandewall, 1995).</p>
+
+				<p class="i">Most properties specified in LTL conform to a restricted set of forms or patterns. A set of patterns used in specifying properties has been codified by Dwyer, Avrunin and Corbett (1999). These patterns are coded in a number of formalisms that include linear temporal logic and computation tree logic (CTL). While LTL is defined with respect to infinite execution sequences or linear time, CTL is a temporal logic defined with respect to a branching tree of execution paths or branching time. CTL was used in the model-checking work originated by Clarke, Emerson and Sistla (1986). There has been much academic debate on the relative advantages of LTL and CTL, starting with the classic paper by Lamport (1980) entitled <em>"Sometime" Is Sometimes "Not Never": On the Temporal Logic of Programs</em> to the more recent <em>Branching vs. Linear Time: Final Showdown</em> by Vardi (2001). Pnueli (1977) was responsible for the original idea of using temporal logic as the logical basis for proving correctness properties of concurrent programs.</p>
+
+				<p class="i">Finally, it should be noted that the database ring is due to Bill Roscoe (1998). The example, which was used to illustrate an approach to modeling change in the form of safe node deletion and creation, appears in a paper by Kramer and Magee
+				(1998).</p>
+
+				<div class="pagebreak pageNumber">366</div>
+
+			</section>
+
+			<section class="section" data-number="16" data-name="Exercises">
+
+				<h3>Exercises</h3>
+
+				<ol id="fourteen">
+
+					<li><span class="first-sentence">Using FLTL, specify and check the exclusion safety properties for neighbors in the Dining Philosophers problem of Chapter 6.</span> In addition, specify and check the liveness properties, including the response property that ensures that if a philosopher is hungry, he will eventually eat. Use witnesses to provide examples of property satisfaction.</li>
+
+					<li>Using FLTL, specify safety and liveness properties for the Readers-Writers problem of section 7.5. Check that these give the same results as the corresponding properties specified in Chapter 7 and for the same properties used in the verification models of Chapter 13.</li>
+
+					<li>Using FLTL, specify and check the exclusion safety properties for the warring neighbors of exercise 7.6, and for Peterson's Algorithm for two processes of exercise 7.7. In addition, specify and check the liveness properties, including the response property that ensures that if a neighbor wants to enter the field, he will eventually gain exclusive access. Use witnesses to provide examples of property satisfaction.</li>
+
+					<li>Using FLTL, specify safety and liveness properties for the cruise control system of
+					Chapter 8. Check these properties against the model of Chapter 8. (<em>Hint</em>: define fluents
+					for each of the abstract states -active, cruising, enabled, etc. -as necessary.)</li>
+
+					<li>Using FLTL, specify a safety property to replace the property <code>SAFE</code> specified in section 11.3.1 for the Announcer-Listener system. (<em>Hint</em>: define a fluent which holds when a process registers for a pattern and note that a separate <code>SAFE</code> process is created in Chapter 11 for each listener process.)</li>
+
+				</ol>
+
+			</section>
+
+		</div>
+
+	</div>
+
+</body>
+</html>

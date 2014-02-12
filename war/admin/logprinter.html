@@ -1,0 +1,36 @@
+<html>
+
+	<head>
+		<!-- Stylesheets -->
+		<link rel="stylesheet" type="text/css" href="/lib/bootstrap/css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="/basic/css/main.css" />
+
+		<!-- Scripts -->
+		<script src="/lib/jquery-1.7.2.min.js"></script>
+		<script src="/lib/underscore-min.js"></script>
+		<script src="/lib/backbone-min.js"></script>
+		<script src="/lib/bootstrap/js/bootstrap-dropdown.js"></script>
+		
+		<script src="/basic/js/models/log-models.js"></script>
+		<script src="/basic/js/views/log-views.js"></script>
+		
+		<script src="/basic/js/userbar.js"></script>
+		<script src="/admin/logprinter.js"></script>
+		
+		<title>CampusReader - Log Printer</title>
+		
+	</head>
+
+	<body>
+
+		Enter a user's email address and submit to get a full list of logs for that person in chronological order.
+		<br><br>
+			User Email: <input type="text" id="emailTextbox" placeholder="Enter user email here..." name="email" style="height: 30; position: relative; top: 5px" />
+			<input type="button" id="searchBtn" class='btn' value="Search" />
+		<br><br>
+		
+		<div id="logTableContainer"></div>
+
+	</body>
+
+</html>

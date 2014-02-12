@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h2>Appendix B</h2>
+				<h2><em>FSP</em> Language Specification</h2>
+				<div class="border"></div>
+
+				<p><span class="first-sentence"><em>FSP</em> stands for Finite State Processes.</span> This appendix contains a comprehensive specification of the syntax of <em>FSP</em> together with a commentary on features such as variable scope that are not treated explicitly in the body of the book. A formal description of the semantics of the <em>FSP</em> process operators may be found in Appendix C.</p>
+
+				<p class="i">In specifying the syntax of <em>FSP</em>, we have followed the approach used in the Java Language Specification. In particular, the syntax is specified using a context-free grammar that consists of a number of productions. Each production is defined by a non-terminal symbol as its left-hand side and a sequence of one or more terminal and non-terminal symbols as its right-hand side. In the following, non-terminal symbols are shown in italic type and terminal symbols in a fixed width bolded type. The definition of a non-terminal is introduced by its name followed by a colon. One or more alternative right-hand sides for the non-terminal then follow on succeeding lines. For example, the following production specifies the syntax for an <em>FSP</em> constant definition.</p>
+
+				<pre class="times">
+<em>ConstantDef:</em>
+       <code><strong>const</strong></code> <em>ConstantIdent = Expression</em>
+       			</pre>
+
+       			<p>The production below specifies an argument list as consisting of either a single expression or a list of expressions separated by commas:</p>
+
+       			<pre class="times">
+<em>ArgumentList:
+      Expression
+      ArgumentList, Expression</em>
+				</pre>
+
+				<p>The subscripted suffix "<em>opt</em>", which may appear after a terminal or non-terminal, indicates an optional symbol.</p>
+
+				<div class="pagebreak pageNumber">372</div>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="FSP Description">
+
+				<h3>B.1 <em>FSP</em> Description</h3>
+
+				<p><span class="first-sentence">In addition to definitions for processes and compositions of processes, an <em>FSP</em> model description consists of definitions for constants, ranges of integers, sets of action labels, safety properties, progress properties, animation menus, fluents and assertions.</span></p>
+
+				<pre class="times">
+<em>
+FSPdescription
+        FSPdefinition
+        FSPdescription FSPdefinition
+FSPdefinition
+        ConstantDef
+        RangeDef
+        SetDef
+        ProcessDef
+        CompositeDef
+        PropertyDef
+        ProgressDef
+        MenuDef
+        FluentDef
+        AssertDef</em>
+				</pre>
+
+			</section>
+
+			<section class="section" data-number="2" data-name="Identifiers">
+
+				<h3>B.2 Identifiers</h3>
+
+				<p><span class="first-sentence"><em>FSP</em> definitions and process parameters are named by identifiers beginning with
+				an uppercase letter.</span> Action label and variable identifiers begin with a lowercase
+				letter.</p>
+
+				<pre class="times">
+<em>ConstantIdent:
+RangeIdent:
+SetIdent:
+ParameterIdent:
+ProcessIdent:
+PropertyIdent:
+ProgressIdent:
+MenuIdent:
+FluentIdent:
+AssertIdent:
+          UpperCaseldentifier
+Variable:
+          LowerCaseldentifier</em>
+				</pre>
+
+				<p>Upper- and lowercase identifiers are specified by the following productions in which <em>UpperCaseLetter</em> denotes one of the uppercase alphabetical characters and</p>
+
+				<div class="pagebreak pageNumber">373</div>
+
+				<p><em>LowerCaseLetter</em> denotes one of the lowercase alphabetical characters or underscore "_". <em>Digit</em> denotes one of the decimal digits.</p>
+
+				<pre class="times"><em>
+UpperCaseldentifier:
+      UpperCaseLetter
+      UpperCaseldentifier Letter
+      UpperCaseldentifier Digit
+LowerCaseldentifier:
+      LowerCaseLetter
+      LowerCaseIdentifier Letter
+      LowerCaseldentifier Digit
+Letter:
+      UpperCaseLetter
+      LowerCaseLetter
+				</em></pre>
+
+			</section>
+
+			<section class="section" data-number="3" data-name="Action Labels">
+
+				<h3>B.3 Action Labels</h3>
+
+				<p><span class="first-sentence">Actions in <em>FSP</em> can be labeled either by a lowercase identifier or by a value computed from an expression enclosed by square brackets.</span> Action labels are also formed by concatenating simpler labels with a dot.</p>
+
+				<pre class="times">
+<em>ActionLabel:
+       LowerCaseldentifier
+       ActionLabel</em> <strong><code>.</code></strong> <em>LowerCaseldentifier</em>
+       <strong><code>[</code></strong> <em>Expression</em> <strong><code>]</code></strong> 
+       <em>ActionLabel</em> <strong><code>[</code></strong> <em>Expression</em> <strong><code>]</code></strong>	
+				</pre>
+
+				<h5>Examples</h5>
+
+				<pre>
+in    [43]    in[12]    in[2][i*2]    x[1].y[3]
+				</pre>
+
+				<p>Wherever a single action label can be used in <em>FSP</em>, a set of action labels can also be used. The exception is where label values are used in expressions (see section
+				B.10).</p>
+
+				<pre class="times">
+<em>ActionLabels:
+       ActionLabel
+       Set</em>
+       <strong><code>[</code></strong> <em>ActionRange</em> <strong><code>]</code></strong>
+       <em>ActionLabels</em> <strong><code>.</code> </strong><em>ActionLabel</em>
+       <em>ActionLabels</em> <strong><code>.</code></strong> <em>Set</em>
+       <em>ActionLabels</em><strong><code>[</code></strong><em>ActionRange</em><strong><code>]</code></strong>
+       <em>ActionLabels</em> <strong><code>[</code></strong> <em>Expression</em> <strong> <code>]</code></strong>
+				</pre>
+
+				<div class="pagebreak pageNumber">374</div>
+
+				<p>Sets of action labels are defined explicitly by a set or by a range of integer values.</p>
+
+				<pre class="times">
+<em>ActionRange:</em>
+       <em>Range</em>
+       <em>Set</em>
+       <em>Variable</em> <strong><code>:</code></strong> <em>Range</em>
+       <em>Variable</em> <strong><code>:</code></strong> <em>Set</em>
+<em>Range:</em>
+       <em>RangeIdent</em>
+       <em>Expression</em> <strong><code>..</code></strong> <em>Expression</em>
+<em>Set:
+       SetIdent</em>
+       <strong><code>{</code></strong> <em>SetElements</em> <strong><code>}</code></strong>
+<em>SetElements:
+       ActionLabels </em>
+       <em>SetElements</em> <strong><code>,</code></strong> <em>ActionLabels</em>
+				</pre>
+
+				<h5>Examples</h5>
+
+				<pre>
+{a,b,c}    X.a    in[x:1..3]    in[x:T]    a.{x,y,z}
+				</pre>
+
+				<p>Variables can be associated with a set or a range in an <em>ActionRange</em>. The variable successively takes on each of the values of the set or range. The scope of variables is discussed in the following with respect to their use in processes, composite processes and re-labeling definitions.</p>
+
+				<h5>Examples</h5>
+
+				<pre>
+a[i:1..3]    x[v:{a,b,c}]
+				</pre>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="const, range, set">
+
+				<h3>B.4 const, range, set</h3>
+
+				<p><span class="first-sentence">Named constants, ranges and sets are defined as follows:</span></p>
+
+				<pre class="times">
+<em>ConstantDef:</em> 
+    <code><strong>const</strong></code> <em>ConstantIdent = SimpleExpression 
+RangeDef:</em> 
+    <code><strong>range</strong></code> <em>RangeIdent = SimpleExpression</em> <code><strong>..</strong></code> <em>SimpleExpression 
+SetDef:</em> 
+    <code><strong>set</strong></code> <em>SetIdent =</em> <code><strong>{</strong></code> <em>setElements</em> <code><strong>}</strong></code>
+				</pre>
+
+				<div class="pagebreak pageNumber">375</div>
+
+				<h5>Examples</h5>
+
+				<pre>
+<strong>const</strong> N = 3
+<strong>range</strong> R = 0..N
+<strong>set</strong>   S = {a,b,c,d[R]}
+				</pre>
+
+			</section>
+
+			<section class="section" data-number="5" data-name="Process Definition">
+
+				<h3>B.5 Process Definition</h3>
+
+				<p><span class="first-sentence">A process is defined by one or more local processes.</span> A process can optionally be parameterized and have re-labeling, hiding and alphabet extension parts.</p>
+
+				<pre class="times">
+<em>ProcessDef: 
+      ProcessIdent Param<sub>opt </sub>= Process Body 
+                    AlphabetExtension<sub>opt</sub> Relabel<sub>opt</sub> Hiding<sub>opt</sub></em><code> <strong>.</strong></code>
+<em>Process Body:
+      LocalProcess
+      LocalProcess</em> <code><strong>,</strong></code> <em>LocalProcessDefs
+LocalProcessDefs:
+      LocalProcessDef
+      LocalProcessDefs,LocalProcessDef
+LocalProcessDef: 
+      ProcessIdent IndexRanges<sub>opt</sub> = LocalProcess</em><code><strong> .</strong></code>
+<em>AlphabetExtension:</em>
+     <code><strong>+</strong> </code><em>Set</em>
+				</pre>
+
+				<p>The scope of the name for a local process definition is the process in which it is contained. A local process is <code>END</code>, <code>STOP</code>, <code>ERROR</code>, a reference to another local process, a sequential composition, a conditional process or is defined using action prefix and choice.</p>
+
+				<pre class="times">
+<em>LocalProcess: 
+        BaseLocalProcess 
+        SequentialComposition </em>
+        <code><strong>if</strong></code> <em>Expression</em> <code><strong>then</strong></code> <em>LocalProcess</em> 
+        <code><strong>if</strong></code> <em>Expression</em> <code><strong>then</strong></code> <em>LocalProcess</em> <code><strong>else</strong></code> <em>LocalProcess</em> 
+        <code><strong>(</strong></code> <em>Choice</em> <code><strong>)</strong></code>
+<em>BaseLocalProcess:</em>
+        <code><strong>END</strong></code> 
+        <code><strong>STOP</strong></code> 
+        <code><strong>ERROR</strong></code> 
+        <em>ProcessIdent Indices<sub>opt</sub></em>
+				</pre>
+
+				<div class="pagebreak pageNumber">376</div>
+
+				<pre class="times">
+<em>Choice:</em>
+  <em>ActionPrefix</em>
+  <em>Choice</em> <code>|</code>
+<em>ActionPrefix:
+   Guard<sub>opt</sub> PrefixActions</em> <code>-></code> <em>LocalProcess</em>
+<em>PrefixActions:
+   ActionsLabels
+   PrefixActions</em> <code>-></code> <em>ActionsLabels
+Guard:</em>
+   <strong><code>when</code></strong> <em>Expression</em>
+				</pre>
+
+				<h5>Examples</h5>
+
+				<pre>
+TIME = (tick -> TIME).
+S = STOP + {a,b,c}.
+
+R = (a -> R | b -> Q),
+Q = STOP.
+
+P = (a[i:1..3] ->
+    <strong>if</strong> i==1 <strong>then</strong> STOP <strong>else</strong> P).
+    			</pre>
+
+    			<p>The scope of a variable defined in an action label is the rest of the local process in which it is g,efined. However, the scope of a variable defined inside a set does not extend beyond that set, e.g. <code>{a,b,c[i:0..2]}</code>. Note that variables are a syntactic convenience to permit concise definitions. The example process <code>P</code> above can be expanded to an equivalent definition without variables and conditionals:</p>
+
+    			<pre>
+P = (a[1] -> STOP | a[2] -> P | a[3] -> P).
+				</pre>
+
+				<p>In a similar way, processes with guards can be expressed by explicitly enumerating the choices that an action label set represents. For example, the process:</p>
+
+				<pre>
+P = (a[i:0..3] ->
+  ( <strong>when</strong> i==0 x -> STOP
+  | <strong>when</strong> i!=0 y -> P
+  )
+  ).
+				</pre>
+
+				<p>is equivalent to:</p>
+
+				<pre>
+P = (a[0] -> x -> STOP 
+|
+				</pre>
+
+				<div class="pagebreak pageNumber">377</div>
+
+				<pre>
+|a[2] -> y -> P
+|a[3] -> y -> P
+).
+				</pre>
+
+				<p>Index ranges for local processes are also a syntactic convenience. They define a set of local processes.</p>
+
+				<pre class="times">
+<em>Indices:</em> 
+    <code><strong>[</strong></code> <em>Expression</em> <code><strong>]</strong></code>
+    <em>Indices</em> <code><strong>[</strong></code> <em>Expression</em> <code><strong>]</strong></code>
+<em>IndexRanges:</em>
+    <code><strong>[ </strong></code><em>Expression</em> <code><strong>]</strong></code>
+    <code><strong>[ </strong></code><em>ActionRang</em>e <code><strong>]</strong></code>
+    <em>IndexRanges</em> <code><strong>[</strong></code> <em>Expression</em> <code><strong>]</strong></code>
+    <em>IndexRanges</em> <code><strong>[ </strong></code><em>ActionRange </em><code><strong>]</strong></code>
+				</pre>
+
+				<h5>Example</h5>
+
+				<pre>
+P         = S[0],
+S[i:0..2] = (<strong>when</strong> i&lt;3 a -> S[i+1]),
+S[3]      = STOP.
+				</pre>
+
+				<p>The scope of a variable used in a local process definition is the local process, i.e. it extends to the comma that terminates the definition. The example above could be defined without a variable as:</p>
+
+				<pre>
+P    = S[0]
+s[0] = (a -> S[1]),
+S[1] = (a -> S[2]),
+S[2] = (a -> S[3]),
+S[3] = STOP.
+				</pre>
+
+				<p>The reference to a local process can be replaced by substituting its definition, giving:</p>
+
+				<pre>
+P = (a -> (a -> (a -> STOP))).
+				</pre>
+
+				<p>This is exactly equivalent to:</p>
+
+				<pre>
+P = (a -> a -> a -> STOP).
+				</pre>
+
+				<p>Variables in <em>FSP</em> definitions can always be removed by syntactic transformation. Consequently, in Appendix C, which presents the semantics of <em>FSP</em>, variables are not considered.</p>
+
+				<div class="pagebreak pageNumber">378</div>
+
+				<p class="i">A sequential composition is always defined within a process. The last process in the sequential composition must be <code>END</code>, <code>STOP</code>, <code>ERROR</code>, or a reference to a local process. The composition essentially concatenates processes with the last (i.e. <code>END</code>) state of a sequential process replaced with the first state of the subsequent process in the composition list.</p>
+
+				<pre class="times">
+<em>Sequential Composition: 
+   SeqProcessList</em> <code><strong>;</strong></code> <em>BaseLocalProcess</em>
+<em>SeqProcessList:
+  ProcessRef
+  SeqProcessList </em><code><strong>;</strong></code> <em>ProcessRef
+  ProcessRef
+        Processldent Argument<sub>opt</sub>
+  Argument:</em>
+  <code><strong>(</strong></code> <em>ArgumentList</em> <code><strong>)</strong></code>
+<em>ArgumentList:
+   Expression
+   ArgumentList</em> <code><strong>,</strong></code> <em>Expression</em>
+				</pre>
+
+				<h5>Examples</h5>
+
+				<pre>
+P(I=1) = (a[I] -> b[I] -> END).
+
+SC = P(1);P(2);SC.
+				</pre>
+
+				<p>The process <code>SC</code> above is defined below without sequential composition and has exactly the same behavior.</p>
+
+				<pre>
+SC = (a[1] -> b[1] -> a[2] -> b[2] -> SC).
+				</pre>
+
+			</section>
+
+			<section class="section" data-number="6" data-name="Composite Processes">
+
+				<h3>B.6 Composite Processes</h3>
+
+				<p><span class="first-sentence">A composite process is distinguished from a primitive process by prefixing its definition with <code>||</code>.</span> Composite processes are constructed using parallel composition, re-labeling, priority and hiding. Process labeling and sharing are specialized forms of re-labeling. The replication and conditional constructs are purely syntactic conveniences.</p>
+
+				<pre class="times">
+<em>CompositeDef:</em>
+<code>|</code>   
+                                                 <em>Priority<sub>opt</sub> Hiding<sub>opt</sub> </em><strong><code>.</code></strong>
+				</pre>
+
+				<div class="pagebreak pageNumber">379</div>
+
+				<pre class="times">
+<em>CompositeBody:
+          PrefixLabel<sub>opt</sub> ProcessRef Relabel<sub>opt</sub>
+          PrefixLabel<sub>opt</sub></em> <code><strong>(</strong></code> Parallel Composition <code><strong>)</strong></code> <em>Relabel<sub>opt</sub></em>
+          <strong><code>forall</code></strong> <em>Ranges CompositeBody</em>              --replication
+          <strong><code>if</code></strong> <em>Expression</em> <strong><code>then</code></strong> <em>CompositeBody</em>       --conditional
+          <strong><code>if</code></strong> <em>Expression</em> <strong><code>then </code></strong><em>CompositeBody</em> <strong><code>else</code></strong>  <em>CompositeBody</em> 
+<em>PrefixLabel:
+          ActionLabels</em> <code><strong>:</strong></code>                                          --process labeling
+          <em>ActionLabels</em> <code><strong>::</strong></code>                                        --process sharing
+          <em>ActionLabels</em> <code><strong>::</strong></code> <em>ActionLabel</em><strong><code>:</code></strong> 
+<em>ParallelComposition</em>
+          <em>CompositeBody</em>
+          <em>ParallelComposition</em> <strong><code>||</code></strong> <em>CompositeBody</em> 
+<em>Priority:</em>
+          <strong><code>>></code> </strong><em>Set</em>
+          <strong><code>&lt;&lt;</code></strong> <em>Set</em>
+<em>Ranges:</em> 
+          <code><strong>[</strong></code> <em>ActionRange </em><code><strong>]</strong></code>
+          <em>Ranges</em> <code><strong>[</strong></code> <em>ActionRange</em> <code><strong>]</strong></code>
+				</pre>
+
+				<h5>Examples</h5>
+
+				<pre>
+||S = a[1..3]:P.
+||S = {a[1],a[2],a[3]}:P.
+||S = <strong>forall</strong>[i:1..3] a[i]:P.
+||S = <strong>forall</strong>[i:1..3] a:P/{a[i]/a}.
+||S = (a[1]:P || a[2]:P || a[3]:P).
+				</pre>
+
+				<p>The composite process definitions above are exactly equivalent and define the same composite process. The syntax for re-labeling is described in section B.8. The scope of a variable in a composite process is the <em>CompositeBody</em> in which it is defined together with any other <em>CompositeBody</em> contained within that <em>CompositeBody</em> definition.</p>
+
+				<h5>Examples</h5>
+
+				<pre>
+|
+<strong>if</strong> (i&lt;=2)<strong>then</strong> 
+  (<strong>forall</strong>[j:1..2] a[i][j]:P) 
+<strong>else</strong> 
+  (<strong>forall</strong>[j:1..2] b[i][j]:P).
+  				</pre>
+
+  				<div class="pagebreak pageNumber">380</div>
+
+  				<p>The definitions of the two occurrences of the variable <code>j</code> do not conflict in the above example since they are each defined in a different <em>CompositeBody</em>. Neither <em>CompositeBody</em> is contained within the other. The replication can be unfolded to give the equivalent definition for <code>S</code> shown below.</p>
+
+  				<pre>
+||S = 
+( a[1][1]:P || a[1][2]:P ||
+||b[3][1]:P || b[3][2]:P ||
+).
+					</pre>
+
+				</section>
+
+				<section class="section" data-number="7" data-name="Parameters">
+
+					<h3>B.7 Parameters</h3>
+
+					<p><span class="first-sentence">Process and composite process parameters must always have a default value. </span>This means that a process can always be compiled into a finite Labeled Transition System (<em>LTS</em>). The default parameter value may be changed by an argument when the process, whether composite or primitive, forms part of another composite process.</p>
+
+					<pre class="times">
+<em>Param:</em>
+  <code><strong>(</strong></code> <em>ParameterList</em> <code><strong>)</strong></code>
+<em>ParameterList:</em>
+  <em>Parameter</em>
+  <em>ParameterList</em> <code><strong>,</strong></code> <em>Parameter</em>
+<em>Parameter:</em>
+  <em>Parameterldent = Expression</em>
+				</pre>
+
+				<h5>Example</h5>
+
+				<pre>
+P(X=1)   = (a[X] -> STOP).
+||S(Y=2) = (P(Y+1) || P(Y+2)).
+				</pre>
+
+				<p>The scope of a parameter is the process or composite in which it is defined. Parameter substitution creates a new process with each occurrence of the parameter replaced by the argument value. This is simply macro expansion. Substituting the parameters in the example results in the following equivalent definition.</p>
+
+				<pre>
+P3   = (a[3] -> STOP).
+P4   = (a[4] -> STOP).
+||S2 = (P3 ||
+				</pre>
+
+				<div class="pagebreak pageNumber">381</div>
+
+			</section>
+
+			<section class="section" data-number="8" data-name="Re-Labeling and Hiding">
+
+				<h3>B.8 Re-Labeling and Hiding</h3>
+
+				<p><span class="first-sentence">The re-labeling and hiding operators can be applied to both processes and composite processes.</span></p>
+
+				<pre class="times">
+<em>Relabel:
+      /</em> <code><strong>{</strong></code> <em>RelabelDefs</em> <code><strong>}</strong></code>
+<em>RelabelDefs:
+      RelabelDef
+      RelabelDefs, RelabelDef
+RelabelDef: 
+      ActionLabels / ActionLabels</em> 
+      <code><strong>forall</strong></code> <em>IndexRanges</em> <code><strong>{</strong></code> <em>RelabelDefs</em> <code><strong>}</strong></code>
+				</pre>
+
+				<p><em>FSP</em> supports relational re-labeling. The re-labeling operator applies a relation to a process, which can result in replacing many labels with a single label and replacing one label with multiple labels. The re-labeling relation is defined by a set of pairs. Each pair takes the form <code>newlabel/oldlabel</code>. Sets of labels and the replication construct permit the concise definition of the re-labeling relation. In each of the examples below, both the concise form and the equivalent expanded form of the relation are given.</p>
+
+				<h5>Examples</h5>
+
+				<pre>
+/* one to one re-labeling */
+P/{ <code><strong>forall</strong></code>[i:1..3] {a[i]/x[i]}}
+/* equivalent */
+P/{ a[1]/x[1], a[2]/x[2], a[3]/x[3] }
+
+/* one to many re-labeling */
+P/{ {x,y,z}/a }
+/* equivalent */
+P/{ x/a, y/a, z/a }
+
+/* many to one re-labeling */
+P/{ a/{x,y,z} }
+/* equivalent */
+P/{ a/x, a/y, a/z }
+
+/* many to many re-labeling */
+P/{ {a,b}/{x,y} }
+/* equivalent */
+P/{ a/x, a/y, b/x , b/y }
+				</pre>
+
+				<div class="pagebreak pageNumber">382</div>
+
+				<p>If the old label does not appear in the alphabet of <code>P</code>, then the re-labeling pair <code>newlabel/oldlabel</code> has no effect. Re-labeling in <em>FSP</em> is always applied before parallel composition such that for a re-labeling relation <code><em>R</em></code>, <code>(P||Q)/<em>R</em></code> is equivalent to <code>(P/<em>R</em>||Q/<em>R</em>)</code>.</p>
+
+				<pre class="times">
+<em>Hiding:</em>
+  <code><strong>\</strong></code> <em>Set</em>
+  <code><strong>@</strong></code> <em>Set</em>
+  				</pre>
+
+  				<p>There are two forms of the hiding operator: <code>\</code> applies a set of labels to a process such that the labels that occur in both the alphabet of the process and the set are hidden; <code>@</code> applies a set of labels to a process such that every label in the alphabet is hidden except those that occur in the set.</p>
+
+  				<h4>Prefix Matching</h4>
+
+  				<p>Action labels in hiding sets, priority sets and on the right-hand side of a re-labeling pair match prefixes of labels in the alphabet of the process to which they are applied. For example, an action label <code>a</code> in a hiding set will hide all labels prefixed by <code>a</code>, e.g. <code>a.b</code>, <code>a[1]</code>, <code>a.x.y</code>. Similarly, the re-labeling pair <code>x/a</code> would replace these labels with <code>x.b</code>, <code>x[1]</code>, <code>x.x.y</code>. Prefix matching permits label details to be ignored when processes are composed.</p>
+
+  			</section>
+
+  			<section class="section" data-number="9" data-name="property, progress and menu">
+
+  				<h3>B.9 property, progress and menu</h3>
+
+  				<p><span class="first-sentence">A safety property is defined by a process prefixed by the keyword <code><strong>property</strong></code>.</span></p>
+
+  				<pre class="times">
+<em>PropertyDef:</em>
+   <strong><code>property</code></strong> <em>ProcessDef</em>
+   				</pre>
+
+   				<p>There are two forms of progress property, though we have used only the simpler form in the main text of this book. The first form asserts that at least one action in a set <code>S</code> must occur infinitely often. The second form is conditional progress, which takes the form <code><strong>if</strong> C <strong>then</strong> S</code>. This asserts that if one of the actions in the set <code>C</code> occurs infinitely often, then so must one of the actions in the set <code>S</code>.</p>
+
+   				<pre class="times">
+<em>ProgressDef:</em>
+   <code><strong>progress</strong></code> <em>ProgressIdent Ranges<sub>opt</sub></em> = <em>Set</em>
+   <code><strong>progress</strong></code> <em>ProgressIdent Ranges<sub>opt</sub></em> = <strong>if</strong> <em>Set</em> <strong>then</strong> <em>Set</em>
+   				</pre>
+
+   				<p>A set of progress properties may be declared using an index range.</p>
+
+   				<div class="pagebreak pageNumber">383</div>
+
+   				<h5>Example</h5>
+
+   				<pre>
+<strong>progress</strong> G[i:1..3] = {{a,b}[i]}
+				</pre>
+
+				<p>A menu definition specifies the set of actions that the user can control in an animation.</p>
+
+				<pre class="times">
+<em>MenuDef:</em>
+  <strong><code>menu</code></strong> <em>MenuIdent = Set</em>
+				</pre>
+
+			</section>
+
+			<section class="section" data-number="10" data-name="Expression">
+
+				<h3>B.10 Expression</h3>
+
+				<p><span class="first-sentence">Expressions in <em>FSP</em> are a subset of expressions in Java.</span> This has the advantage of familiarity; however it has the disadvantage that some of the <em>FSP</em> process operators have a different meaning when used in the context of an expression. In particular, the priority operators <code>&lt;&lt;</code> and <code>&gt;&gt;</code> mean shift left and shift right when used in an expression, the parallel composition operator <code>||</code> means logical or when used in an expression, the choice operator <code>|</code> means bit-wise or in an expression and the re-label operator <code>/</code> means division. Where confusion might arise, namely in constant and range definitions, expressions with the logical and shift operators must be bracketed. This is the reason why constant and range definitions are defined using <em>SimpleExpression</em> rather than <em>Expression</em>. The syntax of expressions used in <em>FSP</em> is specified by the following expressions.</p>
+
+				<pre class="times">
+<em>SimpleExpression:
+    AdditiveExpr
+Expression:
+    OrExpr
+OrExpr:
+    AndExpr
+    OrExpr </em><strong><code>||</code></strong> <em>AndExpr
+AndExpr:
+    BitOrExpr</em>
+    <em>AndExpr</em> <strong><code>&amp;&amp;</code></strong> <em>BitOrExpr
+BitOrExpr:
+    BitExclOrExpr
+    BitOrExpr</em> <strong><code>|</code></strong> <em>BitExclOrExpr
+BitExclOrExpr:
+    BitAndExpr
+    BitExclOrExpr ^ BitAndExpr
+BitAndExpr:
+    Equality Expr
+    BitAndExpr </em><strong><code>&amp;</code></strong> <em>EqualityExpr</em>
+				</pre>
+
+				<div class="pagebreak pageNumber">384</div>
+
+				<pre class="times">
+<em>EqualityExpr:</em>
+   <em>RelationalExpr</em>
+   <em>EqualityExpr</em> <strong><code>==</code></strong> <em>RelationalExpr</em>
+   <em>EqualityExpr</em> <strong><code>!=</code></strong> <em>RelationalExpr</em>
+<em>RelationalExpr:</em>
+   <em>ShiftExpr</em>
+   <em>RelationalExpr</em> <strong><code>&lt;</code></strong> <em>ShiftExpr</em>
+   <em>RelationalExpr</em> <strong><code>&lt;=</code></strong> <em>ShiftExpr</em>
+   <em>RelationalExpr</em> <strong><code>></code></strong> <em>ShiftExpr</em>
+   <em>RelationalExpr</em> <strong><code>>=</code></strong> <em>ShiftExpr</em>
+<em>ShiftExpr:</em>
+   <em>AdditiveExpr</em>
+   <em>ShiftExpr</em> <strong><code>>></code></strong> <em>AdditiveExpr</em>
+   <em>ShiftExpr</em> <strong><code>&lt;&lt;</code></strong> <em>AdditiveExpr</em>
+<em>AdditiveExpr:</em>
+   <em>MultiplicativeExpr</em>
+   <em>AdditiveExpr</em> <strong><code>+</code></strong> <em>MultiplicativeExpr</em>
+   <em>AdditiveExpr</em> <strong><code>-</code></strong> <em>MultiplicativeExpr</em>
+<em>MultiplicativeExpr:</em>
+   <em>UnaryExpr</em>
+   <em>MultiplicativeExpr</em> <strong><code>*</code></strong> <em>UnaryExpr</em>
+   <em>MultiplicativeExpr</em> <strong><code>\</code></strong> <em>UnaryExpr</em>
+   <em>MultiplicativeExpr</em> <strong><code>%</code></strong> <em>UnaryExpr</em>
+<em>UnaryExpr:</em>
+   <em>BaseExpr</em>
+   <strong><code>+</code></strong> <em>BaseExpr</em>
+   <strong><code>-</code></strong> <em>BaseExpr</em>
+   <strong><code>!</code></strong> <em>BaseExpr</em>
+<em>BaseExpr:</em>
+   <em>IntegerLiteral</em>
+   <em>Variable</em>
+   <em>ConstantIdent</em>
+   <em>'ActionLabel</em>
+   <strong><code>#</code></strong> <em>SetIdent</em>
+   <strong><code>@(</code></strong> <em>SetIdent</em> <strong><code>,</code></strong> <em>Expression</em> <strong><code>)</code></strong>
+   <strong><code>(</code></strong> <em>Expression</em> <strong><code>)</code></strong>
+				</pre>
+
+				<p><em>FSP</em> supports only integer and label expressions. Variables may take either an integer value or a label value. Label literals are formed by preceding an action label with a quote - this distinguishes a label value from a variable. The only valid operators on label values are equality and inequality.</p>
+
+				<p class="i">The expression @(<em>A, e</em>) returns a label value which is the <em>e</em><sup>th</sup> element of the set identified by <em>A</em>.</p>
+
+				<div class="pagebreak pageNumber">385</div>
+
+				<p class="i">The expression # <em>A</em> returns as an integer value the cardinality of the set identified by <em>A</em>.</p>
+
+				<p class="i">As in the programming language C, the results of boolean expressions in <em>FSP</em> are integer values. A false expression has the value 0 and a true expression the value 1.</p>
+
+			</section>
+
+			<section class="section" data-number="11" data-name="Basic FSP">
+
+				<h3>B.10 Basic <em>FSP</em></h3>
+
+				<p><span class="first-sentence">In the previous sections, we have indicated that constructs such as guards, replica tors, conditionals, variables and index ranges are syntactic conveniences to permit concise descriptions.</span> Models described using these constructs can be syntactically transformed into a more basic form of <em>FSP</em>. This basic form of <em>FSP</em> uses only the process operators and the primitive local processes <code>END</code>, <code>STOP</code> and <code>ERROR</code>. The syntax of basic <em>FSP</em> is described by the following productions:</p>
+
+				<pre class="times">
+<em>BProcessDef:
+    BProcessBody AlphabetExtension<sub>opt</sub> Relabel<sub>opt</sub> Hiding<sub>opt</sub> .
+BProcessBody: 
+    ProcessIdent = BLocalProcess 
+    BProcessBody</em> <code><strong>,</strong></code> <em>ProcessIdent = BLocalProcess
+BLocalProcess:
+    BBaseProcess</em>
+    <code><strong>(</strong></code> <em>BChoice</em> <code><strong>)</strong></code>
+<em>BBaseProcess:</em>
+    <code><strong>END</strong></code>
+    <code><strong>STOP</strong></code>
+    <code><strong>ERROR</strong></code>
+    <em>ProcessIdent</em> 
+    <em>ProcessIdent</em> <code><strong>;</strong></code> <em>BBaseProcess</em>
+<em>BChoice:</em> 
+    <em>ActionLabel</em> <code>-></code> <em>BLocalProcess</em> 
+    <em>BChoice</em> <code><strong>|</strong></code> <em>ActionLabel</em> <code>-></code> <em>BLocalProcess</em>
+<em>BCompositeDef </em>
+    <code><strong>||</strong></code> <em>ProcessIdent = BCompositeBody Priority<sub>opt</sub> Hiding<sub>opt</sub>.
+BCompositeBody: 
+    ProcessIdent Relabel<sub>opt</sub></em> 
+    <code><strong>(</strong></code> <em>BParallelComposition</em> <code><strong>)</strong></code> <em>Relabel<sub>opt</sub></em>
+<em>BParallelComposition: </em>
+    <em>BCompositeBody</em> 
+    <em>BParallelComposition</em> <code><strong>||</strong></code> <em>BCompositeBody</em>
+				</pre>
+
+				<p>A formal semantics for basic <em>FSP</em> is presented in Appendix C.</p>
+
+				<div class="pagebreak pageNumber">386</div>
+
+			</section>
+
+			<section class="section" data-number="12" data-name="fluent and assert">
+
+				<h3>B.12 fluent and assert</h3>
+
+				<p><span class="first-sentence">Fluents used in Linear Temporal Logic expressions are defined by two sets of action labels and an optional initialization expression that determines whether the fluent is initially true or false.</span> The sets may be singletons, in which case a single action label may be defined. If initialization is omitted, by default, the fluent is initially false. A set of fluents may be declared using an index range.</p>
+
+				<pre class="times">
+<em>FluentDef:</em> 
+  <strong><code>fluent</code></strong> <em>FluentIdent IndexRanges<sub>opt</sub></em> 
+      <code><strong>=&lt;</strong></code> <em>ActionLabels, ActionLabels</em> <code><strong>></strong></code> <em>Initially<sub>opt</sub></em>
+<em>Initially:</em>
+  <strong><code>initially</code></strong> <em>SimpleExpression</em>
+				</pre>
+
+				<h5>Example</h5>
+
+				<pre>
+<strong>fluent</strong> Simple = &lt;a,b>
+<strong>fluent</strong> Sets   = &lt;{start,begin},{end,finish}>
+<strong>fluent</strong> Indexed[i:1..8]
+       = &lt;a[i],b[i]> <strong>initially</strong> (i%2==0)
+				</pre>
+
+				<p>Assertions define properties expressed in Fluent Linear Temporal Logic (FLTL). Assertions are named FLTL formulae and they may be parameterized and used in the definition of more complex properties.</p>
+
+				<pre class="times">
+<em>AssertDef: </em>
+   <strong><code>assert</code></strong> <em>AssertIdent Param<sub>opt</sub> = FLTLUnaryExpression</em>
+<em>FLTLOrExpr:</em> 
+   <em>FLTLBinaryExpr</em> 
+   <em>FLTLOrExpr</em> <strong><code>||</code></strong> <em>FLTLBinaryExpr</em>
+<em>FLTLBinaryExpr:</em> 
+   <em>FLTLAndExpr</em> 
+   <em>FLTLBinaryExpr</em> <strong><code>U</code></strong> <em>FLTLAndExpr</em>        --until 
+   <em>FLTLBinaryExpr</em> <strong><code>W</code></strong> <em>FLTLAndExpr</em>        --weak until 
+   <em>FLTLBinaryExpr</em> <code>-></code> <em>FLTLAndExpr</em>      --implication 
+   <em>FLTLBinaryExpr</em> <code>&lt;-></code> <em>FLTLAndExpr</em>    --equivalence
+<em>FLTLAndExpr:</em> 
+   <em>FLTLUnaryExpr</em> 
+   <em>FLTLAndExpr</em> <strong><code>&amp;&amp;</code></strong> <em>FLTLUnaryExpr</em>
+<em>FLTLUnaryExpr:</em> 
+   <em>FLTLBaseExpr</em> 
+   <strong><code>!</code></strong> <em>FLTLUnaryExpr</em>    --negation
+				</pre>
+
+				<div class="pagebreak pageNumber">387</div>
+
+				<pre class="times">
+   <code><strong>X</strong></code> <em>FLTLUnaryExpr</em>     - next time
+   <code><strong>&lt;></strong></code> <em>FLTLUnaryExpr</em>   - eventually
+   <code><strong>[]</strong></code> <em>FLTLUnaryExpr</em>   - always
+   <code><strong>forall</strong></code> <em>Ranges FLTLUnaryExpr</em> 
+   <code><strong>exists</strong></code> <em>Ranges FLTLUnaryExpr</em>
+<em>FLTLBaseExpr:</em>
+   <em>FluentIdent Ranges<sub>opt</sub></em>
+   <em>ActionLabels</em>
+   <em>AssertIdent Argument<sub>opt</sub></em>
+   <code><strong>rigid</strong></code> <em>SimpleExpression</em>
+   <code><strong>(</strong></code> <em>FLTLOrExpr</em> <code><strong>)</strong></code>
+				</pre>
+
+				<p>Uppercase identifiers in FLTL expressions refer either to fluent or assertion definitions. Lowercase identifiers refer to action labels. Where a set of action labels is used, this means the disjunction of the fluents representing each individual action as described in Chapter 14. The simple expression introduced by the keyword <code><strong>rigid</strong></code> is a boolean expression that must evaluate to either 0 <em>false</em> or 1
+				<em>true</em>.</p>
+
+			</section>
+
+		</div>
+
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,276 @@
+
+<html lang='en'>
+<head>
+	<title>Introducing Regular Expressions</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="regexp">
+
+		<div class="container">
+
+			<h3>CHAPTER 8</h3>
+			<div class="border"></div>
+
+			<section class="intro" data-number="0" data-name="Chapter 8 Introduction">
+
+				<h1>Lookarounds</h1>
+
+				<p><span class="first-sentence">Lookarounds are non-capturing groups that match patterns based on what they find
+				either in front of or behind a pattern.</span> Lookarounds are also considered <em>zero-width
+				assertions</em>.</p>
+
+				<p>Lookarounds include:</p>
+
+				<ul>
+					<li>Positive lookaheads</li>
+					<li>Negative lookaheads</li>
+					<li>Positive lookbehinds</li>
+					<li>Negative lookbehinds</li>
+				</ul>
+
+				<p>In this chapter, I’ll show you how each of these works. We’ll start out using RegExr on
+				the desktop and then move on to Perl and <em>ack</em> (<em>grep</em> doesn’t know about lookarounds).
+				Our text is still Coleridge’s well-worn poem.</p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Positive Lookaheads">
+
+				<h2>Positive Lookaheads</h2>
+
+				<p><span class="first-sentence">Suppose you want to find every occurrence of the word <em>ancyent</em> that is followed by
+				<em>marinere</em> (I use the archaic spellings because that is what is found in the file).</span> To do
+				this, we could use a positive lookahead.</p>
+
+				<p>First let’s try it in RegExr desktop. The following case-insentitive pattern goes in the
+				text box at the top:</p>
+
+				<p class="indented"><code>(?i)ancyent (?=marinere)</code></p>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>You can also specify case-insensitivity with RegExr by simply checking
+					the box next to <em>ignoreCase</em>, but both methods work.</p>
+				</div>
+
+				<div class="pagebreak pageNumber right">81</div>
+
+				<p>Because you use the case-insensitive option (?i), you don’t need to worry about what
+				case you use in your pattern. You are looking for every line that has the word <em>ancyent</em>
+				followed hard by <em>marinere</em>. The results will be highlighted in the text area below the
+				pattern area (see <strong>Figure 8-1</strong>); however, only the first part of the pattern will be highlighted
+				(<em>ancyent</em>), not the lookahead pattern (<em>Marinere</em>).</p>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure8-1.png">
+					<figcaption>Figure 8-1. Positive lookahead in RegExr</figcaption>
+				</figure>
+
+				<p>Let’s now use Perl to do a positive lookahead. You can form the command like so:</p>
+
+				<p class="indented"><code>perl -ne 'print if /(?i)ancyent (?=marinere)/' rime.txt</code></p>
+
+				<p>and the output should look like this:</p>
+
+				<p class="indented"><code>THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.<br/>
+				How a Ship having passed the Line was driven by Storms to the cold Country towards<br/>
+				the South Pole; and how from thence she made her course to the tropical Latitude of<br/>
+				the Great Pacific Ocean; and of the strange things that befell; and in what manner the<br/>
+				Ancyent Marinere came back to his own Country.<br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;It is an ancyent Marinere,
+				&nbsp;&nbsp;&nbsp;&nbsp;"God save thee, ancyent Marinere!
+				&nbsp;&nbsp;&nbsp;&nbsp;"I fear thee, ancyent Marinere!</code></p>
+
+				<p>There are five lines in the poem where the word <em>ancyent</em> shows up right before the word
+				<em>marinere</em>. What if we just wanted to check if the word following <em>ancyent</em> started with
+				the letter <em>m</em>, either in upper- or lowercase? We could do it this way:</p>
+
+
+				<p class="indented"><code>perl -ne 'print if /(?i)ancyent (?=m)/' rime.txt</code></p>
+
+				<div class="pagebreak left"><span class="pageNumber">82</span> | Chapter 8: Lookarounds</div>
+
+				<p>In addition to Marinere, you would get <code>man</code> and Man:</p>
+
+				<p class="indented"><code>And thus spake on that ancyent man,<br/>
+				And thus spake on that ancyent Man,</code></p>
+
+				<p><em>ack</em> also can do lookarounds as it is written in Perl. The command-line interface for
+				<em>ack</em> is very similar to <em>grep</em>.</p>
+
+				<p>Try this:</p>
+
+				<p class="indented"><code>ack '(?i)ancyent (?=ma)' rime.txt</code></p>
+
+				<p>and you’ll see highlighted results, as shown in <strong>Figure 8-2</strong>.</p>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure8-2.png">
+					<figcaption>Figure 8-2. Positive lookahead with ack in Terminal</figcaption>
+				</figure>
+
+				<p>With <em>ack</em>, you can specify case-insensitivity with the command-line option <em>-i</em>, rather
+				than with the embedded option (<code>?i</code>):</p>
+
+				<p class="indented"><code>ack -i 'ancyent (?=ma)' rime.txt</code></p>
+
+				<p>I’ll throw something in here for good measure. If you want to add line numbers to
+				<em>ack</em>’s output, you can do several things. You can add the <em>-H</em> option:</p>
+
+				<p class="indented"><code>ack -Hi 'ancyent (?=ma)' rime.txt</code></p>
+
+				<div class="pagebreak right">Positive Lookaheads | <span class="pageNumber">83</span></div>
+
+				<p>Or you could add this code with the <em>--output</em> option:</p>
+
+				<p class="indented"><code>ack -i --output '$.:$_' 'ancyent (?=ma)' rime.txt</code></p>
+
+				<p>This is a bit of a hack, and turns off highlighting, but it works.</p>
+
+			</section>
+
+			<section class="section" data-number="2" data-name="Negative Lookaheads">
+
+				<h2>Negative Lookaheads</h2>
+
+				<p><span class="first-sentence">The flip side of a positive lookahead is a negative lookahead.</span> This means that as you
+				try to match a pattern, you <em>won’t</em> find a given lookahead pattern. A negative lookahead
+				is formed like this:</p>
+
+				<p class="indented"><code>(?i)ancyent (?!marinere)</code></p>
+
+				<p>Only one character changed: The equals sign (=) in the positive lookahead became an
+				exclamation point (!) in the negative lookahead. <strong>Figure 8-3</strong> shows you this negative
+				lookahead in Opera.</p>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure8-3.png">
+					<figcaption>Figure 8-3. Negative lookahead with RegExr in Opera</figcaption>
+				</figure>
+
+				<p>In Perl, we could do a negative lookahead this way:</p>
+
+				<p class="indented"><code>perl -ne 'print if /(?i)ancyent (?!marinere)/' rime.txt</code></p>
+
+				<p>and this is what we would get back:</p>
+
+				<p class="indented"><code>And thus spake on that ancyent man,<br/>
+				And thus spake on that ancyent Man,</code></p>
+
+				<div class="pagebreak left"><span class="pageNumber">84</span> | Chapter 8: Lookarounds</div>
+
+				<p>In <em>ack</em>, the same results could be produced with:</p>
+
+				<p class="indented"><code>ack -i 'ancyent (?!marinere)' rime.txt</code></p>
+
+			</section>
+
+			<section class="section" data-number="3" data-name="Positive Lookbehinds">
+
+				<h2>Positive Lookbehinds</h2>
+
+				<p><span class="first-sentence">A positive lookbehind looks to the left, in the opposite direction as a lookahead.</span> The
+				syntax is:</p>
+
+				<p class="indented"><code>(?i)(?&lt;=ancyent) marinere</code></p>
+
+				<p>The positive lookbehind throws in a less-than sign (&lt;), reminding you which direction
+				lookbehind is. Try this in RegExr and see what the difference is. Instead of <em>ancyent</em>
+				being highlighted, <em>marinere</em> is. Why? Because the positive lookbehind is a condition of
+				the match and is not included or consumed in the match results.</p>
+
+				<p>Do it like so in Perl:</p>
+
+				<p class="indented"><code>perl -ne 'print if /(?i)(?&lt;=ancyent) marinere/' rime.txt</code></p>
+
+				<p>And like this with <em>ack</em></p>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="Negative Lookbehinds">
+
+				<h2>Negative Lookbehinds</h2>
+
+				<p><span class="first-sentence">Finally, there is the negative lookbehind.</span> And how do you think this one works?</p>
+
+				<p>It is looking to see if a pattern does <em>not</em> show up behind in the left-to-right stream of
+				text. Again, it adds a less-than sign (&lt;), reminding you which direction lookbehind is.</p>
+
+				<p>Do this in RegExr and see the results.</p>
+
+				<p class="indented"><code>(?1)(?&lt;!ancyent) marinere</code></p>
+
+				<p>Scroll down to see what you got.</p>
+
+				<p>Then try it in Perl:</p>
+
+				<p class="indented"><code>perl -ne 'print if /(?i)(?&lt;!ancyent) marinere/' rime.txt</code></p>
+
+				<p>What you should see is this, with no sign of <em>ancyent</em> anywhere:</p>
+
+				<p class="indented"><code>
+					&nbsp;&nbsp;&nbsp;&nbsp;The Marinere hath his will.<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;The bright-eyed Marinere.<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;The bright-eyed Marinere.<br/>
+					The Marineres gave it biscuit-worms,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;Came to the Marinere's hollo!<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;Came to the Marinere's hollo!<br/>
+					The Marineres all 'gan work the ropes,<br/>
+					The Marineres all return'd to work<br/>
+					The Marineres all 'gan pull the ropes,<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;"When the Marinere's trance is abated."<br/>
+					He loves to talk with Marineres<br/>
+					The Marinere, whose eye is bright,
+				</code></p>
+
+				<div class="pagebreak right">Negative Lookbehinds | <span class="pageNumber">85</span></div>
+
+				<p>And, lastly, do it this way in <em>ack</em>:</p>
+
+				<p class="indented"><code>ack -i '(?&lt;!ancyent) marinere' rime.txt</code></p>
+
+				<p>That wraps up our brief introduction to for lookaheads and lookbehinds, a powerful
+				feature of modern regular expressions.</p>
+
+				<p>In the next chapter, you’ll see a full example of how to mark up a document with
+				HTML5 using <em>sed</em> and Perl.</p>
+
+			</section>
+
+			<section class="section" data-number="5" data-name="What You Learned in Chapter 8">
+
+				<h2>What You Learned in Chapter 8</h2>
+
+				<ul>
+					<li><span class="first-sentence">How to do positive and negative lookaheads</span></li>
+					<li>How to do both positive and negative lookbehinds</li>
+				</ul>
+
+			</section>
+
+			<section class="section" data-number="6" data-name="Technical Notes">
+
+				<h2>Technical Notes</h2>
+
+				<p><span class="first-sentence">See also pages 59 through 66 of <span class="url">Mastering Regular Expressions, Third Edition</span>.</span></p>
+
+			</section>
+
+		</div> <!--container-->
+
+	</div> <!--regexp-->
+</body>
+</html>
+	
+
+
+
+
+
+
+
+
+

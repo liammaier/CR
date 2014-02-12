@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+  <head>
+  	<title> App Inventor Chapter 17 </title>
+
+  </head>
+
+  <body>
+  	<div id="appinventor17" class="appinventor container"> 
+  		<div class="page">
+	  			<div class="chapter_head">
+					CHAPTER 17
+				</div>
+				<h2> Creating Animated Apps </h2>
+	  		<section id="introduction" class="section" data-number="0" data-name="Introduction">
+		  		<div class="chapter_description chapter_17"> 
+		  				<figure class="floatright">
+			  				<img id="figure_17_0" height="450px" src="/contents/appinventor/images/figure_17_0.png">
+			  			</figure>
+		  				<p>
+		  					<span class="first_sentence">This chapter discusses methods for creating apps with simple animations—objects that move.</span> You’ll learn the basics of creating two-dimensional games with App Inventor and become comfortable with image sprites and handling events like two objects colliding.
+		  				</p>
+		  				<p>
+		  					When you see an object moving smoothly along the computer screen, what you’re really seeing is a quick succession of images with the object in a slightly differ- ent place each time. It’s an illusion not much different from “flipbooks,” in which you see a moving picture by flipping quickly through the pages (and it’s also how far more sophisticated animated films are made!).
+		  				</p>
+		  				<p>
+		  					With App Inventor, you’ll define animation by placing objects within a <span class="code">Canvas</span> component and moving those objects around the <span class='code'>Canvas</span> over time. In this chapter, you’ll learn how the <span class="code">Canvas</span> coordinate system works, how the <span class="program_block">Clock.Timer</span> event can be used to trigger movement, how to control the speed of objects, and how to respond to events such as two objects colliding.
+		  				</p>
+			  	</div> <!-- chapter description -->			  		
+	  		</section> <!-- introduction dn1 -->
+	  		<section class="section" data-number="1" data-name="Adding a Canvas Component to Your App">
+				<h3>Adding a Canvas Component to Your App</h3>
+				<div> <!-- (rightfig container) -->
+				<figure class="rightfig">
+					<img src="/contents/appinventor/images/figure_17_1.png">
+					<figcaption>
+						Figure 17-1. Setting the Canvas’s Width to span the screen
+					</figcaption>
+				</figure>
+				<div class="next_to_rightfig">
+				  	<p>
+				  		<span class="first_sentence">You can drag a Canvas component into your app from the Basic palette. After dragging it out, spec- ify the <span class="code">Canvas’s Width</span> and <span class="code">Height</span>.</span> Often, you’ll want the Canvas to span the width of the device screen. To do this, choose “Fill parent” when speci- fying the <span class="code">Width</span>, as shown in Figure 17-1.
+				  	</p>
+				  	<p>
+				  		You can do the same for the <span class="code">Height</span>, but generally you’ll set it to some number (e.g., 300 pixels) to leave room for other components above and below the Canvas.
+				  	</p>
+				</div>
+				</div> <!-- (rightfig container) -->
+			  	<div class="pagebreak">
+			  		<span class="pageNumber"> 250 </span> Chapter 17: Creating Animated Apps
+			  	</div>
+			 </section> <!-- Named Memory Slots dn2 -->
+			 <section class="section" data-number="2" data-name="The Canvas Coordinate System">
+			 	<h3>The Canvas Coordinate System</h3>
+			 	<p>
+			 		<span class="first_sentence">A drawing on a canvas is really a table of <span class="new_term">pixels</span>, where a pixel is the tiniest possible dot of color that can appear on the phone (or other device). </span>Each pixel has a location (or table cell) on the canvas, which is defined by an x–y coordinate system, as illus- trated in Figure 17-2. In this coordinate system, x defines a location on the horizontal plane (left to right), and y defines a location on the vertical plane (up and down).
+			 	</p>
+			 	<figure class="centered">
+					<img src="/contents/appinventor/images/figure_17_2.png">
+					<figcaption>
+						Figure 17-2. The Canvas coordinate system
+					</figcaption>
+				</figure>
+				<p>
+					It might seem a bit counterintuitive, but the top-left cell in a Canvas starts with 0 for x=0, y=14 x=19, y=14 both coordinates, so this position is represented as (x=0,y=0). (This is different than the index you use in App Inventor for lists, which starts at the seemingly more nor- mal value of 1.) As you move right, the x coordinate gets larger; as you move down, the y coordinate gets larger. The cell to the immediate right of the top-left corner is (x=1,y=0). The top-right corner has an x coordinate equal to the width of the canvas minus 1. Most phone screens have a width close to 300, but for the sample canvas shown here, the Width is 20, so the top-right corner is the coordinate (x=19,y=0).
+				</p>
+				<p>
+					You can change the appearance of the canvas in two ways: (1) by painting on it, or (2) by placing and moving objects within it. This chapter will focus primarily on the latter, but let’s first discuss how you “paint” and how to create animation by painting (this is also the topic of the PaintPot app in Chapter 2).
+				</p>
+				<p>
+					Each cell of the canvas holds a pixel defining the color that should appear there. The Canvas component provides the <span class="program_block">Canvas.DrawLine</span> and <span class="program_block">Canvas.DrawCircle</span> blocks for painting pixels on it. You first set the <span class="code">Canvas.PaintColor</span> property to
+				</p>
+				<div class="pagebreak">
+			  		<span class="pageNumber"> 251 </span> Animating Objects with Timer Events
+			  	</div>
+			  	<p>
+			  		the color you want and then call one of the Draw blocks to draw in that color. With <span class="program_block">DrawCircle</span>, you can paint circles of any radius, but if you set the radius to 1, as shown in Figure 17-3, you’ll paint an individual pixel.
+			  	</p>
+			  	<figure class="centered">
+					<img src="/contents/appinventor/images/figure_17_3.png">
+					<figcaption>
+						Figure 17-3. DrawCircle with radius 1 paints an individual pixel with each touch
+					</figcaption>
+				</figure>
+				<p>
+					App Inventor provides a palette of 14 basic colors that you can use to paint pixels (or component backgrounds). You can access a wider range of colors by using the color numbering scheme explained in the App Inventor documentation at <span class="url">http://appinventor .googlelabs.com/learn/reference/blocks/colors.html</span>.
+				</p>
+				<p>
+					The second way to modify the appearance of a canvas is to place <span class="code">Ball</span> and <span class="code">ImageSprite</span> components on it. A <span class="new_term">sprite</span> is a graphical object placed within a larger scene—in this case, a canvas. Both the <span class="code">Ball</span> and <span class="code">ImageSprite</span> components are sprites; they are different only in appearance. A <span class="code">Ball</span> is a circle whose appearance can only be modified by changing its color or radius, whereas an <span class="code">ImageSprite</span> can take on any ap- pearance as defined by an image file you upload. <span class="code">Image Sprites</span> and <span class="code">Balls</span> can only be added within a Canvas; you can’t drag them into the user interface outside of one.
+				</p>
+			 </section> <!-- The Canvas Coordinate System dn3 -->
+			 <section class="section" data-number="3" data-name="Animating Objects with Timer Events">
+			 	<h3>Animating Objects with Timer Events</h3>
+			 	<p>
+			 		<span class="first_sentence">One way to specify animation in App Inventor is to change an object in response to a timer event.</span> Most commonly, you’ll move sprites to different locations on the canvas at set time intervals. Using timer events is the most general method of defining those set time intervals. Later, we’ll also discuss an alternative method of program- ming animation using the <span class="code">ImageSprite</span> and <span class="code">Ball</span> components’ <span class="code">Speed</span> and <span class="code">Heading</span> properties.
+			 	</p>
+			 	<div class="pagebreak">
+			  		<span class="pageNumber"> 252 </span> Chapter 17: Creating Animated Apps
+			  	</div>
+			  	<p>
+			  		Button clicks and other user-initiated events are simple to understand: the user does something, and the app responds by performing some operations. Timer events are different: they aren’t triggered by the end user but instead by the passing of time. You have to conceptualize the phone’s clock triggering events in the app instead of a user doing something.
+			  	</p>
+			  	<p>
+			  		To define a timer event, you first drag a <span class="code">Clock</span> component into your app within the Component Designer. The <span class="code">Clock</span> component has a <span class="code">TimerInterval</span> property associ- ated with it. The interval is defined in terms of milliseconds (1/1,000 of a second). If you set the <span class="code">TimerInterval</span> to 500, that means a timer event will be triggered every half-second. The smaller the <span class="code">TimerInterval</span>, the faster your object will move.
+			  	</p>
+			  	<p>
+			  		After adding a <span class="code">Clock</span> and setting a <span class="code">TimerInterval</span> in the Designer, you can drag out a <span class="program_block">Clock.Timer</span> event in the Blocks Editor. You can put any blocks you like in this event, and they’ll be performed every time interval.
+			  	</p>
+			  	<section class="subsection" data-number="4" data-name="Creating Movement">
+			  		<h4>Creating Movement</h4>
+			  		<p>
+			  			<span class="first_sentence">To show a sprite moving over time, you’ll use the <span class="program_block">MoveTo</span> function found in both the <span class="code">ImageSprite</span> and <span class="code">Ball</span> components.</span> For example, to move a ball <span class="emph">horizontally</span> across the screen, you’d use the blocks in Figure 17-4.
+			  		</p>
+			  		<figure class="centered">
+						<img src="/contents/appinventor/images/figure_17_4.png">
+						<figcaption>
+							Figure 17-4. Moving the ball horizontally across the screen
+						</figcaption>
+					</figure>
+					<p>
+						<span class="program_block">MoveTo</span> moves an object to an <span class+"new_term">absolute</span> location on the canvas, not a relative amount. So, to move an object some amount, you set the <span class="program_block">MoveTo</span> arguments to the object’s current location plus an offset. Since we’re moving horizontally, the x argu- ment is set to the current <span class="emph">x</span> location (<span class="program_block">Ball1.X</span>) plus the offset 20, while the y argument is set to stay at its current setting (<span class="program_block">Ball1.Y</span>).
+					</p>
+					<p>
+						If you wanted to move the ball diagonally, you’d add an offset to both the <span class="emph">x</span> and <span class="emph">y</span> coordinates, as shown in Figure 17-5.
+					</p>
+					<div class="pagebreak">
+			  			<span class="pageNumber"> 253 </span> High-Level Animation Functions
+			  		</div>
+			  	</section><!-- Creating Movementdn5 -->
+			  	<section class="subsection" data-number="5" data-name="Speed">
+			  		<figure class="centered">
+			  			<img src="/contents/appinventor/images/figure_17_5.png">
+			  			<figcaption>Figure 17-5. Offsetting both the x and y coordinates to move the ball diagonally</figcaption>
+			  		</figure>
+			  		<h4>Speed</h4>
+			  		<p>
+			  			<span class="first_sentence">How fast is the ball moving in the preceding example? The speed depends on both the <span class="code">Clock’s TimerInterval</span> property and the parameters you specify in the <span class="program_block">MoveTo</span> function. </span>If the interval is set to 1,000 milliseconds, that means an event will be trig- gered every second. For the horizontal example shown in Figure 17-4, the ball will move 20 pixels per second.
+			  		</p>
+			  		<p>
+			  			But a <span class="code">TimerInterval</span> of 1,000 milliseconds doesn’t provide very smooth animation; the ball will only move every second, and this will appear jerky. To get smoother movement, you need a smaller interval. If the <span class="code">TimerInterval</span> was set instead to 100 milliseconds, the ball would move 20 pixels every tenth of a second, or 200 pixels per second—a rate that will appear much smoother to anyone using your app. There’s another way to change the speed instead of changing the timer interval—can you think of what that is? (<span class="emph">Hint</span>: Speed is a function of how often you move the ball and how far you move it each time.) You could also alter speed by keeping a timer inter- val of 1,000 milliseconds and instead changing the <span class="program_block">MoveTo</span> operation so the ball only moves 2 pixels every time interval—2 pixels/100ms is still 20 pixels/second.
+			  		</p>
+			  	</section> <!-- dn6 -->
+			</section> <!-- dn4 -->
+			<section class="section" data-number="6" data-name="High-Level Animation Functions">
+				<h3>High-Level Animation Functions</h3>
+				<p>
+					<span class="first_sentence">The ability to move an object across the screen is useful for things like animated ads that slide in and out, but to build games and other animated apps, you need more complex functionality. </span>Fortunately, App Inventor provides some high-level blocks for dealing with animation events such as an object reaching the screen’s edge or two objects colliding.
+				</p>
+				<p>
+					In this context, <span class="new_term">high-level block</span> means that App Inventor takes care of the lower-level details of determining events like when two sprites collide. You could check for such occurrences yourself using <span class="program_block">Clock.Timer</span> events and checking the <span class="code">X</span>,<span class="code">Y</span>, <span class="code">Height</span>, and <span class="code">Width</span> properties of the sprites. Such programming would require some fairly com- plex logic, however. Because these events are common to many games and other apps, App Inventor provides them for you.
+				</p>
+				<div class="pagebreak">
+			  		<span class="pageNumber"> 254 </span> Chapter 17: Creating Animated Apps
+			  	</div>
+			  	<section class="subsection" data-number="7" data-name="EdgeReached">
+			  		<h4>EdgeReached</h4>
+			  		<p>
+			  			<span class="first_sentence">Consider again the animation in which the object is moving diagonally from the top left to the bottom right of the canvas. </span>As we programmed it, the object would move diagonally and then stop when it reached the right or bottom edge of the canvas (the system won’t move an object past the canvas boundaries).
+			  		</p>
+			  		<p>
+			  			If you instead wanted the object to reappear at the top-left corner after it reaches the bottom right, you could define a response to the <span class="program_block">Ball.EdgeReached</span> event shown in Figure 17-6.
+			  		</p>
+			  		<figure class="centered">
+						<img src="/contents/appinventor/images/figure_17_4.png">
+						<figcaption>
+							Figure 17-4. Moving the ball horizontally across the screen
+						</figcaption>
+					</figure>
+					<p>
+						<span class="program_block">EdgeReached</span> (an event that is applicable only for sprites and balls) is triggered when the <span class="code">Ball</span> hits any edge of the canvas. This event handler, combined with the diagonal movement specified with the previously described timer event, will cause the ball to move diagonally from top left to bottom right, pop back up to the top left when it reaches the edge, and then do it all over again, forever (or until you tell it otherwise).
+					</p>
+					<p>
+						Note that there is an argument, <span class="code">edge1</span>, with the <span class="program_block">EdgeReached</span> event. The argument specifies which edge the ball reached, using the following directional numbering scheme:
+					</p>
+					<ul>
+						<li>
+							North = 1
+						</li>
+						<li>
+							Northeast = 2
+						</li>
+						<li>
+							East = 3
+						</li>
+						<li>
+							Southeast = 4
+						</li>
+						<li>
+							South = –1
+						</li>
+						<li>
+							Southwest = –2
+						</li>
+						<li>
+							West = –3
+						</li>
+						<li>
+							Northwest = –4
+						</li>
+					</ul>
+					<div class="pagebreak">
+			  			<span class="pageNumber"> 255 </span> High-Level Animation Functions
+			  		</div>
+			  	</section><!--  EdgeReached dn8 -->
+			  	<section class="subsection" data-number="8" data-name="CollidingWith and NoLongerCollidingWith">
+			  		<h4>CollidingWith and NoLongerCollidingWith</h4>
+			  		<p>
+			  			<span class="first_sentence">Shooting games, sports, and other animated apps often rely on activity occurring when two or more objects collide (e.g., a bullet hitting a target).</span>
+			  		</p>
+			  		<p>
+			  			Consider a game, for instance, in which an object changes colors and plays an explo- sion sound when it hits another object. Figure 17-7 shows the blocks for such an event handler.
+			  		</p>
+			  		<figure class="centered">
+						<img src="/contents/appinventor/images/figure_17_7.png">
+						<figcaption>
+							Figure 17-7. Making the ball change color and play an explosion sound when it hits another object
+						</figcaption>
+					</figure>
+					<p>
+						<span class="program_block">NoLongerCollidingWith</span> provides the opposite event of <span class="program_block">CollidedWith</span>. It is triggered only when two objects have come together and then separated. So, for your game, you might include blocks as shown in Figure 17-8.
+					</p>
+					<figure class="centered">
+						<img src="/contents/appinventor/images/figure_17_8.png">
+						<figcaption>
+							Figure 17-8. Changing the color back and stopping the explosion noise when the objects separate
+						</figcaption>
+					</figure>
+					<p>
+						Note that both <span class="program_block">CollidedWith</span> and <span class="code">NoLongerCollidingWith</span> have an argument, other. other specifies the particular object you collided with (or separated from). This allows you to perform operations only when the object (e.g., <span class="code">Ball1</span>) interacts with a particular other object, as shown in Figure 17-9.
+					</p>
+					<figure class="centered">
+						<img src="/contents/appinventor/images/figure_17_9.png">
+						<figcaption>
+							Figure 17-9. Only perform the response if Ball1 hit ImageSprite1
+						</figcaption>
+					</figure>
+					<div class="pagebreak">
+			  			<span class="pageNumber"> 256 </span> Chapter 17: Creating Animated Apps
+			  		</div>
+			  		<p>
+			  			The <span class="program_block">component ImageSprite1</span> block is one we haven’t yet discussed. When you need to compare components (to know which ones have collided), as in this ex- ample, you must have some way to refer to a specific component. For this rea- son, each component has a special block that refers to itself. So, in the drawer for <span class="code">ImageSprite1</span>, you’ll find the <span class="program_block">component ImageSprite1</span> block.
+			  		</p>
+			  	</section><!-- CollidingWith and NoLongerCollidingWith dn9 -->
+			</section><!-- Interactive Animation dn7 -->
+			<section class="section" data-number="9" data-name="Interactive Animation">
+				<h3>Interactive Animation</h3>
+				<p>
+					<span class="first_sentence">In the animated behaviors we’ve discussed so far, the end user isn’t involved.</span> Of course, games are interactive, with the end user playing a central role. Often, the end user controls the speed or direction of an object with buttons or other user interface objects.
+				</p>
+				<p>
+					As an example, let’s update the diagonal animation by allowing the user to stop and start the diagonal movement. You can do this by programming a <span class="program_block">Button.Click</span> event handler to disable and reenable the timer event of the clock component.
+				</p>
+				<p>
+					By default, the <span class="code">Clock</span> component’s <span class="code">timerEnabled</span> property is checked. You can disable it dynamically by setting it to false in an event handler. The event handler in Figure 17-10, for example, would stop the activity of a <span click="code">Clock</span> timer on the first click.
+				</p>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_17_10.png">
+					<figcaption>
+						Figure 17-10. Stopping the timer the first time the button is clicked
+					</figcaption>
+				</figure>
+				<p>
+					After the <span class="code">Clock1.TimerEnabled</span> property is set to false, the <span class="program_block">Clock1.Timer</span> event will no longer trigger, and the ball will stop moving.
+				</p>
+				<p>
+					Of course, stopping the movement on the first click isn’t too interesting. Instead, you could “toggle” the movement of the ball by adding an <span class="program_block">ifelse</span> in the event handler that either enables or disables the timer, as shown in Figure 17-11.
+				</p>
+				<p>
+					This event handler stops the timer on first click, and resets the button so that it says “Start” instead of “Stop.” The second time the user clicks the button, the <span class="code">TimerEnabled</span> is false, so the “else” part is executed. In this case, the timer is enabled, which gets the object moving again, and the button text is switched back to “Stop.” For more information about <span class="program_block">ifelse</span> blocks, see Chapter 18, and for examples of inter- active animations that use the orientation sensor, see Chapters 5 and 23.
+				</p>
+				<div class="pagebreak">
+			  		<span class="pageNumber"> 257 </span> Specifying Sprite Animation Without a Clock Timer
+			  	</div>
+			  	<figure class="centered">
+					<img src="/contents/appinventor/images/figure_17_11.png">
+					<figcaption>
+						Figure 17-11. Adding an ifelse so that clicking the button starts and stops the movement of the ball
+					</figcaption>
+				</figure>
+			</section> <!-- dn10 Interactive Animation -->
+			<section class="section" data-number="10" data-name="Specifying Sprite Animation Without a Clock Timer">
+				<h3>Specifying Sprite Animation Without a Clock Timer</h3>
+				<p>
+					<span class="first_sentence">The animation samples described so far use a <span class="code">Clock</span> component and specify that an object should move each time the <span class="code">Clock’s</span> timer event is triggered.</span> The <span class="program_block">Clock.Timer</span> event scheme is the most general method of specifying animation; other than mov- ing an object, you could also have it change an object’s color over time, change some text (to appear as though the app is typing), or have the app speak words at a certain pace.
+				</p>
+				<p>
+					For object movement, App Inventor provides an alternative that doesn’t require the use of a <span class="code">Clock</span> component. As you may have noticed, the <span class="code">ImageSprite</span> and <span class="code">Ball</span> components have properties for <span class="code">Heading</span>, <span class="code">Speed</span>, and <span class="code">Interval</span>. Instead of defining a <span class="program_block">Clock.Timer</span> event handler, you can set these properties in the Component Designer or Blocks Editor to control how a sprite moves.
+				</p>
+				<p>
+					To illustrate, let’s reconsider the example that moved a ball diagonally. The <span class="code">Heading</span> property of a sprite or ball has a range of 360 degrees, as seen in Figure 17-12.
+				</p>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_17_12.png">
+					<figcaption>
+						Figure 17-12. The Heading property has a range of 360 degrees
+					</figcaption>
+				</figure>
+				<div class="pagebreak">
+			  		<span class="pageNumber"> 258 </span> Chapter 17: Creating Animated Apps
+			  	</div>
+			  	<p>
+			  		If you set the <span class="code">Heading</span> to 0, the ball will move left to right. If you set it to 90, it will move bottom to top. If you set it to 180, it will move right to left. If you set it to 270, it will move top to bottom.
+			  	</p>
+			  	<p>
+			  		Of course, you can set it to any number between 0 and 360. To move a ball diagonally from top left to bottom right, you’d set the Heading to 315. You also need to set the Speed property to a value other than 0. The <span class="code">Speed</span> property works the same way as moving objects with <span class="program_block">MoveTo</span>: it specifies the number of pixels the object will move per time interval, where the interval is defined by the object’s <span class="code">Interval</span> property.
+			  	</p>
+			  	<p>
+			  		To try out these properties, create a test app with a <span class="code">Canvas</span> and <span class="code">Ball</span> and click “Connect to Phone” to see your app. Then modify the <span class="code">Heading</span>, <span class="code">Speed</span>, and <span class="code">Interval</span> properties of the ball to see how it moves.
+			  	</p>
+			  	<p>
+			  		If you wanted the program to continually move from top left to bottom right and then back, you’d initialize the ball’s <span class="code">Heading</span> property to 315 in the Component Designer. You’d then add the <span class="program_block">Ball1.EdgeReached</span> event handler, shown in Figure 17-13, to change the ball’s direction when it reaches either edge.
+			  	</p>
+			  	<figure class="centered">
+					<img src="/contents/appinventor/images/figure_17_13.png">
+					<figcaption>
+						Figure 17-13. Changing the ball’s direction when it reaches either edge
+					</figcaption>
+				</figure>
+			</section> <!-- dn11 -->
+			<section class="section" data-number="11" data-name="Summary">
+				<h3>Summary</h3>
+				<p>
+					Animation is an object being moved or otherwise transformed over time, and App Inventor provides some high-level components and functionality to facilitate it. By pro- gramming the <span class="code">Clock</span> component’s <span class="code">Timer</span> event, you can specify any type of animation, including object movement—the fundamental activity in almost any type of game.
+				</p>
+				<p>
+					The <span class="code">Canvas</span> component allows you to define a subarea of the device’s screen in which objects can move around and interact. You can put only two types of compo- nents, <span class="code">ImageSprites</span> and <span class="code">Balls</span>, within a <span class="code">Canvas</span>. These components provide high- level functionality for handling events such as collisions and reaching a Canvas edge. They also have properties—<span class="code">Heading</span>, <span class="code">Speed</span> and <span class="code">Interval</span>—that provide an alternative method of movement.
+				</p>
+			</section> <!-- Summary dn12 -->
+		</div>
+	</div>	
+</body>
+

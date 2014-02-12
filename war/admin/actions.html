@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+	<link rel="stylesheet" type="text/css" href="/lib/bootstrap/css/bootstrap.css">
+	<script src="/lib/jquery-1.7.2.min.js"></script>
+	<script src="actions.js"></script>
+	<title>Admin administrative actions</title>
+	
+	
+</head>
+<body>
+	<a href= "/">Home</a><br><br>
+	
+	<a href= "/logout">LogOut</a><br><br>
+	
+	<h1>Administrative actions</h1>
+	<br>
+	<br>
+
+	<a href="/admin/create_library.html">Create a Library</a>
+	<br>
+	<a href="/admin/addUserToLib.jsp">Add a user role to a library</a>
+	<br>
+	<a href="/admin/managelibresources.jsp">Manage Library Resources</a>
+	<br>
+	<a href="/admin/add_strategy.html">Add Strategy</a>
+	<br>
+	<a href="/admin/create_group.html">Create a group</a>
+	<br>
+	<a href="/admin/add_student_emails.html">Add authorized student emails</a>
+	
+	<br>
+	<a href="/admin/addTestQuestions.jsp">Add Test Questions</a>
+	<br>
+	<a href="/admin/logprinter.html">Search for Logs by username</a>
+	<br>
+	<a href="/admin/notebookprinter">Print out the Notebook for a user</a>
+	<br>
+	<a href="/admin/cleardatabase.jsp">Clear selected database tables</a>
+	<br>
+	<a href="/admin/deleteresource.jsp">Delete a resource</a>
+	<br>
+	<a href="/admin/deletelibrary.jsp">Delete a library</a>
+	<br>
+	<a href="/admin/deleteuser.jsp">Delete a user</a>
+	<br>
+	<br>
+	<br>
+	<h3>deletes all Logs in the Database</h3>
+	<input id = "clearL" type= "button" value = "Clear Logs">
+	<br>
+	<br>
+	<br>
+	<h3>deletes all Logs, UserContentProgress, Feed Data, Notes, Simple Notes, Strategy Data, Answers, and Note Ignores in the Database</h3>
+	<input id = "clearuserdata" type= "button" value = "Clear User data">
+	<br>
+	<br>
+	<br>
+	<h3>deletes all LIBRARIES, Resources, Content, Sections, and Glossary in the Database</h3>
+	<input id = "clearResources" type= "button" value = "Clear All Libraries and Resource data">
+	<br>
+	<br>
+	<br>
+	<h3>deletes all Users, Libraries, UserLibraryRoles, and Options in the Database</h3>
+	<input id = "clearUsers" type= "button" value = "Clear All User data">
+	<br>
+	<br>
+	<br>
+	<h3>deletes EVERYTHING in the Database</h3>
+	<input id = "cleareverything" type= "button" value = "Clear EVERYTHING data">
+	<br>
+	<br>
+	<br>
+	<h3>Add basic data</h3>
+	<input id = "addBasic" type= "button" value = "Add Basic Data">
+	<br>
+	<br>
+	<br>
+	<h3>Add all resources (show the browser console to see progress)</h3>
+	<input id = "addResources" type= "button" value = "Add All Resources">
+	
+	<div id="xmldiv" style="display:none;"></div>
+	<div id="contnetdiv" style="display:none;"></div>
+	
+	
+</body>
+
+</html>

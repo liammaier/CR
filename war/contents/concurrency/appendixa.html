@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h2>Appendix A</h2>
+				<h2><em>FSP</em> Quick Reference</h2>
+				<div class="border"></div>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Processes">
+
+				<h3>A.1 Processes</h3>
+
+				<p><span class="first-sentence">A process is defined by one or more local processes separated by commas.</span>
+				The definition is terminated by a full stop. <code>STOP</code> and <code>ERROR</code> are primitive local
+				processes.</p>
+
+				<h5>Example</h5>
+
+				<pre>
+Process = (a -> Local),
+Local   = (b -> STOP).
+				</pre>
+
+				<table class="appendix has-border">
+
+					<tr>
+						<td>Action Prefix <code>-></code></td>
+
+						<td>
+							If <code>x</code> is an action and <code>P</code> a process then <code>(x->P)</code> describes a process that initially engages in the action <code>x</code> and then behaves exactly as described by <code>P</code>.
+						</td>
+					</tr>
+
+					<tr>
+						<td>Choice <code>|</code></td>
+
+						<td>
+							If <code>x</code> and <code>y</code> are actions then <code>(x->P|y->Q)</code> which initially engages in either of the actions <code>x</code> or <code>y</code>. After the first action has occurred, the subsequent behavior is described by <code>P</code> if the first action was <code>x</code> and <code>Q</code> if the first action was <code>y</code>.
+						</td>
+					</tr>
+
+					<tr>
+						<td>Guarded Action<br/><strong><code>when</code></strong></td>
+
+						<td>
+							The choice <code>(<strong>when</strong> B x -> P | y -> Q)</code> means that when the guard <code>B</code> is true then the actions <code>x</code> and <code>y</code> are both eligible to be chosen, otherwise if <code>B</code> is false then the action <code>x</code> cannot be chosen.
+						</td>
+					</tr>
+
+					<tr>
+						<td>Alphabet<br/>Extension <code>+</code></td>
+
+						<td>
+							The alphabet of a process is the set of actions in which it can engage. <code>P + S</code> extends the alphabet of the process <code>P</code> with the actions in the set <code>S</code>.
+						</td>
+					</tr>
+
+				</table>
+
+				<p class="table-caption"><strong>Table A.1</strong> Process operators</p>
+
+				<div class="pagebreak pageNumber">368</div>
+
+			</section>
+
+			<section class="section" data-number="2" data-name="Composite Processes">
+
+				<h3>A.2 Composite Processes</h3>
+
+				<p><span class="first-sentence">A composite process is the parallel composition of one or more processes.</span> The definition of a composite process is preceded by <code>||</code>.</p>
+
+				<h5>Example</h5>
+
+				<pre>
+||Composite = (P || Q).
+				</pre>
+
+				<table class="appendix has-border">
+
+					<tr>
+						<td>Parallel Composition <code>||</code></td>
+
+						<td>
+							If <code>P</code> and <code>Q</code> are processes then (<code>P||Q</code>) represents the concurrent execution of <code>P</code> and <code>Q</code>.
+						</td>
+					</tr>
+
+					<tr>
+						<td>Replicator <code><strong>forall</strong></code></td>
+
+						<td><code><strong>forall</strong>[i:1..N] P(i)</code> is the parallel composition <code>(P(1)||...||P(N))</code>.</td>
+					</tr>
+
+					<tr>
+						<td>Process Labeling <code>:</code></td>
+
+						<td><code>a:P</code> prefixes each label in the alphabet of <code>P</code> with <code>a</code>.</td>
+					</tr>
+
+					<tr>
+						<td>Process Sharing <code>::</code></td>
+
+						<td><code>{a<sub>1</sub>,..,a<sub>x</sub>}::P</code> replaces every label <code>n</code> in the alphabet of <code>P</code> with the labels <code>a<sub>1</sub>.n,...,a<sub>x</sub>.n</code>. Further, every transition <code>(n->Q)</code> in the definition of <code>P</code> is replaced with the transitions <code>({a<sub>1</sub>.n,...,a<sub>x</sub>.n}->Q)</code>.</td>
+					</tr>
+
+					<tr>
+						<td>Priority High <code>&lt;&lt;</code></td>
+
+						<td><code>||C = (P||Q)&lt;&lt;{a<sub>1</sub>,...,a<sub>n</sub>}</code> specifies a composition in which the actions <code>a<sub>1</sub>,...,a<sub>n</sub></code> have higher priority than any other action in the alphabet of <code>P||Q</code> including the silent action <code>tau</code>. In any choice in this system which has one or more of the actions <code>a<sub>1</sub>,...,a<sub>n</sub></code> labeling a transition, the transitions labeled with lower priority actions are discarded.</td>
+					</tr>
+
+					<tr>
+						<td>Priority Low <code>>></code></td>
+
+						<td><code>||C = (P||Q)>>{a<sub>1</sub>,...,a<sub>n</sub>}</code> specifies a composition in which the actions <code>a<sub>1</sub>,...,a<sub>n</sub></code> have lower priority than any other action in the alphabet of <code>P||Q</code> including the silent action <code>tau</code>. In any choice in this system which has one or more transitions not labeled by <code>a<sub>1</sub>,...,a<sub>n</sub></code>, the transitions labeled by <code>a<sub>1</sub>,...,a<sub>n</sub></code> are discarded.</td>
+					</tr>
+				</table>
+
+				<p class="table-caption"><strong>Table A.2</strong> Composite process operators</p>
+
+			</section>
+
+			<section class="section" data-number="3" data-name="Common Operators">
+
+				<h3>A.3 Common Operators</h3>
+
+				<p><span class="first-sentence">The operators in Table A.3 may be used in the definition of both processes and composite processes.</span>
+				</p>
+
+				<div class="pagebreak pageNumber">369</div>
+
+				<table class="appendix has-border">
+					<tr>
+						<td>Conditional <code><strong>if then else</strong></code></td>
+
+						<td>The process <code><strong>if</strong> B <strong>then</strong> P <strong>else</strong> Q</code> behaves as the process <code>P</code> if the condition <code>B</code> is true; otherwise it behaves as <code>Q</code>. If the <code><strong>else</strong> Q</code> is omitted and <code>B</code> is false, then the process behaves as <code>STOP</code>.</td>
+					</tr>
+
+					<tr>
+						<td>Re-labeling <code>/</code></td>
+
+						<td>Re-labeling is applied to a process to change the names of action labels . The general form of re-Iabeling is:/{<em>newlabel</em>_1/<em>oldlabel</em>_1,...<em>newlabel</em>_n/ <em>oldlabel</em>_n}.</td>
+					</tr>
+
+					<tr>
+						<td>Hiding <code>\</code></td>
+
+						<td>When applied to a process <code>P</code>, the hiding operator <code>{a<sub>1</sub>..a<sub>x</sub>}</code> removes the action names <code>a<sub>1</sub>..a<sub>x</sub></code> from the alphabet of <code>P</code> and makes these concealed actions "silent". These silent actions are labeled <code>tau</code>. Silent actions in different processes are not shared.</td>
+					</tr>
+
+					<tr>
+						<td>Interface <code>@</code></td>
+
+						<td>When applied to a process <code>P</code>, the interface operator <code>@{a<sub>1</sub>..a<sub>x</sub>}</code> hides all actions in the alphabet of <code>P</code> not labeled in the set <code>a<sub>1</sub>..a<sub>x</sub></code>.</td>
+					</tr>
+				</table>
+
+				<p class="table-caption"><strong>Table A.3</strong> Common process operators</p>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="Properties">
+
+				<h3>A.4 Properties</h3>
+
+				<table class="appendix has-border">
+					<tr>
+						<td>Safety <code><strong>property</strong></code></td>
+
+						<td><span class="first-sentence">A safety <code><strong>property</strong> P</code> defines a deterministic process that asserts that any trace induding actions in the alphabet of <code>P</code> is accepted by <code>P</code>.</span></td>
+					</tr>
+
+					<tr>
+						<td>Progress <code><strong>progress</strong></code></td>
+
+						<td><code><strong>progress</strong> P = {a<sub>1</sub>,a<sub>2</sub>..a<sub>n</sub>}</code> defines a progress property <code>P</code> which asserts that in an infinite execution of a target system, at least one of the actions <code>a<sub>1</sub>,a<sub>2</sub>..a<sub>n</sub></code> will be executed infinitely often.</td>
+					</tr>
+				</table>
+
+				<p class="table-caption"><strong>Table A.4</strong> Safety and progress properties</p>
+
+				<div class="pagebreak pageNumber">370</div>
+
+			</section>
+
+			<section class="section" data-number="5" data-name="Fluent Linear Temporal Logic (FLTL)">
+
+				<h3>A.5 Fluent Linear Temporal Logic (FLTL)</h3>
+
+				<table class="appendix has-border">
+					<tr>
+						<td>Fluent <strong><code>fluent</code></strong></td>
+
+						<td><span class="first-sentence"><code><strong>fluent</strong> FL = &lt;{s<sub>1</sub>,...s<sub>n</sub>}, {e<sub>1</sub>..e<sub>n</sub>}> <strong>initially</strong> B</code> defines a fluent FL that is initially true if the expression <code><em>B</em></code> is true and initially false if the expression <code><em>B</em></code> is false.</span> <code>FL</code> becomes true immediately any of the initiating actions <code>{s<sub>1</sub>,...s<sub>n</sub>}</code> occur and false immediately any of the terminating actions <code>{e<sub>1</sub>..e<sub>n</sub>}</code> occur. If the term <code><strong>initially </strong><em>B</em></code> is omitted then <code>FL </code>is initially false.</td>
+					</tr>
+
+					<tr>
+						<td>Assertion <strong><code>assert</code></strong></td>
+
+						<td><code><strong>assert</strong> PF=FLTL_Expression</code> defines an FLTL property.</td>
+					</tr>
+
+					<tr>
+						<td><code>&amp;&amp;</code></td>
+
+						<td>conjunction (<em>and</em>)</td>
+					</tr>
+
+					<tr>
+						<td><code>||</code></td>
+
+						<td>disjunction (<em>or</em>)</td>
+					</tr>
+
+					<tr>
+						<td><code>!</code></td>
+
+						<td>negation (<em>not</em>)</td>
+					</tr>
+
+					<tr>
+						<td><code>-></code></td>
+
+						<td>implication <code>((A->B)&equiv;(!A||B))</code></td>
+					</tr>
+
+					<tr>
+						<td><code>&lt;-></code></td>
+
+						<td>equivalence <code>((A&lt;->B)&equiv;(A->B)&amp;&amp;(B->A))</code></td>
+					</tr>
+
+					<tr>
+						<td>next time <strong><code>X&nbsp;<em>F</em></code></strong></td>
+
+						<td>iff <em><strong><code>F</code></strong></em> holds in the next instant.</td>
+					</tr>
+
+					<tr>
+						<td>always <strong><code>[]<em>F</em></code></strong></td>
+
+						<td>iff <em><code><strong>F</strong></code></em> holds now and always in the future.</td>
+					</tr>
+
+					<tr>
+						<td>eventually <code><strong>&lt;><em>F</em></strong></code></td>
+
+						<td>iff <em><strong><code>F</code></strong></em> holds at some point in the future.</td>
+					</tr>
+
+					<tr>
+						<td>until <strong><code><em>P</em>&nbsp;U&nbsp;<em>Q</em></code></strong></td>
+
+						<td>iff <em><code><strong>Q</strong></code></em> holds at some point in the future and <em><code><strong>P</strong></code></em> holds until then.</td>
+					</tr>
+
+					<tr>
+						<td>weak until <code><strong><em>P</em>&nbsp;W&nbsp;<em>Q</em></strong></code></td>
+
+						<td>iff <em><code><strong>P</strong></code></em> holds indefinitely or <strong><code><em>P</em> U <em>Q</em></code></strong>.</td>
+					</tr>
+
+					<tr>
+						<td><strong><code>forall</code></strong></td>
+
+						<td><code><strong>forall</strong>[i:R] FL(i)</code> conjunction of FL(i)</td>
+					</tr>
+
+					<tr>
+						<td><code><strong>exists</strong></code></td>
+
+						<td><code><strong>exists</strong>[i:R] FL(i)</code> disjunction of FL(i)</td>
+					</tr>
+				</table>
+
+				<p class="table-caption"><strong>Table A.5</strong> Fluent Linear Temporal Logic</p>
+
+				<div class="pagebreak pageNumber">371</div>
+
+			</section>
+
+		</div>
+
+	</div>
+
+</body>
+</html>

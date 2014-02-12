@@ -1,0 +1,3101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+
+	<title>Chapter 4. JavaScript Functions and Objects: Serious JavaScript</title>
+
+	
+	<META name="javascript" javascript="/contents/html5/html5.js">
+	
+
+</head>
+
+<body>
+	
+	<div id="html51" class="html5 container">
+
+		<section class="section" data-number="0" data-name="JavaScript Functions and Objects: Serious JavaScript">
+
+			<div class="pagebreak pageNumber">113</div>
+		
+			<h1>Chapter 4. JavaScript Functions and Objects: Serious JavaScript</h1>
+
+			<figure class="center">
+				<img  src="/contents/html5/figs/web/113fig01.png" />
+			</figure>
+		
+			<p><a id="iddle1824" class="indexterm" /><a id="iddle2499" class="indexterm" />
+				<strong>Can you call yourself a scripter yet?</strong> Probably—you already know your
+				way around a lot of JavaScript. But who wants to be a scripter when
+				you can be a programmer? It’s time to get serious and take it up a
+				notch—it’s time you learn about <strong>functions</strong>
+				and <strong>objects</strong>. They’re the
+				key to writing code that is more powerful, better organized and more
+				maintainable. They’re also heavily used across HTML5 JavaScript APIs,
+				so the better you understand them the faster you can jump into a new
+				API and start ruling with it. Strap in, this chapter is going to
+				require your undivided attention...</p>
+
+		</section> <!-- Section 0 -->
+
+		<section class="section" data-number="1" data-name="Expanding your vocabulary">
+		
+<!-- Page 114 -->
+
+			<div class="pagebreak pageNumber">114</div>
+		
+			<h2 class="title">Expanding your vocabulary</h2>
+
+			<p>You can already do a lot with JavaScript, let’s take a look at some of the things you know how to do:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/114fig01a.png" />
+			</figure>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/114fig01b.png" />
+			</figure>
+			
+			<p>So far, though, a lot of your knowledge is informal—sure, you can
+				get an element out of the DOM and assign some new HTML to it, but if
+				we asked you to explain exactly what
+				<code class="literal">document.getElementById</code>
+				is technically, well, that might be a little more challenging. No
+				worries; by the time you leave this chapter you’re going to have it
+				down.</p>
+
+			<p>Now to get you there, we’re not going to start with a deep,
+				technical analysis of <code class="literal">getElementById</code>,
+				no no, we’re going to do something <span class="emphasis"><em>a
+				little more interesting</em></span>: We’re going to extend JavaScript’s
+				vocabulary and make it do some new things.</p>
+
+		</section> <!-- Section 1 -->
+
+		<section class="section" data-number="2" data-name="How to add your own functions">
+
+<!-- Page 115 -->
+
+			<div class="pagebreak pageNumber">115</div>
+
+			<h2 class="title">How to add your own functions</h2>
+
+			<p>You’ve been using built-in functions, like <code class="literal">alert</code>
+				, or even <code class="literal">Math.random</code>, but what if you wanted to add
+				your own? Let’s say we wanted to write some code like this:</p>
+
+			<section class="subsection" data-number="3" data-name="Create a checkGuess function">
+
+				<div class="titlepage">
+					<h3 class="title">Create a checkGuess function</h3>
+				</div>
+	
+				<figure>
+					<img src="/contents/html5/figs/web/115fig01.png" />
+				</figure>
+
+			</section> <!-- Section 3 -->
+
+		</section> <!-- Section 2 -->
+
+		<section class="section" data-number="4" data-name="How a function works">
+
+<!-- Page 116 -->
+	
+			<div class="pagebreak pageNumber">116</div>
+
+			<h2 class="title">How a function works</h2>
+
+			<p><a id="iddle1839" class="indexterm" /><a id="iddle2576" class="indexterm" />
+				So how does this all work? What happens when we <span class="emphasis"><em>actually
+				invoke</em></span> a function? Here’s the 10,000-foot view:</p>
+
+			<p><strong>Okay, first we need a function.</strong></p>
+
+			<p>Let’s say you’ve just written your new <code class="literal">bark</code> function, which has two parameters,
+				<code class="literal">dogName</code> and <code class="literal">dogWeight</code>, and also a very impressive
+				bit of code that returns a dog’s bark, depending on its weight of course.</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/116fig01.png" />
+			</figure>
+
+			<hr>
+
+			<p><strong>Now let’s invoke it!</strong></p>
+
+			<p>You know how to call a function already: just use its name and
+				give it any arguments it needs. In this case we need two: a string
+				with the dog’s name, and the dog’s weight, which is an integer.</p>
+
+			<p>Let’s make that call and see how this works:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/116fig02.png" />
+			</figure>
+
+<!-- Page 117 -->
+
+			<div class="pagebreak pageNumber">117</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/117fig01.png" />
+			</figure>
+			
+			<p><a id="iddle2719" class="indexterm" /><strong>And, let the body of the function do its work.</strong></p>
+
+			<p>After we’ve assigned the value of each argument to its corresponding
+				parameter in the function—like “Fido” to <code class="literal">dogName</code>
+				and the integer 50 to <code class="literal">dogWeight</code>
+				—then we’re ready to evaluate all the statements in the function body.</p>
+
+			<p>Statements are evaluated from top to bottom, just like all the other
+				code you’ve been writing. What’s different is that we’re doing it in
+				an environment where the parameter names <code class="literal">dogName</code>
+				and <code class="literal">dogWeight</code> are assigned to the arguments you passed into the function.</p>
+
+			<hr>
+
+			<p><strong>Optionally, we can have return statements in the body...</strong></p>
+
+			<aside>
+				Remember, functions aren’t required to return a value. But in
+				this case, the bark function does return a value.
+			</aside>
+
+			<p>... and that’s where we return a value back to the code that makes the call. Let’s see how that works:</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/117fig02.png" />
+			</figure>
+
+<!-- Page 118 -->
+
+			<div class="pagebreak pageNumber">118</div>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/118fig01.png" />
+			</figure>
+
+			<p><a id="iddle2135" class="indexterm" /><strong>If we could have another moment to talk...</strong></p>
+
+			<p>We know, we know, by Chapter 4
+				you thought you’d be flying in an HTML5 jetpack by now, and we’ll
+				get there. But before we do, you really need to understand
+				<span class="emphasis"><em>the underpinnings</em></span> of the HTML5
+				JavaScript APIs, and we’re going to do that in this chapter.</p>
+
+			<p>So what are these underpinnings? Think of the HTML5 JavaScript
+				APIs as made up of objects, methods (otherwise known as functions)
+				and properties. And so to really get in and master these APIs, you
+				need to understand those things pretty well. Sure, you could try to
+				get by without knowing them, but you’ll always be guessing your way
+				around the APIs while failing to use them fully (not to mention
+				making lots of mistakes and writing buggy code).</p>
+
+			<p>So we just wanted to drop you a note before you got too far
+				into this chapter to tell you what we are up to. Here’s the great
+				thing: by the end of this chapter you’re going to understand
+				objects, functions, methods and a lot of other related things better
+				than about 98% of JavaScript scripters out there. Seriously.</p>
+
+<!-- Page 119 -->
+
+			<div class="pagebreak pageNumber">119</div>
+
+			<div class="sidebar" id="function_exposed">
+
+				<figure class="center">
+					<img src="/contents/html5/figs/web/thefunctionexposed.png">
+				</figure>
+
+				<h3>This week’s interview: a few things you didn’t know...</h3>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>
+					Welcome Function! We’re looking forward to digging in and finding out what you’re all about.</p>
+
+				<p><span class="formalpara-title"><strong>Function:</strong></span>Glad to be here.</p>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>
+					Now we’ve noticed many people who are new to JavaScript
+					don’t tend to use you a lot. They just get in and write their code,
+					line by line, top to bottom. Why should they take a look at you?</p>
+
+				<p><span class="formalpara-title"><strong>Function:</strong></span>
+					Yes, and that is unfortunate, because I’m powerful. Think about me like
+					this: I give you a way to take code, write it once, and then reuse
+					it over and over.</p>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>
+					Well, excuse me for saying this, but if you’re just
+					giving them the ability to do the same thing, over and
+					over...that’s a little boring isn’t it?</p>
+
+				<p><span class="formalpara-title"><strong>Function:</strong></span>
+					No no, functions are parameterized—in other words, each time you use
+					the function, you pass it arguments so that you can get back
+					results that vary, depending on what you pass in.</p>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>Err, example?</p>
+
+				<p><span class="formalpara-title"><strong>Function:</strong></span>
+					Let’s say you need to tell your users how much the items in their
+					shopping cart are going to cost, so you write a function
+					<code class="literal">computeShoppingCartTotal</code>.
+					Then you can pass that function different shopping carts
+					belonging to different users and each time you get the appropriate
+					cost of the shopping cart.</p>
+
+				<p>...By the way, back to your comment about new coders not using
+					functions; that’s simply not true, they use them all the time:
+					<code class="literal">alert</code>,
+					<code class="literal">document.getElementById, Math.random</code>.
+					They just aren’t defining <span class="emphasis"><em>their
+					own</em></span> functions.</p>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>
+					Well, right, <code class="literal">alert</code>, that makes sense,
+					but the other two don’t look quite like functions.</p>
+
+				<p><span class="formalpara-title"><strong>Function:</strong></span>
+					Oh they’re functions, you see... hold on just a sec...</p>
+
+				<p>...oh, I was just told the readers haven’t learned about
+					those kinds of functions yet, but they’re getting there in a few
+					pages. Anyway, functions are everywhere.</p>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>
+					So, one thing a function has to do is return a value,
+					right? I mean, what if I don’t have a value I want to return?</p>
+
+				<p><span class="formalpara-title"><strong>Function:</strong></span>
+					Many functions return values, but a function doesn’t have to. Lots of
+					functions just do something like update the DOM and then return
+					without any value, and that’s just fine.</p>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>
+					So in those functions I just don’t have a return statement?</p>
+
+				<p><span class="formalpara-title"><strong>Function:</strong></span>You got it.</p>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>
+					Well, what about naming your functions, I’ve heard you
+					don’t have to do that either, if you don’t want to.</p>
+
+				<p><span class="formalpara-title"><strong>Function:</strong></span>
+					Okay, let’s not freak the audience out too much. How about we come back
+					to that topic after they know a bit more about me?</p>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>
+					As long as you give me an exclusive?</p>
+
+				<p><span class="formalpara-title"><strong>Function:</strong></span>We’ll talk...</p>
+			</div> <!-- /sidebar -->
+
+<!-- Page 120 -->
+
+			<div class="pagebreak pageNumber">120</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/120fig01.png" />
+			</figure>
+
+			<p><a id="iddle1440" class="indexterm" /><a id="iddle2080" class="indexterm" />
+				<a id="iddle2574" class="indexterm" /><strong>No, they’re different.</strong></p>
+
+			<p>When you define a function you can <em>define</em> it with one or more <em>parameters</em>.</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/120fig02.png" />
+			</figure>
+			
+			<p>When you call a function, you <em>call</em> it with <em>arguments</em>:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/120fig03.png" />
+			</figure>
+			
+			<p>So you’ll only define your parameters once, but you’ll probably call your functions
+				with a lot of different arguments.</p>
+
+			<aside>
+				You’d be amazed how many people get this wrong—even books get
+				it wrong, so if you read it differently elsewhere, now you know
+				better....
+			</aside>
+
+			<h3>You define a function with parameters, you call a function with arguments.</h3>
+
+<!-- Page 121 -->
+
+			<div class="pagebreak pageNumber">121</div>
+
+			<div class="sidebar" id="anatomy_of_a_function">
+
+				<figure class="left">
+					<img src="/contents/html5/figs/web/microscope.png">
+				</figure>
+			
+				<h3>Anatomy of a Function</h3>
+			
+				<p>Now that you know how to define and call a function, let’s make sure we’ve
+					got the syntax down cold. Here are all the parts of a function’s anatomy:</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/121fig01.png" />
+				</figure>
+			</div>
+
+			<div class="sidebar" id="there_are_no_dumb_questions-id00034">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+				</figure>
+
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<div class="qandaset" id="ch04qa1">
+							<table style="border: 0;">
+								<colgroup>
+									<col style="text-align: left; width: 1%;" />
+									<col />
+								</colgroup>
+
+								<tbody>
+									<tr class="question" id="id36188721">
+										<td style="text-align: left; vertical-align: top;" id="ch04qa1q1"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: Why don’t the parameter names have var in front of them? A parameter
+												is a new variable right?</strong></p>
+										</td>
+									</tr>
+								
+									<tr class="answer" id="ch04qa1q1a1">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Efffectively
+												yes. The function does all the work of instantiating the
+												variable for you, so you don’t need to supply the var
+												keyword in front of your parameter names.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36188747">
+										<td style="text-align: left; vertical-align: top;" id="ch04qa1q2"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: What are the rules for function names?</strong></p>
+										</td>
+									</tr>
+
+									<tr class="answer" id="ch04qa1q2a2">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> The rules for naming a function are
+												the same as the rules for naming a variable.</p>
+										</td>
+									</tr>
+
+									<tr class="question" id="id36188768">
+										<td style="text-align: left; vertical-align: top;" id="ch04qa1q3"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: I’m passing a variable to my function—if I change the value of the
+												corresponding parameter in my function does it also change
+												my original variable?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch04qa1q3a3">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> No. When you
+												pass a primitive value it is copied into the parameter. We
+												call this “passing by value.” So if you change the value of
+												the parameter in your function body it has no affect on our
+												original argument’s value. The exception to this is passing
+												an array or object, and we’ll get to that in a bit.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36188797">
+										<td style="text-align: left; vertical-align: top;" id="ch04qa1q4"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: So how can I change values in a function?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch04qa1q4a4">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> You can only
+											change the values of global variables (those defined outside
+											of functions), or variables you’ve explictly defined in your
+											function. We’re going to talk about that in a little more
+											detail shortly.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36188821">
+										<td style="text-align: left; vertical-align: top;" id="ch04qa1q5"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: What does a function return if it doesn’t have a return statement?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch04qa1q5a5">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> A function without a return statement returns
+												<code class="literal">undefined</code>.</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div> <!-- /qandaset -->
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 122 -->
+
+			<div class="pagebreak pageNumber">122</div>
+
+			<div class="sidebar" id="sharpen_your_pencil-id00035">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/sharpenpencil.png">
+				</figure>
+			
+				<p>Use your knowledge of functions
+					and passing arguments to parameters to evaluate the code below.
+					After you’ve traced through the code, write the value of each
+					variable below. Check your answers with the solution at the end of
+					the chapter before you go on.</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/122fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			 			<div class="modal-body">
+							<code>
+<pre>function dogsAge(age) {</pre>
+<pre>	return age * 7;</pre>
+<pre>}</pre>
+								<br />
+<pre>var myDogsAge = dogsAge(4);</pre>
+								<br />
+<pre>function rectangleArea(width, height) {</pre>
+<pre>	var area = width * height;</pre>
+<pre>	return area;</pre>
+<pre>}</pre>
+								<br />
+<pre>var rectArea = rectangleArea(3, 4);</pre>
+								<br />
+<pre>function addUp(numArray) {</pre>
+<pre>	var total = 0;</pre>
+<pre>	for (var i = 0; i < numArray.length; i++) {</pre>
+<pre>		total += numArray[i];</pre>
+<pre>	}</pre>
+<pre>	return total;</pre>
+<pre>}</pre>
+								<br />
+<pre>var theTotal = addUp([1, 5, 3, 9]);</pre>
+								<br />
+<pre>function getAvatar(points) {</pre>
+<pre>	var avatar;</pre>
+<pre>	if (points < 100) {</pre>
+<pre>		avatar = "Mouse";</pre>
+<pre>	} else if (points > 100 && points < 1000) {</pre>
+<pre>		avatar = "Cat";</pre>
+<pre>	} else {</pre>
+<pre>		avatar = "Ape";</pre>
+<pre>	}</pre>
+<pre>	return avatar;</pre>
+<pre>}</pre>
+<pre>var myAvatar = getAvatar(335);</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 4 -->
+
+		<section class="section" data-number="5" data-name="Local and Global Variables">
+
+<!-- Page 123 -->
+
+			<div class="pagebreak pageNumber">123</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/123fig01.png" />
+			</figure>
+			
+			<h2 class="title">Local and Global Variables</h2>
+
+			<section class="subsection" data-number="6" data-name="Know the difference or risk humiliation">
+				
+				<div class="titlepage">
+					<h3 class="title">Know the difference or risk humiliation</h3>
+				</div>
+
+				<p>You already know that you can declare a variable by using the <code class="literal">var</code>
+					keyword and a name anywhere in your script:</p>
+
+				<div class="clear" />
+				
+				<figure>
+					<img src="/contents/html5/figs/web/123fig02.png" />
+				</figure>
+				
+				<div class="sidebar-right-pair-borderless">
+					<h3>
+						If a variable is declared outside a function, it’s GLOBAL. If it’s declared
+						inside a function, it’s LOCAL.
+					</h3>
+				</div>
+				
+				<p>And you’ve seen that you can also declare variables inside a function:</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/123fig03.png" />
+				</figure>
+
+				<p>But what does it matter? Variables are variables, right? Well,
+					<em>where</em> you declare your variables
+					determines <em>how visible</em> they
+					are to other parts of your code, and, later, understanding how
+					these two kinds of variables operate will help you write more
+					maintainable code (not to mention, help you understand the code of others).</p>
+
+			</section> <!-- Section 6 -->
+
+		</section> <!-- Section 5 -->
+
+		<section class="section" data-number="7" data-name="Knowing the scope of your local and global variables">
+
+<!-- Page 124 -->
+
+			<div class="pagebreak pageNumber">124</div>
+
+			<h2 class="title">Knowing the scope of your local and global variables</h2>
+
+			<p><a id="iddle2735" class="indexterm" />Where you define your variables determines their
+				<em>scope</em>; that is, where they are defined and where they aren’t, where they’re
+				visible to your code and where they aren’t. Let’s look at an example
+				of both locally and globally scoped variables—remember, the
+				variables you define outside a function are globally scoped, and the
+				function variables are locally scoped:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/124fig01.png" />
+			</figure>
+
+		</section> <!-- Section 7 -->
+
+		<section class="section" data-number="8" data-name="The short lives of variables">
+
+<!-- Page 125 -->
+
+			<div class="pagebreak pageNumber">125</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/125fig01.png" />
+			</figure>
+			
+			<h2 class="title">The short lives of variables</h2>
+
+			<p><a id="iddle1937" class="indexterm" /><a id="iddle2996" class="indexterm" />
+				When you’re a variable, you work
+				hard and life can be short. That is, unless you’re a global
+				variable, but even with globals, life has its limits. But what
+				determines the life of a variable? Think about it like this:</p>
+
+			<p><strong>Globals live as long as the page.</strong> A global variable begins life when its JavaScript is
+				loaded into the page. But, your global variable’s life ends when the
+				page goes away. Even if you reload the same page, all your global
+				variables are destroyed and then recreated in the newly loaded page.</p>
+
+			<p><strong>Local variables typically disappear when your function ends.</strong> Local variables are
+				created when your function is first called and live until the
+				function returns (with a value or not). That said, you can take the
+				values of your local variables and return them from the function
+				before the variables meet their digital maker.</p>
+
+			<div class="sidebar-right-pair-borderless">
+				<aside>
+					We say “typically” because there are some advanced ways to
+					retain locals a little longer, but we’re not going to worry about
+					them now.
+				</aside>
+			</div>
+
+			<p>So, there really is NO escape from the page is there? If
+				you’re a local variable, your life comes and goes quickly, and if
+				you’re lucky enough to be a global, you’re good as long as that
+				browser doesn’t reload the page.</p>
+
+			<p>But there just ><em>has</em> to be a way to escape the page! We can find a way! Can’t we?</p>
+
+			<aside>
+				Join us in the Web Storage chapter where we’ll help our data
+				escape the dreaded page refresh!
+			</aside>
+
+<!-- Page 126 -->
+
+			<div class="pagebreak pageNumber">126</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/126fig01.png" />
+			</figure>
+
+			<p><a id="iddle2344" class="indexterm" /><a id="iddle2795" class="indexterm" />
+				<a id="iddle2995" class="indexterm" /><strong>You “shadow” your global.</strong></p>
+
+			<p>Here’s what that means: say you have a global variable
+				<strong><code class="literal">beanCounter</code></strong>
+				and you then declare a function, like this:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/126fig02.png" />
+			</figure>
+
+			<p>When you do this, any references to <strong><code class="literal">beanCounter</code>
+				</strong> within the function refer to
+				the local variable and not the global. So we say the global variable
+				is in the shadow of the local variable (in other words we can’t see
+				it because the local version is in our way).</p>
+
+			<aside>
+				Note that the local and global variables have no effect on
+				each other: if you change one, it has no effect on the other. They
+				are independent variables.
+			</aside>
+
+<!-- Page 127 -->
+
+			<div class="pagebreak pageNumber">127</div>
+
+			<div class="sidebar" id="there_are_no_dumb_questions-id00036">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+				</figure>
+			
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<div class="qandaset" id="ch04qa2">
+							<table style="border: 0;">
+								<colgroup>
+									<col style="text-align: left; width: 1%;" />
+									<col />
+								</colgroup>
+								<tbody>
+									<tr class="question" id="id36189494">
+										<td style="text-align: left; vertical-align: top;" id="ch04qa2q1"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><a id="iddle1845" class="indexterm" />
+												<a id="iddle1939" class="indexterm" /><a id="iddle2156" class="indexterm" />
+												<strong>Q: Keeping track of
+												the scope of all these locals and globals is confusing, so
+												why not just stick to globals? That’s what I’ve always
+												done.</strong></p>
+										</td>
+									</tr>
+
+									<tr class="answer" id="ch04qa2q1a1">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> If you’re
+												writing code that is complex or that needs to be maintained
+												over a long period of time, then you really have to watch
+												how you manage your variables. When you’re overzealous in
+												creating global variables, it becomes difficult to track
+												where your variables are being used (and where you’re making
+												changes to your variables’ values), and that can lead to
+												buggy code. All this becomes even more important when you’re
+												writing code with coworkers or you’re using third-party
+												libraries (although if those libraries are written well,
+												they should be structured to avoid these issues).</p>
+
+											<div class="note" id="ch04note06">
+												<p>If this were a book on in-depth JavaScript
+													programming we’d take you further into this topic, but
+													given that this is Head First HTML5 Programming, we’ll just
+													suggest you explore this topic further to improve the
+													quality of your code!</p>
+											</div>
+											
+											<p>So, use globals where it makes sense, but use them in
+												moderation, and whenever possible, make your variables
+												local. As you get more experience with JavaScript, you can
+												investigate additional techniques to structure code so that
+												it’s more maintainable.</p>
+										</td>
+									</tr>
+
+									<tr class="question" id="id36189607">
+										<td style="text-align: left; vertical-align: top;" id="ch04qa2q2"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: I have global variables in my page, but I’m loading in other
+												JavaScript files as well. Do those files have separate
+												sets of global variables?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch04qa2q2a2">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> There is
+												only one global scope so every file you load sees the same
+												set of variables (and creates globals in the same space).
+												That’s why it is so important you be careful with your use
+												of variables to avoid clashes (and reduce or eliminate
+												global variables when you can).</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36189633">
+										<td style="text-align: left; vertical-align: top;" id="ch04qa2q3"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: I’ve seen code where people don’t use the var keyword when assigning
+												a value to a new variable name. How does that work?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch04qa2q3a3">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Yes, that
+												can be done; when you assign a value to a variable name that
+												hasn’t been previously declared, it is treated as a new,
+												global variable. So be careful, if you do this within a
+												function you are creating a global variable. Note that we
+												don’t recommend this coding practice; not only is it
+												potentially confusing when reading code, some people think
+												this behavior may change some day in the JavaScript
+												implementations (which would probably break your code).</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36189662">
+										<td style="text-align: left; vertical-align: top;" id="ch04qa2q4"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: Do I need to
+												define a function before I use it, or can it appear
+												anywhere in my script?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch04qa2q4a4">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Function
+												declarations can appear anywhere in your script. You can
+												declare a function below where you use it if you want. This
+												works because when you first load your page, the browser
+												parses all the JavaScript in the page (or in the external
+												file) and sees the function declaration before it starts
+												executing the code. You can also put your global variable
+												declarations anywhere in your script, although we recommend
+												declaring all your global variables at the top of your files
+												so they’re easy to locate.</p>
+
+											<p>One thing to keep in mind when using more than one
+												external JavaScript file is that if you have two functions
+												in different files named the same thing, the function that
+												the browser sees last will be the one that is used.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36189687">
+										<td style="text-align: left; vertical-align: top;"id="ch04qa2q5"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: Everyone
+												seems to complain about the overuse of global variables in
+												JavaScript. Why is this? Was the language badly designed
+												or do people not know what they’re doing, or what? And
+												what do we do about it?</strong>
+											</p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch04qa2q5a5">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Globals are
+												often overused in JavaScript. Some of this is because the
+												language makes it easy to just jump in and start coding—and
+												that’s a good thing—because JavaScript doesn’t enforce a lot
+												of structure or overhead on you. The downside is when people
+												write serious code this way and it has to be changed and
+												maintained over the long term (and that pretty much
+												describes all web pages). All that said, JavaScript is a
+												powerful langauge and includes features like objects that
+												you can use to organize your code in a modular way. Many
+												books have been written on that topic alone, and we’re going
+												to give you just a taste of objects in the second half of
+												this chapter (which is only a few pages away).
+											</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div> <!-- /qandaset -->
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+			<aside>
+				If this were a book on in-depth JavaScript programming wed take you further into this topic,
+				but given that this is Head First HTML5 Programming, we'll just suggest you explore this topic
+				further to improve the quality of your code.
+			</aside>
+
+		</section> <!-- Section 8 -->
+
+		<section class="section" data-number="9" data-name="Oh, did we mention functions are also values?">
+
+<!-- Page 128 -->
+
+			<div class="pagebreak pageNumber">128</div>
+
+			<h2 class="title">Oh, did we mention functions are also values?</h2>
+
+			<p><a id="iddle1860" class="indexterm" /><a id="iddle2981" class="indexterm" />
+				OK, you’ve used variables to
+				store numbers, boolean values, strings, arrays, all kinds of things,
+				but did we mention you can also assign a function to a variable?
+				Check this out:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/128fig01.png" />
+			</figure>
+			
+			<p>Well, not only did we fail to mention this little detail about
+				functions before now, but we also weren’t totally honest when we
+				told you about the anatomy of a function—as it turns out, you don’t
+				even have to give your function a name. That’s right: your function
+				can be <em>anonymous</em>. What the
+				heck does that mean, and why would you want to do such a thing?
+				First let’s see how you create a function without a name:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/128fig02.png" />
+			</figure>
+
+<!-- Page 129 -->
+
+			<div class="pagebreak pageNumber">129</div>
+
+			<div class="sidebar">
+				<img src="/contents/html5/figs/web/brainpower.png">
+			
+				<p>Take a look at this code: what do you think is going on?</p>
+
+				<aside>
+					This should start to look a little more understandable with
+					what we just covered...
+				</aside>
+
+				<figure>
+					<img src="/contents/html5/figs/web/129fig01.png" />
+				</figure>
+			</div>
+
+		</section> <!-- Section 9 -->
+
+		<section class="section" data-number="10" data-name="What you can do with functions as values?">
+
+			<h2 class="title">What you can do with functions as values</h2>
+
+			<p>So what’s the big deal? Why is this useful? Well, the important
+				thing isn’t so much that we can assign a function to a variable,
+				that’s just our way of showing you that a function
+				<em>actually is a value</em>. And you know
+				you can store values in variables or arrays, you can pass them as
+				arguments to functions, or as we’ll soon see, you can assign them to
+				the properties of objects. But, rather than talking you through how
+				anonymous functions are useful, let’s just look at one of the many
+				ways using functions as values starts to get interesting:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/129fig02.png" />
+			</figure>
+
+			<p>Or we could get even fancier:</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/129fig03.png" />
+			</figure>
+			
+			<p>You might be starting to see that functions can do some useful
+				things beyond just packaging up code for reuse; to give you a better
+				idea of how to fully take advantage of functions, we’re going to
+				take a look at objects and see how they fit into JavaScript, and
+				then we’ll put it all together.</p>
+
+<!-- Page 130 -->
+
+			<div class="pagebreak pageNumber">130</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/130fig01.png" />
+			</figure>
+			
+			<p><a id="iddle2136" class="indexterm" /><strong>Well we thought we’d covered that already...</strong>
+				but if it looks like we’ve
+				picked you up and have driven you halfway around the city with the
+				meter running (when we could have driven you straight downtown),
+				well, then remember we’re about to start diving into the APIs that
+				work with HTML5 <em>in the next
+				chapter</em>. And, doing that is going to require that you
+				<em>really understand</em> functions,
+				objects and a few other related topics.</p>
+
+			<p>So hang in there—in fact you’re halfway there! And don’t
+				forget, this is the chapter where you’re going from scripter to
+				programmer, from an HTML/CSS jockey to someone who is capable of
+				building real apps.</p>
+
+			<aside>
+				Did we already mention that is probably going to make you a
+				lot more money too?
+			</aside>
+
+			<div class="clear" />
+
+<!-- Page 131 -->
+
+			<div class="pagebreak pageNumber">131</div>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/131fig01.png" />
+			</figure>
+
+		</section> <!-- Section 10 -->
+
+		<section class="section" data-number="11" data-name="Did someone say "Objects"?!">
+
+			<h2 class="title">Did someone say “Objects”?!</h2>
+
+			<p><a id="iddle2500" class="indexterm" />Ah, our
+				favorite topic! Objects are going to take your JavaScript
+				programming skills to the next level—they’re the key to managing
+				complex code, to understanding the DOM, to organizing your data, and
+				they’re even the fundamental way HTML5 JavaScript APIs are packaged
+				up (and that’s just our short list!). That said, objects are a
+				difficult topic, right? Hah! We’re going to just jump in head first
+				and you’ll be using them in no time.</p>
+
+			<p><em>Here’s the secret to JavaScript objects</em>: they’re just a
+				collection of properties. Let’s
+				take an example, say, a dog. A dog’s got properties:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/131fig02.png" />
+			</figure>
+
+		</section> <!-- Section 11 -->
+
+		<section class="section" data-number="12" data-name="Thinking about properties...">
+
+<!-- Page 132 -->
+
+			<div class="pagebreak pageNumber">132</div>
+
+			<h2 class="title">Thinking about properties...</h2>
+
+			<p><a id="iddle1009" class="indexterm" /><a id="iddle1427" class="indexterm" />
+				<a id="iddle2509" class="indexterm" /><a id="iddle2667" class="indexterm" />
+				<a id="iddle2980" class="indexterm" />Of course Fido would be the first to admit
+				there’s a lot more to him than just a few properties, but for this
+				example, those are going to be the ones we need to capture in
+				software. Let’s think about those properties in terms of JavaScript
+				data types:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/132fig01.png" />
+			</figure>
+
+		</section> <!-- Section 12 -->
+
+		<section class="section" data-number="13" data-name="How to create an object in JavaScript">
+
+			<h2 class="title">How to create an object in JavaScript</h2>
+
+			<p>So we’ve got an object with some properties; how do we create this using JavaScript? Here’s how:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/132fig02.png" />
+			</figure>
+
+		</section> <!-- Section 13 -->
+
+		<section class="section" data-number="14" data-name="Some things you can do with objects">
+
+<!-- Page 133 -->
+
+			<div class="pagebreak pageNumber">133</div>
+
+			<h2 class="title">Some things you can do with objects</h2>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p><a id="iddle1016" class="indexterm" /><a id="iddle1519" class="indexterm" />
+							<a id="iddle1574" class="indexterm" /><a id="iddle2524" class="indexterm" />
+							<a id="iddle2668" class="indexterm" /><a id="iddle2815" class="indexterm" />
+							<a id="iddle2861" class="indexterm" /><a id="iddle2983" class="indexterm" />
+							Access object properties with “dot” notation:</p>
+
+						<figure>
+							<img src="/contents/html5/figs/web/133fig01.png" />
+						</figure>
+					</li>
+
+					<li class="listitem">
+						<p>Access properties using a string with [] notation:</p>
+
+						<figure>
+							<img src="/contents/html5/figs/web/133fig02.png" />
+						</figure>
+					</li>
+
+					<li class="listitem">
+						<p>Change a property’s value:</p>
+						
+						<figure>
+							<img src="/contents/html5/figs/web/133fig03.png" />
+						</figure>
+					</li>
+
+					<li class="listitem">
+						<p>Enumerate all an object’s properties:</p>
+						<figure>
+							<img src="/contents/html5/figs/web/133fig04.png" />
+						</figure>
+					</li>
+				</ol>
+			</div> <!-- /orderedlist -->
+
+<!-- Page 134 -->
+
+			<div class="pagebreak pageNumber">134</div>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1" start="5">
+					<li class="listitem">
+						<p><a id="iddle1084"class="indexterm" /><a id="iddle1846" class="indexterm" />
+							<a id="iddle1851" class="indexterm" />Have fun with an object’s array:</p>
+
+						<figure>
+							<img src="/contents/html5/figs/web/134fig01.png" />
+						</figure>
+					</li>
+					
+					<li class="listitem">
+						<figure class="right">
+							<img src="/contents/html5/figs/web/134fig03.png" />
+						</figure>
+
+						<p>Pass an object to a function:</p>
+						
+						<figure>
+							<img src="/contents/html5/figs/web/134fig02.png" />
+						</figure>
+					</li>
+				</ol>
+			</div> <!-- /orderedlist -->
+
+			<div class="sidebar-left-dotted">
+				<p><strong>The Dot Operator.</strong></p>
+
+				<p>The dot operator (.) gives you access to an object’s
+					properties. In general it’s easier to read than the [“string”]
+					notation:</p>
+
+				<div class="itemizedlist">
+					<ul class="itemizedlist">
+						<li class="listitem"><p>
+								<code class="literal">fido.weight</code>
+								is the size of fido.
+							</p></li>
+						<li class="listitem"><p>
+								<code class="literal">fido.breed</code>
+								is the breed of fido.
+							</p></li>
+						<li class="listitem"><p>
+								<code class="literal">fido.name</code>
+								is the name of fido.
+							</p></li>
+						<li class="listitem"><p>
+								<code class="literal">fido.loves</code>
+								is an array containing fido’s interests.
+							</p></li>
+					</ul>
+				</div> <!-- /itemizedlist -->
+			</div> <!-- /note -->
+
+			<div class="clear" />
+
+<!-- Page 135 -->
+
+			<div class="pagebreak pageNumber">135</div>
+			
+			<figure class="left">
+				<img src="/contents/html5/figs/web/135fig01.png" />
+			</figure>
+			
+			<p><a id="iddle2501" class="indexterm" /><span class="strong"><strong>
+				Yes, you can add or delete properties at any time.</strong></p>
+
+			<p>To add a property to an object you simply assign a new property a value, like this:</p>
+
+<pre><strong>fido.age = 5;</strong></pre>
+			
+			<p>and from that point on <code class="literal">fido</code> will have a new property:
+				<code class="literal">age</code>.</p>
+
+			<p>Likewise, you can delete any property with the <code class="literal">delete</code> keyword, like this:</p>
+
+<pre><strong>delete fido.age;</strong></pre>
+			
+			<p>When you delete a property, you’re not just deleting the value of
+				the property, you’re deleting the property itself. In fact, if you
+				use <code class="literal">fido.age</code> after deleting it, it will evaluate to
+				<code class="literal">undefined</code>.</p>
+
+			<p>The <code class="literal">delete</code> expression returns <code class="literal">true</code>
+				if the property was deleted successfully (or if you delete a
+				property that doesn’t exist or if what you’re trying to delete isn’t
+				a property of an object).</p>
+
+		</section> <!-- Section 14 -->
+
+		<section class="section" data-number="15" data-name="Let's talk about passing objects to functions">
+
+<!-- Page 136 -->
+
+			<div class="pagebreak pageNumber">136</div>
+
+			<h2 class="title">Let’s talk about passing objects to functions</h2>
+
+			<p><a id="iddle1852" class="indexterm" /><a id="iddle2587" class="indexterm" />
+				<a id="iddle2588" class="indexterm" /><a id="iddle2992" class="indexterm" />
+				We’ve already talked a bit about
+				how arguments are passed to functions—arguments are passed <em>by value</em>,
+				so if we pass an integer, the corresponding function parameter gets a <em>copy</em>
+				of the <em>value</em> of that integer for its use in the function. The same rules hold
+				true for objects, <em>however</em> we’ve got to look a little more closely at what a variable holds
+				when it is assigned to an object to know what this means.</p>
+
+			<p>When an object is assigned to a variable, that variable holds a
+				<em>reference</em> to the object, not the
+				object itself. Think of a reference as a pointer to the object.</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/136fig01.png" />
+			</figure>
+
+			<p>So, when you call a function and pass it an object, you’re
+				passing the object reference—not the object itself, just a “pointer”
+				to it. A copy of the reference is passed into the parameter, which
+				then points to the original object.</p>
+			
+			<p>So, what does this all mean? Well, when you change a property of the
+				object, you’re changing the property in the <em>original</em>
+				object, not a copy, and so, you’ll see all the changes you make to
+				an object within and outside of your function. Let’s step through an
+				example using a <code class="literal">loseWeight</code> function for dogs...</p>
+
+			
+
+<!-- Page 137 -->
+
+			<div class="pagebreak pageNumber">137</div>
+
+			<section class="subsection" data-number="16" data-name="Putting Fido on a diet...">
+				<figure class="right">
+					<img src="/contents/html5/figs/web/behindthescenes.png" />
+				</figure>
+				
+				<div class="titlepage">
+					<h3 class="title">Putting Fido on a diet....</h3>
+				</div>
+
+				<p>Let’s take a look at what’s going on when we pass <code class="literal">fido</code>
+					to <code class="literal">loseWeight</code> and change the <code class="literal">dog.weight</code>
+					property.</p>
+				
+				<div class="orderedlist">
+					<ol class="orderedlist" type="1">
+						<li class="listitem">
+							<p>We’ve defined an object, fido, and we are passing that object into a function, loseWeight.</p>
+
+							<div class="informalfigure" id="med_id00273a">
+								<div class="mediaobject" id="med_id00273">
+									<img src="/contents/html5/figs/web/137fig01.png" />
+								</div>
+							</div>
+						</li>
+						
+						<li class="listitem">
+							<p>The dog parameter of the
+								loseWeight function gets a copy of the reference to fido. And
+								so, any changes to the properties of the parameter affect the
+								object that was passed in.</p>
+						</li>
+					</ol>
+				</div> <!-- /orderedlest -->
+
+<!-- Page 138 -->
+
+				<div class="pagebreak pageNumber">138</div>
+
+				<div class="sidebar" id="now_showing_at_the_webville_cinema">
+					<h2>Now Showing at the Webville Cinema</h2>
+
+					<figure class="right">
+						<img src="/contents/html5/figs/web/138fig01.png" />
+					</figure>
+
+					<p><a id="iddle2510" class="indexterm" />The Webville Cinema has come to us for help
+						with their JavaScript API; let’s start simple and design the movie
+						object for them. What we need is a couple of movie objects that
+						each include a title, a genre, a movie rating (1-5 stars) and a
+						set of showtimes. Go ahead and sketch out your movie object design
+						here (you can use our dog object as a model). Here’s some sample
+						data you can use to populate your objects:</p>
+
+					<p><strong>Plan 9 from Outer Space</strong>, which shows at 3:00pm, 7:00pm and 11:00pm; it’s in the
+						genre “cult classic”; and has a 2-star rating.</p>
+
+					<p><strong>Forbidden Planet</strong>,
+						which shows at 5:00pm and 9:00pm; is in the genre “classic
+						sci-fi”; and has a 5-star rating.</p>
+
+					<aside>
+						The solution’s right on the next page, but don’t look until
+						you’ve done the exercise. Really. We mean it.
+					</aside>
+					
+					<aside>Feel free to add your own favorites instead.</aside>
+
+					<aside>Design your objects here.</aside>
+
+					<figure>
+						<img src="/contents/html5/figs/web/138fig02.png" />
+					</figure>
+				</div> <!-- /sidebar -->
+
+			</section> <!-- Section 16 -->
+
+		</section> <!-- Section 15 -->
+
+		<section class="section" data-number="17" data-name="Now showing at the webville cinema solution">
+
+<!-- Page 139 -->
+
+			<div class="pagebreak pageNumber">139</div>
+
+			<div class="sidebar">
+				<h2>Now Showing at the Webville Cinema: Solution</h2>
+
+				<p>How did it go creating your movie object?</p>
+
+				<p>Here’s our solution:</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/139fig02.png" />
+				</figure>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/139fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>var movie1 = {</pre>
+<pre>	title: "Plan 9 from Outer Space",</pre>
+<pre>	genre: "Cult Classic",</pre>
+<pre>	rating: 5,</pre>
+<pre>	showtimes: ["3:00pm", "7:00pm", "11:00pm"]</pre>
+<pre>};</pre>
+								<br />
+<pre>var movie2 = {</pre>
+<pre>	title: "Forbidden Planet",</pre>
+<pre>	genre: "Classic Sci-fi",</pre>
+<pre>	rating: 5,</pre>
+<pre>	showtimes: ["5:00pm", "9:00pm"]</pre>
+<pre>};</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 17 -->
+
+		<section class="section" data-number="18" data-name="Our next showing is at...">
+
+<!-- Page 140 -->
+
+			<div class="pagebreak pageNumber">140</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/140fig02.png" />
+			</figure>
+			
+			<h2 class="title">Our next showing is at....</h2>
+
+			<p><a id="iddle1437" class="indexterm" /><a id="iddle1931" class="indexterm" />
+				<a id="iddle1932" class="indexterm" />We’ve already had a small taste of mixing
+				objects and functions. Let’s take this further by writing some code
+				to tell us when the next showing of a movie is. Our function’s going
+				to take a movie as an argument, and return a string containing the
+				next time it plays, based on your current time.</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/140fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function getNextShowing(movie) {</pre>
+<pre>	var now = new Date().getTime();</pre>
+<pre>	</pre>
+<pre>	for (var i = 0; i < movie.showtimes.length; i++) {</pre>
+<pre>		var showtime = getTimeFromString(movie.showtimes[i]);</pre>
+<pre>		if ((showtime - now) > 0) {</pre>
+<pre>			return "Next showing of " + movie.title + " is " + movie.showtimes[i];</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>	return null;</pre>
+<pre>}</pre>
+							<br />
+<pre>function getTimeFromString(str) {</pre>
+<pre>	var theTime = new Date();</pre>
+<pre>	var time = str.match(/(\d+)(?::(\d\d))?\s*(p?)/);</pre>
+<pre>	theTime.setHours( parseInt(time[1]) + (time[3] ? 12 : 0) );</pre>
+<pre>	theTime.setMinutes( parseInt(time[2]) || 0 );</pre>
+<pre>	return theTime.getTime();</pre>
+<pre>}</pre>
+							<br />
+<pre>var nextShowing = getNextShowing(move1);</pre>
+<pre>alert(nextShowing);</pre>
+<pre>nextShowing = getNextShowing(movie2);</pre>
+<pre>alert(nextShowing);</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 141 -->
+
+			<div class="pagebreak pageNumber">141</div>
+
+			<div class="sidebar" id="how_quotation_markchainingquotation_mark">
+				<div class="left">
+					<img src="/contents/html5/figs/web/upclose.png">
+				</div>
+
+				<h3>How “Chaining” works...</h3>
+
+				<p>Did you catch this in the previous code?</p>
+
+<pre><strong>movie.showtimes.length</strong></pre>
+				
+				<p>That doesn’t look like anything we’ve seen before. This is really
+					just a shorthand for a series of steps we could have taken to get
+					the length of the
+					<code class="literal">showtimes</code>
+					array from the movies object. We could have written this instead:</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/141fig01.png" />
+				</figure>
+
+				<p>But we can do all this in one shot by chaining together the expressions. Let’s step through how this works:</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/141fig02.png" />
+				</figure>
+			</div> <!-- /sidebar -->
+
+		</section> <!-- Section 18 -->
+
+		<section class="section" data-number="19" data-name="Testing at the drive-in">
+
+			<h2 class="title left">Testing at the drive-in</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+
+			<div class="clear" />
+
+			<p>Get the code on the previous page typed in and let’s give it a test
+				run. You’ll see that the
+				<code class="literal">getNextShowing</code>
+				function takes whatever movie it is handed and figures out the next
+				showing time. Feel free to create some new movie objects of your own
+				and give them a test drive too. We did, at our own local time of
+				12:30pm:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/141fig03.png" />
+			</figure>
+
+		</section> <!-- Section 19 -->
+
+		<section class="section" data-number="20" data-name="Objects can have behavior too...">
+
+<!-- Page 142 -->
+
+			<div class="pagebreak pageNumber">142</div>
+
+			<h2 class="title">Objects can have behavior too...</h2>
+
+			<div class="sidebar-right-borderless">
+				<h3>When an object has a function in it, we say that object has a <u>method</u>.</h3>
+			</div>
+
+			<p><a id="iddle2514" class="indexterm" />You didn’t think objects were just for storing
+				numbers, strings and arrays did you? Objects are active, they can do
+				things. Dogs don’t just sit there: they bark, run, play catch and a
+				dog object should too! Given everything you’ve learned in this
+				chapter, you’re all set to add behavior to your objects. Here’s how
+				we do that:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/142fig01.png" />
+			</figure>
+
+			<p>To call a method on an object we use the object name along
+				with the method using our dot notation, and supply any arguments
+				needed.</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/142fig02.png" />
+			</figure>
+
+		</section> <!-- Section 20 -->
+
+		<section class="section" data-number="21" data-name="Meanwhile back at Webville Cinema...">
+
+<!-- Page 143 -->
+
+			<div class="pagebreak pageNumber">143</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/143fig01.png" />
+			</figure>
+			
+			<h2 class="title">Meanwhile back at Webville Cinema...</h2>
+
+			<p><a id="iddle1854" class="indexterm" />Now that
+				your knowledge of objects is expanding we can go back and improve
+				the cinema code. We’ve already written a
+				<code class="literal">getNextShowing</code>
+				function that takes a movie as an argument, but we could instead
+				make this part of the movie object by making it a method. Let’s do
+				that:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/143fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var movie1 = {</pre>
+<pre>	title: "Plan 9 from Outer Space",</pre>
+<pre>	genre: "Cult Classic",</pre>
+<pre>	rating: 5,</pre>
+<pre>	showtimes: ["3:00pm", "7:00pm", "11:00pm"],</pre>
+							<br />
+<pre>	getNextShowing(movie) {</pre>
+<pre>		var now = new Date().getTime();</pre>
+							<br />
+<pre>		for (var i = 0; i < movie.showtimes.length; i++) {</pre>
+<pre>			var showtime = getTimeFromString(movie.showtimes[i]);</pre>
+<pre>			if ((showtime - now) > 0) {</pre>
+<pre>				return "Next showing of " + movie.title + " is " + movie.showtimes[i];</pre>
+<pre>			}</pre>
+<pre>		}</pre>
+<pre>		return null;</pre>
+<pre>	}</pre>
+<pre>};</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 21 -->
+
+		<section class="section" data-number="22" data-name="But we know that can't be quite right...">
+
+			<h2 class="title">But we know that can’t be quite right...</h2>
+
+			<p>We actually can’t just throw the function in this object because
+				<code class="literal">getNextShowing</code>
+				takes a movie argument, and what we really want is to call
+				<code class="literal">getNextShowing</code>
+				like this:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/143fig03.png" />
+			</figure>
+			
+			<p>Alright, so how do we fix this? We’ve got to remove the parameter
+				from the
+				<code class="literal">getNextShowing</code>
+				method definition, but then we need to do something with all the
+				references to
+				<code class="literal">movie.showtimes</code>
+				in the code because, once we remove the parameter,
+				<code class="literal">movie</code>
+				will no longer exist as a variable. Let’s take a look...</p>
+
+		</section> <!-- Section 22 -->
+
+		<section class="section" data-number="23" data-name="Let's get the movie parameter out of there...">
+
+<!-- Page 144 -->
+
+			<div class="pagebreak pageNumber">144</div>
+
+			<h2 class="title">Let’s get the movie parameter out of there...</h2>
+
+			<p><a id="iddle2908" class="indexterm" />We’ve taken the liberty of removing the
+				<code class="literal">movie</code> parameter, and all the references to it. Which leaves us with this code:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/144fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var movie1 = {</pre>
+<pre>	title: "Plan 9 from Outer Space",</pre>
+<pre>	genre: "Cult Classic",</pre>
+<pre>	rating: 5,</pre>
+<pre>	showtimes: ["3:00pm", "7:00pm", "11:00pm"],</pre>
+							<br />
+<pre>	getNextShowing(movie) {</pre>
+<pre>		var now = new Date().getTime();</pre>
+							<br />
+<pre>		for (var i = 0; i < showtimes.length; i++) {</pre>
+<pre>			var showtime = getTimeFromString(showtimes[i]);</pre>
+<pre>			if ((showtime - now) > 0) {</pre>
+<pre>				return "Next showing of " + title + " is " + showtimes[i];</pre>
+<pre>			}</pre>
+<pre>		}</pre>
+<pre>		return null;</pre>
+<pre>	}</pre>
+<pre>};</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 23 -->
+
+		<section class="section" data-number="24" data-name="Now what?">
+
+			<h2 class="title">Now what?</h2>
+
+			<p>Alright, here’s the conundrum: we’ve got these references to the
+				properties <code class="literal">showtimes</code> and
+				<code class="literal">title</code>. Normally in a function we’re referencing a local variable, a
+				global variable, or a parameter of the function, but <code class="literal">showtimes</code>
+				and<code class="literal">title</code> are <em>properties</em> of the
+				<code class="literal">movie1</code> object. Well maybe this just works... it seems like JavaScript might
+				be smart enough to figure this out?</p>
+
+			<p>Nope. It doesn’t work. Feel free to give it a test drive;
+				JavaScript will tell you the showtimes and title variables are
+				undefined. How can that be?</p>
+
+			<p>Okay, here’s the deal: these variables are properties of an object,
+				but we aren’t telling JavaScript which object. You might say to
+				yourself, “Well, obviously we mean THIS object, this one right here!
+				How could there be any confusion about that?” And, yes, we want the
+				properties of this very object. In fact, there’s a keyword in
+				JavaScript named <code class="literal">this</code>,
+				and that is exactly how you tell JavaScript you mean <em>this object we’re in</em>.</p>
+
+			<p>Now, the situation is actually a little more complicated than it
+				appears here, and we’re going to get to that in a second, but for
+				now we’re going to add the
+				<code class="literal">this</code>
+				keyword and get this code working.</p>
+
+		</section> <!-- Section 24 -->
+
+		<section class="section" data-number="25" data-name="Adding the "this" keyword">
+
+<!-- Page 145 -->
+
+			<div class="pagebreak pageNumber">145</div>
+
+			<h2 class="title">Adding the “this” keyword</h2>
+
+			<p><a id="iddle2909" class="indexterm" />Let’s add <code class="literal">this</code>
+				each place we specify a property, so that we’re telling JavaScript
+				we want the property in <em>this</em> object:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/145fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var movie1 = {</pre>
+<pre>	title: "Plan 9 from Outer Space",</pre>
+<pre>	genre: "Cult Classic",</pre>
+<pre>	rating: 5,</pre>
+<pre>	showtimes: ["3:00pm", "7:00pm", "11:00pm"],</pre>
+							<br />
+<pre>	getNextShowing(movie) {</pre>
+<pre>		var now = new Date().getTime();</pre>
+							<br />
+<pre>		for (var i = 0; i < this.showtimes.length; i++) {</pre>
+<pre>			var showtime = getTimeFromString(this.showtimes[i]);</pre>
+<pre>			if ((showtime - now) > 0) {</pre>
+<pre>				return "Next showing of " + this.title + " is " + this.showtimes[i];</pre>
+<pre>			}</pre>
+<pre>		}</pre>
+<pre>		return null;</pre>
+<pre>	}</pre>
+<pre>};</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 25 -->
+
+		<section class="section" data-number="26" data-name="A test drive with "this"">
+
+			<h2 class="title left">A test drive with “this”</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+
+			<div class="clear" />
+
+			<p>Go ahead and type in the code above and also add the
+				<code class="literal">getNextShowing</code>
+				function to your <code class="literal">movie2</code>
+				object (just copy and paste it in). Then make the changes below to
+				your previous test code. After that give it a spin! Here’s what we
+				got:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/145fig02.png" />
+			</figure>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/145fig03.png" />
+			</figure>
+
+<!-- Page 146 -->
+
+			<div class="pagebreak pageNumber">146</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/146fig01.png" />
+			</figure>
+		
+			<p><strong>Ah, good eye.</strong></p>
+			
+			<p>
+				You have great instincts if you recognized that we are duplicating
+				code when we copy
+				<code class="literal">getNextShowing</code>
+				into more than one movie object. One of the aims of
+				“object-oriented” programming is to maximize code reuse—here we’re
+				not reusing any code, in fact we’re creating every object as a
+				one-off, and our movie objects just happen to be the same by
+				convention (and copying and pasting!). Not only is that a waste, it
+				can be error prone.
+			</p>
+			
+			<p>
+				There’s a much better way to do this using a <span class="emphasis"><em>constructor</em></span>.
+				What’s a constructor? It’s just a special function we’re going to
+				write that can create objects for us, and make them all the same.
+				Think of it like a little factory that takes the property values you
+				want to set in your object, and then hands you back a nice new
+				object with all the right properties and methods.
+			</p>
+			
+			<p>Let’s create a constructor...</p>
+
+<!-- Page 147 -->
+
+			<div class="pagebreak pageNumber">147</div>
+
+		</section> <!-- Section 26 -->
+
+		<section class="section" data-number="27" data-name="How to create a constructor">
+
+			<h2 class="title">How to create a constructor</h2>
+			
+			<p>
+				Let’s make a constructor for
+				dogs. We already know what we want our dog objects to look like:
+				they have name, breed and weight properties, and they have a bark
+				method. So what our constructor needs to do is take the property
+				values as parameters and then hand us back a dog object all ready to
+				bark. Here’s the code:
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/147fig01.png" />
+			</figure>
+			
+			<p>
+				So let’s walk though this again to make sure we’ve got it. Dog is a
+				constructor function and it takes a set of arguments, which just
+				happen to be the initial values for the properties we want: name,
+				breed and weight. Once it has those values, it assigns properties
+				using the <code class="literal">this</code>
+				keyword. It also defines our bark method. The result of all this?
+				The Dog constructor returns a new object. Let’s see how to actually
+				use the constructor.
+			</p>
+
+<!-- Page 148 -->
+
+			<div class="pagebreak pageNumber">148</div>
+
+		</section> <!-- Section 27 -->
+
+		<section class="section" data-number="28" data-name="Now let's use our constructor">
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/148fig01.png" />
+			</figure>
+
+			<div class="clear" />
+
+			<h2 class="title">Now let’s use our constructor</h2>
+			
+			<p>
+				Now that we’ve got our factory built, we can use it to create some dogs.
+				There’s only one thing we haven’t told you, which is that you need
+				to call a constructor function in a special way by putting the
+				keyword <code class="literal">new</code>
+				before the call. Here are some examples:
+			</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/148fig02.png" />
+			</figure>
+
+			<p>
+				Let’s review what’s going on here one more time: we’re creating
+				three different dog objects, each with its own properties, using the
+				<code class="literal">new</code>
+				keyword with the Dog constructor that we created. The constructor
+				returns a Dog object customized with the arguments we passed in.
+			</p>
+
+			<p>
+				Next, we call the <code class="literal">bark</code>
+				method on each one—notice that we’re sharing the same
+				<code class="literal">bark</code> method across all dogs, and when each dog barks,
+				<code class="literal">this</code> points to the dog object that made the call. So if we call the
+				<code class="literal">bark</code> method on
+				<code class="literal">fido</code>, then, in the bark method,
+				<code class="literal">this</code> is set to the fido object. Let’s look a little closer at how that
+				happens.
+			</p>
+
+<!-- Page 149 -->
+
+			<div class="pagebreak pageNumber">149</div>
+
+		</section> <!-- Section 28 -->
+
+		<section class="section" data-number="29" data-name="How does this really work?">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/behindthescenes.png" />
+			</figure>
+			
+			<h2 class="title">
+				How does <code class="literal">this</code> really work?
+			</h2>
+			
+			<p>
+				Anytime we put
+				<code class="literal">this</code> in the code of a method it will be interpreted as a reference to the
+				object the method was called on. So, if we call <code class="literal">fido.bark</code>,
+				then <code class="literal">this</code> is going to reference <code class="literal">fido</code>.
+				Or, if we call it on our dog object <code class="literal">tiny</code> then
+				<code class="literal">this</code> is going to reference <code class="literal">tiny</code>
+				within that method call. How does <code class="literal">this</code> know which object it is
+				representing? Let’s see:
+			</p>
+			
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p>Let’s say we’ve got a dog object assigned to fido:</p>
+						
+						<figure>
+							<img src="/contents/html5/figs/web/149fig01.png" />
+						</figure>
+					</li>
+					
+					<li class="listitem">
+						<p>And we call bark() on fido:</p>
+
+						<figure>
+							<img src="/contents/html5/figs/web/149fig02.png" />
+						</figure>
+					</li>
+					
+					<li class="listitem">
+						<p>
+							So “this” always refers to the
+							object the method was invoked on, no matter how many dogs we
+							create to bark:
+						</p>
+						
+						<figure>
+							<img src="/contents/html5/figs/web/149fig03.png" />
+						</figure>
+					</li>
+				</ol>
+			</div>
+
+<!-- Page 150 -->
+
+			<div class="pagebreak pageNumber">150</div>
+
+			<div class="sidebar">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/xxviifig00.png">
+				</figure>
+
+				<h3>Code Magnets</h3>
+				
+				<p>
+					A working Movie constructor
+					function was on the fridge, but some of the magnets fell on the
+					floor. Can you help get it back together? Be careful, some extra
+					magnets may have already been on the ground and might distract you.
+				</p>
+
+				<div class="clear"></div>
+				
+<pre><strong>function _____________(_________, __________, rating, showtimes) {</strong></pre>
+				
+<pre>	<strong>this.title = _________;</strong></pre>
+				
+<pre>	<strong>this.genre = genre;</strong></pre>
+				
+<pre>	<strong>this.________________ = rating;</strong></pre>
+				
+<pre>	<strong>this.showtimes = ________________;</strong></pre>
+				
+<pre>	<strong>this.getNextShowing = function() {</strong></pre>
+				
+<pre>		<strong>var now = new Date().getTime();</strong></pre>
+				
+<pre>		<strong>for (var i = 0; i &lt; ____________________.length; i++) {</strong></pre>
+				
+<pre>			<strong>var showtime = getTimeFromString(this.__________________[i]);</strong></pre>
+				
+<pre>			<strong>if ((showtime - now) &gt; 0) {</strong></pre>
+				
+<pre>				<strong>return "Next showing of " + ___________ + " is " + this.showtimes[i];</strong></pre>
+				
+<pre>			<strong>}</strong></pre>
+				
+<pre>		<strong>}</strong></pre>
+				
+<pre>	<strong>} ______</strong></pre>
+				
+<pre><strong>}</strong></pre>
+				
+				<figure>
+					<img src="/contents/html5/figs/web/150fig01.png" />
+				</figure>
+			</div>
+
+<!-- Page 151 -->
+
+			<div class="pagebreak pageNumber">151</div>
+
+			<div class="sidebar" id="there_are_no_dumb_questions-id00038">
+				
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+				</figure>
+				
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<table style="border: 0;">
+							<colgroup>
+								<col style="text-align: left; width: 1%;" />
+								<col />
+							</colgroup>
+							
+							<tbody>
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q: What’s the real
+											difference between a function and a method? After all, if
+											they’re the same thing why call them something different?</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> By
+											convention, if an object has a function we call that a
+											method. They both work the same way, except that you invoke
+											an object’s method using the dot operator, and a method can
+											use <code class="literal">this</code>
+											to access the object on which the method is invoked. Think
+											of a function as a standalone piece of code you can invoke,
+											and a method as behavior that is attached to a specific
+											object.
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q: So when I
+											create objects with a constructor and those objects have a
+											method, then all of those objects share the same code for
+											that method?</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> That’s
+											right, and that’s one of the advantages of object-oriented
+											programming: you can create the code for that class of
+											objects (say all your dog objects) in one place and all the
+											dogs share it. Now the way you make it specific to each dog
+											is with your properties and using <code class="literal">this</code>
+											to access those properties.
+										</p>
+									</td>
+								</tr>
+
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q: Can I set <code class="literal">this</code> to a value of my choosing,
+											and if I do, will that mess things up?</strong>
+										</p>
+									</td>
+								</tr>
+
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> No, you can’t set <code class="literal">this</code>
+											to anything. Remember, <code class="literal">this</code>
+											is a keyword, not a variable! It looks and acts a bit like
+											one, but it’s not a variable.
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q: Does <code class="literal">this</code> have a value outside of an
+											object method?</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong> No, if you’re not invoking an object method, then
+											<code class="literal">this</code> is undefined.
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q: So the way to think about <code class="literal">this</code> is when I
+											invoke a method on an object, the value of <code class="literal">this</code> is
+											set to that object the entire time the method is being evaluated?</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong> Within the body of the object, yes,
+											<code class="literal">this</code> will always be the object itself. There are some advanced
+											cases where it may not be true; for instance, things get
+											more complicated when you have objects within objects, and
+											if you start doing that, you’ll need to look up the
+											semantics, but this is a good general rule.
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q: I’ve heard
+											that in object-oriented programming I can have classes of
+											objects and they can inherit from each other. Like, I
+											could have a mammals class that both dog and cat inherit
+											from. Can I do that in JavaScript?</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> You can.
+											JavaScript uses something called prototypal inheritance,
+											which is an even more powerful model than strictly
+											class-based models. Getting into prototypal inheritance is a
+											little beyond the scope of this book, but who knows, we
+											could be convinced to write more on JavaScript.
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q: So when we say new Date(), we’re using a constructor, right?</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> Yes, good
+											catch! Date is a built-in constructor in JavaScript. When
+											you say <code class="literal">new Date()</code>,
+											you get a Date object with a bunch of useful methods you
+											can use to manipulate the date.
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q: What’s the
+											difference between objects we write out ourselves and ones
+											we create with a constructor?</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong></p>
+									</td>
+
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> The main
+											difference is how you create them. Objects you write out
+											yourself using curly braces and comma separated properties
+											are known as “object literals.” You literally type them into
+											your code! If you want another one like it, you have to type
+											it in yourself and make sure it’s got the same properties.
+											Objects created by a constructor are created by using
+											<code class="literal">new</code>
+											and a constructor function, which returns the object. You
+											can use the constructor function to create many objects that
+											have the same properties, but different property values if
+											you want.
+										</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 152 -->
+
+			<div class="pagebreak pageNumber">152</div>
+
+			<div class="sidebar" id="code_magnets-id00039">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/xxviifig00.png">
+				</figure>
+
+				<h3>Code Magnets</h3>
+			
+				<p>
+					A working Movie constructor
+					function was on the fridge, but some of the magnets fell on the
+					floor. Can you help get it back together? Be careful, some extra
+					magnets may have already been on the ground and might distract you.
+				</p>
+			
+				<figure>
+					<img src="/contents/html5/figs/web/152fig01.png" />
+				</figure>
+			
+				<figure>
+					<img src="/contents/html5/figs/web/152fig02.png" />
+				</figure>
+			</div>
+
+<!-- Page 153 -->
+
+			<div class="pagebreak pageNumber">153</div>
+
+		</section> <!-- Section 29 -->
+
+		<section class="section" data-number="30" data-name="Test drive your constructor right off the factory floor">
+
+			<h2 class="title left">Test drive your constructor right off the factory floor</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+			
+			<div class="clear" />
+
+			<p>
+				Now that you’ve got a Movie constructor, it’s time to make some Movie
+				objects! Go ahead and type in the Movie constructor function and
+				then add the code below and take your constructor for a spin. We
+				think you’ll agree this a much easier way to create objects.
+			</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/153fig01.png" />
+			</figure>
+
+<!-- Page 154 -->
+
+			<div class="pagebreak pageNumber">154</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/154fig01.png" />
+			</figure>
+			
+			<p><strong>Now, you might have started to notice...</strong></p>
+
+			<p>
+				...that objects are all around you. For instance,
+				<code class="literal">document</code> and <code class="literal">window</code>
+				are objects, as are the elements we get back from
+				<code class="literal">document.getElementById</code>.
+				And, these are just a few of many objects we’ll be
+				encountering—when we get to the HTML5 APIs, we’ll be seeing objects
+				everywhere!
+			</p>
+			
+			<p>
+				Let’s take a second look at some of the objects you’ve been
+				using all along in this book:
+			</p>
+
+			<div class="clear" />
+
+			<figure>
+				<img src="/contents/html5/figs/web/154fig02.png" />
+			</figure>
+
+<!-- Page 155 -->
+
+			<div class="pagebreak pageNumber">155</div>
+
+		</section> <!-- Section 30 -->
+
+		<section class="section" data-number="31" data-name="What is the window object anyway?">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/155fig02.png" />
+			</figure>
+			
+			<h2 class="title">What is the window object anyway?</h2>
+			
+			<p>
+				When you’re writing code for the browser, the
+				<code class="literal">window</code>
+				object is always going to be part of your life. The window object
+				represents both the global environment for your JavaScript programs
+				and the main window of your app, and as such, it contains many core
+				properties and methods. Let’s take a look at it:
+			</p>
+
+			<div class="clear" />			
+			
+			<figure>
+				<img src="/contents/html5/figs/web/155fig01.png" />
+			</figure>
+
+<!-- Page 156 -->
+
+			<div class="pagebreak pageNumber">156</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/156fig01.png" />
+			</figure>
+			
+			<p><strong>Window is the global object.</strong></p>
+			
+			<p>
+				It may seem a little weird, but the window object acts as your
+				global environment, so the names of any properties or methods from
+				window are resolved even if you don’t prepend them with
+				<code class="literal">window</code>.
+			</p>
+			
+			<p>
+				In addition, any global variables you define are also put into the
+				window namespace, so you can reference them as
+				<code class="literal">window.myvariable</code>
+				.
+			</p>
+
+		</section> <!-- Section 31 -->
+		
+		<section class="section" data-number="32" data-name="A closer look at the window.onload">
+
+			<div class="clear" />
+			
+			<h2 class="title">A closer look at window.onload</h2>
+			
+			<p>
+				One thing we’ve used often so far in this book is a <code class="literal">window.onload</code>
+				event handler. By assigning a function to the <code class="literal">window.onload</code>
+				property, we can ensure our code isn’t run until the page is loaded
+				and the DOM is completely set up. Now, there’s a lot going on in the
+				<code class="literal">window.onload</code> statement, so let’s have another look and it will all start to come
+				together for you:
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/156fig02.png" />
+			</figure>
+
+<!-- Page 157 -->
+
+			<div class="pagebreak pageNumber">157</div>
+
+		</section> <!-- Section 32 -->
+
+		<section class="section" data-number="33" data-name="Another look at the document object">
+
+			<h2 class="title">Another look at the document object</h2>
+
+			<p>
+				The <code class="literal">document</code>
+				object is another familar face; it’s the object we’ve been using to
+				access the DOM. And, as you’ve just seen, it is actually a property
+				of the <code class="literal">window</code> object. Of course we haven’t used it like
+				<code class="literal">window.document</code> because we don’t need to. Let’s take a quick peek under the covers
+				to see its more interesting properties and methods:
+			</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/157fig01.png" />
+			</figure>
+
+		</section> <!-- Section 33 -->
+
+		<section class="section" data-number="34" data-name="A closer look at document.getElementById">
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/157fig03.png" />
+			</figure>
+
+			<h2 class="title">A closer look at document.getElementById</h2>
+
+			<p>
+				We promised in the begining of this chapter that you’d understand
+				<code class="literal">document.getElementById</code>
+				by the end of the chapter. Well, you made it through functions,
+				objects, and methods, and now you’re ready! Check it out:
+			</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/157fig02.png" />
+			</figure>
+
+			<p>
+				What was a confusing looking string of syntax now has a lot more
+				meaning, right? Now, that
+				<code class="literal">div</code>
+				variable is also an object: an element object. Let’s take a closer
+				look at that too.
+			</p>
+
+<!-- Page 158 -->
+
+			<div class="pagebreak pageNumber">158</div>
+
+		</section> <!-- Section 34 -->
+
+		<section class="section" data-number="35" data-name="One more object to think about: your element objects">
+
+			<h2 class="title">One more object to think about: your element objects</h2>
+			<p>
+				We shouldn’t forget when we’re working with methods like
+				<code class="literal">getElementById</code>
+				that the elements they return are also objects! Okay, you might not
+				have realized this, but now that you know, you might be starting to
+				think everything in JavaScript is an object, and, well, you’re
+				pretty much right.
+			</p>
+
+			<p>
+				You’ve already seen some evidence of element properties, like the
+				<code class="literal">innerHTML</code>
+				property; let’s look at some of the more notable properties and
+				methods:
+			</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/158fig01.png" />
+			</figure>
+			
+			<div class="sidebar">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+				</figure>
+				
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<table style="border: 0;">
+							<colgroup>
+								<col style="text-align: left; width: 1%;" />
+								<col />
+							</colgroup>
+							
+							<tbody>
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q: Since window
+											is the global object, that means I can use its properties
+											and all of its methods without specifying <code
+											class="literal">window</code> first right?
+											</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> That’s
+											right. And whether you prepend the window object’s
+											properties and methods with <code class="literal">window</code>
+											is up to you. For things like alert, everyone knows what
+											that is, and no one uses window with it. On the other hand,
+											if you’re using the lesser known properties or methods you
+											might want to make your code more easily understandable, and
+											use <code class="literal">window</code>.
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q: So, technically, I could write <code class="literal">onload
+											= init</code> instead of <code class="literal">window.onload
+											= init</code>, right? </strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> Yes. But we don’t recommend it in this particular case, because there
+											are a lot of objects that have onload properties, so your
+											code is going to be much clearer if you use <code class="literal">window.</code>
+											in front of <code class="literal">onload</code>.
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q: The reason we don’t say <code class="literal">window.onload =
+											init()</code> is because that would call the function, instead
+											of using its value?</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> That’s right. When you use parentheses after the function name,
+											like init(), you are saying you want to <em>call</em> the function init. If
+											you use its name without parentheses, then you’re assigning
+											the function value to the <code class="literal">onload</code>
+											property. It’s a subtle difference when you’re typing it in,
+											but the ramifications are large, so pay careful attention.
+										</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 159 -->
+
+			<div class="pagebreak pageNumber">159</div>
+
+			<div class="sidebar">
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<table style="border: 0;">
+							<colgroup>
+								<col style="text-align: left; width: 1%;" />
+								<col />
+							</colgroup>
+							
+							<tbody>
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q: Which of the two ways of creating a window.onload handler
+											is better, using a function name or an anonymous function?</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> One isn’t
+											better than the other, they both do basically the same
+											thing: set the value of <code class="literal">window.onload</code>
+											to a function that will run when the page has loaded. If you
+											need to call <code class="literal">init</code>
+											from another function later in your program for some reason,
+											then you’ll need to define an <code class="literal">init</code>
+											function. Otherwise, it doesn’t matter which way you do it.
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Q: What’s the
+											difference between built-in objects like window and
+											document, and the ones we make?</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong></p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> One
+											difference is that built-in objects follow the guidelines
+											set by specifications, so you can refer to the W3C
+											specifications to understand all their properties and
+											methods. In addition, many of the built-in objects, like
+											String, may have properties that are immutable and can not
+											be changed. Other than that, objects are objects. The nice
+											thing about built-in objects is they’re already built for
+											you.
+										</p>
+										<aside>
+											Yes, String is an object! Check out a good JavaScript
+											reference to get all the details of its properties and methods.</p>
+										</aside>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+			
+			<figure>
+				<img src="/contents/html5/figs/web/159fig01.png" />
+			</figure>
+
+<!-- Page 160 -->
+
+			<div class="pagebreak pageNumber">160</div>
+
+			<div class="sidebar" id="bullet_points-id00041">
+				<img src="/contents/html5/figs/web/xxvifig03.png">
+
+				<div class="itemizedlist">
+					<ul class="itemizedlist">
+						<li class="listitem">
+							<p>
+								To create a function, use
+								the function keyword with parentheses to hold parameters, if
+								there are any.
+							</p>
+						</li>
+						
+						<li class="listitem"><p>Functions can be named, or be anonymous.</p></li>
+						
+						<li class="listitem"><p>Naming rules for functions are the same as naming rules for variables.</p></li>
+						
+						<li class="listitem">
+							<p>The body of a function goes
+								between curly braces, and contains statements that do the work
+								of the function.
+							</p>
+						</li>
+						
+						<li class="listitem"><p>A function can return a value with the return statement.</p></li>
+						
+						<li class="listitem"><p>To invoke (or call) a function, use its name and pass any arguments it needs.</p></li>
+						
+						<li class="listitem"><p>JavaScript uses pass-by-value parameter passing.</p></li>
+						
+						<li class="listitem">
+							<p>
+								When you pass an object, like a dog, as an argument to a
+								function, the parameter gets a copy of the <strong>reference</strong>
+								to the object.
+							</p>
+						</li>
+						
+						<li class="listitem">
+							<p>Variables defined in functions, including parameters, are known as local variables.</p>
+						</li>
+						
+						<li class="listitem"><p>Variables defined outside of functions are known as global variables.</p></li>
+						
+						<li class="listitem">
+							<p>
+								Local variables are not visible
+								outside the function in which they are defined. This is known as
+								the scope of a variable.
+							</p>
+						</li>
+						
+						<li class="listitem">
+							<p>
+								If you declare a local variable
+								with the same name as a global variable, the local variable
+								shadows the global variable.
+							</p>
+						</li>
+						
+						<li class="listitem">
+							<p>
+								When you link to multiple
+								JavaScript files from your page, all the global variables are
+								defined in the same global space.
+							</p>
+						</li>
+						
+						<li class="listitem">
+							<p>
+								If you assign a new variable
+								without using the var keyword, that variable will be global,
+								even if you are first assigning it in a function.
+							</p>
+						</li>
+						
+						<li class="listitem">
+							<p>
+								Functions are values that can be
+								assigned to variables, passed to other functions, stored in
+								arrays, and assigned to object properties.
+							</p>
+						</li>
+						
+						<li class="listitem"><p>Objects are collections of properties.</p></li>
+						
+						<li class="listitem"><p>You access an object’s properties using dot notation or the [ ] notation.</p></li>
+						
+						<li class="listitem">
+							<p>If you use [ ] notation, enclose the property’s name as a string; for example, myObject[“name”].</p>
+						</li>
+						
+						<li class="listitem">
+							<p>You can change a property’s value, delete properties, or add new properties to an object.</p>
+						</li>
+						
+						<li class="listitem"><p>You can enumerate an object’s properties using a for-in loop.</p></li>
+						
+						<li class="listitem"><p>A function assigned to an object property is referred to as a method.</p></li>
+						
+						<li class="listitem">
+							<p>
+								A method can use a special keyword, <code class="literal">this</code>,
+								to refer to the object on which it was invoked.
+							</p>
+						</li>
+						
+						<li class="listitem"><p>A constructor is a function that makes objects.</p></li>
+						
+						<li class="listitem">
+							<p>The job of a constructor is to create a new object and initialize its properties.</p>
+						</li>
+						
+						<li class="listitem">
+							<p>To invoke a constructor to create an object, use the new keyword. For example, new Dog().</p>
+						</li>
+						
+						<li class="listitem">
+							<p>
+								We’ve already been using several
+								objects in this book, including document, window, and various
+								element objects.
+							</p>
+						</li>
+						
+						<li class="listitem"><p>The window object is the global object.</p></li>
+						
+						<li class="listitem"><p>The document object is one of window’s properties.</p></li>
+						
+						<li class="listitem"><p>The document.getElementById method returns an element object.</p></li>
+					</ul>
+				</div>
+			</div> <!-- /sidebar -->
+
+<!-- Page 161 -->
+
+			<div class="pagebreak pageNumber">161</div>
+
+			<div class="sidebar">
+				<img src="/contents/html5/figs/web/html5cross2.png">
+
+				<p>
+					It’s been a whirlwind chapter
+					of functions, objects, properties and methods—so there’s lots to
+					make stick. Sit back, relax, and work the rest of your brain a
+					little. Here’s your Chapter 4crossword puzzle.
+				</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/161fig01.png" />
+				</figure>
+
+				<div class="informaltable">
+					<table style="border-collapse: collapse;">
+						<colgroup>
+							<col class="c1" />
+							<col class="c2" />
+							<col class="c3" />
+							<col class="c4" />
+						</colgroup>
+						
+						<thead>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;" colspan="2">
+									<p>Across</p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;" colspan="2">
+									<p>Down</p>
+								</td>
+							</tr>
+						</thead>
+						
+						<tbody>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>1.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>These variables are only available in functions.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>2.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>This kind of function makes objects.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>4.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>The true global object.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>3.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>Functions might or might not include this kind of statement.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>6.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>The _________ object represents the DOM.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>5.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>Stringing together properties and function calls with the dot operator.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>11.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>Arguments are passed by ______________.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>7.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>A property in window that we assign to a handler function.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>12.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>Use this keyword to start a function definition.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>8.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>What you supply in your function call.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>14.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>Functions without return statements return this.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>9.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>The ______ operator lets you access an object’s properties and methods.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>15.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>A function in an object.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>10.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>By convention, constructors have a name with an _________ first letter.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>17.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>Functions without a name.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>13.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>Refers to the current object in an object method.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid;"><p>18.</p></td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid;">
+									<p>What you supply in your function definition.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid;"><p>16.</p></td>
+								
+								<td style="vertical-align: top;"><p>Variable scope that is visible everywhere.</p></td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- /informaltable -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 162 -->
+
+			<div class="pagebreak pageNumber">162</div>
+
+			<div class="sidebar" id="sharpen_your_pencil_solution-id00043">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/sharpenpencil.png">
+				</figure>
+
+				<p>
+					Use your knowledge of functions
+					and passing arguments to parameters to evaluate the code below.
+					After you’ve traced through the code, write the value of each
+					variable below. Here’s our solution.
+				</p>
+
+				<div class="hiddencode">				
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/162fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>function dogsAge(age) {</pre>
+<pre>	return age * 7;</pre>
+<pre>}</pre>
+								<br />
+<pre>var myDogsAge = dogsAge(4);</pre>
+								<br />
+<pre>function rectangleArea(width, height) {</pre>
+<pre>	var area = width * height;</pre>
+<pre>	return area;</pre>
+<pre>}</pre>
+								<br />
+<pre>var rectArea = rectangleArea(3, 4);</pre>
+								<br />
+<pre>function addUp(numArray) {</pre>
+<pre>	var total = 0;</pre>
+<pre>	for (var i = 0; i < numArray.length; i++) {</pre>
+<pre>		total += numArray[i];</pre>
+<pre>	}</pre>
+<pre>	return total;</pre>
+<pre>}</pre>
+								<br />
+<pre>var theTotal = addUp([1, 5, 3, 9]);</pre>
+								<br />
+<pre>function getAvatar(points) {</pre>
+<pre>	var avatar;</pre>
+<pre>	if (points < 100) {</pre>
+<pre>		avatar = "Mouse";</pre>
+<pre>	} else if (points > 100 && points < 1000) {</pre>
+<pre>		avatar = "Cat";</pre>
+<pre>	} else {</pre>
+<pre>		avatar = "Ape";</pre>
+<pre>	}</pre>
+<pre>	return avatar;</pre>
+<pre>}</pre>
+								<br />
+<pre>var myAvatar = getAvatar(335);</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 163 -->
+
+			<div class="pagebreak pageNumber">163</div>
+
+			<div class="sidebar">
+				<img src="/contents/html5/figs/web/html5crosssolution.png">
+
+				<figure>
+					<img src="/contents/html5/figs/web/163fig01.png" />
+				</figure>
+			</div>
+		
+		</section> <!-- Section 35 -->
+
+	</div> <!-- /container -->
+
+</body>
+</html>

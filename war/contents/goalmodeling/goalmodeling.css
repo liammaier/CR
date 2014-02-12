@@ -1,0 +1,143 @@
+div.goalmodeling.container {
+	font-family: "Times New Roman";
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 650px;
+	font-size: 12pt;
+}
+
+/* COMMON */
+
+.goalmodeling h1 {
+	text-align: center;
+	font-weight: bold;
+	font-size: 1.5em;
+}
+
+.goalmodeling h2 {
+	margin-top: 1em;
+	margin-bottom: .5em;
+	font-weight: bold;
+}
+
+.goalmodeling h3 {
+	font-size: 12pt;
+	font-style: normal;
+	margin-left: 0;
+	margin-right: 0;
+	margin-top: .5em;
+	margin-bottom: .5em;
+	font-weight: bold;
+}
+
+.goalmodeling p {
+	margin-top: .5em;
+	margin-bottom: 0;
+}
+
+.goalmodeling .pagebreak {
+	text-align: center;
+	display: block;
+	width: 100%;
+	border-bottom: 2px solid black;
+	margin-top: 3em;
+	margin-bottom: 3em;
+}
+
+.goalmodeling img {
+	width: 650px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.goalmodeling .left {
+	text-align: left;
+}
+
+.goalmodeling .right {
+	text-align: right;
+}
+
+.goalmodeling .center {
+	text-align: center;
+}
+
+.goalmodeling .clear {
+	clear: both;
+}
+
+.goalmodeling span.arial {
+	font-family: Arial;
+	font-size: 80%;
+}
+
+.goalmodeling p.command {
+	margin-top: .5em;
+	margin-left: 2em;
+}
+
+.goalmodeling .subscript {
+	font-size: 50%;
+	vertical-align: bottom;
+}
+
+/* LISTS */
+
+.goalmodeling ul {
+	margin-left: 1em;
+	margin-right: 1em;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-left: 40px;
+}
+
+.goalmodeling ul li {
+	margin-left: -2.5em;
+	margin-bottom: .5em;
+}
+
+.goalmodeling ul ul {
+	margin-left: 2em;
+	list-style-type: none;
+}
+
+.goalmodeling ul ul li {
+	text-indent: -20px;
+}
+
+.goalmodeling ul ul li:before {
+	content:"-";
+	position: relative;
+	left: -5px;
+}
+
+.goalmodeling ul.alphabetizedList li {
+	list-style-type: lower-latin;
+}
+
+.goalmodeling ul.invisibleNumber {
+	list-style-type: none;
+}
+
+/* TABLES */
+
+.goalmodeling table {
+	border-collapse: collapse;
+	border: 1px solid black;
+	width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	font-family: Arial;
+	font-size: 90%;
+	margin-top: 1em;
+}
+
+.goalmodeling table td {
+	margin: .5em;
+	border: 1px solid black;
+	padding: 5px;
+}
+
+

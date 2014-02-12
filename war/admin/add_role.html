@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en-US">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="/CSS/main.css">
+		<link rel="stylesheet" type="text/css" href="/public/css/bootstrap.min.css">
+		
+		<script type="text/javascript">
+		changeHighlighted("AdminPanel");
+		</script>
+		
+		<title>Add Role</title>
+	</head>
+	<body>
+		Add a role to an existing user
+		<form action="/admin/add_role" method="post" >
+			Group Id: <input type="text" name="group_id" /> <br>
+			User's email: <input type="text" name="email" /> <br>
+			Role to add: <br><br>
+			
+			<input type="radio" name="role" value="leader"> Leader
+			<input type="radio" name="role" value="member"> Member
+			
+			<br>
+
+			<input type="submit" value="Add role" />
+		</form>
+	</body>
+</html>

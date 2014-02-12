@@ -1,0 +1,3623 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+
+	<title>Chapter 10. Putting JavaScript to Work: Web Workers</title>
+	<META name="javascript" javascript="/contents/html5/html5.js">
+
+</head>
+	
+<body>
+
+	<div id="html51" class="html5 container">
+	
+		<section class="section" data-number="0" data-name="Introduction">
+
+			<div class="pagebreak pageNumber">473</div>
+			
+			<h1>Chapter 10. Putting JavaScript to Work: Web Workers</h1>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/473fig01.png" />
+			</figure>
+			
+			<p>
+				<strong>Slow script - do you want to continue running it?</strong>
+				If you've spent enough time with JavaScript or browsing the Web you've probably seen the "slow
+				script" message. And, with all those
+				multicore processors sitting in your new machine how could a script be running <em>too slow</em>? It's because JavaScript
+				can only do one thing at a time. But, with HTML5 and Web Workers, <em>all that changes</em>. Youve now got the ability to
+				spawn <em>your own</em> JavaScript workers to get more work done. Whether you're just trying to design a more responsive
+				app, or you just want to max out your machine's CPU, Web Workers are here to help. Put your JavaScript manager's hat on,
+				let's get some workers cracking!
+			</p>
+
+<!-- Page 474 -->
+
+			<div class="pagebreak pageNumber">474</div> 
+			
+		</section> <!-- Section 0 -->
+		
+		<section class="section" data-number="1" data-name="The Dreaded Slow Script">
+			
+				<h2 class="title">The Dreaded Slow Script</h2>
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web/474fig01.png" />
+				</figure>
+					
+				<p>
+					One of the great things about JavaScript is it does only one thing at a time. It;s what we like to call "single-threaded."
+					Why's that great? Because it makes programming straightforward. When you have lots of threads of
+					execution happening at the same time, writing a program that works correctly can become quite a challenge.
+				</p>
+				
+				<p>
+					The downside of being single-threaded is that if you give a JavaScript program too much to do, it can get overwhelmed,
+					and we end up with "slow script" dialogs. The other ramification of having only one thread is if you have JavaScript code
+					that is working really hard, it doesn't leave a lot of computational power for your user interface or your user's
+					interactions, and your application can appear to be sluggish, or unresponsive.
+				</p>
+					
+		</section> <!-- Section 1 -->
+				
+		<section class="section" data-number="2" data-name="How JavaScript spends its time">
+			
+			<h2 class="title">How JavaScript spends its time</h2>
+			
+			<p>Let's see what this all means by taking a look at how JavaScript handles the tasks of a typical page:</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/474fig02.png" />
+			</figure>
+			
+<!-- Page 475 -->
+
+			<div class="pagebreak pageNumber">475</div> 
+		
+		</section> <!-- Section 2 -->
+		
+		<section class="section" data-number="3" data-name="When single-threaded goes BAD">
+		
+			<h2 class="title">When single-threaded goes BAD</h2>
+			
+			<p>
+				It's true, for a lot of uses,
+				this single-threaded mode of computing by JavaScript works great,
+				and as we've said, it makes programming straightforward. But, when
+				you've written code that is so "computationally intensive' it starts
+				to impact JavaScript's ability to get everything done, the
+				single-threaded model starts to break down.
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/475fig01.png" />
+			</figure>
+			
+<!-- Page 476 -->				
+
+			<div class="pagebreak pageNumber">476</div> 
+			
+		</section> <!-- Section 3 -->
+		
+		<section class="section" data-number="4" data-name="Adding another thread of control to help">
+			
+			<h2 class="title">Adding another thread of control to help</h2>
+			
+			<p>
+				Before HTML5, we were stuck with one thread of
+				control in our pages and apps, but with Web Workers we've now got a way to create another thread of control
+				to help out. So, if you've got code that takes a long time to compute, you can create a Web Worker that
+				will handle that task while the main JavaScript thread
+				of control is making sure everything is good with the browser and the user.
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/476fig01.png" />
+			</figure>
+			
+			<p>
+				Now, we've made a big deal out of the fact that one thread of control keeps things simple and easy to program,
+				and that is true. But, as you're going to see, Web Workers have been carefully crafted to make sure things
+				stay simple, easy and safe for the programmer. We'll see how in just a moment...
+			</p>
+				
+<!-- Page 477 -->				
+
+			<div class="pagebreak pageNumber">477</div> 
+	
+			<div class="sidebar">
+				
+				<figure class="center">
+					<img src="/contents/html5/figs/web/javascriptexposedagain.png">
+
+					<br />
+
+					<h3>This week's interview: Where JavaScript spends his time.</h3>
+				</figure>
+				
+				<p><span class="formalpara-title"><strong>Head First:</strong>:</span>Welcome back JavaScript, great to have you.</p>
+				
+				<p>
+					<span class="formalpara-title"><strong>JavaScript:</strong>:</span>Glad
+					to be here, as long as we stick to my schedule, lots to do.
+				</p>
+				
+				<p>
+					<span class="formalpara-title"><strong>Head First:</strong>:</span>That is actually where I thought we might focus
+					our time today. You're a super successful guy, you have so much going on - how do you get it all done?
+				</p>
+				
+				<p>
+					<span class="formalpara-title"><strong>JavaScript:</strong>:</span>Well,
+					I have a philosophy: I do one thing at a time, and I do it really well.
+				</p>
+				
+				<p>
+					<span class="formalpara-title"><strong>Head First:</strong>:</span>How do you do only one thing at a time? To us it looks
+					like you're retrieving data, displaying pages, interacting with the user, managing timers and alerts, and on and on...
+				</p>
+				
+				<p>
+					<span class="formalpara-title"><strong>JavaScript:</strong>:</span>Yes, I do all that, but whatever I'm doing, I do only
+					that. So if I'm dealing with the user, that's all I do until I'm done with that.
+				</p>
+				
+				<p>
+					<span class="formalpara-title"><strong>Head First:</strong>:</span>How can that be true? What if a timer goes off, or
+					network data arrives, or whatever, don't you stop and do that?
+				</p>
+				
+				<p>
+					<span class="formalpara-title"><strong>JavaScript:</strong>:</span>When
+					an event occurs, like the ones you've mentioned, that event is added to a queue. I don't even look at it until I've
+					finished whatever I'm working on. That way I do everything correctly and safely and efficiently.
+				</p>
+				
+				<p>
+					<span class="formalpara-title"><strong>Head First:</strong>:</span>Are you ever late getting to one of those tasks on the
+					queue?
+				</p>
+				
+				<p>
+					<span class="formalpara-title"><strong>JavaScript:</strong>:</span>Oh it happens. Luckily I'm the technology behind
+					browser web pages, so how bad can it be if I get a little behind? You should talk to the guys that have to run code
+					for spacecraft thrusters or nuclear power plant controllers, those guys have to live by different rules-that's why
+					they make the big bucks.
+				</p>
+				
+				<p>
+					<span class="formalpara-title"><strong>Head First:</strong>:</span>I've always wondered what's going on when I get
+					the "Slow script, do you want to continue" dialog on my browser. Is that you taking a break?
+				</p>
+				
+				<p>
+					<span class="formalpara-title"><strong>JavaScript:</strong>:</span>Taking
+					a break! Hah. That's when someone has structured their page such that I've got so much work to do, I can't do it
+					all! If you write a bit of JavaScript that hogs all my time, then your interaction with
+					your user is going to suffer. I can only do so much.
+				</p>
+				
+				<p>
+					<span class="formalpara-title"><strong>Head First:</strong>:</span>Sounds like you need some help.
+				</p>
+				
+				<p>
+					<span class="formalpara-title"><strong>JavaScript:</strong>:</span>Well
+					thanks to HTML5, I have help now because that's where Web Workers come in. If you really need to write compute-intensive
+					code, use Web Workers to offload some of the work-that way I can keep my focus, and workers can do some of the heavy
+					lifting for me (without getting in my way).
+				</p>
+				
+				<p>
+					<span class="formalpara-title"><strong>Head First:</strong>:</span>Interesting, we'll look into that. Now, next question...
+					Oh, wait, he's gone, looks like he's off to his next task. Serious guy, huh?
+				</p>
+			
+			</div> <!-- /sidebar -->
+			
+<!-- Page 478 -->				
+
+			<div class="pagebreak pageNumber">478</div> 
+		
+		</section> <!-- Section 4 -->
+		
+		<section class="section" data-number="5" data-name="How Web Workers work">
+		
+			<h2 class="title">How Web Workers work</h2>
+			
+			<p>
+				Let's take a look at a day in the life of a Web Worker: how workers are created, how they know what to do, and how they
+				get results back to your main browser code.
+			</p>
+			
+			<p>
+				<strong>To use Web Workers, the browser first has to create one or more workers to help compute tasks. Each worker is
+				defined with its own JavaScript file that contains all the code (or references to code) it needs to do its job.</strong>
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/478fig01.png" />
+			</figure>
+			
+			<hr>
+			
+			<p>
+				<strong>Now, workers live in a very restricted world; they don't have access to many of the runtime objects your main
+				browser code does, like the DOM or any of the variables or functions in your main code.</strong>
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/478fig02.png" />
+			</figure>
+			
+<!-- Page 479 -->				
+
+			<div class="pagebreak pageNumber">479</div> 
+			
+			<p>
+				<strong>To get a worker to start working, the browser typically sends it a message. The worker code receives the message,
+				takes a look at it to see if there are any special instructions, and starts working.</strong>
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/479fig01.png" />
+			</figure>
+			
+			<hr>
+			
+			<p>
+				<strong>When the worker completes its work, it then sends a message back, with the final results of what it's been working on.
+				The main browser code then takes these results and incorporates them into the page in some way.</strong>
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/479fig02.png" />
+			</figure>
+
+<!-- Page 480 -->				
+			
+			<div class="pagebreak pageNumber">480</div> 
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/480fig01.png" />
+			</figure>
+			
+			<p><strong>To keep things efficient.</strong></p>
+			
+			<p>
+				One reason the DOM and JavaScript have been so successful is
+				that we're able to highly optimize DOM operations because we have only one thread with access to the DOM. If we let
+				multiple threads of computation concurrently change the DOM, then we'll seriously impact its performance (and browser
+				implementors would have to go to great effort to make sure making changes to the DOM is safe). The truth is, allowing a
+				bunch of changes to the DOM at the same time can easily lead to situations where the DOM is in an inconsistent state,
+				which would be bad. Very bad.
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/480fig02.png" />
+			</figure>
+
+<!-- Page 481 -->				
+
+			<div class="pagebreak pageNumber">481</div> 
+			
+			<div class="sidebar">
+				
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/sharpenpencil.png" />
+				</figure>
+				
+				<p class="clear">
+					Take a look at all the potential uses for workers below. Which ones might improve the design and the performance of an app?
+				</p>
+				
+				<div class="informaltable">
+					<table>	
+						<tbody>
+							<tr>
+								<td class="checkbox">
+									<img src="/contents/html5/figs/web/squer.png" />
+								</td>	
+
+								<td class="item"><p>Caching data for use in your pages.</p></td>	
+
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+								
+								<td class="item"><p>Spell checking the page as the user types.</p>
+								</td>
+							</tr>
+
+							<tr>
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>	
+
+								<td class="item"><p>Processing large amounts of data in arrays or large JSON responses from web services.</p></td>
+
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+								<td class="item"><p>Polling web services and alerting the main page when something happens.</p></td>
+							</tr>
+
+							<tr>
+								<td class="checkbox">
+									<img src="/contents/html5/figs/web/squer.png" />
+								</td>
+								
+								<td class="item"><p>Managing a database connection along with adding and removing records for the main page.</p></td>		
+
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+								
+								<td class="item"><p>Image processing of data in a canvas.</p>
+								</td>
+							</tr>		
+
+							<tr>
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>		
+
+								<td class="item"><p>Automated race track betting agent.</p></td>		
+
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+								
+								<td class="item"><p>Code syntax or other language highlighting.</p></td>
+							</tr>		
+
+							<tr>
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>			
+
+								<td class="item"><p>Analyzing video.</p></td>			
+
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>			
+
+								<td class="item"><p>Pre-fetching data based on what your user is doing.</p>
+								</td>
+							</tr>		
+
+							<tr>
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>			
+
+								<td class="item"><p>_____________________</p></td>			
+
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>		
+
+								<td class="item"><p>Managing advertising for your page.</p></td>
+							</tr>		
+
+							<tr>
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+								
+								<td class="item"><p>_____________________</p></td>				
+
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>			
+
+								<td class="item"><p>_____________________</p></td>
+							</tr>		
+
+							<tr>
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+								
+								<td class="item"><p>_____________________</p></td>				
+
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+								
+								<td class="item"><p>_____________________</p></td>
+							</tr>			
+
+							<tr>
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+								
+								<td class="item"><p>_____________________</p></td>					
+
+								<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+								
+								<td class="item"><p>_____________________</p></td>
+							</tr>				
+						</tbody>
+					</table>
+				</div> <!-- /informaltable -->
+
+				<aside>Your ideas here!</aside>
+
+			</div> <!-- sidebar -->
+		
+			<aside>
+				All answers are good uses, although you could debate a couple: spell checking & syntax checking may be better done
+				in the main page code; race track betting may be better not done at all. ;-)
+			</aside>
+			
+<!-- Page 482 -->				
+
+			<div class="pagebreak pageNumber">482</div> 
+			
+			<div class="sidebar-left">
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/watchit.png" />
+				</figure>
+				
+				<p>
+					Google's Chrome browser has some extra security restrictions that will prevent you from running Web Workers directly
+					from a file. If you try, your page won't run and you'll get no indication of why (including no error messages telling
+					you what's wrong!).
+				</p>
+				
+				<p>
+					So, for these examples, we recommend either using a different browser, or running your own server and running
+					the examples from http://localhost. Or you can upload them to a hosted server if you have access to one.
+				</p>
+			
+			</div> <!-- /sidebar-left -->
+			
+			<aside class="right">
+				You can also use the Chrome runtime switch --allow-file-access-from-files, but we don't recommend this witch beyond
+				just testing your code.
+			</aside>
+				
+			<div class="sidebar clear">
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/watchit.png" />
+				</figure>
+				
+				<p>
+					Almost all the modern browsers support Web Workers, but there is one exception: Internet Explorer 9. The good news
+					is that for IE10 and later, you can count on Web Workers, but with IE9 and all the IE versions before it, you'll
+					have to supply an alternative experience.
+				</p>
+				
+				<p>
+					But rather than worrying about IE specifically, here's how you can easily check to see if any browser supports Web Workers:
+				</p>
+
+				<div class="hiddencode">				
+					<figure class="center">
+						<img class="codeimage" src="/contents/html5/figs/web/482fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>if (window["Worker"]) {</pre>
+<pre>	var status = document.getElementById("status");</pre>
+<pre>	status.innerHTML = "Bummer, no Web Workers";</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div> <!-- sidebar -->
+			
+<!-- Page 483 -->				
+
+			<div class="pagebreak pageNumber">483</div> 
+			
+		</section> <!-- Section 5 -->
+		
+		<section class="section" data-number="6" data-name="Your first Web Worker...">
+			
+			<h2 class="title">Your first Web Worker...</h2>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/483fig01.png" />
+			</figure>
+			
+			<p>
+				Let's get down to the business of creating a worker to see how this all works. To do that we need a page to put
+				everything in. We'll go with the simplest HTML5 markup we can get away with; type this into
+				<code>pingpong.html</code>:
+			</p>
+
+			<div class="hiddencode">			
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/483fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>	&lt;head&gt;</pre>
+<pre>		&lt;title&gt;Ping Pong&lt;/title&gt;</pre>
+<pre>		&lt;meta charset="utf-8"&gt;</pre>
+<pre>		&lt;script src="manager.js"&gt;&lt;/script&gt;</pre>
+<pre>	&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;p id="output"&gt;</pre>
+<pre>&lt;/p&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 6 -->
+		
+		<section class="subsection" data-number="7" data-name="How to create a Web Worker">
+			
+			<h3 class="title">How to create a Web Worker</h3>		
+			
+			<p>
+				Before we start implementing <code class="literal">manager.js</code>, let's look at how you actually create a Web Worker:
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/483fig03.png" />
+				</figure>	
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var worker = new Worker("worker.js");</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>
+				So that's how you create one worker, but of course you don't have to stop there; you can create as many workers as you like:
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/483fig04.png" />
+				</figure>	
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var worker2 = new Worker("worker.js");</pre>
+<pre>var worker3 = new Worker("worker.js");</pre>
+							<br />
+<pre>var another_worker = new Worker("another_worker.js");</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 484 -->
+
+			<div class="pagebreak pageNumber">484</div> 
+			
+		</section> <!-- Section 7 -->
+		
+		<section class="section" data-number="8" data-name="Writing Manager.js">
+					
+			<h2 class="title">Writing Manager.js</h2>
+			
+			<p>
+				Now that you know how to create a worker (and how easy it is), let's start working on our
+				<code class="literal">manager.js</code> code. We'll keep this code simple and create just one worker for now.
+				Create a file named <code class="literal">manager.js</code> and add this code:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/484fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>window.onload = function() {</pre>
+<pre>	var worker = new Worker ("worker.js");</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>
+				That's a great start, but now we want to get the worker to actually do some work. As we've already discussed, one way
+				we tell a worker to do some work is by sending it a message. To send a message we use the worker object's
+				<code class="literal">postMessage</code> method. Here's how you use it:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/484fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>window.onload = function() {</pre>
+<pre>	var worker = new Worker("worker.js");</pre>
+							<br />
+<pre>	worker.postMessage("ping");</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sidebar">
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/postmessageupclose.png" />
+				</figure>
+				
+				<p class="clear">
+					You can send more than just strings in <code class="literal">postMessage</code>. Let's look at everything you
+					can send in a message:
+				</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/484fig03.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>worker.postMessage("ping");</pre>
+<pre>worker.psotMessage([1, 2, 3, 5, 11]);</pre>
+<pre>worker.postMessage({"message": "ping", "count": 5});</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+				
+				<p>
+					You <strong>can't</strong> send functions:
+				</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/484fig04.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>worker.postMessage(updateTheDOM);</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div> <!-- /sidebar -->
+				
+<!-- Page 485 -->				
+
+			<div class="pagebreak pageNumber">485</div> 
+		
+		</section> <!-- Section 8 -->
+		
+		<section class="section" data-number="9" data-name="Receiving messages from the worker">
+
+			<h2 class="title">Receiving messages from the worker</h2>
+
+			<p>
+				We're not quite done with our <code class="literal">manager.js</code> code yet-we still need to be able to receive a
+				message from the worker if we're going to make use of all its hard work. To receive a worker's message we need to
+				define a handler for the worker's
+				<code class="literal">onmessage</code> property so that anytime a message comes in from that worker, our handler
+				will be called (and handed the message). Here's how we do that:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/485fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>window.onload = function() {</pre>
+<pre>	var worker = new Worker("worker.js");</pre>
+							<br />
+<pre>	worker.postMessage("ping");</pre>
+							<br />
+<pre>	worker.onmessage = function(event) {</pre>
+<pre>		var message = "Worker " + " says " + event.data;</pre>
+<pre>		document.getElementById("output").innerHTML = message;</pre>
+<pre>	};</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<div class="sidebar">
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/onmessageupclose.png" />
+				</figure>
+
+				<p class="clear">
+					Let's take a quick look at the message our
+					<code class="literal">onmessage</code> handler is receiving from the worker. As we've said, this message is
+					wrapped in an <code class="literal">Event</code> object, which has two properties we're interested in:
+					<code class="literal">data</code> and <code class="literal">target</code>:
+				</p>
+
+				<div class="hiddencode">
+					<figure class="center">
+						<img class="codeimage" src="/contents/html5/figs/web/485fig02.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>worker.onmessage = function (event) {</pre>
+<pre>	var message = event.data;</pre>
+<pre>	var worker = event.target;</pre>
+<pre>};</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div> <!--sidebar-->
+			
+<!-- Page 486 -->				
+
+			<div class="pagebreak pageNumber">486</div> 
+		
+		</section> <!-- Section 9 -->
+		
+		<section class="section" data-number="10" data-name="Now let's write the worker">
+					
+			<h2 class="title">Now let's write the worker</h2>
+			
+			<p>
+				To get started on the worker, the first thing we need to do is to make sure the worker can receive messages that are sent
+				from <code>manager.js</code>-that's how the worker gets its work orders. For that we're also going to make use of another
+				<code class="literal">onmessage</code> handler, the one in the worker itself. Every worker is ready to receive messages,
+				you just need to give the worker a handler to
+				process them. Here's how we do that (go ahead and create a file <code class="literal">worker.js</code>
+				and add this code):
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/486fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>onmessage = pingPong;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+				
+		</section> <!-- Section 10 -->
+		
+		<section class="subsection" data-number="11" data-name="Writing the worker's message handler">
+			
+			<h3 class="title">Writing the worker's message handler</h3>
+			
+			<p>
+				Let's write the worker's message handler, <code class="literal">pingPong</code>, and we're going to start simple. Here's
+				what it's going to do (you might have already guessed from the name <code class="literal">pingPong</code>): the worker's
+				going to check any message it gets to make sure it contains the string "ping", and if it does, we're going to send a message
+				back that says "pong". So, in effect, the work of the worker is just to get a "ping" and to answer with a "pong"-we're not
+				going to do any heavy computation here, we're just going to make sure the manager and worker are communicating. Oh, and if
+				the message doesn't say "ping", we're just going to ignore it.
+			</p>
+			
+			<p>
+				So the function <code class="literal">pingPong</code> takes a message and responds with "pong". Go ahead and add this
+				code to <code class="literal">worker.js</code>:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/486fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>inmessage = pingPong;</pre>
+<pre>function pingPong(event) {</pre>
+<pre>	if (event.data == "ping") {</pre>
+<pre>		postMessage("pong");</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+<!-- Page 487 -->				
+
+			<div class="pagebreak pageNumber">487</div> 
+		
+		</section> <!-- Section 11 -->
+		
+		<section class="section" data-number="12" data-name="Serving up a test drive">
+			
+			<h2 class="title left">Serving up a test drive</h2>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" style="margin-left:20px"/>
+			</figure>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/487fig01.png" />
+			</figure>
+			
+			<br />
+
+			<p>
+				Make sure you've got <code>pingpong.html</code>,<code>manager.js</code> and <code>worker.js</code> typed in and saved.
+				Now keep those files open so you can review them and let's think through how this works. First, <code>manager.js</code>
+				creates a new worker, assigns a message handler to it, and then
+				sends the worker a "ping" message. The worker, in turn, makes sure <code>pingPong</code>
+				is set up as its message handler, and then it waits. At some point, the worker receives a message from the manager,
+				and when it does it checks to see that it contains "ping", which it does, and then the worker does a lot of very little
+				hard work and sends a "pong" message back.
+			</p>
+			
+			<p>
+				At this point the main browser code receives a message from the worker, which it hands to the message handler. The
+				handler then simply prepends "Worker says" to the front of the message, and displays it.
+			</p>
+			
+			<p>
+				Now, our calculations here say the page should display "Worker says pong"...okay okay, we know, you can't take the
+				suspense any more... go ahead and load the page already!
+			</p>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/487fig02.png" />
+			</figure>
+			
+<!-- Page 488, 489 -->				
+
+			<div class="pagebreak pageNumber clear">488, 489</div> 
+	
+			<div class="sidebar" id="be_the_browser-id00121">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/bethebrowser.png">
+				</figure>
+				
+				<h2>BE the Browser</h2>
+				
+				<p>
+					<strong>It's time to pretend you're the browser evaluating JavaScript. For each bit of code below, act like you're the
+						browser and write its output in the lines provided. You can assume this code is using the same worker.js we just
+						wrote:</strong>
+				</p>
+				
+				<aside class="right">
+					You can check the solutions at the end of the chapter.
+				</aside>
+				
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/488fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>window.onload = function() {</pre>
+<pre>	var worker = new Worker("worker.js");</pre>
+<pre>	worker.onmessage = function(event) {</pre>
+<pre>		alert("Worker says " + event.data);</pre>
+<pre>	}</pre>
+<pre>	for (var i = 0; i < 5; i++) {</pre>
+<pre>		worker.postMessage("ping");</pre>
+<pre>	}</pre>
+<pre>}</pre>
+								<br />
+<pre>window.onload = function() {</pre>
+<pre>	var worker = new Worker("worker.js");</pre>
+<pre>	worker.onmessage = function(event) {</pre>
+<pre>		alert("Worker says " + event.data);</pre>
+<pre>	}</pre>
+								<br />
+<pre>	for (var i = 5; i > 0; i--) {</pre>
+<pre>		worker.postMessage("pong");</pre>
+<pre>	}</pre>
+<pre>}</pre>
+								<br />
+<pre>window.onload = function() {</pre>
+<pre>	var worker = new Worker("worker.js");</pre>
+<pre>	worker.onmessage = function(event) {</pre>
+<pre>		alert("Worker says " + event.data);</pre>
+<pre>		worker.postMessage("ping");</pre>
+<pre>	}</pre>
+<pre>	worker.postMessage("ping");</pre>
+<pre>}</pre>
+								<br />
+<pre>window.onload = function() {</pre>
+<pre>	var worker = new Worker("worker.js");</pre>
+<pre>	worker.onmessage = function(event) {</pre>
+<pre>		alert("Worker says " + event.data);</pre>
+<pre>	}</pre>
+								<br />
+<pre>	setInterval(pinger, 1000);</pre>
+<pre>	</pre>
+<pre>	function pinger() {</pre>
+<pre>		worker.postMessage("ping");</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div> <!--sidebar -->
+				
+<!-- Page 490 -->				
+
+			<div class="pagebreak pageNumber">490</div> 
+		
+			<div class="sidebar">
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/sharpenpencil.png" alt="Sharpen your pencil" />
+				</figure>
+				
+				<p class="clear">
+					While workers typically get their work orders through a message, they don't have to. Check out this nice, compact
+					way to get work done with workers and HTML. When you know what it does, describe it below. You can check your solution
+					with ours at the end of the chapter.
+				</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/490fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>	&lt;head&gt;</pre>
+<pre>		&lt;title&gt;Quote&lt;/title&gt;</pre>
+<pre>		&lt;meta charset="utf-8"&gt;</pre>
+<pre>	&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;p id="quote"&gt;&lt;/p&gt;</pre>
+<pre>	&lt;script&gt;</pre>
+<pre>		var worker = new Worker("quote.js");</pre>
+<pre>		worker.onmessage = function(event) {</pre>
+<pre>			document.getElementById("quote").innerHTML = event.data;</pre>
+<pre>		}</pre>
+<pre>	&lt;/script&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div> <!--sidebar -->
+			
+<!-- Page 491 -->				
+
+			<div class="pagebreak pageNumber">491</div>
+								
+			<div class="sidebar">
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/exercise.png" alt="Exercise" />
+				</figure>
+				
+				<p>
+					Let's add a couple of workers to our pingPong game. Your job is to fill in the blanks to complete the code
+					so we have three pings sent to the workers, and three pongs back from the workers.
+				</p>
+
+				<div class="hiddencode">
+					<figure class="center">
+						<img class="codeimage" src="/contents/html5/figs/web/491fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>window.onload = function() {</pre>
+<pre>	var numWorkers = 3;</pre>
+<pre>	var workers = [];</pre>
+<pre>	for (var i = 0; i < numWorkers; i++) {</pre>
+<pre>		var worker = new Worker("worker.js");</pre>
+<pre>		worker.onmessage = function(event) {</pre>
+<pre>			alert(event.target + " says " + event.data);</pre>
+<pre>		};</pre>
+<pre>		workers.push(worker);</pre>
+<pre>	}</pre>
+<pre>	for (var i = 0; i < workers.length; i++) {</pre>
+<pre>		workers[i].postMessage("ping");</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div> <!--sidebar-->
+			
+			<div class="sidebar" style="border:none">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png" alt="There are no Dumb Questions" />
+				</figure>
+				
+				<blockquote class="blockquote">
+					<table>
+						<tbody>
+							<tr>
+								<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>Can I just pass a function instead of a JavaScript file when I create the worker? That would
+											seem easier and more consistent with how JavaScript usually does things.</strong>
+									</p>
+								</td>
+							</tr>
+
+							<tr class="answer">
+								<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										No, you can't. Here's why: as you know, one of the requirements of a
+										worker is that it not have access to the DOM (or to any state of the main browser thread for that matter). If you
+										could pass a function to the Worker constructor, then your function could also contain reference to the DOM or
+										other parts of your main JavaScript code, which would violate that
+										requirement. So, the designers of Web Workers chose instead to have you just pass a JavaScript URL to avoid that issue.
+									</p>
+								</td>
+							</tr>
+
+							<tr class="question">
+								<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p><strong>When I send a worker an object in a message, does it become a shared object between my main page and
+										the worker?</strong></p>
+								</td>
+							</tr>
+
+							<tr class="answer">
+								<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										No, when you send an object the worker gets a copy of it. Any changes the
+										worker makes will not affect the object in your main page. The worker is executing in a different environment
+										than your main page, so you have no access to objects there. The same
+										is true of objects the worker sends you: you get a copy of them.
+									</p>
+								</td>
+							</tr>
+
+							<tr class="question">
+								<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p><strong>Can workers access localStorage or make XMLHttpRequests?</strong></p>
+								</td>
+
+							</tr>
+							<tr class="answer">
+								<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+								<td style="text-align: left; vertical-align: top;">
+									<p>Yes, workers can access localStorage and make XMLHttpRequests.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</blockquote>
+			</div> <!--sidebar-->
+				
+<!-- Page 492 -->				
+
+			<div class="pagebreak pageNumber">492</div> 
+			
+			<div class="sidebar">
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/exercisesolution.png" alt="Exercise Solutions" />
+				</figure>
+				
+				<p>
+					Let's add a couple of workers to our pingPong game. Your job was to fill in the blanks to complete the code so we
+					have three pings sent to the workers and three pongs back from the workers. Here's our solution.
+				</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/492fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>window.onload = function() {</pre>
+<pre>	var numWorkers = 3;</pre>
+<pre>	var workers = [];</pre>
+<pre>	for (var i = 0; i < numWorkers; i++) {</pre>
+<pre>		var worker = new Worker("worker.js");</pre>
+<pre>		worker.onmessage = function(event) {</pre>
+<pre>			alert(event.target + " says " + event.data);</pre>
+<pre>		};</pre>
+<pre>		workers.push(worker);</pre>
+<pre>	}</pre>
+<pre>	for (var i = 0; i < workers.length; i++) {</pre>
+<pre>		workers[i].postMessage("ping");</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+<!-- Page 493 -->				
+
+			<div class="pagebreak pageNumber">493</div> 
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/493fig01.png" />
+			</figure>
+			
+			<p><strong>Take a look at importScripts.</strong></p>
+			
+			<p>
+				Web Workers have a global function named <code class="literal">importScripts</code> that you can use to import one or
+				more JavaScript files into your worker. To use <code class="literal">importScripts</code> just give it a comma
+				separated list of files or URLs you'd like to import, like this:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/493fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>importScripts("http://bigscience.org/nuclear.js"),</pre>
+<pre>	"http://nasa.gov/rocket.js",</pre>
+<pre>	"mylibs/atomsmasher.js");</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>
+				Then when <code class="literal">importScripts</code> is invoked, each JavaScript URL is retrieved and evaluated in order.
+			</p>
+			
+			<p>
+				Notice that <code class="literal">importScripts</code> is a full-fledged function, so (unlike
+				<code class="literal">import</code> statements in a lot of languages) you can make runtime decisions about importing, like this:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/493fig03.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>if (taskType == "songdetection") {</pre>
+<pre>	importSciprts("audio.js");</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+<!-- Page 494 -->				
+
+			<div class="pagebreak pageNumber clear">494</div> 
+		
+		</section> <!-- Section 12 -->
+		
+		<section class="section" data-number="13" data-name="Virtual Land Grab">
+				
+			<h2 class="title">Virtual Land Grab</h2>
+			
+			<p>
+				Explorers of the Mandelbrot Set have already grabbed areas of the virtual countryside and given them names like the
+				lovely "Seahorse Valley," "Rainbow Islands," and the dreaded "Black Hole." And given the value of physical real estate
+				these days, the only play left seems to be in the virtual spaces. So, we're going to build an explorer for the Mandelbrot
+				Set to get in on the action. Actually, we have to confess, we already have built it, but it's slow-navigating around in
+				the entire Mandelbrot Set could take a very long time -so we're hoping together we can speed it up, and we have a
+				hunch Web Workers may be the answer.
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/494fig01.png" />
+			</figure>
+		
+		</section> <!-- Section 13 -->
+		
+		<section class="section" data-number="14" data-name="Take a look around">
+			<h2 class="title">Take a look around</h2>
+			
+			<p>
+				Go ahead and fire up
+				<a class="ulink" href="http://wickedlysmart.com/hfhtml5/chapter10/singlethread/fractal.html" target="_top">
+				http://wickedlysmart.com/hfhtml5/chapter10/singlethread/fractal.html</a> and you'll see a visualization of the Mandelbrot
+				Set in the distance. Just click anywhere and you'll zoom into an area of the map. Keep clicking to explore different areas,
+				or reload to start over. Watch out for areas with black holes, they tend to suck you in. We don't know about you, but while
+				the scenery is beautiful, our viewer could be a little faster... ya think? It would be great to have enough performance
+				to maximize the view to the entire browser
+				window as well! Let's fix all that by adding Web Workers to the Fractal Explorer.
+			</p>
+			
+<!-- Page 495 -->				
+
+			<div class="pagebreak pageNumber">495</div> 
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/495fig01.png" />
+			</figure>
+			
+			<p>
+				<strong>Well, if you happen to be a mathematician</strong> then you know the Mandelbrot Set is the equation:
+			</p>
+			
+			<p class="center">
+				<strong><em>z<sub>n</sub></em>+1 = <em>z</em><sub><em>n</em><sup>2</sup></sub> + <em>c</em></strong>
+			</p>
+			
+			<p>
+				and that it was discovered and studied by Benoit Mandelbrot.
+				You also know that it's simply a set of complex numbers (numbers with a real part, and an imaginary part)
+				generated by this equation.
+			</p>
+			
+			<p>
+				If, on the other hand, you're not a mathematician, the best
+				way to think about the Mandelbrot Set is as an infinitely complex fractal image-meaning an image that you can zoom into,
+				to any level of magnification, and find interesting structures. Just look at some of the things you can find by navigating
+				into the set:
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/495fig02.png" />
+			</figure>
+			
+			<p>
+				And why are we so interested in it? Well, the set has a few
+				interesting properties. First, it's generated by a very simple equation (the one above) that can be expressed in just a
+				few lines of code; second, generating the Mandelbrot Set takes a fair number of computing cycles, which makes it a great
+				example for using Web Workers. And finally, hey, it's cool and a trip to work with, and what a great app to end the book
+				with, don't you think?
+			</p>
+			
+			<aside>
+					RIP Benoit Mandelbrot, who passed during the writing of this
+					book. We were lucky to have known you.
+			</aside>
+			
+<!-- Page 496 -->				
+
+			<div class="pagebreak pageNumber">496</div> 
+		
+		</section> <!-- Section 14 -->
+		
+		<section class="section" data-number="15" data-name="How to compute a Mandelbrot Set">
+					
+			<h2 class="title">How to compute a Mandelbrot Set</h2>
+			
+			<p>
+				Let's take a look at how you'd typically structure your code to compute a Mandelbrot Set before we get workers involved
+				 We don't want to focus much on the nitty-gritty of computing Mandelbrot pixel values; we've already got all that code taken
+				 care of, and we're going to give it to you in a sec. For now, we just want you to get sense of the big picture view of
+				 how to compute the set:
+			</p>
+			
+			<div class="note">
+				<p>
+					Note, our aim here isn't to teach you to be a numerical
+					analyst (who can code equations with complex numbers); it's to adapt a compute intensive application to use Web Workers.
+					If you are interested in the numerical aspects of the Mandelbrot Set, Wikipedia is a great place to start.</p>
+			</div>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/496fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>for (i = 0; i < numberOfRows; i++) {</pre>
+<pre>	var row = computeRow(i);</pre>
+<pre>	drawRow(row);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>
+				Now this code is just meant to be simple pseudo-code-when it comes to writing the code for real, there are a few more
+				details we need to get into: for instance, to compute a row we need to know the width of the row, the zoom factor, the
+				numerical resolution to which we want to compute it, and a few other small details. We can capture all those details in a
+				task object like this:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/496fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>for (i = 0; i < numberOfRows; i++) {</pre>
+<pre>	var taskForRow = createTaskForRow(i);</pre>
+<pre>	var row = computeRow(taskForRow);</pre>
+<pre>	drawRow(row);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>
+				Now the trick is going to be taking this and reworking it to
+				divide up the computation among a number of workers, and then adding the code that handles giving tasks to workers,
+				and handles dealing with the results when the workers complete the tasks.
+			</p>
+			
+<!-- Page 497 -->				
+
+			<div class="pagebreak pageNumber">497</div> 
+		
+		</section> <!-- Section 15 -->
+		
+		<section class="section" data-number="16" data-name="How to use multiple workers">
+			
+			<h2 class="title">How to use multiple workers</h2>
+			
+			<p>
+				<strong>You already know how to create new workers, but how do you use them to do something a little more complicated,
+					like computing the rows of the Mandelbrot Set? Or applying a Photoshop-like effect over an image? Or ray tracing a movie
+					scene? In all these cases, we can break up the job into small tasks that each worker can work on independently. For now,
+					let's stick with computing the Mandelbrot Set (but the pattern we're going to use can be applied to any of these
+					examples).</strong>
+			</p>
+			
+			<p>
+				<strong>To get started, the browser first creates a bunch of workers to help (but not too many-workers can be expensive
+					if we create too many of them-more on this later). We'll use just five workers for this example:</strong>
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/497fig01.png" />
+			</figure>
+			
+<!-- Page 498 -->				
+
+			<div class="pagebreak pageNumber">498</div> 
+			
+			<p>
+				<strong>Next, the browser code doles out a different part of the image for each worker to compute:</strong>
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/498fig01.png" />
+			</figure>
+			
+			<hr>
+			
+			<p>
+				<strong>Each worker works on its own piece of the image independently. As a worker finishes its task, it packages
+					up the result and sends it back.</strong>
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/498fig02.png" />
+			</figure>
+			
+<!-- Page 499 -->				
+
+			<div class="pagebreak pageNumber">499</div> 
+			
+			<p>
+				<strong>As pieces of the image come back from the workers they are aggregated into the image in the browser, and
+					if there are more pieces to compute, new tasks are handed out to the workers that are idle.</strong>
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/499fig01.png" />
+			</figure>
+			
+			<hr>
+			
+			<p>
+				<strong>With the last piece of the image computed, the image is complete and the workers sit idle, until the user
+					clicks to zoom in, and then it all starts again...</strong>
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/499fig02.png" />
+			</figure>
+			
+<!-- Page 500 -->				
+
+			<div class="pagebreak pageNumber">500</div> 
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/500fig01.png" />
+			</figure>
+			
+			<p><strong>It can be faster in two ways...</strong></p>
+			
+			<p>
+				First consider an application that has a lot of "computing" going on that also has to be responsive to the user. If
+				your application is hogging a lot of JavaScript time, your users are going to experience a sluggish interface that feels
+				slow (again, because JavaScript is single-threaded). By adding workers to such an app you can immediately improve the feel
+				of the app for your users. Why? Because JavaScript has a chance to respond to user interaction in between getting results
+				from the workers, something it doesn't have a chance to do if everything's being computed on the main thread. So the UI
+				is more responsive-and your app's just going to <em>feel</em> faster (even if it isn't running
+				any faster under the hood). Don't believe us? Give it a try and put some real users in front of your app. Ask them what they think.
+			</p>
+			
+			<p>
+				The second way <em>really is faster</em>. Almost all modern desktops and devices today are shipping with multicore
+				processors (and perhaps even multiple processors). Multicore just means that the processor can do multiple things
+				concurrently. With just a single thread of control, JavaScript in the browser doesn't make use of your extra cores
+				or your extra processors, they're just wasted. However, if you use Web Workers, the workers can take advantage of
+				running on your different cores and you'll see a real speedup in your app because you've got more processor power
+				being thrown at it. If you've got a multicore machine, just wait, you're going to see the difference soon.
+			</p>
+			
+<!-- Page 501 -->				
+
+			<div class="pagebreak pageNumber">501</div>
+			
+			<figure class="left">
+				<img src="/contents/html5/figs/web/501fig01.png" />
+			</figure>
+			
+			<p>
+				<strong>In theory, not in practice.</strong>
+			</p>
+			
+			<p>
+				Web Workers aren't intended to be used in large numbers-while creating a worker looks simple in code, it requires
+				extra memory and an operating system thread, which can be costly in start-up time and resources. So, in general
+				you'll want to create a limited number of workers that you reuse over time.
+			</p>
+			
+			<p>
+				Take our Mandelbrot example: in theory you could assign a
+				worker to compute every single pixel, which would probably be much simpler from a code design perspective,
+				but given that workers are heavy-weight resources, we would never design our app that way. Instead, we'll use
+				a handful of workers and structure our computation to take advantage of them.
+			</p>
+			
+			<p>
+				Let's get a little further into the design of the Fractal
+				Explorer and then we'll come back and play with the number of workers we're using to understand the performance implications.
+			</p>
+			
+<!-- Page 502 -->				
+
+			<div class="pagebreak pageNumber clear">502</div> 
+			
+			<div class="sidebar">
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/brainpower.png" alt="Brain Power" />
+				</figure>
+				
+				<p class="clear">
+					You've certainly got a lot of background now on building Web Worker apps, how to create and use workers, a
+					bit about how you can solve big computations by breaking
+					them down into small tasks that can be computed by your workers, and you even know a little about how Mandelbrot
+					sets are computed. Try to put it all together and think through how you'd take the pseudo-code below and rewrite
+					it to use workers. You might first assume you have as many workers as you need (say a worker for every single row),
+					and then add the constraint that you have a limited number of workers (fewer workers than the number of rows):
+				</p>
+
+				<div class="hiddencode">
+					<figure class="center">
+						<img class="codeimage" src="/contents/html5/figs/web/502fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>for (i = 0; i < numberOfRows; i++) {</pre>
+<pre>	var taskForRow = createTaskForRow(i);</pre>
+<pre>	var row = computeRow(taskForRow);</pre>
+<pre>	drawRow(row);</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+				
+				<p>Your notes go here:</p>
+			</div> <!-- sidebar -->
+			
+<!-- Page 503 -->				
+
+			<div class="pagebreak pageNumber">503</div> 
+		
+		</section> <!-- Section 16 -->
+		
+		<section class="section" data-number="17" data-name="Let's build the Fractal Explorer app">
+						
+			<div class="minitable right">
+				<table>
+					<tbody>
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Create HTML</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">
+									<span class="inlinemediaobject"><img src="/contents/html5/figs/web/common-7.png" /></span> <strong>Ready Bake Code</strong>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Create workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Start the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Implement the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Process the results</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">User interaction code</td>
+						</tr>
+					</tbody>
+				</table>
+			</div> <!-- /minitable -->
+			
+			<h2 class="title">Let's build the Fractal Explorer app</h2>
+			
+			<p>
+				<strong>Here's what we need to do:</strong>
+			</p>
+			
+			<div class="informaltable left">
+				<table>
+					<tbody>
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item"><p>Set up our HTML page to hold the Mandelbrot App.</p>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">
+								<p>
+									Get all the <span class="inlinemediaobject"><img src="/contents/html5/figs/web/common-6.png" /></span>
+									<strong>Ready Bake Code</strong> entered (or downloaded).
+								</p>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item"><p>Create some workers and get them set up to compute.</p></td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item"><p>Start the workers on their tasks.</p></td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item"><p>Implement the worker code.</p></td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item"><p>Process the worker results as the workers complete their tasks.</p></td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item"><p>Handle click and resize events in the user interface.</p></td>
+						</tr>
+					</tbody>
+				</table>
+			</div> <!-- /informaltable -->
+			
+			<hr>
+		
+		</section> <!-- Section 17 -->
+		
+		<section class="subsection" data-number="18" data-name="Creating the Fractal Viewer HTML Markup">
+						
+			<h3 class="title">Creating the Fractal Viewer HTML Markup</h3>
+
+			<p>
+				First we need to set up an HTML page to hold our app. You'll want to create an HTML file named
+				<code class="literal">fractal.html</code> and add the following markup. Let's check it out:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/503fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>	&lt;head&gt;</pre>
+<pre>		&lt;title&gt;Fractal Explorer&lt;/title&gt;</pre>
+<pre>		&lt;meta charset="utf-8"&gt;</pre>
+<pre>		&lt;link rel="stylesheet" href="fractal.css"&gt;</pre>
+<pre>		&lt;script src="mandellib.js"&gt;&lt;/script&gt;</pre>
+<pre>		&lt;script src="mandel.js"&gt;&lt;/script&gt;</pre>
+<pre>	&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;canvas id="fractal" width="800" height="600"&gt;&lt;/canvas&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+		
+<!-- Page 504 -->				
+
+			<div class="pagebreak pageNumber">504</div>
+				
+			<figure class="sidebarimg">
+				<img src="/contents/html5/figs/web/readybakecode.png" alt="Ready Bake Code"/>
+			</figure>
+
+			<aside class="clear">
+				Reminder: you can download all the code from
+				<a class="ulink" href="http://wickedlysmart.com/hfhtml5" target="_top">http://wickedlysmart.com/hfhtml5</a>
+			</aside>
+
+			<p>
+				We have to tell you we were planning on an entire chapter on the wonders of computing the Mandelbrot Set...
+				we planned to explain it to you in detail, including a history of Benoit Mandelbrot, how he discovered it,
+				all its amazing properties, pixel optimizations, color maps, and so on, but then we got the call from our
+				editor-you know, THE CALL. I guess we were running a bit late on this book, so our apologies, but we're going
+				to have to give you some <strong>Ready Bake Code</strong> code to do the low-level computation of the Mandelbrot
+				graphics. Here's the good side though: we can focus on how to use Web Workers without spending the next couple
+				of days on math and graphics. That said, we encourage you to explore those topics on your own!
+			</p>
+
+			<p>
+				Anyway, first we've got the code used to manage tasks and draw the rows for the fractal images. Start by typing
+				this code into a file called "mandellib.js":
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/504fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var canvas;</pre>
+<pre>var ctx;</pre>
+							<br />
+<pre>var i_max = 1.5;</pre>
+<pre>var i_min = -1.5;</pre>
+<pre>var r_min = -2.5;</pre>
+<pre>var r_max = 1.5;</pre>
+							<br />
+<pre>var max_iter = 1024;</pre>
+<pre>var escape = 100;</pre>
+<pre>var palette = [];</pre>
+							<br />
+<pre>function createTask(row) {</pre>
+<pre>	var task = {</pre>
+<pre>		row: row,				// row number we're working on</pre>
+<pre>		width: rowData.width,   // width of the ImageData object to fill</pre>
+<pre>		generation: generation, // how far in we are</pre>
+<pre>		r_min: r_min,</pre>
+<pre>		r_max: r_max,</pre>
+<pre>		i: i_max + (i_min - i_max) * row / canvas.height,</pre>
+<pre>		max_iter: max_iter,</pre>
+<pre>		escape: escape</pre>
+<pre>	};</pre>
+<pre>	return task;</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 505 -->				
+
+			<div class="pagebreak pageNumber">505</div>
+			
+			<div class="minitable right">
+				<table>
+					<tbody>
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Create HTML</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">
+									<span class="inlinemediaobject"><img src="/contents/html5/figs/web/common-7.png" /></span> <strong>Ready Bake Code</strong>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Create workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Start the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Implement the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Process the results</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">User interaction code</td>
+						</tr>
+					</tbody>
+				</table>
+			</div> <!-- /minitable -->
+			
+			<figure class="sidebarimg">
+				<img src="/contents/html5/figs/web/readybakecodecontinued.png" alt="Ready Bake Code Continued...">
+			</figure>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/505fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function makePalette() {</pre>
+<pre>  function wrap(x) {</pre>
+<pre>	  x = ((x + 256) & 0x1ff) - 256;</pre>
+<pre>	  if (x < 0) x = -x;</pre>
+<pre>	  return x;</pre>
+<pre>  }</pre>
+<pre>  for (i = 0; i <= this.max_iter; i++) {</pre>
+<pre>    palette.push([wrap(7*i), wrap(5*i), wrap(11*i)]);</pre>
+<pre>  }</pre>
+<pre>}</pre>
+							<br />
+<pre>function drawRow(workerResults) {</pre>
+<pre>  var values = workerResults.values;</pre>
+<pre>  var pixelData = rowData.data;</pre>
+<pre>  for (var i = 0; i < rowData.width; i++) {</pre>
+<pre>	var red = i * 4;</pre>
+<pre>	var green = i * 4 + 1;</pre>
+<pre>	var blue = i * 4 + 2;</pre>
+<pre>	var alpha = i * 4 + 3;</pre>
+<pre>    pixelData[alpha] = 255;</pre>
+<pre>    if (values[i] < 0) {</pre>
+<pre>      pixelData[red] = pixelData[green] = pixelData[blue] = 0;</pre>
+<pre>    } else {</pre>
+<pre>      var color = this.palette[values[i]];</pre>
+<pre>	      pixelData[red] = color[0];</pre>
+<pre>	      pixelData[green] = color[1];</pre>
+<pre>	      pixelData[blue] = color[2];</pre>
+<pre>    }</pre>
+<pre>  }</pre>
+<pre>  ctx.putImageData(this.rowData, 0, workerResults.row);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+<!-- Page 506 -->				
+
+			<div class="pagebreak pageNumber">506</div>
+			
+			<figure class="sidebarimg">
+				<img src="/contents/html5/figs/web/readybakecodecontinued.png" alt="Ready Bake Code Continued...">
+			</figure>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/506fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function setupGraphics() {</pre>
+							<br />
+<pre>	canvas = document.getElementById("fractal");</pre>
+<pre>	ctx = canvas.getContext("2d");</pre>
+							<br />
+<pre>	canvas.width = window.innerWidth;</pre>
+<pre>	canvas.height = window.innerHeight;</pre>
+							<br />
+<pre>	var width = ((i_max - i_min) * canvas.width / canvas.height);</pre>
+<pre>	var r_mid = (r_max + r_min) / 2;</pre>
+<pre>	r_min = r_mid - width/2;</pre>
+<pre>	r_max = r_mid + width/2;</pre>
+							<br />
+<pre>	rowData = ctx.createImageData(canvas.width, 1);</pre>
+							<br />
+<pre>	makePalette();</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+<!-- Page 507 -->				
+
+			<div class="pagebreak pageNumber">507</div>
+			
+			<figure class="sidebarimg">
+				<img src="/contents/html5/figs/web/readybakecodecontinued.png" alt="Ready Bake Code Continued...">
+			</figure>
+
+			<p class="clear">
+				This <strong>Ready Bake Code</strong> is what the worker will use to do its mathematical computation of the Mandelbrot
+				Set. This is really where the magic of the computation happens (and if you explore the Mandelbrot Set more deeply,
+				this is where you'll want to focus). Type this code into "workerlib.js":
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/507fig01.png" />		
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function computeRow(task) {</pre>
+<pre>	var iter = 0;</pre>
+<pre>	var c_i = task.i;</pre>
+<pre>	var max_iter = task.max_iter;</pre>
+<pre>	var escape = task.escape * task.escape;</pre>
+<pre>	task.values = [];</pre>
+<pre>	for (var i = 0; i < task.width; i++) {</pre>
+<pre>		var c_r = task.r_min + (task.r_max - task.r_min) * i / task.width;</pre>
+<pre>		var z_r = 0, z_i = 0;</pre>
+							<br />
+<pre>		for (iter = 0; z_r*z_r + z_i*z_i < escape && iter < max_iter; iter++) {</pre>
+<pre>			// z -> z^2 + c</pre>
+<pre>			var tmp = z_r*z_r - z_i*z_i + c_r;</pre>
+<pre>			z_i = 2 * z_r * z_i + c_i;</pre>
+<pre>			z_r = tmp;</pre>
+<pre>		}</pre>
+<pre>		if (iter == max_iter) {</pre>
+<pre>			iter = -1;</pre>
+<pre>		}</pre>
+<pre>		task.values.push(iter);</pre>
+<pre>	}</pre>
+<pre>	return task;</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+<!-- Page 508 -->				
+
+			<div class="pagebreak pageNumber">508</div> 
+			
+		</section> <!-- Section 18 -->
+		
+		<section class="section" data-number="19" data-name="Creating workers, and giving them tasks...">
+			
+			<div class="minitable right">
+				<table>
+					<tbody>
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Create HTML</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">
+									<span class="inlinemediaobject"><img src="/contents/html5/figs/web/common-7.png" /></span> <strong>Ready Bake Code</strong>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Create workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Start the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Implement the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Process the results</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">User interaction code</td>
+						</tr>
+					</tbody>
+				</table>
+			</div> <!-- /minitable -->
+			
+			<h2 class="title">Creating workers, and giving them tasks...</h2>
+			
+			<p>
+				With the <strong>Ready Bake Code</strong> out of the way, let's now turn our attention to writing the code that is
+				going to create and hand tasks to the workers. Here's how it's going to work:
+			</p>
+			
+			<ol>
+				<li>
+					We create an array of workers, initially all idle. And an image with nothing computed (nextRow = 0).
+					
+					<figure>
+						<img src="/contents/html5/figs/web/508fig01.png" />
+					</figure>
+				</li>
+
+				<li>
+					We iterate through the array, and create a task for each idle worker:
+					
+					<figure>
+						<img src="/contents/html5/figs/web/508fig02.png" />
+					</figure>
+				</li>
+
+				<li>
+					We continue to iterate, looking for the next idle worker to give a task to. The next one is nextRow = 1. And so on...
+				
+					<figure>
+						<img src="/contents/html5/figs/web/508fig03.png" />
+					</figure>
+				</li>
+			</ol>
+				
+<!-- Page 509 -->				
+
+			<div class="pagebreak pageNumber">509</div> 
+		
+		</section> <!-- Section 19 -->
+		
+		<section class="section" data-number="20" data-name="Writing the code">
+			
+			<div class="minitable right">
+				<table>
+					<tbody>
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Create HTML</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">
+									<span class="inlinemediaobject"><img src="/contents/html5/figs/web/common-7.png" /></span> <strong>Ready Bake Code</strong>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Create workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Start the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Implement the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Process the results</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">User interaction code</td>
+						</tr>
+					</tbody>
+				</table>
+			</div> <!-- /minitable -->
+					
+			<h2 class="title">Writing the code</h2>
+
+			<p>
+				Now that we know how we're going to create and manage our workers, let's write the code. We really need an initial
+				function for this, so let's create a function in <code class="literal">mandel.js</code> named
+				<code class="literal">init</code> -we'll place a few other things in it as well, to get the app up and running
+				(like making sure we have the graphics intialization out of the way):
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/509fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var numberOfWorkers = 8;</pre>
+<pre>var workers = [];</pre>
+							<br />
+<pre>window.onload = init;</pre>
+							<br />
+<pre>function init() {</pre>
+<pre>	setupGraphics();</pre>
+							<br />
+<pre>	for (var i = 0; i < numberOfWorkers; i++) {</pre>
+<pre>		var worker = new Worker("worker.js");</pre>
+							<br />
+<pre>		worker.onmessage = function(event) {</pre>
+<pre>			processWork(event.target, event.data)</pre>
+<pre>		}</pre>
+							<br />
+<pre>		worker.idle = true;</pre>
+							<br />
+<pre>		workers.push(worker);</pre>
+<pre>	}</pre>
+							<br />
+<pre>	startWorkers();</pre>
+							<br />
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+<!-- Page 510 -->				
+
+			<div class="pagebreak pageNumber">510</div> 
+		
+		</section> <!-- Section 20 -->
+		
+		<section class="section" data-number="21" data-name="Getting the workers started">
+				
+			<div class="minitable right">
+				<table>
+					<tbody>
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Create HTML</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">
+									<span class="inlinemediaobject"><img src="/contents/html5/figs/web/common-7.png" /></span> <strong>Ready Bake Code</strong>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Create workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Start the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Implement the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Process the results</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">User interaction code</td>
+						</tr>
+					</tbody>
+				</table>
+			</div> <!-- /minitable -->
+				
+			<h2 class="title">Getting the workers started</h2>
+
+			<p>
+				Okay we've got a few things to knock out: we need to start the workers, we need to write the function that can
+				process the work that comes back from the workers and, well, we need to write the code for the worker too. Let's
+				start by writing the code to start the workers:
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/510fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var nextRow = 0;</pre>
+<pre>var generation = 0;</pre>
+							<br />
+<pre>function startWorkers() {</pre>
+<pre>	generation++;</pre>
+<pre>	nextRow = 0;</pre>
+							<br />
+<pre>	for (var i = 0; i < workers.length; i++) {</pre>
+<pre>		var worker = workers[i];</pre>
+							<br />
+<pre>		if (worker.idle) {</pre>
+							<br />
+<pre>			var task = createTask(nextRow);</pre>
+							<br />
+<pre>			worker.idle = false;</pre>
+<pre>			worker.postMessage(task);</pre>
+							<br />
+<pre>			nextRow++;</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+<!-- Page 511 -->				
+
+			<div class="pagebreak pageNumber">511</div> 
+		
+		</section> <!-- Section 21 -->
+		
+		<section class="section" data-number="22" data-name="Implementing the worker">
+		
+			<div class="minitable right">
+				<table>
+					<tbody>
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Create HTML</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">
+									<span class="inlinemediaobject"><img src="/contents/html5/figs/web/common-7.png" /></span> <strong>Ready Bake Code</strong>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Create workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Start the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Implement the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Process the results</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">User interaction code</td>
+						</tr>
+					</tbody>
+				</table>
+			</div> <!-- /minitable -->	
+			
+			<h2 class="title">Implementing the worker</h2>
+			
+			<p>
+				Now that we've got the code to get our workers started by passing each a task, let's write the worker code.
+				Then all we need to do is come back and process the results from the worker, once the worker has computed its
+				part of the fractal image. Before we write the code for the worker though, let's quickly review how it should work:
+			</p>
+				
+			<figure class="center">
+				<img src="/contents/html5/figs/web/511fig01.png" />
+			</figure>
+			
+			<p>
+				So let's implement this: go head and type the following code into your <code class="literal">worker.js</code> file.
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/511fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>importScripts("workerlib.js");</pre>
+<pre>onmessage = function (task) {</pre>
+<pre>	var workerResult = computeRow(task.data);</pre>
+<pre>	postMessage(workerResult);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+<!-- Page 512 -->				
+
+			<div class="pagebreak pageNumber">512</div> 
+		
+		</section> <!-- Section 22 -->
+		
+		<section class="subsection" data-number="23" data-name="A little pit stop...">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/512fig01.png" />
+			</figure>
+			
+			<h2 class="title left">A little pit stop...</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" style="margin-left:20px"/>
+			</figure>	
+				
+			<br />
+
+			<p>
+				That was a lot of code in just a few pages. Let's take a quick pit stop, and refuel our tanks and stomachs.
+			</p>
+			
+			<p>
+				We also thought you might want to get a quick peek behind the scenes and see what the worker tasks and results
+				look like (they look remarkably similar as we'll see). So, grab a bottle of sarsaparilla and let's take a look
+				while you're resting...
+			</p>
+			
+			<div class="sidebar clear">
+					<figure class="sidebarimg">
+						<img src="/contents/html5/figs/web/closeupontasks.png" alt="Close up on Tasks" />
+					</figure>
+			
+					<code>
+<pre>var task = createTask(nextRow);</pre>
+<pre>worker.postMessage(task);</pre>
+					</code>
+			
+				<p class="clear">So you've looked at the call to createTask and postMessage, which uses the task:</p>
+
+<pre><strong>var task = createTask(nextRow);</pre>
+
+<pre>worker.postMessage(task);</strong></pre>
+				
+				<p>
+					And you might be wondering what that task looks like. Well, it's an object made up of propeties and values,
+					let's take a look:
+				</p>
+
+				<div class="hiddencode">
+					<figure class="center">
+						<img class="codeimage" src="/contents/html5/figs/web/512fig02.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>task = {</pre>
+<pre>	row: 1,</pre>
+<pre>	width: 1024,</pre>
+<pre>	generation: 1,</pre>
+<pre>	r_min: 2.074,</pre>
+<pre>	r_max: -3.074,</pre>
+<pre>	i: -0.252336,</pre>
+<pre>	max_iter: 1024,</pre>
+<pre>	escape: 1025</pre>
+<pre>};</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+<!-- Page 513 -->				
+
+			<div class="pagebreak pageNumber">513</div>
+			
+			<div class="sidebar" id="close_up_on_results">
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/closeuponresults.png" alt="Close up on Tasks" />
+				</figure>
+				
+				<p class="clear">
+					And what about the results we get from computing the row in the worker?
+				</p>
+				
+				<pre class="programlisting"><strong>var workerResult = computeRow(task.data);postMessage(workerResult);</strong></pre>
+
+				<p>
+					What does this look like? Remarkably similar to the task:
+				</p>
+
+				<div class="hiddencode">
+					<figure class="center">
+						<img class="codeimage" src="/contents/html5/figs/web/513fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>workerResult = {</pre>
+<pre>	row: 1,</pre>
+<pre>	width: 1024,</pre>
+<pre>	generation: 1,</pre>
+<pre>	r_min: 2.074,</pre>
+<pre>	r_max: -3.074,</pre>
+<pre>	i: -0.252336,</pre>
+<pre>	max_iter: 1024,</pre>
+<pre>	escape: 1025</pre>
+<pre>	values: [3, 9, 56, ... -1, 22]</pre>
+<pre>};</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+				
+		</section> <!-- Section 23 -->
+		
+		<section class="subsection" data-number="24" data-name="Time to get back on the road...">		
+						
+			<figure class="left">
+				<img src="/contents/html5/figs/web/513fig02.png" />
+			</figure>
+			
+			<h2 class="title">Time to get back on the road...</h2>
+			
+			<p>
+				Thanks for taking some time with us to check out the tasks and
+				results. You better take a last swig of that sarsaparilla-we're hitting the road again!
+			</p>
+			
+			<figure class="clear right">
+				<img src="/contents/html5/figs/web/car-1.png" />
+			</figure>
+			
+<!-- Page 514 -->				
+
+			<div class="pagebreak pageNumber clear">514</div> 
+		
+		</section> <!-- Section 24 -->
+		
+		<section class="section" data-number="25" data-name="Back to the code: how to process the worker's results">	
+			
+			<div class="minitable right">
+				<table>
+					<tbody>
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Create HTML</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">
+									<span class="inlinemediaobject"><img src="/contents/html5/figs/web/common-7.png" /></span> <strong>Ready Bake Code</strong>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Create workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Start the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Implement the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">Process the results</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">User interaction code</td>
+						</tr>
+					</tbody>
+				</table>
+			</div> <!-- /minitable -->	
+					
+			<h2 class="title">Back to the code: how to process the worker's results</h2>
+			
+			<p>
+				Now that you've seen how the worker's results work, let's see what happens when we get them back from the worker.
+				Recall that when we created our workers, we assigned a message handler named <code class="literal">processWork</code>:
+			</p>	
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/514fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var worker = new Worker("worker.js");</pre>
+							<br />
+<pre>worker.onmessage = function(event) {</pre>
+<pre>	processWork(event.target, event.data);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>
+				When a worker posts a message back to us with its results, it's the <code class="literal">processWork</code> function
+				that's going to handle it. As you can see, it is passed two things: the target of the message, which is just a reference
+				to the worker that sent it, and the data of the message (that's the task object with the values for a row of the image).
+				So our job now is to write <code class="literal">processWork</code>
+				(enter this code in <code class="literal">mandel.js</code>) <code class="literal">:</code>
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/514fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function processWork(worker, workerResults) {</pre>
+<pre>	drawRow(workerResults);</pre>
+<pre>	reassignWorker(worker);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>
+				We're almost there, so let's just knock out <code class="literal">reassignWorker</code> while we're at it. Here's
+				how it works: we check the row we're computing by using our <code class="literal">nextRow</code> global variable,
+				and as long as there's more to compute (which we can determine by looking at how many rows are in our canvas), we
+				give the worker a new assignment. Otherwise, if there's no more work
+				to do, then we just set the worker's idle property to true. Go ahead and enter this code in
+				<code class="literal">mandel.js</code> too:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/514fig03.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function reassignWorker(worker) {</pre>
+<pre>	var row = nextRow++;</pre>
+							<br />
+<pre>	if (row >= canvas.height) {</pre>
+<pre>		worker.idle = true;</pre>
+<pre>	} else {</pre>
+<pre>		var task = createTask(row);</pre>
+<pre>		worker.idle = false;</pre>
+<pre>		worker.postMessage(task);</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+<!-- Page 515 -->				
+
+			<div class="pagebreak pageNumber">515</div> 
+		
+		</section> <!-- Section 25 -->
+		
+		<section class="section" data-number="26" data-name="Psychedelic test drive"> 
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/515fig01.png" />
+			</figure>		
+			
+			<h2 class="title left">Psychedelic test drive</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" style="margin-left:20px" />
+			</figure>
+			
+			<br />
+
+			<p>
+				Enough code already! Let's road test this thing. Load the
+				<code class="literal">fractal.html</code> file into your browser and see your workers going to work. Depending
+				on your machine, your Fractal Explorer should run a little faster than before.
+			</p>
+			
+			<p>
+				We haven't written any code to handle resizing your browser
+				window, or clicking to zoom into the fractal for that matter. So, for right now, all you'll be able to
+				see is the image on the right.
+			</p>
+			
+			<p>
+				But, hey, so far so good, huh?
+			</p>
+		
+		</section> <!-- Section 26 -->
+		
+		<section class="subsection" data-number="27" data-name="Handling a click event">		
+				
+			<div class="minitable right clear">
+				<table>
+					<tbody>
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Create HTML</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">
+									<span class="inlinemediaobject"><img src="/contents/html5/figs/web/common-7.png" /></span> <strong>Ready Bake Code</strong>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Create workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Start the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Implement the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Process the results</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">User interaction code</td>
+						</tr>
+					</tbody>
+				</table>
+			</div> <!-- /minitable -->	
+			
+			<h3 class="title">Handling a click event</h3>
+			
+			<p>
+				We've got our workers busy working to compute the Mandelbrot Set and returning results to us so we can draw them on the
+				canvas, but what happens if you click to zoom in? Fortunately, because we're using workers to do the intense computation
+				in the background, the UI should be snappy in dealing with your click. That said, we need to write a little code to
+				actually handle the click. Here's how we do that:
+			</p>
+					
+			<ol>
+				<li>
+					<p>
+						The first thing we need to do is add a handler to take care of mouse clicks, and remember, the clicks are happening
+						on our canvas element. To do that we just add a handler for the canvas's onclick property, like this:
+					</p>	
+
+					<div class="hiddencode">
+						<figure class="center">
+							<img class="codeimage" src="/contents/html5/figs/web/515fig02.png" />
+						</figure>
+
+						<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  		<div class="modal-body">
+								<code>
+<pre>canvas.onclick = function(event) {</pre>
+<pre>	handleClick(event.clientX, event.clientY);</pre>
+<pre>};</pre>
+								</code>
+							</div>
+						</div>
+					</div>
+					
+					<p>
+						Add this code below the call to setUpGraphics in the init function of "mandel.js".
+					</p>
+				</li>
+				
+				<li>
+					<p>
+						Now we just need to write the handleClick function. Before we do let's think about this a second: when a user clicks
+						on the canvas it means they want to zoom into the area they're clicking on (you can go back to the single-threaded version
+						at <code class="literal">http://wickedlysmart.com/hfhtml5/chapter10/singlethread/fractal.html</code> to see this behavior).
+						So when the user clicks, we need to get the coordinates of where they want to zoom, and then get all the workers working
+						on creating a new image. Remember too, we've already got a function to assign new work to any idle workers:
+						startWorkers. Let's give it a try...
+					</p>
+				</li>
+			</ol>
+			
+<!-- Page 516 -->				
+
+			<div class="pagebreak pageNumber">516</div>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/516fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function handleClick(x, y) {</pre>
+<pre>	var width = r_max - r_min;</pre>
+<pre>	var height = i_min - i_max;</pre>
+<pre>	var click_r = r_min + ((width * x) / canvas.width);</pre>
+<pre>	var click_i = i_max + ((height * y) / canvas.height);</pre>
+							<br />
+<pre>	var zoom = 8;</pre>
+							<br />
+<pre>	r_min = click_r - width/zoom;</pre>
+<pre>	r_max = click_r + width/zoom;</pre>
+<pre>	i_max = click_i - height/zoom;</pre>
+<pre>	i_min = click_i + height/zoom;</pre>
+							<br />
+<pre>	startWorkers();</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 27 -->
+		
+		<section class="section" data-number="28" data-name="Another test drive">	
+				
+			<figure class="right">
+				<img src="/contents/html5/figs/web/516fig02.png" />
+			</figure>
+			
+			<h2 class="title left">Another test drive</h2>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" style="margin-left:20px" />
+			</figure>
+			
+			<br />
+
+			<p>
+				Let's give those code changes a try. Reload <code class="literal">fractal.html</code> in your browser and
+				this time click somewhere in the canvas. When you do you'll see the workers start working on the zoomed-in view.
+			</p>
+			
+			<p>
+				Hey, you should be able to start exploring now! After you've
+				played around a bit, let's make a few final changes to get this implementation all the way there.
+			</p>
+			
+<!-- Page 517 -->				
+
+			<div class="pagebreak pageNumber clear">517</div>
+		
+		</section> <!-- Section 28 -->
+		
+		<section class="section" data-number="29" data-name="Fitting the canvas to the browser window">
+			
+			<div class="minitable right">
+				<table>
+					<tbody>
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Create HTML</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">
+									<span class="inlinemediaobject"><img src="/contents/html5/figs/web/common-7.png" /></span> <strong>Ready Bake Code</strong>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Create workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Start the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Implement the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Process the results</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/squer.png" /></td>
+
+							<td class="item">User interaction code</td>
+						</tr>
+					</tbody>
+				</table>
+			</div> <!-- /minitable -->		
+			
+			<h2 class="title">Fitting the canvas to the browser window</h2>
+			
+			<p>
+				We said we wanted the fractal image to fill the browser window, which means we need to resize the canvas if the window
+				size changes. Not only that, but if we change the canvas size we should also fire off a new set of tasks to the workers
+				so they can redraw the fractal to fill up the new canvas size. Let's write the code to resize the canvas to the size of
+				the browser window, and we'll also restart the workers while we're at it.
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/517fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function resizeToWindow() {</pre>
+<pre>	canvas.width = window.innerWidth;</pre>
+<pre>	canvas.height = window.innerHeight;</pre>
+<pre>	var width = ((i_max - i_min) * canvas.width / canvas.height);</pre>
+<pre>	var r_mid = (r_max + r_min) / 2;</pre>
+<pre>	r_min = r_mid - width/2;</pre>
+<pre>	r_max = r_mid + width/2;</pre>
+<pre>	rowData = ctx.createImageData(canvas.width, 1);</pre>
+							<br />
+<pre>	startWorkers();</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>
+				Now we need to do one more thing: install <code class="literal">resizeToWindow</code> as a handler for the
+				browser window's resize event. Here's how we do that:
+			</p>
+			
+			<pre class="programlisting"><strong>window.onresize = function() {</pre>
+
+<pre>	resizeToWindow();</pre>
+
+<pre>};</strong></pre>
+			
+			<p>
+				You'll want to place this code in the init function of <code class="literal">mandel.js</code>, just below the
+				call to <code class="literal">setUpGraphics</code>.
+			</p>
+			
+			<div class="right">
+				<aside>This code goes in mandel.js.</aside>
+			</div>
+			
+<!-- Page 518 -->				
+
+			<div class="pagebreak pageNumber clear">518</div>
+		
+		</section> <!-- Section 29 -->
+		
+		<section class="section" data-number="30" data-name="The anal-retentive coder">		
+					
+			<h2 class="title">The anal-retentive <del>chef</del> coder</h2>
+			
+			<p>
+				There's just one more thing, and we could let this one go, but the code just doesn't seem correct without it. Think
+				through this with us: you've got a bunch of workers happily
+				working on their rows and all of the sudden the user has to go and click on the screen to zoom. Well isn't that great,
+				because the workers have been working hard on their rows, and now the user wants to go and change the entire image,
+				making all that work useless. Even worse, the workers have no knowledge that the user has clicked, and they're going to
+				send back their results anyway. And far worse, the code in the main page is gladly going to receive and display that
+				row! And not to get all doomsday and everything, but we've got exactly the same problem if the user resizes the window.
+			</p>
+			
+			<aside>Note to Editor: Apologies for the little rant here, but, hey, after this many pages, well, it can get to you...</aside>
+			
+			<p>
+				Now, you'd probably never notice any of this because there
+				aren't that many workers, and the workers very quickly compute the same rows for the new image, overwriting
+				the previous, incorrect rows. But hey, it just feels wrong. Not only that, it's so easy to fix we just have to.
+			</p>
+			
+			<p>
+				Of course we have a little confession to make: we knew this was
+				coming, and you might remember a little variable we stuck in named <code class="literal">generation</code>.
+				Remember, every time we restart our workers we increase the value of <code class="literal">generation</code>. Also
+				remember the results object that comes back from the worker: every result has its "generation" as a property. So
+				we can use generation to know if we've got a result from the current or the previous visualization.
+			</p>
+			
+			<p>
+				Let's look at the code fix, and then we can talk about how it works; edit your <code class="literal">processWork</code>
+				function in <code class="literal">mandel.js</code> and add these two lines:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/518fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function processWork(worker, workerResults) {</pre>
+<pre>	if (workerResults.generation == generation) {</pre>
+<pre>		drawRow(workerResults);</pre>
+<pre>	}</pre>
+<pre>	reassignWorker(worker);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>
+				So all we're doing here is checking to make sure the current
+				generation we're working on matches the generation of the result that comes back from the worker. If it does,
+				great, then we need to draw the row. If it doesn't, well that means it must be old, and so we just ignore it-it's
+				too bad our worker wasted its time on it, but we don't want to draw an old row from the previous image on the screen.
+			</p>
+			
+			<p>
+				So, really, that's it, we promise, it's time to make sure you have the changes above typed in, and get ready for...
+			</p>
+			
+<!-- Page 519 -->				
+
+			<div class="pagebreak pageNumber">519</div>
+		
+		</section> <!-- Section 30 -->
+		
+		<section class="section" data-number="31" data-name="Time for the final test drive!">	
+			
+			<div class="minitable right">
+				<table>
+					<tbody>
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Create HTML</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">
+									<span class="inlinemediaobject"><img src="/contents/html5/figs/web/common-7.png" /></span> <strong>Ready Bake Code</strong>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Create workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Start the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Implement the workers</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">Process the results</td>
+						</tr>
+
+						<tr>
+							<td class="checkbox"><img src="/contents/html5/figs/web/tick.png" /></td>
+
+							<td class="item">User interaction code</td>
+						</tr>
+					</tbody>
+				</table>
+			</div> <!-- /minitable -->
+					
+			<h2 class="title left">Time for the final test drive!</h2>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" style="margin-left:20px" />
+			</figure>
+			
+			<br />
+
+			<p>
+				That's it! You should be ready to go with all your code. Load the <code class="literal">fractal.html</code>
+				file into your browser and see your workers going to work. This version should be faster and more responsive
+				than the original, single-threaded version; if you've got more than one core on your
+				computer, then it will be <span class="emphasis"><em>a lot</em></span> faster.
+			</p>
+			
+			<p>
+				Have fun... zoom in... explore. Let us know if you find any undiscovered "country" in the Mandelbrot Set
+				(tweet your screenshots to <strong>#hfhtml5</strong> if you want!).
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/519fig01.png" />
+			</figure>
+			
+<!-- Page 520 -->				
+
+			<div class="pagebreak pageNumber">520</div>
+			
+			<div class="sidebar" style="float:left">
+				<figure class="right">
+					<img src="/contents/html5/figs/web/520fig01.png" />
+				</figure>
+				
+				<figure class="right clear">
+					<img src="/contents/html5/figs/web/520fig02.png" />
+				</figure>
+				
+				<h3>IN THE LABORATORY</h3>
+				
+				<p>
+					If you're writing high performance code you'll want to check out how the number of workers can impact your app's runtime.
+				</p>
+				
+				<p>
+					To do that, you can use the task monitor on either OS X or Windows. If we go back to our original version
+					(the single-threaded one at
+					<a class="ulink" href="http://wickedlysmart.com/hfhtml5/chapter10/singlethread/fractal.html" target="_top">
+						http://wickedlysmart.com/hfhtml5/chapter10/singlethread/fractal.html</a>) our performance looks like the graph on the right.
+				</p>
+				
+				<p>
+					We have eight cores in our machine, and so in the Fractal Explorer with Web Workers, we're setting the number
+					of workers to match that, with <code class="literal">numberOfWorkers = 8</code>. And you can see in our activity
+					monitor, all 8 cores are being used to the max.
+				</p>
+				
+				<p>
+					What do you think will happen if we set the number of workers to 2, or 4, or 16, or 32? Or something in between?
+				</p>
+				
+				<p>
+					Give it a try on your machine and see what values work best
+					for you.
+				</p>
+				
+				<figure class="center">
+					<img src="/contents/html5/figs/web/520fig03.png" />
+				</figure>
+				
+			</div> <!-- sidebar -->
+				
+<!-- Page 521 -->				
+
+			<div class="pagebreak pageNumber clear">521</div>
+				
+			<div class="sidebar" id="stake_your_claimexclamation_mark">
+				<h3>STAKE YOUR CLAIM!</h3>
+				
+				<p>
+					<strong>You've done it! You've got a fully functional Fractal Explorer that's all ready for exploring the Mandbelbrot
+						territory. So what are you waiting for-dig in and find your little slice of the virtual universe. Once you've found
+						it, print it, paste it in here, and give your new little homestead a name.</strong>
+				</p>
+				
+				<figure class="center">
+					<img src="/contents/html5/figs/web/521fig01.png" />
+				</figure>
+				
+				<p class="center"><strong>Name your new territory</strong>: __________________________________</p>
+			</div> <!-- sidebar -->
+				
+			<figure>
+				<img src="/contents/html5/figs/web/521fig02.png" />
+			</figure>
+			
+<!-- Page 522 -->				
+
+			<div class="pagebreak pageNumber">522</div>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/522fig01.png" />
+			</figure>
+			
+			<div class="sidebar">
+				<h3>Terminate a worker</h3>
+				
+				<p>
+					You've created workers to do a task, the task is done, and you want to get rid of all the workers
+					(they do take up valuable memory in the browser). You can terminate a worker from the code in your main page like this:
+				</p>
+				
+<pre><strong>worker.terminate();</strong></pre>
+				
+				<p>
+					If the worker happens to still be running, the worker script terminated a orker you can't reuse it; you'll
+					have to create a new one.
+				</p>
+				
+				<p>
+					You can also have a worker stop itself by calling
+					<span class="strong"><strong><code class="literal">close();</code></strong> (from inside the worker).
+				</p>
+			</div> <!-- sidebar -->
+			
+			<div class="sidebar">
+				<h3>Handle errors in workers</h3>
+				
+				<p>What happens if something goes terribly wrong in a worker?
+					How can you debug it? Use the onerror handler to catch any errors
+					and also get debugging information, like this:
+				</p>
+				
+<pre><strong>worker.onerror = function(error) {</strong></pre>
+				
+<pre>	<strong>document.getElementById("output").innerHTML =</strong></pre>
+				
+<pre>		<strong>"There was an error in " + error.filename +</strong></pre>
+        
+        <pre>		<strong>" at line number " + error.lineno +</strong></pre>
+        
+        <pre>		<strong>": " + error.message;</pre>
+				
+<pre>}</strong></pre>
+			</div> <!-- sidebar -->
+			
+<!-- Page 523 -->				
+
+			<div class="pagebreak pageNumber">523</div>
+			
+			<div class="sidebar" id="use_importscripts_to_make_a_jsonp_reques">
+				<h3>Use importScripts to make a JSONP request</h3>
+				
+				<p>
+					You can't insert new <code class="literal">&lt;script&gt;</code> elements to make JSONP requests from workers,
+					but you <strong>can</strong> use importScripts to make JSONP requests, like this:
+				</p>
+
+				<div class="hiddencode">
+					<figure class="center">
+						<img class="codeimage" src="/contents/html5/figs/web/523fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>function makeSeverRequest() {</pre>
+<pre>	importScripts("http://SomeServer.com?callback=handleRequest");</pre>
+<pre>}</pre>
+<pre>function handleRequest(response) {</pre>
+<pre>	postMessage(response);</pre>
+<pre>}</pre>
+<pre>makeServerRequest();</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div> <!-- sidebar -->
+			
+			<div class="sidebar">
+				<h3>Use setInterval in your workers</h3>
+				
+				<p>
+					You might have missed this (it went by fast, we used it in setTimeout) in your workers to do the same task
+					repeatedly. For instance you could update the quotes worker (quote.js) to post a random quote every 3 seconds, like this:
+				</p>
+
+				<div class="hiddencode">
+					<figure class="center">
+						<img class="codeimage" src="/contents/html5/figs/web/523fig02.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>var quotes = ["I hope life isn’t a joke, because I don’t get it.",</pre>
+<pre>              "There is a light at the end of every tunnel...just pray it’s not a train!",</pre>
+<pre>              "Do you believe in love at first sight or should I walk by again?"];</pre>
+								<br />
+<pre>function postAQuote() {</pre>
+<pre>	var index = Math.floor(Math.random() * quotes.length);</pre>
+<pre>	postMessage(quotes[index]);</pre>
+<pre>}</pre>
+<pre>postAQuote();</pre>
+<pre>setInterval(postAQuote, 3000);</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div> <!-- sidebar -->
+			
+			<div class="sidebar">
+				<h3>Subworkers</h3>
+				
+				<p>
+					If your worker needs help with its task, it can create its an image to work on, the worker could decide that
+					if a region is bigger than some size, it will split it up among its own subworkers.
+				</p>
+				
+				<p>
+					A worker creates subworkers just like the code in your page
+					creates a worker, with:
+				</p>
+				
+				<pre class="programlisting"><strong>var worker = new Worker("subworker.js");</strong></pre>
+				
+				<p>
+					Remember that subworkers, just like workers, are fairly heavy-weight: they take up memory and are run as separate
+					threads. So, be cautious about how many subworkers you create.
+				</p>
+			</div> <!-- sidebar -->
+			
+<!-- Page 524 -->				
+
+			<div class="pagebreak pageNumber">524</div>
+			
+			<div class="sidebar" style="float:left">
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/bulletpoints.png" alt="BULLET POINTS" />
+				</figure>
+				
+				<ul class="clear" style="float:left; width:45%;">
+					<li>Without Web Workers, JavaScript is single-threaded, meaning it can do only one thing at a time.</li>
+					
+					<li>If you give a JavaScript program too much to do, you might get the slow script dialog.</li>
+					
+					<li>
+						Web Workers handle tasks on a separate thread so your main JavaScript code can continue to run and your
+						UI remains responsive.
+					</li>
+					
+					<li>The code for a Web Worker is in a separate file from your page's code.</li>
+					
+					<li>Web Workers don't have access to any of the functions in the code in your page or the DOM.</li>
+					
+					<li>The code in your page and the Web Worker communicate via messages.</li>
+					
+					<li>To send a message to a worker, use postMessage.</li>
+					
+					<li>You can send strings and objects to a worker via postMessage. You can't send functions to a worker.</li>
+					
+					<li>Receive messages back from workers by setting the worker's onmessage property to a handler function.</li>
+					
+					<li>A worker receives messages from the code in your page by setting its onmessage property to a handler function.</li>
+					
+					<li>When a worker is ready to send back a result, it calls postMessage and passes the result as the argument.</li>
+					
+					<li>Worker results are encapsulated in an event object and placed in the data property.</li>
+				</ul>
+				
+				<ul style="float:right; width:45%">
+					<li>You can find out which worker sent the message using the event.target property.</li>
+					
+					<li>Messages are copied, not shared, between your main page code and the worker.</li>
+					
+					<li>
+						You can use multiple workers for large computations that can be split into multiple tasks, such as
+						computing a fractal visualization or ray tracing an image.
+					</li>
+					
+					<li>
+						Each worker runs in its own thread, so if your computer has a multicore processor, the workers are run in
+						parallel, which increases the speed of the computation.
+					</li>
+					
+					<li>
+						You can terminate a worker by calling worker. terminate() from the code in your page. This will abort the
+						worker script. A worker can also stop itself by calling close().
+					</li>
+					
+					<li>
+						Workers also have an onerror property. You can set this to an error handling function that will be called
+						if your worker has a script error.
+					</li>
+					
+					<li>To include and use JavaScript libraries in your worker file, use importScripts.</li>
+					
+					<li>You can also use importScripts with JSONP. Implement the callback you pass in the URL query in the worker file.</li>
+					
+					<li>
+						While workers do not have access to the DOM or functions in your main code, they can use XMLHttpRequest and
+						Local Storage.
+					</li>
+				</ul>
+			</div> <!-- /sidebar -->
+			
+<!-- Page 525 -->				
+
+			<div class="pagebreak pageNumber clear">525</div>
+			
+			<figure class="sidebarimg">
+				<img src="/contents/html5/figs/web/html5cross2.png" alt="HTML5cross"/>
+			</figure>
+			
+			<p>
+				Wow, Chapter:10; you've done it. Sit back, relax and make it stick by working the rest of your brain a little.
+				Here's your Chapter:10 crossword puzzle.
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/525fig01.png" />
+			</figure>
+			
+			<div class="informaltable">
+				<table>
+					<thead>
+						<tr>
+							<td colspan="2"><strong>Across</strong></td>
+
+							<td colspan="2"><strong>Down</strong></td>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr>
+							<td style="vertical-align: top"><p>4.</p></td>
+
+							<td style="vertical-align: top"><p>You can pass _______ to workers using postMessage.</p></td>
+
+							<td style="vertical-align: top"><p>1.</p></td>
+
+							<td style="vertical-align: top">
+								<p>Workers can use XMLHttpRequest and access ___________.</p>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="vertical-align: top"><p>8.</p></td>
+
+							<td style="vertical-align: top"><p>
+								Capability of a processor to do more than one thing at a time.</p>
+							</td>
+							
+							<td style="vertical-align: top"><p>2.</p></td>
+							
+							<td style="vertical-align: top">
+								<p>How to import additional code into a worker.</p>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="vertical-align: top"><p>9.</p></td>
+
+							<td style="vertical-align: top"><p>The property used to register a handler to receive messages.</p></td>
+
+							<td style="vertical-align: top"><p>3.</p></td>
+							
+							<td style="vertical-align: top"><p>_____ of execution.</p></td>
+						</tr>
+
+						<tr>
+							<td style="vertical-align: top"><p>11.</p></td>
+
+							<td style="vertical-align: top"><p>Workers can't access the _______.</p></td>
+
+							<td style="vertical-align: top"><p>5.</p></td>
+							
+							<td style="vertical-align: top"><p>How to abort a worker.</p></td>
+						</tr>
+
+						<tr>
+							<td style="vertical-align: top"><p>12.</p></td>
+
+							<td style="vertical-align: top"><p>Our first example used this game.</p></td>
+
+							<td style="vertical-align: top"><p>6.</p></td>
+							
+							<td style="vertical-align: top"><p>Mandelbrot uses __________ numbers.</p>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="vertical-align: top"><p>13.</p></td>
+
+							<td style="vertical-align: top"><p>The most famous fractal.</p></td>
+
+							<td style="vertical-align: top"><p>7.</p></td>
+
+							<td style="vertical-align: top"><p>How to create a Worker.</p></td>
+						</tr>
+
+						<tr>
+							<td style="vertical-align: top"><p>14.</p></td>
+
+							<td style="vertical-align: top"><p>______/worker.</p></td>
+
+							<td style="vertical-align: top"><p>10.</p></td>
+							
+							<td style="vertical-align: top"><p>The manager and workers communicate with these.</p></td>
+						</tr>
+
+						<tr>
+							<td style="vertical-align: top"><p>15.</p></td>
+
+							<td style="vertical-align: top"><p>
+								A lovely area of the Mandelbrot countryside is _________ Valley.</p>
+							</td>
+
+							<td>:</td>
+
+							<td>:</td>
+						</tr>
+
+						<tr>
+							<td style="vertical-align: top"><p>16.</p></td>
+
+							<td style="vertical-align: top"><p>
+								The guy who wrote the original version of Fractal Viewer.</p>
+							</td>
+
+							<td>:</td>
+
+							<td>:</td>
+						</tr>
+					</tbody>
+				</table>
+			</figure>
+			
+			<aside>
+				Okay we never told you this, it's James Henstridge.
+			</aside>
+			
+<!-- Page 526 -->				
+
+			<div class="pagebreak pageNumber">526</div>
+			
+			<figure class="left">
+				<img src="/contents/html5/figs/web/bethebrowser.png" alt="BE the Browser Solution" />
+			</figure>
+			
+			<h2>BE the Browser Solution</h2>
+			
+			<p><strong>It's time to pretend you're the browser<br>evaluating Javascript.</strong></p>
+
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/526fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>window.onload = function() {</pre>
+<pre>	var worker = new Worker("worker.js");</pre>
+<pre>	worker.onmessage = function(event) {</pre>
+<pre>		alert("Worker says " + event.data);</pre>
+<pre>	}</pre>
+<pre>	for (var i = 0; i < 5; i++) {</pre>
+<pre>		worker.postMessage("ping");</pre>
+<pre>	}</pre>
+<pre>}</pre>
+								<br />
+<pre>window.onload = function() {</pre>
+<pre>	var worker = new Worker("worker.js");</pre>
+<pre>	worker.onmessage = function(event) {</pre>
+<pre>		alert("Worker says " + event.data);</pre>
+<pre>	}</pre>
+								<br />
+<pre>	for (var i = 5; i > 0; i--) {</pre>
+<pre>		worker.postMessage("pong");</pre>
+<pre>	}</pre>
+<pre>}</pre>
+								<br />
+<pre>window.onload = function() {</pre>
+<pre>	var worker = new Worker("worker.js");</pre>
+<pre>	worker.onmessage = function(event) {</pre>
+<pre>		alert("Worker says " + event.data);</pre>
+<pre>		worker.postMessage("ping");</pre>
+<pre>	}</pre>
+<pre>	worker.postMessage("ping");</pre>
+<pre>}</pre>
+								<br />
+<pre>window.onload = function() {</pre>
+<pre>	var worker = new Worker("worker.js");</pre>
+<pre>	worker.onmessage = function(event) {</pre>
+<pre>		alert("Worker says " + event.data);</pre>
+<pre>	}</pre>
+								<br />
+<pre>	setInterval(pinger, 1000);</pre>
+<pre>	</pre>
+<pre>	function pinger() {</pre>
+<pre>		worker.postMessage("ping");</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+<!-- Page 527 -->
+			
+			<div class="pagebreak pageNumber">527</div>
+			
+			<div class="sidebar">
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/sharpenyourpencilsolution.png" alt="Sharpen your pencil Solution" />
+				</figure>
+				
+				<p class="clear">
+					While workers typically get their work orders through a message, they don't have to. Check out this nice, compact way to get work done with workers and HTML. When you know what it does, describe it below:
+				</p>
+
+				<div class="hiddencode">
+					<figure class="center">
+						<img class="codeimage" src="/contents/html5/figs/web/527fig01.png" />
+					</figure>		
+				</div>
+			</div>
+			
+<!-- Page  528-->				
+
+			<div class="pagebreak pageNumber">528</div>
+			
+			<div class="sidebar">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/html5crosssolution.png" alt="HTML5cross Solution" />
+				</figure>
+				
+				<figure class="center clear">
+					<img src="/contents/html5/figs/web/528fig01.png" />
+				</figure>
+			</div>
+			
+<!-- Page  529-->				
+
+			<div class="pagebreak pageNumber">529</div>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/529fig01.png" />
+			</figure>
+			
+			<h2 class="title" style="line-height:100%">Congratulations!<br>You made it to the end</h2>
+			
+			<p>
+				<strong>Of course, there's still an appendix. And the index.</strong>
+			</p>
+			
+			<p>
+				<strong>And the colophon.</strong>
+			</p>
+			
+			<p>
+				<strong>And then there's the web site...</strong>
+			</p>
+			
+			<p>
+				<strong>There's no escape, really.</strong>
+			</p>
+			
+		</section> <!-- Time for the final test drive! dn31 -->
+	
+	</div> <!-- /container -->
+	
+</body>
+</html>

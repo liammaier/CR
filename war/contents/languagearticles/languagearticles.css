@@ -1,0 +1,704 @@
+div.language.container {
+font-family: "Times New Roman";
+max-width: 850px;
+}
+
+.language div.introbreak p {
+	font-family: "Times New Roman";
+	padding-bottom: 0;
+	margin: 0;
+	text-indent: 1em;
+}
+
+.language div.introbreak h2 {
+	color: white;
+	text-shadow: 0.1em 0.1em #333;
+	font-size: 100%;
+	font-family: Arial;
+	display: inline;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.language div.firstpage {
+	padding-top: 2em;
+}
+
+.language p.firstpagebody1 {
+	margin-left: 8em;
+	margin-right: 2em;
+	line-height: 200%;
+	margin-top: 30px;
+}
+
+.language p.firstpagebody2 {
+	margin-left: 7em;
+	margin-right: 2em;
+	line-height: 200%;
+	text-indent: 1em;
+}
+
+.language .firstletter {
+	font-size: 750%;
+	float: left;
+	margin: 0;
+}
+
+.language h1 {
+	line-height: 70px;
+}
+
+.language .header1normallineheight {
+	line-height: 36px;
+}
+
+.language h2 {
+	font-family: Arial;
+	font-size: 110%;
+	font-weight: bold;
+	font-style: normal;
+}
+
+.language h3 {
+	font-size: 100%;
+	font-weight: normal;
+	font-weight: bold;
+	font-style: italic;
+}
+
+.language ul li {
+	list-style-type: disc;
+}
+
+.language .blankorderedlist {
+	list-style-type: none;
+}
+
+.language p.bodytext {
+	text-indent: 1em;
+}
+
+.language p.journal {
+	margin-left: 2em;
+	margin-right: 2em;
+}
+
+.language p.continued {
+	text-align: right;
+	font-family: Arial;
+}
+
+.language p.reference {
+	text-indent: -1em;
+	margin-left: 1em;
+}
+
+.language li.invisiblenumber {
+	list-style-type: none;
+}
+
+.language .break {
+	border-bottom: solid grey 2px;
+}
+
+.language .floatleft {
+	float: left;
+	top: inherit;
+	position: inherit;
+}
+
+.language .floatright {
+	float: right;
+}
+
+.language .centered {
+	text-align: center;
+}
+
+.language .clear {
+	clear: both;
+}
+
+.language div.box {
+	border: solid 1px black;
+	margin: 0em;
+	padding: 0em;
+}
+
+.language div.box h2 {
+	text-align: center;
+	font-weight: bold;
+	font-size: 110%;
+}
+
+.language div.box p {
+	padding: .3em;
+}
+
+.language .supertext {
+	vertical-align: super;
+	font-size: 50%;
+}
+
+.language div.pagebreak {
+	margin: 1em;
+	border-bottom: 3px grey dashed;
+	text-align: center;
+	font-family: Arial;
+	font-size: 75%;
+}
+
+.language .pagenumber {
+	font-weight: bold;
+}
+
+.language div.pagebreak p:first-child {
+	float: left;
+	margin-left: 2em;
+}
+
+.language div.pagebreak p:nth-child(2) {
+	float:right;
+	margin-right: 2em;
+}
+
+.language .appendixheader h1 {
+	border-bottom: 2px solid black;
+	margin-bottom: 0;
+	font-size: 2em;
+}
+
+.language .appendixheader p {
+	font-weight: bold;
+	text-align: right;
+	margin-top: 0;
+}
+
+.language .whitelettering {
+	color: white;
+	text-shadow: -2px -2px #000,
+    2px -2px #000,
+    -2px 2px #000,
+    2px 2px #000;
+
+}
+
+/* 07-02_Kayser */
+.language .firstletter.kayser {
+	color: #E1E8F4;
+	padding-top: 40;
+}
+
+.language div.firstpage.kayser {
+	background-color: #B4C5E3;
+}
+
+.language .headercolor.kayser {
+	color: #8C8C8C;
+}
+
+.language div.introbreak.kayser h2 {
+	background-color: #4E5F7D;
+}
+
+.language div.introbreak.kayser p {
+	border-bottom: 1px #4E5F7D solid;	
+}
+
+.language .titlesize1.kayser {
+	font-size: 400%;
+	margin: 0;
+	margin-left: 30%;
+	font-weight: normal;
+}
+
+.language .titlesize2.kayser {
+	font-size: 500%;
+	margin: 0;
+	margin-left: 30%;
+	font-weight: normal;
+}
+
+.language .titlesize3.kayser {
+	font-size: 600%;
+	margin: 0;
+	margin-left: 30%;
+	font-weight: normal;
+}
+
+.language .titlesize4.kayser {
+	margin: 0;
+	margin-left: 30%;
+	font-weight: normal;
+	font-size: 200%;
+}
+
+.language .appendiciesheader {
+	border: solid #4E5F7D 3px;
+	margin-bottom: 2em;
+}
+
+.language .appendiciesheader h1 {
+	border-bottom: 3px #B4C5E3 solid;
+	margin-right: 1.5em;
+	margin-left: 1.5em;
+	margin-top: .5em;
+	text-align: center;
+	color: grey;
+	margin-bottom: 0em;
+	line-height: 40px;
+}
+
+.language .appendiciesheader p {
+	margin-top: 0em;
+	margin-bottom: .5em;
+	text-align: center;
+	font-size: 135%;
+	color: grey;
+	font-family: Arial;
+}
+
+.language .appendiciesheadermarco {
+	border: solid #FF8533 3px;
+	margin-bottom: 2em;
+	max-width: 60%;
+}
+
+.language .appendiciesheadermarco h1 {
+	border-bottom: 3px #FFAA70 solid;
+	margin-top: .5em;
+	margin-left: .1em;
+	margin-right: .1em;
+	color: grey;
+	margin-bottom: 0em;
+	max-width: 90%;
+}
+
+.language .appendiciesheadermarco p {
+	margin-top: 0em;
+	margin-bottom: .5em;
+	color: grey;
+	font-family: Arial;
+}
+.language .appendiciesbox {
+	background-color: #4E5F7D;
+	color: white;
+}
+
+.language .appendiciesboxleft {
+	float: left;
+}
+
+.language .appendiciesboxright {
+	float: right;
+}
+
+.language .appendiciesbox h1 {
+	font-size: 100%;
+	margin-bottom: 0em;
+	margin-top: .1em;
+	line-height: 36px;
+}
+
+.language .appendiciesboxleft h1 {
+	text-align: right;
+	margin-left: 2em;
+	margin-right: .5em;
+	line-height: 36px;
+}
+
+.language .appendiciesboxright h1 {
+	text-align: left;
+	margin-right: 2em;
+	margin-left: .5em;
+	line-height: 36px;
+}
+
+.language .appendiciesbox p {
+	font-family: Arial;
+	margin-top: 0em;
+	margin-bottom: .1em;
+}
+
+.language .appendiciesboxleft p {
+	text-align: right;
+	margin-right: .5em;
+}
+
+.language .appendiciesboxright p {
+	text-align: left;
+	margin-left: .5em;
+}
+
+.language .appendicies {
+	background-color: #B4C5E3;
+	border: solid 1px #4E5F7D;
+	width: 75%;
+}
+
+.language .appendicies p {
+	margin: .5em;
+}
+
+.language .appendicies ol {
+	list-style-type: upper-alpha;
+}
+
+.language ol.appendiciesol {
+	list-style-type: decimal;
+}
+
+.language .appendicies table,.appendicies th,.appendicies td {
+	border: solid #4E5F7D 3px;
+	border-collapse: collapse;
+	margin: .5em;
+	font-family: Arial;
+	padding: .1em;
+}
+
+.language .appendicies th {
+	text-align: left;
+	padding-left: .5em;
+	padding-bottom: .3em;
+}
+
+.language .appendicies td {
+	min-width: 100px;
+	height: 50px;
+}
+
+.language .firstcolumnformatting {
+	vertical-align: text-top;
+	padding: 1em;
+}
+
+.language .firstcolumnnumber {
+	font-size: 150%;
+}
+
+.language .plaintable {
+	border-collapse: collapse;
+	border: 1px solid black;
+}
+
+.language .plaintable td, .plaintable th {
+	border: 1px solid black;
+	padding: .5em;
+}
+
+.language .appendicies .feedbacktable {
+	border: none;
+	border-collapse: collapse;
+	font-family: Arial;
+	min-width: 96%;
+}
+
+.language .appendicies .feedbacktable td {
+	border: none;
+	border-collapse: collapse;
+	font-family: Arial;
+}
+
+.language .appendicies .feedbacktable th {
+	border: none;
+	border-bottom: solid 3px #4E5F7D;
+}
+
+.language .appendicies .feedbacktable tr td:first-child {
+	width: 50%;
+}
+
+/* 07-02_Marco */
+.language div.firstpage.marco {
+	background-color: #FFE5B2;
+}
+
+.language div.introbreak.marco h2 {
+	background-color: #FF8533;
+}
+
+.language div.introbreak.marco p {
+	border-bottom: 1px #FF8533 solid;	
+}
+
+.language p.firstpagebody1.marco {
+	margin-left: 5em;
+	padding-top: 0em;
+}
+
+.language p.firstpagebody2.marco {
+	margin-left: 5em;
+}
+
+.language .firstletter.marco {
+	color: #FF8533;
+	padding-top: 36;
+}
+
+.language .marcolettercoloring {
+	color: #FF8533;
+	margin-left: -6;
+}
+
+.language .headercolor.marco {
+	color: #8C8C8C;
+}
+
+.language .titlesize1.marco {
+	font-size: 400%;
+	margin: 0;
+	margin-left: 30%;
+	font-weight: normal;
+}
+
+.language .titlesize2.marco {
+	font-size: 500%;
+	margin: 0;
+	margin-left: 30%;
+	font-weight: normal;
+}
+
+.language .titlesize3.marco {
+	font-size: 600%;
+	margin: 0;
+	margin-left: 30%;
+	font-weight: normal;
+}
+
+.language .titlesize4.marco {
+	margin: 0;
+	margin-left: 30%;
+	font-weight: normal;
+	font-size: 200%;
+}
+
+/* 08_2 */
+.language div.firstpage._08two {
+	background-color: #91AFE8;
+}
+
+.language div.introbreak._08two h2 {
+	background-color: #667AA2;
+	color: #667AA2;
+	text-shadow: none;
+}
+
+.language div.introbreak._08two p {
+	border-bottom: 1px #667AA2 solid;	
+}
+
+.language div.firstpage._08two h1 {
+	margin-left: 3em;
+	font-size: 275%;
+}
+
+.language .firstletter._08two {
+	color: #667AA2;
+	margin-left: 1em;
+	margin-top: 44px;
+}
+
+.language p.firstpagebody1._08two {
+	margin-left: 8em;
+	margin-top: 30px;
+}
+
+.language p.firstpagebody2 {
+	margin-left: 8em;
+}
+
+.language h2.firstpageh2 {
+	margin-left: 8em;
+}
+
+.language ._08twotable {
+	border: none;
+	border-collapse: collapse;
+	border-bottom: 2px solid black;
+	text-align: center;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.language ._08twotable td {
+	border-left: 2px solid black;
+	border-right: 2px solid black;
+	padding: .3em;
+}
+
+.language ._08twotable th {
+	font-weight: normal;
+	border-right: 2px solid black;
+	border-left: 2px solid black;
+	border-top: 2px solid black;
+	padding: .3em;
+}
+
+/* 09_1 */
+.language div.firstpage._09one {
+	background-color: #C2FFD6;
+}
+
+.language div.introbreak._09one h2 {
+	background-color: #27332B;	
+}
+
+.language div.introbreak._09one p {
+	border-bottom: 1px #27332B solid;	
+}
+
+.language .firstletter._09one {
+	color: #27332B;
+	margin-left: 1em;
+	margin-top: 44px;
+}
+
+.language div.firstpage._09one h1 {
+	margin-left: 3em;
+	font-size: 275%;
+}
+
+.language .continuedheader h1 {
+	border-bottom: 2px black solid;
+	margin-bottom: 0em;
+}
+
+.language .continuedheader p {
+	text-align: right;
+	font-style: italic;
+	font-weight: bold;
+	margin-top: 0em;
+}
+
+/* 10_1 */
+.language div.firstpage._10one {
+	background-color: #C8B5A3;
+}
+
+.language div.introbreak._10one h2 {
+	background-color: #855C33;
+}
+
+.language div.introbreak._10one p {
+	border-bottom: 1px #855C33 solid;	
+}
+
+.language .firstletter._10one {
+	color: #855C33;
+	margin-left: 1em;
+	margin-right: .1em;
+	margin-top: -10px;
+}
+
+.language div.firstpage._10one h1 {
+	margin-left: 3em;
+	font-size: 275%;
+}
+
+/* 10_3 */
+.language div.firstpage._10three {
+	background-color: #FFA366;
+}
+
+.language div.introbreak._10three h2 {
+	background-color: #FF6600;	
+}
+
+.language div.introbreak._10three p {
+	border-bottom: 1px #FF6600 solid;	
+}
+
+.language .firstletter._10three {
+	color: #FF6600;
+	margin-left: 1em;
+	margin-right: .1em;
+	margin-top: 44px;
+}
+
+.language div.firstpage._10three h1 {
+	margin-left: 3em;
+	font-size: 275%;
+}
+
+.language .headermargin {
+	margin-left: 8em;
+}
+
+/* 11_2 */
+.language div.firstpage._11two {
+	background-color: #85A6E6;
+}
+
+.language div.introbreak._11two h2 {
+	background-color: #50648A;
+}
+
+.language div.introbreak._11two p {
+	border-bottom: 1px #50648A solid;	
+}
+
+.language .firstletter._11two {
+	color: #50648A;
+	margin-left: 1em;
+	margin-right: .1em;
+	margin-top: 44px;
+}
+
+.language div.firstpage._11two h1 {
+	margin-left: 3em;
+	font-size: 275%;
+}
+
+/* 11_3 */
+.language div.firstpage._11three {
+	background-color: #99E699;
+}
+
+.language div.introbreak._11three h2 {
+	background-color: #5CCA5C;	
+}
+
+.language div.introbreak._11three p {
+	border-bottom: 1px #5CCA5C solid;	
+}
+
+.language .firstletter._11three {
+	color: #5CCA5C;
+	margin-left: 1em;
+	margin-right: .1em;
+	margin-top: 44px;
+}
+
+.language div.firstpage._11three h1 {
+	margin-left: 3em;
+	font-size: 275%;
+}
+
+.language h2.firstpageh2._11three {
+	margin-left: 7em;
+}
+
+/* 12_1 */
+.language div.firstpage._12one {
+	background-color: #C2E0FF;
+}
+
+.language div.introbreak._12one h2 {
+	background-color: #9BB3CC;	
+}
+
+.language div.introbreak._12one p {
+	border-bottom: 1px #9BB3CC solid;	
+}
+
+.language .firstletter._12one {
+	color: #9BB3CC;
+	margin-left: 1em;
+	margin-right: .1em;
+	margin-top: 44px;
+}
+
+.language div.firstpage._12one h1 {
+	margin-left: 2em;
+	font-size: 275%;
+}

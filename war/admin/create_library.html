@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en-US">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="/lib/bootstrap/css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="/basic/css/main.css" />
+		<script src="/lib/jquery-1.7.2.min.js"></script>
+		<script src="create_library.js"></script>
+		
+		<title>Create a Add a new Library</title>
+	</head>
+	<body>
+		<h1>Add a new library</h1>
+		<form id= "createForm" action="/admin/createLibrary" method="post" >
+			
+	    	
+			Lib name: <input type="text" name="libraryName" /> <br>
+			Lib Type:
+			Open:<input type="radio" name="libraryType" value="Open" /> 
+			Closed:<input type="radio" name="libraryType" value="Closed" /> <br>
+			
+			Lib Description: <input type="text" name="libraryDescription" /> <br>
+			
+			Leader's email: <input type="text" name="leader" /> <br>
+			
+			Start Date(optional): <script>DateInput('birthdate')</script><input type="date" name="startDate" /> <br>
+			End Date(optional): <input type="date" name="endDate" /> <br>
+			
+			<input id = "submit" type="submit" value="Create Library" /><br><br>
+			
+		</form>
+		<input type="button" id= "addAssignment" class="btn" value ="Add More Assignments(optional):"> <br> <br>
+	</body>
+</html>

@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+	<head>
+		<title> App Inventor Chapter 7 </title>
+	</head>
+
+	<body>
+		<div id="appinventor7" class="appinventor container"> 
+			<div class="page">
+
+<!-- Page 99 -->
+
+				<div class="chapter_head">
+					CHAPTER 7
+				</div>
+
+				<h2>Android, Where's My Car?</h2>
+
+				<section class="section" data-number="0" data-name="Android, Where's My Car?">
+
+					<div class="chapter_description">
+						<p>You parked as close to the stadium as you possibly could, but when the concert ends, 
+							you don’t have a clue where your car is. Your friends are equally clueless. Fortunately, you 
+							haven’t lost your Android phone, which never forgets anything, and you remember you 
+							have the hot new app, “Android, Where’s My Car?” With this app, you click a button when 
+							you park your car, and the Android uses its location sensor to record the car’s GPS coordinates and address.
+							Later, when you reopen the app, it gives you directions from where 
+							you currently are to the remembered location—problem solved!</p>
+					</div>
+
+					<div class="centeredImage">
+					 <img src="/contents/appinventor/images/ch07img01.png">
+					</div>
+	
+				</section>
+ 
+				<section class="section" data-number="1" data-name="What You'll Learn">
+
+					<h3>What You'll Learn</h3>
+
+					<p>This app covers the following concepts:</p>
+
+					<ul>
+						<li>Determining the location of the Android device using the <span class="python">LocationSensor</span>
+							component.</li>
+						<li>Recording data in a database directly on the device using <span class="python">TinyDB</span>.</li>
+						<li>Using the <span class="python">ActivityStarter</span> component to open Google Maps from your app 
+							and show directions from one location to another. </li>
+					</ul>
+
+<!-- Page 100 -->
+
+					<div class="pagebreak">
+						<span class="pageNumber"> 100 </span> Chapter 7: Android, Where's My Car?
+					</div>
+
+				</section>
+
+				<section class="section" data-number="2" data-name="Getting Started">
+
+					<h3>Getting Started</h3>
+
+					<p>Connect to the App Inventor website and start a new project. Name it “AndroidWhere” 
+						(project names can’t have spaces) and also set the screen’s title to “Android, Where’s 
+						My Car?” Open the Blocks Editor and connect to the phone.</p>
+
+				</section>
+
+				<section class="section" data-number="3" data-name="Designing the Components">
+
+					<h3>Designing the Components</h3>
+
+					<p>The user interface for “Android, Where’s My Car?” consists of labels to show your current 
+						and remembered locations, and buttons to record a location and show directions to it. 
+						You’ll need some labels that just show static text; for example, <span class="python">GPSLabel</span> will provide the 
+						text “GPS:” that appears in the user interface. Other labels, such as <span class="python">CurrentLatLabel</span>, 
+						will display data from the location sensor. For these labels, you’ll provide a default value, 
+						(0,0), which will change as the GPS acquires location information.</p>
+
+					<p>You’ll also need three non-visible components: a <span class="python">LocationSensor</span> for obtaining the 
+						current location, a <span class="python">TinyDB</span> for storing locations persistently, and an 
+						<span class="python">ActivityStarter</span> for launching Google Maps to get directions between
+						the current and stored locations.</p>
+
+					<p>You can build the components from the snapshot of the Component Designer in 
+						Figure 7-1.</p>
+
+					<figure>
+						<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch07img02.png">
+						</div>
+						<figcaption>Figure 7-1. The “Android, Where’s My Car?” app in the Component Designer</figcaption>
+					</figure>
+
+<!-- Page 101 -->
+
+					<div class="pagebreak">
+						<span class="pageNumber"> 101 </span> Designing the Components
+					</div>
+
+					<p>You can build the user interface shown in Figure 7-1 by dragging out the components in Table 7-1.</p>
+
+					<p class="caption">Table 7-1.All of the components for the app</p>
+
+					<table>
+						<thead>
+							<tr>
+								<th>Component type</th>
+								<th>Palette group</th>
+								<th>What you'll name it</th>
+								<th>Purpose</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><span class="python">Label</span></td>
+								<td>Basic</td>
+								<td><span class="python">CurrentHeaderLabel</span></td>
+								<td>Display the header "Your current location".</td>
+							</tr>          
+							<tr>
+								<td><span class="python">HorizontalArrangement</span></td>
+								<td>Screen Arrangement</td>
+								<td><span class="python">CurrentAddrArrangement</span></td>
+								<td>Arrange the address info.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">Label</span></td>
+								<td>Basic</td>
+								<td><span class="python">CurrentAdressLabel</span></td>
+								<td>Display the text "Address".</td>
+							</tr>          
+							<tr>
+								<td><span class="python">Label</span></td>
+								<td>Basic</td>
+								<td><span class="python">CurrentAddressDataLabel</span></td>
+								<td>Display dynamic data: the current address.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">HorizontalArrangement</span></td>
+								<td>Screen Arrangement</td>
+								<td><span class="python">CurrentGPSArrangement</span></td>
+								<td>Arrange the GPS info.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">Label</span></td>
+								<td>Basic</td>
+								<td><span class="python">GPSLabel</span></td>
+								<td>Display the text "GPS".</td>
+							</tr>          
+							<tr>
+								<td><span class="python">Label</span></td>
+								<td>Basic</td>
+								<td><span class="python">CurrentLatLabel</span></td>
+								<td>Display dynamic data: the current latitude</td>
+							</tr>          
+							<tr>
+								<td><span class="python">Label</span></td>
+								<td>Basic</td>
+								<td><span class="python">CommaLabel</span></td>
+								<td>Display ",".</td>
+							</tr>          
+							<tr>
+								<td><span class="python">Label</span></td>
+								<td>Basic</td>
+								<td><span class="python">CurrentLongLabel</span></td>
+								<td>Display dynamic data: the current longitude.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">Button</span></td>
+								<td>Basic</td>
+								<td><span class="python">RememberButton</span></td>
+								<td>Click to record the current location.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">HorizontalArrangement</span></td>
+								<td>Screen Arrangement</td>
+								<td><span class="python">RememberAddrArrangement</span></td>
+								<td>Arrange remembered address info.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">Label</span></td>
+								<td>Basic</td>
+								<td><span class="python">RememberedAddressLabel</span></td>
+								<td>Display the text “Remembered Place”.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">Label</span></td>
+								<td>Basic</td>
+								<td><span class="python">RememberedAddressDataLabel</span></td>
+								<td>Display dynamic data: the remembered address.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">HorizontalArrangement</span></td>
+								<td>Screen Arrangement</td>
+								<td><span class="python">RememberGPSArrangement</span></td>
+								<td>Arrange the remembered GPS info.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">Label</span></td>
+								<td>Basic</td>
+								<td><span class="python">RememberedGPSLabel</span></td>
+								<td>Display the text “GPS”.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">Label</span></td>
+								<td>Basic</td>
+								<td><span class="python">RememberedLatLabel</span></td>
+								<td>Display dynamic data: the remembered latitude.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">Label</span></td>
+								<td>Basic</td>
+								<td><span class="python">Comma2Label</span></td>
+								<td>Display “, ”.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">Label</span></td>
+								<td>Basic</td>
+								<td><span class="python">RememberedLongLabel</span></td>
+								<td>Display dynamic data: the remembered longitude.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">Button</span></td>
+								<td>Basic</td>
+								<td><span class="python">DirectionsButton</span></td>
+								<td>Click to show the map.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">LocationSensor</span></td>
+								<td>Sensors</td>
+								<td><span class="python">LocationSensor1</span></td>
+								<td>Sense GPS info.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">TinyDB</span></td>
+								<td>Basic</td>
+								<td><span class="python">TinyDB1</span></td>
+								<td>Store the remembered location persistently.</td>
+							</tr>          
+							<tr>
+								<td><span class="python">ActivityStarter</span></td>
+								<td>Other stuff</td>
+								<td><span class="python">ActivityStarter1</span></td>
+								<td>Launch Maps.</td>
+							</tr>          
+						</tbody>
+					</table>
+
+<!-- Page 102 -->
+
+					<div class="pagebreak">
+						<span class="pageNumber"> 102 </span> Chapter 7: Android, Where's My Car?
+					</div>
+
+					<p>Set the properties of the components in the following way:</p>
+
+					<ul>
+						<li>Set the <span class="python">Text</span> property for the labels with fixed text as specified in Table 7-1.</li>
+						<li>Set the <span class="python">Text</span> property of the labels for dynamic GPS data to “0.0”.</li>
+						<li>Set the <span class="python">Text</span> property of the labels for dynamic addresses to “unknown”.</li>
+						<li>Uncheck the <span class="python">Enabled</span> property of the <span class="python">RememberButton</span> 
+							and <span class="python">DirectionsButton</span>.</li>
+						<li>Set the <span class="python">ActivityStarter</span> properties so that ActivityStarter.StartActivity will 
+							open Google Maps. (The <span class="python">ActivityStarter</span>’s properties are only partially visible 
+							in the user interface shown in Figure 7-1.) Table 7-2 describes how they should 
+							be specified; you can leave blank any properties not listed in the table</li>
+					</ul>
+
+					<p class="caption">Table 7-2.ActivityStarter properties for launching Google Maps</p>
+
+					<table>
+						<thead>
+							<tr>
+								<th>Property</th>
+								<th>Value</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><span class="python">Action</span></td>
+								<td>android.intent.action.VIEW</td>
+							</tr>
+							<tr>
+								<td><span class="python">ActivityClass</span></td>
+								<td>com.google.android.maps.MapsActivity</td>
+							</tr>
+							<tr>
+								<td><span class="python">ActivityPackage</span></td>
+								<td>com.google.android.apps.maps</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div class="note">
+						<img src="/contents/appinventor/images/tip_suggestion.jpg">
+						<p><span class="pBlock normalFont">Note.</span>The <span class="python normalFont">ActivityStarter</span> component lets your app open any 
+							Android app installed on the device. The properties indicated in 
+							Table 7-2 can be used verbatim to open Maps; to open other apps, 
+							see the App Inventor documentation at http://appinventor.google
+							labs.com/learn/reference/other/activitystarter.html.</p>
+					</div>
+ 
+				</section>
+ 
+				<section class="section" data-number="4" data-name="Adding Behaviors to the Components">
+
+					<h3>Adding Behaviors to the Components</h3>
+
+					<p>You’ll need the following behaviors for this app:</p>
+
+					<ul>
+						<li>When the <span class="python">LocationSensor</span> gets a reading, place the current location data into 
+							the appropriate labels of the user interface. This will let the user know the sensor 
+							has read a location and is ready to remember it.</li>
+						<li>When the user clicks the <span class="python">RememberButton</span>, copy the current location data into 
+							the labels for the remembered location. You’ll also need to store the remembered location data
+							so it will be there if the user closes and relaunches the app.</li>
+						<li>When the user clicks the <span class="python">DirectionsButton</span>, launch Google Maps so it shows 
+							directions to the remembered location.</li>
+						<li>When the app is relaunched, load the remembered location from the database 
+							into the app.</li>
+					</ul>
+
+<!-- Page 103 -->
+
+					<div class="pagebreak">
+						<span class="pageNumber"> 103 </span> Adding Behaviors to the Components
+					</div>
+	 
+					<section class="subsection" data-number="5" data-name="Displaying the Current Location">
+
+						<h4>Displaying the Current Location</h4>
+
+						<p>The <span class="pBlock">LocationSensor.LocationChanged</span> event occurs not just when the device’s 
+							location changes, but also when the sensor first gets a reading. Sometimes that first 
+							reading will take a few seconds, and sometimes you won’t get a reading at all if the 
+							sight lines to GPS satellites are blocked (and depending on the device settings). For 
+							more information about GPS and <span class="python">LocationSensor</span>, see Chapter 23.</p>
+
+						<p>When you do get a location reading, the app should place the data into the appropriate
+							labels. Table 7-3 lists all the blocks you’ll need to do this.</p>
+
+						<p class="caption">Table 7-3.Blocks for getting a location reading and displaying it in the app’s UI</p>
+
+						<table>
+							<thead>
+								<tr>
+									<th>Block type</th>
+									<th>Drawer</th>
+									<th>Purpose</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><span class="pBlock">LocationSensor1.LocationChanged</span></td>
+									<td>LocationSensor</td>
+									<td>This is the event handler that is triggered when the phone receives a new GPS reading.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">set CurrentAddressDataLabel.Text to</span></td>
+									<td>CurrentAddressDataLabel </td>
+									<td>Place the new data into the label for the current address.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">LocationSensor1.CurrentAddress</span></td>
+									<td>LocationSensor</td>
+									<td>This property gives you a street address.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">set CurrentLatLabel.Text to</span></td>
+									<td>CurrentLatLabel</td>
+									<td>Place the latitude into the appropriate label.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">value latitude</span></td>
+									<td>My Definitions</td>
+									<td>Plug into set <span class="pBlock">CurrentLatLabel.Text to</span>.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">set CurrentLongLabel.Text to</span></td>
+									<td>CurrentLongLabel</td>
+									<td>Place the longitude into the appropriate label.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">value longitude</span></td>
+									<td>My Definitions</td>
+									<td>Plug into <span class="pBlock">set CurrentLongLabel.Text to</span>.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">set RememberButton.Enabled to</span></td>
+									<td>RememberButton</td>
+									<td>Remember the reading for current location.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">true</span></td>
+									<td>Logic</td>
+									<td>Plug into <span class="pBlock">set RememberButton.Enabled to</span>.</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<section class="subsubsection" data-number="6" data-name="How the blocks work">
+
+							<h5>How the blocks work</h5>
+
+							<p>As you can see in Figure 7-2, <span class="python">latitude</span> and 
+								<span class="python">longitude</span> are arguments of the <span class="pBlock">LocationChanged</span> event,
+								so you grab references to those in the My Definitions drawer. <span class="python">CurrentAddress</span>
+								is not an argument, but rather a property of the <span class="python">LocationSensor</span>, so you grab it from
+								<span class="python">LocationSensor’s</span> drawer. The <span class="python">LocationSensor</span>
+								does some additional work for you by calling Google Maps to get a street address corresponding
+								to the GPS location. </p>
+
+							<p>This event handler also enables the <span class="python">RememberButton</span>. We initialized it as disabled 
+								(unchecked) in the Component Designer because there is nothing for the user to 
+								remember until the sensor gets a reading, so now we’ll program that behavior.</p>
+
+<!-- Page 104 -->
+
+							<div class="pagebreak">
+								<span class="pageNumber"> 104 </span> Chapter 7: Android, Where's My Car?
+							</div>
+
+							<figure>
+								<div class="centeredImage">
+									<img src="/contents/appinventor/images/ch07img03.png">
+								</div>
+								<figcaption>Figure 7-2. Using the LocationSensor to read the current location</figcaption>
+							</figure>
+
+							<div class="test_your_app">
+								<img src="/contents/appinventor/images/test_phone.jpg">
+								
+								<p><span class="apptest_header">Test your app.</span>Live testing—testing your app on a phone connected
+									to your computer—doesn’t work for location-sensing apps. 
+									You need to package and download the app to your phone by 
+									selecting “Package for Phone”→“Download to Connected Phone” 
+									in the Component Designer. Some GPS data should appear and the 
+									<span class="python normalFont">RememberButton</span> should be enabled.</p>
+								<p>If you don’t get a reading, check your Android settings for Location &
+									Security and try going outside. For more information, see Chapter 23.</p>
+							</div>
+					 
+						</section>
+
+					</section>
+					
+					<section class="subsubsection" data-number="7" data-name="Recording the Current Location">
+
+						<h4>Recording the Current Location</h4>
+
+						<p>When the user clicks the <span class="python">RememberButton</span>, the most current location data should 
+							be placed into the labels for displaying the remembered data. Table 7-4 shows you 
+							which blocks you’ll need for this functionality.</p>
+
+						<p class="caption">Table 7-4.Blocks for recording and displaying the current location</p>
+
+						<table>
+							<thead>
+								<tr>
+									<th>Block type</th>
+									<th>Drawer</th>
+									<th>Purpose</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><span class="pBlock">RememberButton.Click</span></td>
+									<td>RememberButton</td>
+									<td>Triggered when the user clicks “Remember.”</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">set RememberedAddressDataLabel.Text to</span></td>
+									<td>RememberedAddressDataLabel</td>
+									<td>Place the sensor’s address data into the label for the remembered address.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">LocationSensor1.CurrentAddress</span></td>
+									<td>LocationSensor</td>
+									<td>This property gives you a street address.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">set RememberedLatLabel.Text to</span></td>
+									<td>RememberedLatLabel</td>
+									<td>Place the latitude sensed into the “remembered” label.</td>
+								</tr>
+							</tbody>
+						</table>
+
+<!-- Page 105 -->
+
+						<div class="pagebreak">
+							<span class="pageNumber"> 105 </span> Adding Behaviors to the Components
+						</div>
+
+						<p class="caption">Table 7-4.Blocks for recording and displaying the current location (continued)</p>
+
+						<table>
+							<thead>
+								<tr>
+									<th>Block type</th>
+									<th>Drawer</th>
+									<th>Purpose</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><span class="pBlock">LocationSensor.Latitude</span></td>
+									<td>LocationSensor</td>
+									<td>Plug into <span class="pBlock">set RememberedLatLabel.Text to</span>.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">set RememberedLongLabel.Text to</span></td>
+									<td>RememberedLongLabel</td>
+									<td>Place the longitude sensed into the “remembered” label.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">LocationSensor.Longitude</span></td>
+									<td>My Definitions</td>
+									<td>Plug into <span class="pBlock">set RememberedLongLabel.Text to</span>.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">set DirectionsButton.Enabled to</span></td>
+									<td>DirectionsButton</td>
+									<td>Map the remembered place.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">true</span></td>
+									<td>Logic </td>
+									<td>Plug into <span class="pBlock">set DirectionsButton.Enabled to</span>.</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<section class="subsection" data-number="8" data-name="How the blocks work">
+
+							<h5>How the blocks work</h5>
+
+							<p>When the user clicks the <span class="python">RememberButton</span>, the location sensor’s current readings are 
+								put into the “remembered” labels, as shown in Figure 7-3.</p>
+
+							<figure>
+								<div class="centeredImage">
+								 <img src="/contents/appinventor/images/ch07img04.png">
+								</div>
+								<figcaption>Figure 7-3. Placing the current location information in the “remembered” labels</figcaption>
+							</figure>
+
+							<p>You’ll notice also that the <span class="python">DirectionsButton</span> is enabled. This could get tricky, because 
+								if the user clicks the <span class="python">DirectionsButton</span> immediately, the remembered location will 
+								be the same as the current location, so the map that appears won’t provide much 
+								in terms of directions. But that’s not something anyone is likely to do; after the user 
+								moves (e.g., walks to the concert), the current location and remembered location will 
+								diverge.</p>
+
+							<div  class="test_your_app">
+								<img src="/contents/appinventor/images/test_phone.jpg">
+								
+								<p><span class="apptest_header">Test your app.</span>Download the new version of the app to your phone 
+									and test again. When you click the <span class="python normalFont">RememberButton</span>, is the data 
+									from the current settings copied into the remembered settings?</p>
+
+								<div class="clear"></div>
+							</div>
+
+						</section>
+
+					</section>
+
+<!-- Page 106 -->
+
+					<div class="pagebreak">
+						<span class="pageNumber"> 106 </span> Chapter 7: Android, Where's My Car?
+					</div>
+
+					<section class="subsection" data-number="9" data-name="Displaying Directions to the Remembered Location">
+
+						<h4>Displaying Directions to the Remembered Location</h4>
+
+						<p>When the user clicks the <span class="python">DirectionsButton</span>, you want the app to open Google Maps 
+							with the directions from the user’s current location to the remembered location (in 
+							this case, where the car is parked).</p>
+						<p>The <span class="python">ActivityStarter</span> component can open any Android app, including Google Maps. 
+							You have to set some configuration data to use it, but to open something like a 
+							browser or map, the data you need to specify is fairly straightforward.</p>
+						<p>To open a map, the key property to configure is the <span class="python">ActivityStarter.DataUri</span>
+							property. You can set the property to any URL that you might enter directly in a 
+							browser. If you want to explore this, open <em>http://maps.google.com</em> in your browser 
+							and ask for directions between, say, San Francisco and Oakland. When they appear, 
+							click the Link button at the top right of the map and check the URL that appears. This 
+							is the kind of URL you need to build in your app.</p>
+						<p>The difference for your app is that the directions map you’ll create will be from one 
+							specific set of GPS coordinates to another (not city to city). The URL must be in the 
+							following form:</p>
+						<p class="centeredURL">http://maps.google.com/maps?saddr=37.82557,-122.47898&daddr=37.81079,-122.47710</p>
+						<p>Type that URL into a browser—can you tell which famous landmark it directs you across?</p>
+						<p>For this app, you need to build the URL and set its source address (<span class="python">saddr</span>) and 
+							destination address
+							(<span class="python">daddr</span>) parameters dynamically. You’ve put text together before 
+							in earlier chapters using <span class="pBlock">make text</span>; we’ll do that here as well, plugging in the GPS 
+							data for the remembered and current locations. You’ll put the URL you build in as the 
+							<span class="python">ActivityStarter.DataUri</span> property, and then call
+							<span class="pBlock">ActivityStarter.StartActivity</span>. 
+							Table 7-5 lists all the blocks you’ll need for this.<p>
+
+						<section class="subsection" data-number="10" data-name="How the blocks work">
+
+							<h5>How the blocks work</h5>
+
+							<p>When the user clicks the <span class="python">DirectionsButton</span>, the event handler builds a URL for a map 
+							 and calls <span class="python">ActivityStarter</span> to launch the Maps application and load the map, as shown 
+							 in Figure 7-4. <span class="pBlock">make text</span> is used to build the URL to send to the Maps application.</p>
+							<p>The resulting URL consists of the Maps domain (<em>http://maps.google.com/maps</em>) along 
+								with two URL parameters, <span class="python">saddr</span> and <span class="python">daddr</span>,
+								which specify the source and destination locations for the directions.
+								For this app, the saddr is set to the latitude and 
+								longitude of the current location, and the daddris set to the latitude and longitude 
+								of the location stored for the car.</p>
+
+<!-- Page 107 -->
+
+							<div class="pagebreak">
+								<span class="pageNumber"> 107 </span> Adding Behaviors to the Components
+							</div>
+
+							<p class="caption">Table 7-5.Blocks for recording and displaying the current location</p>
+
+							<table>
+								<thead>
+									<tr>
+										<th>Block type</th>
+										<th>Drawer</th>
+										<th>Purpose</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><span class="pBlock">DirectionsButton.Click</span></td>
+										<td>DirectionsButton</td>
+										<td>Triggered when the user clicks “Directions.”</td>
+									</tr>
+									<tr>
+										<td><span class="pBlock">set ActivityStarter.DataUri to</span></td>
+										<td>ActivityStarter</td>
+										<td>Set the URL for the map you want to bring up.</td>
+									</tr>
+									<tr>
+										<td><span class="pBlock">make text</span></td>
+										<td>Text</td>
+										<td>Build a URL from multiple parts.</td>
+									</tr>
+									<tr>
+										<td><span class="pBlock">text</span> ("http://maps.google.com/maps?saddr=")</td>
+										<td>Text</td>
+										<td>The fixed part of the URL, the source address.</td>
+									</tr>
+									<tr>
+										<td><span class="pBlock">CurrentLatLabel.Text</span></td>
+										<td>CurrentLatLabel</td>
+										<td>The current latitude.</td>
+									</tr>
+									<tr>
+										<td><span class="pBlock">text</span> (",")</td>
+										<td>Text</td>
+										<td>Put a comma between the latitude and longitude values.</td>
+									</tr>
+									<tr>
+										<td><span class="pBlock">CurrentLongLabel.Text</span></td>
+										<td>CurrentLongLabe</td>
+										<td>The current longitude.</td>
+									</tr>
+									<tr>
+										<td><span class="pBlock">text</span> ("&daddr=")</td>
+										<td>Text</td>
+										<td>The second parameter of the URL, the destination address.</td>
+									</tr>
+									<tr>
+										<td><span class="pBlock">RememberedLatLabel.Text</span></td>
+										<td>RememberedLatLabel</td>
+										<td>The remembered latitude.</td>
+									</tr>
+									<tr>
+										<td><span class="pBlock">text</span> (",")</td>
+										<td>Text</td>
+										<td>Put a comma between the values for latitude and longitude.</td>
+									</tr>
+									<tr>
+										<td><span class="pBlock">RememberedLongLabel.Text</span></td>
+										<td>RememberedLongLabel</td>
+										<td>The remembered longitude.</td>
+									</tr>
+									<tr>
+										<td><span class="pBlock">ActivityStarter.StartActivity</span></td>
+										<td>ActivityStarter</td>
+										<td>Open Maps.</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<figure>
+								<div class="centeredImage">
+									<img class="imageUndertable" src="/contents/appinventor/images/ch07img05.png">
+								</div>
+								<figcaption>Figure 7-4. Building the URL to use for launching the Maps application</figcaption>
+							</figure>
+
+<!-- page 108 -->
+
+							<div class="pagebreak">
+								<span class="pageNumber"> 108 </span> Chapter 7: Android, Where's My Car?
+							</div>
+
+							<div class="test_your_app">
+								<img src="/contents/appinventor/images/test_phone.jpg">
+								
+								<p><span class="apptest_header">Test your app.</span>Download the new version of the app to your phone 
+									and test again. When a reading comes in, click the
+									<span class="python normalFont">RememberButton</span>	and then take a walk. When you click the
+									<span class="python normalFont">DirectionsButton</span>, does 
+									the map show you how to retrace your steps? After looking at the 
+									map, click the back button a few times. Do you get back to your app?</p>
+							</div>
+
+						</section>
+
+					</section>
+
+					<section class="subsection" data-number="11" data-name="Storing the Remembered Location Persistently">
+
+						<h4>Storing the Remembered Location Persistently</h4>
+
+						<p>So now you’ve got a fully functioning app that remembers a start location and draws 
+							a map back to that location from wherever the user is. But if the user “remembers” a 
+							location and then closes the app, the remembered data will not be available when 
+							he reopens it. Really, you want the user to be able to record the location of his car, 
+							close the app and go to some event, and then relaunch the app to get directions to 
+							the recorded location.</p>
+						<p>If you’re already thinking back to the No Texting While Driving app (Chapter 4), you’re 
+							on the right track here—we need to store the data <em>persistently</em> in a database using 
+							<span class="python">TinyDB</span>. You’ll use a scheme similar to the one we used in that app:</p>
+
+						<ol>
+							<li>When the user clicks the <span class="python">RememberButton</span>, store the location data to the database.</li>
+							<li>When the app launches, load the location data from the database into a variable or property.</li>
+						</ol>
+
+						<p>You’ll start by modifying the <span class="pBlock">RememberButton.Click</span> event handler so that it stores 
+							the remembered data. To store the latitude, longitude, and address, you’ll need three 
+							calls to <span class="pBlock">TinyDB.StoreValue</span>. Table 7-6 lists the additional blocks you’ll need.</p>
+
+						<p class="caption">Table 7-6.Blocks for recording and displaying the current location</p>
+
+						<table>
+							<thead>
+								<tr>
+									<th>Block type</th>
+									<th>Drawer</th>
+									<th>Purpose</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><span class="pBlock">TinyDB1.StoreValue</span> (3)</td>
+									<td>TinyDB</td>
+									<td>Store the data in the device database.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">text</span> ("address")</td>
+									<td>Text</td>
+									<td>Plug this into the “tag” slot of <span class="pBlock">TinyDB1.StoreValue</span>.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">LocationSensor.CurrentAddress</span></td>
+									<td>LocationSensor</td>
+									<td>The address to store persistently; plug this into the “value” slot of
+										<span class="pBlock">TinyDB1.StoreValue</span>.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">text</span> ("lat")</td>
+									<td>Text</td>
+									<td>Plug this into the “tag” slot of the second <span class="pBlock">TinyDB1.StoreValue</span></td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">LocationSensor.CurrentLatitude</span></td>
+									<td>LocationSensor</td>
+									<td>The latitude to store persistently; plug this into the “value” slot of the second
+										<span class="pBlock">TinyDB1.StoreValue</span>.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">text</span> ("long")</td>
+									<td>Text</td>
+									<td>Plug this into the “tag” slot of the third <span class="pBlock">TinyDB1.StoreValue</span>.</td>
+								</tr>
+								<tr>
+									<td><span class="pBlock">LocationSensor.CurrentLongitude</span></td>
+									<td>LocationSensor</td>
+									<td>The longitude to store persistently; plug this into the “value” slot of the third
+										<span class="pBlock">TinyDB1.StoreValue</span>.</td>
+								</tr>
+							</tbody>
+						</table>          
+
+<!-- Page 109 -->
+
+						<div class="pagebreak">
+							<span class="pageNumber"> 109 </span> Adding Behaviors to the Components
+						</div>
+
+						<section class="subsection" data-number="12" data-name="How the blocks work">
+
+							<h5>How the blocks work</h5>
+
+							<p>As shown in Figure 7-5, <span class="pBlock">TinyDB1.StoreValue</span> copies the location data from the 
+								LocationSensor properties into the database. As you may recall from No Texting 
+								While Driving, the <span class="python">StoreValue</span> function has two arguments, the tag and the value. 
+								The <em>tag</em> identifies which data you want to store, and the <em>value</em> is the actual data you 
+								want saved—in this case, the <span class="python">LocationSensor</span> data.</p>
+
+							<figure>
+								<div class="centeredImage">
+								 <img src="/contents/appinventor/images/ch07img06.png">
+								</div>
+								<figcaption>Figure 7-5. Storing the remembered location data in a database</figcaption>
+							</figure>
+	
+						</section>
+	
+					</section>
+
+					<section class="subsection" data-number="13" data-name="Retrieving the Remembered Location When the App Launches">
+
+						<h4>Retrieving the Remembered Location When the App Launches</h4>
+
+						<p>You store data in a database so you can recall it later. In this app, if a user stores a 
+							location and then closes the app, you want to recall that information from the data-base and show it to
+							her when she relaunches the app.</p>
+						<p>As discussed in previous chapters, the <span class="pBlock">Screen.Initialize</span> event is triggered when 
+							your app launches. Retrieving data from a database is a very common thing to do on 
+							startup, and it’s exactly what we want to do for this app.</p>
+						<p>You’ll use the <span class="pBlock">TinyDB.GetValue</span> function to retrieve the stored GPS data. Because 
+							you need to retrieve the stored address, latitude, and longitude, you’ll need three 
+							calls to <span class="python">GetValue</span>. As with No Texting While Driving, you’ll need to check if there is 
+							indeed data there (if it’s the first time your app is being launched, <span class="pBlock">TinyDB.GetValue</span>
+							will return an empty text).</p>
+						<p>As a challenge, see if you can create these blocks and then compare your creation to 
+							the blocks shown in Figure 7-6.</p>
+
+<!-- Page 110 -->
+
+						<div class="pagebreak">
+							<span class="pageNumber"> 110 </span> Chapter 7: Android, Where's My Car?
+						</div>
+
+						<figure>
+							<div class="centeredImage">
+								<img src="/contents/appinventor/images/ch07img07.png">
+							</div>
+							<figcaption>Figure 7-6. Adding the remembered location to a database so it’s available when the
+								app is closed and reopened</figcaption>
+						</figure>
+
+						<section class="subsection" data-number="14" data-name="How the blocks work">
+
+							<h5>How the blocks work</h5>
+
+							<p>To understand these blocks, you can envision a user opening the app the first time, 
+								and opening it later after previously recording location data. The first time the user 
+								opens the app, there won’t be any location data in the database to load, so you don’t 
+								want to set the “remembered” labels or enable the <span class="python">DirectionsButton</span>. On successive 
+								launches, if there is data stored, you do want to load the previously stored location 
+								data from the database.</p>
+							<p>The blocks first call the <span class="pBlock">TinyDB1.GetValue</span> with a tag of “address,” which is one of the 
+								tags used when you stored the location data earlier. The retrieved value is placed in 
+								the variable <span class="python">tempAddress</span>, where it is checked to see whether it’s empty or contains 
+								data.</p>
+							<p>The <span class="pBlock">if</span> block is necessary because <span class="python">TinyDB</span>
+								returns an empty text if there is no data 
+								for a particular tag; there isn’t any data the first time the app is launched and there 
+								won’t be until the user clicks the <span class="python">RememberButton</span>. Since the variable
+								<span class="python">tempAddress</span> now holds the returned value, the blocks check to see if the length of
+								<span class="python">tempAddress</span> is greater than 0. If the length is greater than 0, the app
+								knows that <span class="python">TinyDB</span> did return 
+								something, and the retrieved value is placed into <span class="python">RememberedAddressDataLabel</span>. 
+								The app also knows that if an address has been stored, it has a latitude and longitude.
+								Thus, those values are also retrieved using <span class="pBlock">TinyDB.GetValue</span>. Finally, if data has 
+								indeed been retrieved, the <span class="python">DirectionsButton</span> is enabled.</p>
+
+<!-- Page 111 -->
+
+							<div class="pagebreak">
+								<span class="pageNumber"> 111 </span> The Complete App: Android, Where's My Car?
+							</div>
+
+							<div class="test_your_app">
+								<img src="/contents/appinventor/images/test_phone.jpg">
+								
+								<p><span class="apptest_header">Test your app.</span>Download the new version of the
+									app to your phone and test again. Click the <span class="python normalFont">RememberButton</span>
+									and make sure the readings are recorded. Then close the app and reopen it. Does the remembered data appear?</p>
+							</div>
+
+						</section>
+
+					</section>
+
+				</section>
+
+				<section class="section" data-number="15" data-name="The Complete App: Android, Where's My Car?">
+
+					<h4>The Complete App: Android, Where's My Car?</h4>
+
+					<p>Figure 7-7 shows the final blocks for the complete “Android, Where’s My Car?” app.</p>
+
+				</section>
+
+				<section class="section" data-number="16" data-name="Variations">
+
+					<h4>Variations</h4>
+
+					<p>Here are some variations you can experiment with:</p>
+
+					<ul>
+						<li>Create “Android, Where Is Everyone?”, an app that lets a group of people track 
+							one another’s whereabouts. Whether you’re hiking or at the park, this app could 
+							help save time and possibly even lives. The data for this app is shared, so you’ll 
+							need to use a web database and the <span class="python">TinyWebDB</span> component instead of
+							<span class="python">TinyDB</span>. See Chapter 22 for more information.</li>
+						<li>Create a Breadcrumb app that tracks your whereabouts by recording each location change in a list.
+							You should only record a new breadcrumb if the location has changed by a certain amount, or a certain
+							amount of time has elapsed, because even slight movement can generate a new location reading. You’ll need 
+							to store the recorded locations in a list—see Chapter 19 for help.</li>
+					</ul>
+	
+				</section>
+	
+				<section class="section" data-number="17" data-name="Summary">
+
+					<h4>Summary</h4>
+
+					<p>Here are some of the ideas we’ve covered in this tutorial:</p>
+
+					<ul>
+						<li>The <span class="python">LocationSensor</span> component can report the user’s latitude, longitude, and 
+							current street address. Its <span class="python">LocationChanged</span> event is triggered when the sensor 
+							gets its first reading and when the reading changes (the device has moved). For 
+							more information on the <span class="python">LocationSensor</span>, see Chapter 23.</li>
+						<li>The <span class="python">ActivityStarter</span> component can launch any app, including Google Maps. 
+							For Maps, you set the <span class="python">DataUri</span> property to the URL of the map you want to display. If you
+							want to show directions between GPS coordinates, the URL will be in 
+							the following format, but you’d replace the sample data shown here with actual 
+							GPS coordinates: 
+								<p class="centeredURL">http://maps.google.com/maps/?saddr=0.1,0.1&daddr=0.2,0.2</p></li>
+						<li><span class="pBlock">make text</span> is used to piece together (concatenate) separate text items into a 
+							single text object. It allows you to concatenate dynamic data with static text. 
+							With the Maps URL, the GPS coordinates are the dynamic data.</li>
+					</ul>
+
+<!-- Page 112 -->
+
+					<div class="pagebreak">
+						<span class="pageNumber"> 112 </span> Chapter 7: Android, Where's My Car?
+					</div>
+
+					<div class="clear"></div>
+
+					<ul>
+						<li><span class="python">TinyDB</span> allows you to store data persistently in the phone’s database. Whereas 
+							the data in a variable or property is lost when an app closes, data stored in the 
+							database can be loaded each time the app is opened. For more information on 
+							TinyDBand databases, see Chapter 22.</li>
+					</ul>
+
+					<figure>
+						<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch07img08.png">
+						</div>
+						<figcaption>Figure 7-7. The blocks for “Android, Where’s My Car?”</figcaption>
+					</figure>
+
+				</section>
+
+		</div>
+	</body>
+</html>

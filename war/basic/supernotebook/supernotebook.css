@@ -1,0 +1,550 @@
+/* Style definitions for the super notebook */
+
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+h1.title {
+	font-size: 44px;
+	letter-spacing: -1px;
+	position: relative;
+	top: 10px;
+}
+
+body {
+	padding: 0px;
+	overflow: hidden;
+}
+
+#logoutBtn {
+	position: absolute;
+	top: 15px;
+	right: 20px;
+	z-index: 100;
+}
+
+.divider {
+	border-top: 1px solid #DDD;
+	padding: 0px 5px 0px 5px;
+}
+
+#CaretBtn {
+	height: 28px;
+}
+
+#backBtn {
+	position: absolute;
+	top: 15px;
+	left: 20px;
+}
+
+.inline {
+	display: inline-block;
+}
+
+
+/* MAIN CONTENT */
+
+	#BodyContainer {
+		padding-top: 60px;
+		width: 100%;
+		height: 100%;
+		position: absolute;
+	}
+	
+	#topBar {
+		width: 100%;
+		height: 60px;
+		position: relative;
+		margin-top: -60px;
+	}
+	
+	#mainBody {
+		width: 100%;
+		height: 100%;
+		border-top: 3px double #BBB;
+	}
+	
+	#leftColumn {
+		width: 30%;
+		height: 100%;
+		display: inline-block;
+		border-right: 1px solid #BBB;
+		background-color: #DDD;
+		position: relative;
+		float: left;
+		padding: 10px;
+	}
+	
+	#rightColumn {
+		width: 70%;
+		position: relative;
+		height: 100%;
+		display: inline-block;
+		padding: 10px;
+		padding-top: 0px;
+		overflow-y: auto;
+	}
+	
+	
+	
+/* LEFT COLUMN */
+
+	.bookSN {
+		padding-bottom: 3px;
+	}
+
+	.navchapter {
+		font-size: 15px;
+		padding: 4px;
+		padding-right: 15px;
+		position: relative;
+		cursor: pointer;
+	}
+	
+	.navchapter-title {
+		margin-right: 50px;
+	}
+	
+	.tabbed {
+		margin-left: 1.5em;
+	}
+	
+	.N, .H, .S {
+		display: inline;
+		font-size: 14px;
+		font-weight: bold;
+		position: absolute;
+		top: 5px;
+	}
+	
+	.N { color: red; right: 40px; }
+	.H { color: green; right: 60px; }
+	.S { color: blue; right: 0px; }
+	
+	#legend {
+		position: absolute;
+		bottom: 5px;
+	}
+	
+	.red { color: red; }
+	.blue { color: blue; }
+	.green { color: green; }
+	
+	
+	/* Books and Chapters */
+	
+	
+	
+
+
+
+/* CHAPTER COLLAPSIBLE */
+
+	.chapterbar {
+		background-color: #C8EEFD;
+		padding: 5px;
+		margin-top: 10px;
+		border-radius: 5px 5px 0px 0px;
+		border: 1px solid #95C1D3;
+		font-size: 14px;
+		height: 40px;
+	}
+	
+	.dropdown {
+		display: inline-block;
+	}
+	
+	.dropdown-menu::after {
+		position: absolute;
+		top: -6px;
+		right: 10px;
+		display: inline-block;
+		border-right: 6px solid transparent;
+		border-bottom: 6px solid white;
+		border-left: 6px solid transparent;
+		content: '';
+	}
+	
+	.chapterbar-book {
+		display: inline;
+		font-weight: bold;
+		position: relative;
+		top: 4px;
+		margin-left: 10px;
+	}
+	
+	.chapterbar-chapter {
+		margin-left: 30px;
+		display: inline;
+		position: relative;
+		top: 4px;
+	}
+	
+	.chapterbar-toolbar {
+		display: inline;
+		float: right;
+	}
+	
+	.btn-chapterbar {
+		position: relative;
+		top: -1px;
+	}
+
+	.chapter-slidedown {
+		background-color: #B2D1D8;
+		padding: 10px;
+		padding-top: 0px;
+		border: 1px solid #95C1D3;
+		border-top: 0px;
+		display: none;
+	}
+
+
+
+/* SECTION COLLAPSIBLE */
+
+	.sectionbar {
+		background-color: #C4D9EC;
+		padding: 5px;
+		border-radius: 5px 5px 0px 0px;
+		border: 1px solid #95C1D3;
+		font-size: 14px;
+		height: 30px;
+		margin-top: 10px;
+	}
+	
+	.sectionbar-section {
+		margin-left: 10px;
+		display: inline;
+		font-weight: bold;
+	}
+
+	.sectionbar-toolbar {
+		display: inline;
+		float: right;
+	}
+	
+	.dropdown-arrow, .btn-open {
+		display: inline;
+		width: 26px;
+		height: 26px;
+		position: relative;
+		top: -4px;
+		cursor: pointer;
+		
+		-webkit-transition: all 0.3s ease-out;
+		-moz-transition: all 0.3s ease-out;
+		transition: all 0.3s ease-out;
+		
+		-webkit-transform: rotate(-90deg);
+		-moz-transform: rotate(-90deg);
+		-ms-transform: rotate(-90deg);
+		-o-transform: rotate(-90deg);
+		transform: rotate(-90deg);
+	}
+	
+	.btn-open {
+		top: 0px;
+	}
+	
+	.dropdown-arrow.active, .btn-open.active {
+		-webkit-transform: rotate(90deg);
+		-moz-transform: rotate(90deg);
+		-ms-transform: rotate(90deg);
+		-o-transform: rotate(90deg);
+		transform: rotate(90deg);
+	}
+	
+	
+	
+/* Inside a section collapsible */
+	
+	.section-slidedown {
+		border: 1px solid #95C1D3;
+		border-top: none;
+		background-color: #B5C6D7;
+		padding: 5px;
+		padding-top: 0px;
+		display: none;
+		width: 100%;
+		position: relative;
+		top: -2px;
+	}
+	
+	.section-toolbar {
+		text-align: center;
+		width: 100%;
+	}
+	
+	.section-toolbar div {
+		width: 30%;
+		display: inline-block;
+		text-align: center;
+		padding: 2px;
+		border-bottom: 1px solid #909BA6;
+		border-right: 1px solid #909BA6;
+		font-size: 11px;
+		cursor: pointer;
+	}
+	
+	.highlights-btn {
+		border-left: 1px solid #909BA6;
+	}
+	
+	.section-toolbar div.active {
+		background-color: #C4D9EC;
+	}
+	
+	.highlights-window, .list-window, .confusing-window {
+		display: none;
+		width: 100%;
+		margin-top: 10px;
+	}
+	
+	.highlights-window {
+		display: inherit;
+	}
+	
+	.garbageIcon {
+		width: 20px;
+		right: 0px;
+		top: 2px;
+		position: absolute;
+		cursor: pointer;
+	}
+	
+	
+	/* Highlights */
+	
+		.highlight-supporting {
+			margin-left: 3em;
+			border-left: 1px solid #93B0D1;
+		}
+		
+		.highlightNotebook {
+			cursor: pointer;
+			text-align: left;
+			position: relative;
+			font-size: 13px;
+		}
+		
+		.highlightNotebook hr {
+			margin: 0px 10px 0px 10px;
+			border-top: 1px solid #93B0D1;
+			border-bottom: 0px;
+		}
+		
+		.highlight-supporting > hr {
+			margin-left: 0px;
+		}
+		
+		.highlightContent {
+			position: relative;
+			margin-right: 50px;
+			padding: 3px;
+		}
+		
+		.highlighted {
+			background-color: #F0F022;
+		}
+		
+		.highlightAnnotation {
+			margin-left: 50px;
+			font-style: italic;
+			font-size: 11px;
+			color: #666;
+		}
+		
+		.highlightIcon {
+			height: 100%;
+			left: 60%;
+			position: absolute;
+		}
+		
+		#notebookNotes {
+			margin-top: 15px;
+			text-align: left;
+		}
+		
+		.answerTextbox {
+			width: 90%;
+			resize: none;
+			height: 50px;
+			margin-left: 3em;
+		}
+		
+		
+	/* List */
+	
+		.noteArea {
+			margin-bottom: -1px;
+		}
+		
+		.notecontent {
+			position: relative;
+			margin-right: 50px;
+			font-size: 12px;
+			padding-bottom: 3px;
+			padding-top: 1px;
+			margin-left: 20px;
+		}
+		
+		.noteBullet {
+			display: inline-block;
+			border-radius: 50%;
+			height: 5px;
+			width: 5px;
+			background-color: #111111;
+			left: 0px;
+			position: absolute;
+			top: 8px;
+			margin-left: 2px;
+		}
+		
+		.listtitle {
+			font-size: 15px;
+			font-weight: bold;
+			padding-bottom: 10px;
+		}
+		
+		.note {
+			position: relative;
+			font-size: 12px;
+			margin-bottom: -1px;
+		}
+		
+		.newnote {
+			margin-bottom: 2px;
+		}
+		
+		.noteedit {
+			position: relative;
+			left: 20px;
+			font-size: 12px;
+			width: 80%;
+		}
+		
+		.pencilpic {
+			height: 18px;
+			margin-top: -5px;
+		}
+		
+		
+	/* Section Summary */
+		
+		.summary-textbox {
+			width: 100%;
+			resize: none;
+			height: 50px;
+		}
+		
+		.secsum {
+			text-align: center;
+		}
+
+
+
+/* HIGHLIGHT POPUP */
+
+#HighlightPopup {
+	position: absolute;
+	width: 350px;
+	height: 480px;
+	display: none;
+	z-index: 1173;
+	right: 50px;
+	top: 50px;
+	border: 1px solid #AAAAAA;
+	border-radius: 5px;
+}
+
+#highpop-header {
+	position: absolute;
+	z-index: 2;
+	width: 100%;
+	height: 40px;
+	background-color: #D1E5FA;
+	border-bottom: 1px solid #CCCCCC;
+	font-size: 20px;
+	padding: 10px 5px 5px 10px;
+	border-radius: 5px 5px 0px 0px;
+	min-height: 35px;
+}
+
+#highpop-body {
+	position: relative;
+	background-color: #EEEEEE;
+	width: 100%;
+	height: 100%;
+	padding: 40px 0px 40px 0px;
+}
+
+#highpop-bodyinner {
+	height: 100%;
+	width: 100%;
+	overflow: auto;
+	padding: 10px;
+	overflow-y: hidden;
+}
+
+#highpop-footer {
+	height: 40px;
+	width: 100%;
+	position: relative;
+	top: -40px;
+	background-color: #EEEEEE;
+	border-top: 1px solid #CCCCCC;
+	border-radius: 0px 0px 5px 5px;
+	padding-top: 5px;
+	padding-right: 20px;
+	text-align: right;
+}
+
+#highpop-close {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+}
+
+#highpop-applyBtn {
+	margin-right: 5px;
+}
+
+#highlightPopupText {
+	font-style: italic;
+	font-size: 19px;
+	line-height: 130%;
+	height: 100px;
+	overflow-y: scroll;
+}
+
+.highlightpopup-header {
+	font-size: 16px;
+	font-weight: bold;
+	padding-bottom: 7px;
+}
+
+.highlightpopup-textbox {
+	resize: none;
+	width: 100%;
+	height: 50px;
+}
+
+.highpop-table {
+	font-size: 13px;
+}
+
+.highpop-table td:first-child {
+	padding-right: 30px;
+}
+
+#highpop-othertextbox {
+	display: none;
+}
+
+
+
+

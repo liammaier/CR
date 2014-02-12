@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+  <head>
+  	<title> App Inventor Chapter 18 </title>
+
+  </head>
+
+  <body>
+  	<div id="appinventor18" class="appinventor container"> 
+  		<div class="page">
+	  			<div class="chapter_head">
+					CHAPTER 18
+				</div>
+				<div class="chapter_name">
+					<h2> Programming Your App to Make Decisions: Conditional Blocks </h2>
+				</div>
+	  		<section id="introduction" class="section" data-number="0" data-name="Introduction">
+		  		<div class="chapter_description chapter_18"> 
+		  				<figure class="floatright">
+			  				<img id="figure_18_0" height="300px" src="/contents/appinventor/images/figure_18_0.png">
+			  			</figure>
+		  				<p>
+		  					<span class="first_sentence">Computers, even small ones like the phone in your pocket, are good at performing thou- sands of operations in just a few seconds.</span>Even more impressively, they can also make decisions based on the data in their memory banks and logic specified by the programmer. This decision-making capability is probably the key ingredient of what people think of as artificial intelligence—and it’s definitely a very important part of creating smart, interesting apps! In this chapter, we’ll explore how to build decision-making logic into your apps.
+		  				</p>
+			  	</div> <!-- chapter description -->		
+			  <figure class="leftfig">
+					<img src="/contents/appinventor/images/figure_18_1.png">
+					<figcaption>
+						Figure 18-1. An event handler that tests for a condition and branches accordingly
+					</figcaption>
+				</figure>	  		
+			  	<p>
+			  		As we discussed in Chapter 14, an app’s behavior is defined by a set of event handlers. Each event handler executes specific functions in response to a particular event. The response need not be a linear sequence of functions, however; you can specify that some functions be performed only under certain conditions. A game app might check if the score has reached 100. A location- aware app might ask if the phone is within the boundar- ies of some building. Your app can ask such questions and, depending on the answer, proceed down a certain program <span class="new_term">branch</span> (or direction).
+			  	</p>
+			  	<p>
+			  		Figure 18-1 depicts a flowchart of an event handler with a conditional check.
+			  	</p>
+			  	<p>
+			  		When the event occurs, function A is performed no mat- ter what. Then a decision test is performed. If the test is true, B1 is performed. If it is false, B2 is performed. In either case, the rest of the event handler (C) is completed.
+			  	</p>
+			  	<div class="pagebreak clear">
+			  		<span class="pageNumber"> 260 </span> Chapter 18: Programming Your App to Make Decisions: Conditional Blocks
+			  	</div>
+			  	<p class="clear">
+			  		Because decision diagrams like the one in Figure 18-1 look something like trees, it is common to say that the app “branches” one way or the other depending on the test result. So, in this instance, you’d say, “If the test is true, the branch containing B1 is performed.“test”
+			  	</p>
+	  		</section> <!-- introduction dn1 -->
+	  		<section class="section clear" data-number="1" data-name="Testing Conditions with if and ifelse Blocks">
+				<h3>Testing Conditions with if and ifelse Blocks</h3>
+				<p>
+					<span class="first_sentence">App Inventor provides two types of conditional blocks (Figure 18-2): <span class="program_block">if</span> and <span class="program_block">ifelse</span>, both of which are found in the Control drawer of the Built-In palette.</span>
+				</p>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_18_2.png">
+					<figcaption>
+						Figure 18-2. The if and ifelse conditional blocks
+					</figcaption>
+				</figure>
+				<p>
+					You can plug any <span class="new_term">Boolean expression</span> into the “test” slot of these blocks. A Boolean expression is a mathematical equation that returns a result of either true or false. The expression tests the value of properties and variables using relational and logical operators such as the ones shown in Figure 18-3.
+				</p>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_18_3.png">
+					<figcaption>
+						Figure 18-3. Relational and logical operator blocks used in conditional tests
+					</figcaption>
+				</figure>
+				<p>
+			  		For both <span class="program_block">if</span> and <span class="program_block">ifelse</span>, the blocks you put within the “then-do” slot will only be executed if the test is true. For an <span class="pb">if</span> block, if the test is false, the app moves on to the blocks below it. If the <span class="program_block">ifelse</span> test is false, the blocks within the “else-do” slot are performed.
+			  	</p>
+			  	<p>
+			  		So, for a game, you might plug in a Boolean expression concerning the score, as shown in Figure 18-4.
+			  	</p>
+			  	<div class="pagebreak">
+			  		<span class="pageNumber"> 261 </span> Programming an Either/Or Decision
+			  	</div>
+			  		<figure class="centered">
+					<img src="/contents/appinventor/images/figure_18_4.png">
+					<figcaption>
+						Figure 18-4. A Boolean expression used to test the score value
+					</figcaption>
+				</figure>
+				<p>
+					In this example, a sound file is played if the score goes over 100. Note that if the test is false, no blocks are executed. If you want a false test to trigger an action, you can use an <span class="program_block">ifelse</span> block.
+				</p>
+			</section> <!-- Testing Conditions with if and ifelse Blocks dn2 -->
+			<section class="section" data-number="2" data-name="Programming an Either/Or Decision">
+				<h3>Programming an Either/Or Decision</h3>
+				<p>
+					<span class="first_sentence">Consider an app you could use when you’re bored: you press a button on your phone, and it calls a random friend.</span> In Figure 18-5, we use a <span class="program_block">random integer</span> block to generate a random number and then an <span class="program_block">ifelse</span> block to call a particular phone number based on that random number.
+				</p>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_18_5.png">
+					<figcaption>
+						Figure 18-5. This ifelse block calls one of two numbers based on the randomly generated integer
+					</figcaption>
+				</figure>
+				<p>
+					In this example, <span class="program_block">random integer</span> is called with arguments 1 and 2, meaning that the returned random number will be 1 or 2 with equal likelihood. The variable <span class="code">RandomNum</span> stores the random number returned.
+				</p>
+				<p>
+					After setting <span class="code">RandomNum</span>, the blocks compare it to the number 1 in the <span class="program_block">ifelse</span> test. If the value of <span class="code">RandomNum</span> is 1, the app takes the first branch (then-do), and the phone number is set to 111–1111. If the value is not 1, the test is false, so the app takes the second branch (else-do), and the phone number is set to 222–2222. The app makes the phone call either way because the call to <span class="program_block">MakePhoneCall</span> is below the entire <span class="program_block">ifelse</span> block.
+				</p>
+				<div class="pagebreak">
+			  		<span class="pageNumber"> 262 </span> Chapter 18: Programming Your App to Make Decisions: Conditional Blocks
+			  	</div>
+			</section> <!-- Programming an Either/Or Decision dn3 -->
+			<section class="section" data-number="3" data-name="Programming Conditions Within Conditions">
+				<h3>Programming Conditions Within Conditions</h3>
+				<p>
+					<span class="first_sentence">Many decision situations are not <span class="new_term">binomial</span>—that is, they don’t have just two out- comes to choose from.</span> For example, you might want to choose between more than two friends in your Random Call program. To do this, you could place an <span class="program_block">ifelse</span> within the original else-do clause, as shown in Figure 18-6.
+				</p>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_18_6.png">
+					<figcaption>
+						Figure 18-6. An ifelse condition is placed within the else-do of an outer condition
+					</figcaption>
+				</figure>
+				<p>
+					With these blocks, if the first test is true, the app executes the first then-do branch and calls the number 111–1111. If the first test is false, the outer else-do branch is executed, which immediately runs another test. So, if the first test (<span class="code">RandomNum</span>=1) is false, and the second (<span class="code">RandomNum</span>=2) is true, the second then-do is executed, and 222–2222 is called. If both tests are false, the inner else-do branch at the bottom is executed, and the third number (333–3333) is called.
+				</p>
+				<p>
+					Note that this modification only works because the to parameter of the <span class="program_block">random integer</span> call was changed to 3 so that 1, 2, or 3 is called with equal likelihood.
+				</p>
+				<p>
+					Placing one control construct within another is called <span class="new_term">nesting</span>. In this case, you’d say the blocks had a“nested if-else.”You can use such nested logic to provide more choices in your Random Call app, and in general, to add arbitrary complexity to any app.
+				</p>
+				<div class="pagebreak">
+			  		<span class="pageNumber"> 263 </span> Programming Complex Conditions
+			  	</div>
+			</section> <!-- Programming Conditions Within Conditions dn4 -->
+			<section class="section" data-number="4" data-name="Programming Complex Conditions">
+				<h3>Programming Complex Conditions</h3>
+				<p>
+					<span class="first_sentence">Besides nesting questions, you can also specify tests that are more complex than a simple equality test. </span>For example, consider an app that vibrates when you (and your phone) leave a building or some boundary. Such an app might be used by a person on probation to warn him when he strays too far from his legal boundaries, or by par- ents to monitor their children’s whereabouts. A teacher might use it to automatically take roll (if all her students have an Android phone!).
+				</p>
+				<p>
+					For this example, let’s ask this question: is the phone within the boundary of Harney Science Center at the University of San Francisco? Such an app would require a com- plex test consisting of four different questions:
+				</p>
+				<ul>
+					<li>
+						Is the phone’s latitude less than the maximum latitude (37.78034) of the boundary?
+					</li>
+					<li>
+						Is the phone’s longitude less than the maximum longitude (–122.45027) of the boundary?
+					</li>
+					<li>
+						Is the phone’s latitude more than the minimum latitude (37.78016) of the boundary?
+					</li>
+					<li>
+						Is the phone’s longitude more than the minimum longitude (–122.45059) of the boundary?
+					</li>
+				</ul>
+				<p>
+					We’ll be using the <span class="code">LocationSensor</span> component for this example. You should be able to follow along here even if you haven’t been exposed to <span class="code">LocationSensor</span>, but you can learn more about it in Chapter 23.
+				</p>
+				<p>
+					You can build complex tests using the logical operators <span class="program_block">and</span>, <span class="program_block">or</span>, and <span class="program_block">not</span>, which are found in the Logic drawer. In this case, you’d start by dragging out an <span class="program_block">if</span> block and an <span class="program_block">and</span> block and then placing the and block within the “test” slot of the <span class="program_block">if</span>, as illustrated in Figure 18-7.
+				</p>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_18_7.png">
+					<figcaption>
+						Figure 18-7. An and block is placed within the “test” slot of the if block
+					</figcaption>
+				</figure>
+				<p>
+					You’d then drag out blocks for the first question and place them into the <span class="program_block">and</span> block’s “test” slot, as shown in Figure 18-8.
+				</p>
+				<div class="pagebreak">
+			  		<span class="pageNumber"> 264 </span> Chapter 18: Programming Your App to Make Decisions: Conditional Blocks
+			  	</div>
+			  	<figure class="centered">
+					<img src="/contents/appinventor/images/figure_18_8.png">
+					<figcaption>
+						Figure 18-8. When the blocks for the first test are placed into the and block, a new test slot opens
+					</figcaption>
+				</figure>
+				<p>
+					Note that as you fill a (sub-)test of the <span class="program_block">and</span> block, a new test slot opens. If you fill these slots with the other tests and place the entire <span class="program_block">ifelse</span> within a <span class="program_block">LocationSensor.LocationChanged</span> event, you’ll have an event handler that checks the boundary, as shown in Figure 18-9.
+				</p>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_18_9.png">
+					<figcaption>
+						Figure 18-9. This event handler checks the boundary each time the location changes
+					</figcaption>
+				</figure>
+				<p>
+					With these blocks, each time the <span class="code">LocationSensor</span> gets a new reading and its location is within the boundary, the phone vibrates.
+				</p>
+				<p>
+					OK, so far this is pretty cool, but now let’s try something even more complicated to give you an idea of the full extent of the app’s decision-making powers. What if you wanted the phone to vibrate only when the boundary was crossed from in- side to outside? Before moving ahead, think about how you might program such a condition.
+				</p>
+				<p>
+					Our solution is to define a variable <span class="code">withinBoundary</span> that remembers whether the <span class="emph">previous</span> sensor reading was within the boundary or not, and then compares that to each successive sensor reading. <span class="code">withinBoundary</span> is an example of a <span class="new_term">Boolean</span>
+				</p>
+				<div class="pagebreak">
+			  		<span class="pageNumber"> 265 </span> Programming Complex Conditions
+			  	</div>
+			  	<p>
+			  		<span class="new_term">variable</span>—instead of storing a number or text, it stores true or false. For this example, you’d initialize it as false, as shown in Figure 18-10, meaning that the device is not within USF’s Harney Science Center.
+			  	</p>
+			  	<figure class="centered">
+					<img src="/contents/appinventor/images/figure_18_10.png">
+					<figcaption>
+						Figure 18-10. withinBoundary is initialized as false
+					</figcaption>
+				</figure>
+				<p>
+					The blocks can now be modified so that the <span class="code">withinBoundary</span> variable is set on each location change, and so that the phone vibrates only when it moves from inside to outside the boundary. To put that in terms we can use for blocks, the phone should vibrate when (1) the variable <span class="code">withinBoundary</span> is true, meaning the previous read- ing was inside the boundary, and (2) the new location sensor reading is outside the boundary. Figure 18-11 shows the updated blocks.
+				</p>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_18_11.png">
+					<figcaption>
+						Figure 18-11. These blocks cause the phone to vibrate only when it moves from within the boundary to outside the boundary
+					</figcaption>
+				</figure>
+				<p>
+					Let’s examine these blocks more closely. When the <span class="code">LocationSensor</span> gets a reading, it first checks if the new reading is within the boundary. If it is, <span class="code">LocationSensor</span> sets the <span class="code">withinBoundary</span> variable to true. Since we want the phone to vibrate only when we are outside the boundary, no vibration takes place in this first branch.
+				</p>
+				<div class="pagebreak">
+			  		<span class="pageNumber"> 264 </span> Chapter 18: Programming Your App to Make Decisions: Conditional Blocks
+			  	</div>
+			  	<p>
+			  		If we get to the else-do, we know that the new reading is outside the boundary. At that point, we have to check the previous reading: if we’re outside the boundary, we want the phone to vibrate only if the previous reading was <span class="emph">inside</span> the boundary. <span class="code">withinBoundary</span> tells us the previous reading, so we can check that. If it is true, we vibrate the phone.
+			  	</p>
+			  	<p>
+			  		There’s one more thing we need to do once we’ve confirmed that the phone has moved from inside to outside the boundary—can you think of what it is? We also need to reset <span class="code">withinBoundary</span> to false so the phone won’t vibrate again on the next sensor reading.
+			  	</p>
+			  	<p>
+			  		One last note on Boolean variables: check out the two <span class="program_block">if</span> tests in Figure 18-12. Are they equivalent?
+			  	</p>
+			  	<figure class="centered">
+					<img src="/contents/appinventor/images/figure_18_12.png">
+					<figcaption>
+						Figure 18-12. Can you tell whether these two if tests are equivalent?
+					</figcaption>
+				</figure>
+				<p>
+					The answer is “yes!” The only difference is that the test on the right is actually the more sophisticated way of asking the question. The test on the left compares the value of a Boolean variable with <span class="code">true</span>. If <span class="code">withinBoundary</span> contains true, you com- pare <span class="code">true</span> to <span class="code">true</span>, which is true. If the variable contains <span class="code">false</span>, you compare <span class="code">false</span> to <span class="code">true</span>, which is false. However, just testing the value of <span class="code">withinBoundary</span>, as in the test on the right, gives the same result and is easier to code.
+				</p>
+			</section> <!-- dn5 Programming Complex Conditions -->
+			<section class="section" data-number="5" data-name="Summary">
+				<h3>Summary</h3>
+				<p>
+					<span class="first_sentence">Is your head spinning? </span>That last behavior was quite complex! But it’s the type of decision making that sophisticated apps need to perform. If you build such behav- iors part by part (or branch by branch) and test as you go, you’ll find that specifying complex logic—even, dare we say, <span class="emph">artificial intelligence</span>—is doable. It will make your head hurt and exercise the logical side of your brain quite a bit, but it can also be lots of fun.
+				</p>
+			</section>
+		</div>
+	</div>	
+</body>
+

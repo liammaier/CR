@@ -1,0 +1,3812 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+
+	<title>Chapter 8. Not Your Father’s TV</title>
+	
+	
+	<META name="javascript" javascript="/contents/html5/html5.js">
+	
+
+</head>
+
+<body>
+
+	<div id="html51" class="html5 container">
+	
+		<section class="section" data-number="0" data-name="Not your Father's TV">
+	
+<!-- Page 349 -->
+
+			<div class="pagebreak pageNumber">349</div>
+
+			<h1>Chapter 8. Not Your Father's TV: Video... with special guest star "Canvas"</h1>
+		
+			<figure class="center">
+				<img src="/contents/html5/figs/web/349fig01.png" alt=""/>
+			</figure>
+		
+			<p><h4 class="inline">We don’t need no plug-in.</h4> After all, video is now a first-class member
+				of the HTML family—just throw a &lt;video&gt; element in your page
+				and you’ve got instant video, even across most devices. But video is
+				<em>far more</em> than <em>just an element</em>, it’s also a
+				JavaScript API that allows us to control playback, create our own
+				custom video interfaces and integrate video with the rest of HTML in
+				totally new ways. Speaking of <em>integration</em>... remember there’s that <em>video and
+				canvas connection</em> we’ve been talking about—you’re going to see
+				that putting video and canvas together gives us a powerful new way to
+				<em>process</em> <em>video</em>	in real time. In this chapter we’re going to start by getting video
+				up and running in a page and then we’ll put the JavaScript API through its paces. Come on, you’re going to
+				be amazed what you can do with a little markup, JavaScript and video &amp; canvas.
+			</p>
+
+<!-- Page 350 -->
+
+			<div class="pagebreak pageNumber"> 350</div> 
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/350fig02.png" />
+			</figure>
+
+			<h2 class="title">Meet Webville TV</h2>
+
+			<p>Webville TV—all the content you’ve been waiting
+				for, like <em>Destination Earth</em>, <em>The Attack of the 50’ Woman</em>,
+				<em>The Thing</em>, <em>The Blob</em>, and it wouldn’t be beyond us to throw in a few
+				‘50s educational films. What else would
+				you expect in Webville? But that’s just the content, on the
+				technology side would you expect anything less than HTML5 video?
+			</p>
+
+			<p>Of course, that’s just the vision, we have to build Webville
+				TV if we want it to be a reality. Over the next few pages we’re
+				going to build Webville TV from the ground up using HTML5 markup,
+				the video element and a little JavaScript here and there.
+			</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/350fig01.png" alt="" />
+			</figure>
+
+		</section> <!-- Section 0 -->
+
+		<section class="section" data-number="1" data-name="The HTML, let's get it done...">
+
+<!-- Page 351 -->
+			
+			<div class="pagebreak pageNumber">351</div> 
+
+			<h2 class="title">The HTML, let’s get it done...</h2>
+
+			<p>Hey this is Chapter 8, no lollygagging around! Let’s jump right in and create some HTML:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/351fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>	&lt;title&gt;Webville TV&lt;/title&gt;</pre>
+<pre>	&lt;meta charset="utf-8"&gt;</pre>
+<pre>	&lt;link rel="stylesheet" href="webvilletv.css"&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>&lt;div id="tv"&gt;</pre>
+<pre>	&lt;div id="tvConsole"&gt;</pre>
+<pre>		&lt;div id="highlight"&gt;</pre>
+<pre>			&lt;img src="images/highlight.png" alt="highlight for tv"&gt;</pre>
+<pre>		&lt;/div&gt;</pre>
+<pre>		&lt;div id="videoDiv"&gt;</pre>
+<pre>			&lt;video controls src="video/preroll.mp4" width="480" height="360"</pre>
+<pre>				poster="images/prerollposter.jpg" id="video"&gt;</pre>
+<pre>			&lt;/video&gt;</pre>
+<pre>		&lt;/div&gt;</pre>
+<pre>	&lt;/div&gt;</pre>
+<pre>&lt;/div&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 1 -->
+
+		<section class="section" data-number="2" data-name="Plug that set in and test it out...">
+			
+			<h2 class="title left">Plug that set in and test it out...</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-8.png" />
+			</figure>
+
+			<div class="clear" />
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/351fig02.png" />
+			</figure>
+
+			<p>You need to make sure of a few things here: first, make sure you’ve
+				got the code above typed into a file named<code class="literal">webvilletv.html</code>;
+				second, make sure you’ve downloaded the CSS file, and finally,
+				make sure you’ve also downloaded the video files and placed them in
+				a directory named<code class="literal">video</code>. After all that, load the page and sit back and watch.
+			</p>
+			
+			<aside>
+				<p>Download everything from <a class="ulink" href="http://wickedlysmart.com/hfhtml5" target="_top">
+					http://wickedlysmart.com/hfhtml5</a>
+				</p>
+			</aside>
+
+			<div class="clear" />
+
+<!-- Page 352 -->
+
+			<div class="pagebreak pageNumber">352</div> 
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/352fig01.png" />
+			</figure>
+			
+			<h4>Yes, it’s probably the video format.</h4>
+
+			<p>While the browser makers have agreed on what the <code class="literal">&lt;video&gt;</code>
+				element and API look like in HTML5, not everyone can agree on the <em>actual format</em> of the video files
+				themselves. For instance if you are on Safari, H.264 format is
+				favored, if you’re on Chrome, WebM is favored, and so on.
+			</p>
+			
+			<aside class="left">
+				<p>By the time you read this, these formats could be more widely
+					supported across all browsers. So if your video’s working, great.
+					Always check the Web to see the latest on this unfolding topic. And
+					we’ll come back for more on this topic shortly.
+				</p>
+			</aside>
+			
+			<p>In the code we just wrote, we’re assuming H.264 as a format, which
+				works in Safari, Mobile Safari and IE9+. If you’re using another
+				browser then look in your <code class="literal">video</code>
+				directory and you’ll see three different types of video, with three
+				different file extensions: “.mp4”, “.ogv”, and “.webm” (we’ll talk
+				more about what these mean in a bit).
+			</p>
+			
+			<p>For Safari you should already be using .mp4 (which contains H.264).</p>
+			
+			<aside class="right">
+				<p>Give this a try to get you going, and we’re coming back to
+					all this in a bit.
+				</p>
+			</aside>
+			
+			<p>For Google Chrome, use the .webm format by replacing your src attribute with:</p>
+
+			<pre class="programlisting"><strong>src="video/preroll.webm"</strong></pre>
+
+			<p>If you’re using Firefox or Opera, then replace your src attribute with:</p>
+
+			<pre class="programlisting"><strong>src="video/preroll.ogv"</strong></pre>
+
+			<p>And if you’re using IE8 or earlier, you’re out of luck—wait a sec,
+				this is Chapter 8! How could you still be using IE8 or earlier? Upgrade! But if you
+				need to know how to supply fallback content for your IE8 users, hang
+				on, we’re getting to that.
+			</p>
+
+<!-- Page 353 -->
+
+			<div class="pagebreak pageNumber">353</div> 
+			
+		</section> <!-- Section 2 -->
+
+		<section class="section" data-number="3" data-name="How does the video element work?">
+			
+			<h2 class="title">How does the video element work?</h2>
+
+			<p>At this point you’ve got a video
+				up and playing on your page, but before we move on, let’s step back
+				and look at that video element we used in our markup:
+			</p>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/353fig01.png" />
+			</figure>
+			
+			<aside>
+				<p>Another handy tip from the HTML5 Guide from the City of Webville.</p>
+			</aside>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/353fig02.png" alt="" />
+			</figure>
+
+			<div class="sidebar-yellowed right">
+
+				<h2><strong>Good Video Etiquette: The autoplay property</strong></h2>
+
+				<p>While autoplay may be the best thing for sites like YouTube
+					and Vimeo (or WebvilleTV for that matter), think twice before
+					setting it in your &lt;video&gt; tag. Often, users want to
+					participate in the decision of whether or not video is played when
+					they load your page.
+				</p>
+			</div>
+			
+			<div class="clear" />
+
+<!-- Page 354 -->
+
+			<div class="pagebreak pageNumber">354</div> 
+
+		</section> <!-- Section 3 -->
+
+		<section class="section" data-number="4" data-name="Closely inspecting the video attributes...">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/354fig01.png" />
+			</figure>
+			
+			<h2 class="title">Closely inspecting the video attributes...</h2>
+
+			<h4>Let’s look more closely at some of the more important video attributes:</h4>
+
+			<figure>
+				<img src="/contents/html5/figs/web/354fig02.png" />
+			</figure>
+
+<!-- Page 355 -->
+
+			<div class="pagebreak pageNumber">355</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/355fig01.png" />
+			</figure>
+			
+			<h4>Yes, the controls in each browser are different with HTML video.</h4>
+
+			<p>The look and feel of your controls is dictated by those who
+				implement the browsers. They do tend to look different in different
+				browsers and operating systems. In some cases, for instance, on a
+				tablet, they have to look and behave differently because the device
+				just works differently (and it’s a good thing that’s already taken
+				care of for you). That said, we understand; across, say, desktop
+				browsers, it would be nice to have consistent controls, but that
+				isn’t a formal part of the HTML5 spec, and in some cases, a method
+				that works on one OS might clash with another operating system’s UI
+				guidelines. So, just know that the controls may differ, and if you
+				really feel motivated, you can implement custom controls for your apps.
+			</p>
+			
+			<aside>
+				<p>We’ll do this later...</p>
+			</aside>
+
+			<div class="clear" />
+
+<!-- Page 356 -->
+
+			<div class="pagebreak pageNumber">356</div>
+
+		</section> <!-- Section 4 -->
+
+		<section class="section" data-number="5" data-name="What you need to know about video formats">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/356fig01.png" alt="" />
+			</figure>
+			
+			<h2 class="title">What you need to know about video formats</h2>
+
+			<p>We wish everything was as neat
+				and tidy as the video element and its attributes, but as it turns
+				out, video formats are a bit of a mess on the Web. What’s a video
+				format? Think about it this way: a video file contains two parts, a
+				video part and an audio part, and each part is encoded (to reduce
+				size and to allow it to be played back more efficiently) using a
+				specific encoding type. That encoding, for the most part, is what no
+				one can agree on—some browser makers are enamored with H.264
+				encodings, others really like VP8, and yet others like the open
+				source alternative, Theora. And to make all this <em>even more</em>
+				complicated, the file that holds the video and audio encoding (which
+				is known as a container) has its own format with its own name. So
+				we’re really talking buzzword soup here.
+			</p>
+
+			<p>Anyway, while it might be a big, happy world if all browser
+				makers agreed on a single format to use across the Web, well, that
+				just doesn’t seem to be in the cards for a number of technical,
+				political, and philosophical reasons. But rather than open that
+				debate here, we’re just going to make sure you’re reasonably
+				educated on the topic so you can make your own decisions about how
+				to support your audience.
+			</p>
+			
+			<aside>
+				<p>Your mileage may vary by the time you read this book, as
+					favored encodings tend to change over time.
+				</p>
+			</aside>
+			
+			<p>Let’s take a look at the popular encodings out there; right
+				now there are three contenders trying to rule the (Web) world...
+			</p>
+			
+			<div class="blockquote">
+				<blockquote class="blockquote">
+					<p><strong>The HTML5 specification allows for any video format. It is the browser
+						implementation that determines what formats are actually
+						supported.</strong>
+					</p>
+				</blockquote>
+			</div>
+
+<!-- Page 357 -->
+
+			<div class="pagebreak pageNumber">357</div>
+
+		</section> <!-- Section 5 -->
+
+		<section class="section" data-number="6" data-name="The contenders">
+
+			<h2 class="title">The contenders</h2>
+
+			<p>The reality is, if you’re going to be serving
+				content to a wide spectrum of users you’re going to have to supply
+				more than one format. On the other hand, if all you care about is,
+				say, the Apple iPad, you may be able to get away with just one.
+				Today we have three main contenders—let’s have a look at them:
+			</p>
+
+			<div class="sidebar-greyed left">
+
+				<h4><strong>MP4 container with H.264 Video and AAC Audio</strong></h4>
+
+				<p><strong>H.264 is licensed by the MPEG-LA group.</strong></p>
+
+				<p><strong>There is more than one kind of H.264; each is known as a “profile.”</strong></p>
+
+				<p><strong>MP4/H.264 is supported by Safari and IE9+. You may find support in some versions of Chrome.</strong></p>
+
+			</div>
+
+			<div class="sidebar-greyed right">
+
+				<h4><strong>WebM container with VP8 Video and Vorbis Audio</strong></h4>
+
+				<p><strong>WebM was designed by Google to work with VP8 encoded videos.</strong></p>
+
+				<p><strong>WebM/VP8 is supported by Firefox, Chrome and Opera.</strong></p>
+
+				<p><strong>You’ll find WebM formatted videos with the .webm extension.</strong></p>
+
+			</div>
+			
+			<div class="clear" />
+
+			<div class="sidebar-greyed left">
+			
+				<h4><strong>Ogg container with Theora Video and Vorbis Audio</strong></h4>
+
+				<p><strong>Theora is an open source codec.</strong></p>
+
+				<p><strong>Video encoded with Theora is usually contained in an Ogg file, with the .ogv file extension.</strong></p>
+
+				<p><strong>Ogg/Theora is supported by Firefox, Chrome and Opera.</strong></p>
+
+			</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/357fig01.png" alt="" />
+			</figure>
+
+			<div class="clear" />
+
+<!-- Page 358 -->
+
+			<div class="pagebreak pageNumber">358</div>
+
+		</section> <!-- Section 6 -->
+
+		<section class="section" data-number="7" data-name="How to juggle all those formats...">
+
+			<h2 class="title">How to juggle all those formats...</h2>
+
+			<p>So we know it’s a messy world with respect to video format, but what to do? Depending on your
+				audience you may decide to provide just one format of your video, or
+				several. In either case, you can use one <code class="literal">&lt;source&gt;</code>
+				element (not to be confused with the <code class="literal">src</code>
+				<em>attribute</em>) per format inside a <code class="literal">&lt;video&gt;</code>
+				element, to provide a set of videos, each with its own format, and
+				let the browser pick the first one it supports. Like this:
+			</p>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/358fig02.png" alt="" />
+			</figure>
+
+			<div class="hiddencode">
+				<figure class="left">
+					<img class="codeimage" src="/contents/html5/figs/web/358fig01.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;video <del>src="video/preroll.mp4"</del> id="video"</pre>
+<pre>		poster="images/prerollposter.jpg" controls</pre>
+<pre>		width="480" height="360"&gt;</pre>
+<pre>	&lt;source src="video/preroll.mp4"&gt;</pre>
+<pre>	&lt;source src="video/preroll.ogv"&gt;</pre>
+<pre>	&lt;source src="video/preroll.webm"&gt;</pre>
+<pre>	&lt;p&gt;Sorry, your browser doesn't support the video element&lt;/p&gt;</pre>
+<pre>&lt;/video&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<div class="clear" />
+
+			<div class="sidebar">
+
+				<img class="left" src="/contents/html5/figs/web/bullet.png">
+
+				<h3>BULLET POINTS</h3>
+
+				<div class="itemizedlist clear">
+					<ul class="itemizedlist">
+						<li class="listitem">
+							<p>The <strong>container</strong> is
+								the file format that’s used to package up the video, audio and
+								metadata information. Common container formats include: MP4,
+								WebM, Ogg and Flash Video.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>The <strong>codec</strong> is the
+								software used to encode and decode a specific encoding of video
+								or audio. Popular web codecs include: H.264, VP8, Theora, AAC,
+								and Vorbis.
+							</p>
+						</li>
+
+						<li class="listitem">
+							<p>The browser decides what video it
+								can decode and not all browser makers agree, so if you want to
+								support everyone, you need multiple encodings.
+							</p>
+						</li>
+					</ul>
+				</div>
+			</div> <!-- /sidebar -->
+
+<!-- Page 359 -->
+
+			<div class="pagebreak pageNumber">359</div>
+
+		</section> <!-- Section 7 -->
+
+		<section class="section" data-number="8" data-name="How to be even more specific with your video formats">
+
+			<h2 class="title">How to be even more specific with your video formats</h2>
+
+			<p>Telling the browser the location
+				of your source files gives it a selection of different versions to
+				choose from, however the browser has to do some detective work
+				before it can truly determine if a file is playable. You can help
+				your browser even more by giving it more information about the MIME
+				type and (optionally) codecs of your video files:
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/359fig01.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;source src="video/preroll.ogv" type='video/ogg; codecs="theora, vorbis"'&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p>We can update our <code class="literal">&lt;source&gt;</code>
+				elements to include the type information for all three types of
+				video we have, like this:
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/359fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;video id="video" poster="images/prerollposter.jpg" controls width="480" height="360"&gt;</pre>
+<pre>	&lt;source src="video/preroll.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'&gt;</pre>
+<pre>	&lt;source src="video/preroll.webm" type='video/webm; codecs="vp8, vorbis"'&gt;</pre>
+<pre>	&lt;source src="video/preroll.ogv" type='video/ogg; codecs="theora, vorbis"'&gt;</pre>
+<pre>	&lt;p&gt;Sorry, your browser doesn't support the video element&lt;/p&gt;</pre>
+<pre>&lt;/video&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p>If and when you do your own video encoding, you’ll need to know more
+				about the various options for the type parameters to use in your
+				source element. You can get a lot more information on type
+				parameters at <code class="literal">http://wiki.whatwg.org/wiki/Video_type_parameters.</code>
+			</p>
+
+<!-- Page 360 -->
+
+			<div class="pagebreak pageNumber">360</div>
+
+			<div class="sidebar" id="there_are_no_dumb_questions-id00089">
+
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+				</figure>
+
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<table style="border: 0;">
+							<colgroup>
+								<col style="text-align: left; width: 1%;" />
+							</colgroup>
+
+							<tbody>
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;" id="ch08qa1q1"><p><strong>Q:</strong></p></td>
+
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q: Is there any hope of getting to one container format or
+											codec type in the next few years? Isn’t this why we have
+											standards?</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong> There
+											probably won’t be one encoding to rule them all anytime
+											soon—as we said earlier, this topic intersects with a whole
+											host of issues including companies wanting to control their
+											own destiny in the video space to a complex set of
+											intellectual property issues. The HTML5 standards committee
+											recognized this and decided not to specify the video format
+											in the HTML5 specification. So, while in principle HTML5
+											supports (or is at least agnostic to) all of these formats,
+											it is really up to the browser makers to decide what they do
+											and don’t support.
+										</p>
+										
+										<p>Keep an eye on this topic if video is important to
+											you; it will surely be an interesting one to watch over the
+											next few years as this is all sorted out. And, as always,
+											keep in mind what your audience needs and make sure you’re
+											doing what you can to support them.
+										</p>
+									</td>
+								</tr>
+
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;" id="ch08qa1q2"><p><strong>Q:</strong></p></td>
+
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q: If I want to encode my own video, where do I start?</strong></p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong> There are a
+											variety of video capture and encoding programs out there,
+											and which one you choose is really going to depend on what
+											kind of video you’re capturing and how you want to use the
+											end result. Entire books have been written on video
+											encoding, so be prepared to enter a world of all new
+											acronyms and technology. You can start simple with programs
+											like iMovie or Adobe Premiere Elements, which include the
+											ability to encode your video for the Web. If you’re getting
+											into serious video work with Final Cut Pro or Adobe
+											Premiere, these software programs include their own
+											production tools. And, finally, if you are delivering your
+											videos from a Content Delivery Network (CDN), many CDN
+											companies also offer encoding services. So you’ve got a wide
+											variety of choices depending on your needs.
+										</p>
+									</td>
+								</tr>
+
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;" id="ch08qa1q3"><p><strong>Q:</strong></p></td>
+
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q: Can I play
+											my video back fullscreen? I am surprised there isn’t a
+											property for this in the API.</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong> That
+											functionality hasn’t yet been standardized, although you’ll
+											find ways to do it with some of the browsers if you search
+											the Web. Some of the browsers supply a fullscreen control
+											(for instance, on tablets) that give the video element this
+											capability. Also note that once you’ve got a way to go
+											fullscreen, what you can do with the video, other than basic
+											playback, may be limited for security reasons (just as it is
+											with plug-in video solutions today).
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="question">
+									<td style="text-align: left; vertical-align: top;"id="ch08qa1q4"><p><strong>Q:</strong></p></td>
+
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q: What about
+											the volume of my video? Can I use the API to control the
+											volume level?</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer">
+									<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong> You sure
+											can. The volume property can be set to an floating point
+											value between 0.0 (sound off) to 1.0 (sound the loudest).
+											Just use your video object to set this at any time:
+										</p>
+
+										<pre class="programlisting" id="pro_id00052">video.volume = 0.9;</pre></td>
+								</tr>
+							</tbody>
+						</table>
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 361 -->
+
+			<div class="pagebreak pageNumber">361</div>
+
+			<figure>
+				<img src="/contents/html5/figs/web/360fig01.png" alt="" />
+			</figure>
+
+<!-- Page 362 -->
+
+			<div class="pagebreak pageNumber">362</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/361fig01.png" alt="" />
+			</figure>
+
+			<h4>No problem.</h4>
+
+			<p>There are techniques for falling back to another video player
+				if your preferred one (whether that be HTML5 or Flash or another)
+				isn’t supported.
+			</p>
+			
+			<p>Below you’ll find an example of how to insert your Flash video
+				as a fallback for HTML5 video, assuming the browser doesn’t know how
+				to play HTML5 video. Obviously this is an area that is changing
+				fast, so please take a look on the Web (which is updated a lot more
+				often than a book) to make sure you’re using the latest and greatest
+				techniques. You’ll also find ways to make HTML5 the fallback rather
+				than Flash if you prefer to give Flash video priority.
+			</p>
+			
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/361fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;video posters="video.jpg" controls&gt;</pre>
+<pre>	&lt;source src="video.mp4"&gt;</pre>
+<pre>	&lt;source src="video.webm"&gt;</pre>
+<pre>	&lt;source src="video.ogv"&gt;</pre>
+<pre>	&lt;object&gt;...&lt;/object&gt;</pre>
+<pre>&lt;/video&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 363 -->
+
+			<div class="pagebreak pageNumber">363</div>
+
+		</section> <!-- Section 8 -->
+
+		<section class="section" data-number="9" data-name="I was told there would be APIs?">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/363fig00.png">
+			</figure>
+
+			<h2 class="title">I was told there would be APIs?</h2>
+
+			<p>As you can see, you can do a lot using markup and the
+				<code class="literal">&lt;video&gt;</code> element. But the <code class="literal">&lt;video&gt;</code>
+				element also exposes a rich API that you can use to implement all
+				kinds of interesting video behaviors and experiences. Here’s a quick
+				summary of some of the methods, properties and events of the
+				<code class="literal">&lt;video&gt;</code> element you might be interested in (and check the spec for a
+				comprehensive list):
+			</p>
+
+			<div class="clear" />
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/363fig01.png">
+			</figure>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/363fig02.png">
+			</figure>
+
+			<div class="clear" />
+			
+<!-- Page 364 -->
+
+			<div class="pagebreak pageNumber">364</div>
+
+		</section> <!-- Section 9 -->
+
+		<section class="section" data-number="10" data-name="A little content "programming" on Webville TV">
+
+			<h2 class="title">A little content “programming” on Webville TV</h2>
+
+			<p>So far we’ve got one single video up and running on Webville TV. What we’d
+				really like is a programming schedule that serves up a playlist of
+				videos. Let’s say we want to do this on Webville TV:
+			</p>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<figure class="left">
+							<img src="/contents/html5/figs/web/364fig01.png" alt="" />
+						</figure>
+
+						<p>Show a little preshow to the
+							audience, you know, the Coke and popcorn ads, the audience
+							etiquette, and so on...
+						</p>
+					</li>
+
+					<div class="clear" />
+
+					<li class="listitem">
+						<figure class="left">
+							<img src="/contents/html5/figs/web/364fig02.png" alt="" />
+						</figure>
+
+						<p>Show our first feature, titled <em>Are you Popular?</em></span> Trust us, you’ll enjoy it.</p>
+					</li>
+
+					<div class="clear" />
+					
+					<li class="listitem">
+						<figure class="left">
+							<img src="/contents/html5/figs/web/364fig03.png" alt="" />
+						</figure>
+
+						<p>And then show our featured presentation, <em>Destination Earth</em>, presented in full
+							technicolor. Created by the American
+							Petroleum Institute, what on earth could be their message? Watch
+							and find out.
+						</p>
+					</li>
+
+					<div class="clear" />
+
+				</ol>
+			</div>
+
+			<div class="sidebar" id="sharpen_your_pencil-id00090">
+				<img class="left" src="/contents/html5/figs/web/sharpenpencil.png">
+
+				<p>Now you might be tempted to look at the &lt;video&gt; markup
+					specs to see how you specify a playlist, but for this you’re going
+					to need code because the &lt;video&gt; element allows you to
+					specify only one video. If you were on a desert island and had to
+					implement a playlist with only the browser, the &lt;video&gt;
+					element, the src property, the load and play methods, and the ended
+					event, how would you do it (you can use any JavaScript data types
+					you like):
+				</p>
+				
+				<aside>
+					<p>Just a hint: the ended event happens when a video reaches
+						the end and stops playing. Like any event, you can have a handler
+						called when this happens.
+					</p>
+				</aside>
+				
+				<aside>
+					<p>No peeking at the answer!!</p>
+				</aside>
+			</div>
+
+<!-- Page 365 -->
+
+			<div class="pagebreak pageNumber">365</div>
+
+			<div class="sidebar">
+				
+				<img class="left" src="/contents/html5/figs/web/sharpenyourpencilsolution.png">
+				
+				<p>Now you might be tempted to look at the
+					&lt;video&gt; markup specs to see how you specify a playlist, but
+					for this you’re going to need code because the &lt;video&gt;
+					element allows you to specify only one video. If you were on a
+					desert island and had to implement a playlist with only the
+					browser, the &lt;video&gt; element, the src property, the load and
+					play methods, and the ended event, how would you do it (you can use
+					any JavaScript data types you like)? Here’s our solution:
+				</p>
+
+				<figure class="">
+					<img src="/contents/html5/figs/web/365fig01.png" />
+				</figure>
+			</div>
+
+<!-- Page 366 -->
+
+			<div class="pagebreak pageNumber">366</div>
+
+		</section> <!-- Section 10 -->
+
+		<section class="section" data-number="11" data-name="Implementing Webville TV's playlist">
+
+			<h2 class="title">Implementing Webville TV’s playlist</h2>
+
+			<p>Now we’re going to use
+				JavaScript and the video API to implement the Webville TV playlist.
+				Let’s start by adding a link to a JavaScript file in
+				<code class="literal">webvilletv.html</code>; just add this into the
+				<code class="literal">&lt;head&gt;</code>element:
+			</p>
+
+<pre><strong>&lt;script src="webvilletv.js"&gt;&lt;/script&gt;</strong></pre>
+
+			<p>And delete this from your existing <code class="literal">&lt;video&gt;</code> element:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/366fig01.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;video controls &lt;del&gt;autoplay src="video/preroll.mp4"&lt;/del&gt; width="480" height="360"</pre>
+<pre>	poser="images/prerollposter.jpg" ide="video"&gt;</pre>
+<pre>&lt;/video&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p>Now, create a new file <code class="literal">webvilletv.js</code>,
+				and let’s define a few global variables and a function that will
+				be called when the page is fully loaded:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/366fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var position = 0;</pre>
+<pre>var playlist;</pre>
+<pre>var video;</pre>
+							<br />
+<pre>window.onload = function() {</pre>
+<pre>	playlist = ["video/preroll", </pre>
+<pre>				"video/areyoupopular", </pre>
+<pre>				"video/destinationearth"];</pre>
+<pre>	video = document.getElementById('video');</pre>
+<pre>	video.addEventListener("ended", nextVideo,false);</pre>
+							<br />
+<pre>	video.src = playlist[position] + getFormatExtension();</pre>
+<pre>	video.load();</pre>
+<pre>	video.play();</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 367 -->
+
+			<div class="pagebreak pageNumber">367</div>
+
+		</section> <!-- Section 11 -->
+
+		<section class="section" data-number="12" data-name="So what's up with that event handler code?">
+
+			<h2 class="title">So what’s up with that event handler code?</h2>
+
+			<p>In the past we’ve always just assigned a handler function to be called when an event occurs to a
+				property (like <code class="literal">onload</code> or <code class="literal">onclick</code> ) like this:
+			</p>
+
+<pre><strong>video.onended = nextVideo;</strong></pre>
+
+			<p>However, this time we’re going to do things a little differently.
+				Why? Because at the time we’re writing this, support for all the
+				event properties on the video object are a little spotty. That’s
+				okay; that deficiency is also going to allow us to show you another
+				way of registering for events:<code class="literal">addEventListener</code>,
+				which is a general method supported by many objects for
+				registering for various events. Here’s how it works:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/367fig01.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>video.addEventListener("ended", nextVideo, false);</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p>Other than the fact the
+				<code class="literal">addEventListener</code>
+				method is a little more complicated than just adding a handler by
+				setting the property to a function, it works pretty much the same
+				way. So let’s get back to our code!
+			</p>
+	
+		</section> <!-- Section 12 -->
+
+		<section class="section" data-number="13" data-name="How to write the "end of video" handler">
+
+			<h2 class="title">How to write the “end of video” handler</h2>
+
+			<p>Now we just need to write the handler for the video’s ended event.
+				This handler is going to be called whenever the video player hits
+				the end of the current video file. Here’s how we write the
+				<code class="literal">nextVideo</code> function (add it to <code class="literal">webvilletv.js</code>):
+			</p>
+			
+			<aside>
+				<p>Note the handler won’t be called if the user pauses the video
+					or if the video is looping (which you can do by setting the loop
+					property).
+				</p>
+			</aside>
+			
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/367fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function nextVideo() {</pre>
+<pre>	position++;</pre>
+<pre>	if (position >= playlist.length) {</pre>
+<pre>		position = 0;</pre>
+<pre>	}</pre>
+<pre>	video.src = playlist[position] + getFormatExtension();</pre>
+<pre>	video.load();</pre>
+<pre>	video.play();</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 368 -->
+
+			<div class="pagebreak pageNumber">368</div>
+
+		</section> <!-- Section 13 -->
+
+		<section class="section" data-number="14" data-name="Another test drive...">
+
+			<h2 class="title left">Another test drive...</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-8.png" alt="" />
+			</figure>
+
+			<p>Can you believe we’re ready for
+				a test drive? All we did was use the API to set up a video to play,
+				then we made sure we had an event listener ready to handle the
+				situation when the video ends, which it does by starting the next
+				video in the playlist. Make sure you’ve got the changes made to your
+				HTML file, type in your new JavaScript code and give it a test
+				drive.
+			</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/368fig01.png" alt="" />
+			</figure>
+			
+			<figure class="left">
+				<img src="/contents/html5/figs/web/368fig02.png" alt="" />
+			</figure>
+			
+			<p><strong>Good question.</strong></p>
+
+			<p>When we were using multiple <code class="literal">source</code>
+				tags we could count on the browser to sort through one or more video
+				formats and decide if it could play any of them. Now that we’re
+				using code we’re just giving the video element a single option. So
+				how do we test to see what the browser supports to make sure we
+				supply the best format?
+			</p>
+
+			<p>We do that using the <code class="literal">canPlayType</code>
+				method of the video object. <code class="literal">canPlayType</code>
+				takes a video format and returns a string that represents how
+				confident the browser is that it can play that type of video. There
+				are three confidence levels: probably, maybe or no confidence. Let’s
+				take a closer look and then rework the playlist code to use this.
+			</p>
+
+			<div class="note" id="ch08note16">
+				<p>Are you scratching your head saying “probably? maybe? why
+					doesn’t it return true or false?” Us too, but we’ll go through what
+					this means in a sec...
+				</p>
+			</div>
+
+			<div class="clear"></div>
+
+<!-- Page 369 -->
+
+			<div class="pagebreak pageNumber">369</div>
+
+		</section> <!-- Section 14 -->
+
+		<section class="section" data-number="15" data-name="How the canPlayType method works">
+
+			<h2 class="title">How the canPlayType method works</h2>
+
+			<p>The video object provides a method <code class="literal">canPlayType</code>
+				that can determine how likely you are to be able to play a video
+				format. The <code class="literal">canPlayType</code> method takes the same format description you used with the
+				<code class="literal">&lt;source&gt;</code> tag and returns one of three values: the empty string, “maybe” or
+				“probably”. Here’s how you call <code class="literal">canPlayType</code>:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/369fig01.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>video.canPlayType("video/ogg")</pre>
+<pre>video.canPlayType('video/ogg; codecs="theora, vorbis"')</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p>Notice that the browser is only confident beyond “maybe” if you
+				include the codec parameter in the type. Also notice that there’s no
+				“I’m absolutely sure” return value. Even if the browser knows it can
+				play a <em>type</em> of video, there’s
+				still no guarantee it can play the <em>actual</em>
+				video; for instance, if the bitrate of the video is too high, then
+				the browser won’t be able to decode it.
+			</p>
+
+			<aside>
+				<p>Bitrate is the number of bits the browser has to process per
+					unit of time to decode the video and display it correctly.
+				</p>
+			</aside>
+			
+			<section class="subsection" data-number="16" data-name="Putting canPlayType to use">
+
+				<div class="titlepage">
+					<h3 class="title">Putting canPlayType to use</h3>
+				</div>
+
+				<p>We’re going to use <code class="literal">canPlayType</code>
+					to determine which video format to use for Webville TV videos—you
+					already know that we have three versions of each file: MP4, WebM
+					and Ogg, and depending on which browser you’re using, some will
+					work and some won’t. Let’s create a new function that returns the
+					file extension (“.mp4”, “.webm” or “.ogv”) that is appropriate for
+					your browser. We’re going to use only the MIME types (<code class="literal">"video/mp4"</code>,
+					<code class="literal">"video/webm"</code> and <code class="literal">"video/ogg"</code>
+					) and not the codecs, so the only possible returns values are
+					“maybe” and the empty string. Here’s the code:
+				</p>
+
+				<div class="hiddencode">
+					<figure class="">
+						<img class="codeimage" src="/contents/html5/figs/web/369fig02.png" alt="" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>function getFormatExtension() {</pre>
+<pre>  if (video.canPlayType("video/mp4") != "") {</pre>
+<pre>    return ".mp4";</pre>
+<pre>  } else if (video.canPlayType("video/ogg") != "") {</pre>
+<pre>    return ".ogv";</pre>
+<pre>  } else if (video.canPlayType("video/webm") != "") {</pre>
+<pre>    return ".webm";</pre>
+<pre>  }</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+			</section> <!-- Section 16 -->
+
+			<section class="subsection" data-number="17" data-name="Integrating the getFormatExtension function">
+
+<!-- Page 370 -->
+
+				<div class="pagebreak pageNumber">370</div>
+
+				<div class="titlepage">
+					<h3 class="title">Integrating the getFormatExtension function</h3>
+				</div>
+
+				<p>Now, we need to make some changes to the <code class="literal">window.onload</code>
+					and <code class="literal">nextVideo</code> functions to use
+					<code class="literal">getFormatExtension</code>. First, we’ll remove the file extensions
+					from the filenames in the playlist (because we’re going to figure those out using
+					<code class="literal">getFormatExtension</code> instead), and then we’ll call
+					<code class="literal">getFormatExtension</code> where we set the
+					<code class="literal">video.src</code>property:
+				</p>
+
+				<div class="hiddencode">
+					<figure class="">
+						<img class="codeimage" src="/contents/html5/figs/web/370fig01.png" alt="" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>window.onload = function() {</pre>
+<pre>	playlist = ["video/preroll", </pre>
+<pre>				"video/areyoupopular", </pre>
+<pre>				"video/destinationearth"];</pre>
+<pre>	video = document.getElementById('video');</pre>
+<pre>	video.addEventListener("ended", nextVideo,false);</pre>
+<pre>	video.src = playlist[position] + getFormatExtension();</pre>
+<pre>	video.load();</pre>
+<pre>	video.play();</pre>
+<pre>}</pre>
+								<br />
+<pre>function nextVideo() {</pre>
+<pre>	position++;</pre>
+<pre>	if (position >= playlist.length) {</pre>
+<pre>		position = 0;</pre>
+<pre>	}</pre>
+<pre>	video.src = playlist[position] + getFormatExtension();</pre>
+<pre>	video.load();</pre>
+<pre>	video.play();</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+			</section> <!-- Section 17 -->
+
+			<section class="subsection" data-number="18" data-name="And test drive...">
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web/370fig02.png" alt="" />
+				</figure>
+				
+				<div class="titlepage">
+					<h3 class="title left">And test drive...</h3>
+				</div>
+
+				<figure>
+					<img src="/contents/html5/figs/web/common-8.png" alt="" />
+				</figure>
+
+				<p>Add the <code class="literal">canPlayType</code> function and make the changes above, then reload your
+					<code class="literal">webvilletv.html</code> file. Work? Now your code is figuring out the best format. If you
+					want to know which video the browser chose, try adding an alert to the
+					<code class="literal">window.onload</code> and <code class="literal">nextVideo</code>
+					functions; add it at the bottom of each function, after <code class="literal">video.play()</code>:
+				</p>
+
+				<pre class="programlisting"><strong>alert("Playing " + video.currentSrc);</strong></pre>
+
+				<p>Which file did your browser play?</p>
+
+<!-- Page 371 -->
+	
+				<div class="pagebreak pageNumber">371</div>
+
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+				</figure>
+
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<table style="border: 0;">
+							<colgroup>
+								<col style="text-align: left; width: 1%;" />
+								<col />
+							</colgroup>
+
+							<tbody>
+								<tr class="question" id="id36236860">
+									<td style="text-align: left; vertical-align: top;" id="ch08qa2q1"><p><strong>Q:</strong></p></td>
+
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Q:If I’m programmatically setting the source of my video,
+											and canPlayType says its a “maybe”, but yet the playback
+											fails, how can I deal with that?</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer" id="watch_itexclamation_mark">
+									<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>A:</strong> There are a
+											couple of ways to approach this. One is to catch the error
+											and give the video object another source (we’ll talk about
+											catching errors at the end of this chapter). The other is
+											to use the DOM to write multiple source tags into the video
+											object at once (just as if you’d typed them into your
+											markup). That way your video object has several choices and
+											you don’t have to write more complex error handling code).
+											We’re not going to do that in this chapter, but it’s a way
+											of giving your video object multiple choices and doing it
+											through code, not markup, if you have advanced needs.
+										</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</blockquote>
+				</div> <!-- /blockquote -->
+
+				<div class="sidebar">
+
+					<img class="left" src="/contents/html5/figs/web/watchit.png">
+
+					<p><em><strong>You may need to install Quicktime to play mp4 video in Safari.</strong></em></p>
+
+					<p><em>Quicktime often comes installed by default, but if it’s not, you can download it from
+						<a class="ulink" href="http://www.apple.com/quicktime/download/" target="_top">
+						http://www.apple.com/quicktime/download/</a>.</em>
+					</p>
+				</div>
+
+				<div class="sidebar">
+					<img class="left" src="/contents/html5/figs/web/watchit.png">
+					
+					<p><em><strong>Google Chrome has extra security restrictions.</strong></em></p>
+
+					<p><em>These security restrictions will prevent you from doing some video+canvas
+						operations if you loaded the web page as a file (i.e., your URL
+						will show file:// rather than http://), like we’ll be doing in
+						the rest of this chapter. If you try, the app won’t work and
+						you’ll get no indication of why.</em>
+					</p>
+
+					<p><em>So, for this chapter, we recommend either using a different browser, or running your own
+								server and running the examples from http://localhost.</em>
+					</p>
+				</div>
+
+				<div class="sidebar">
+					<img class="left" src="/contents/html5/figs/web/watchit.png">
+					
+					<p><em><strong>Make sure your server is serving video files with the correct MIME type.</strong></em></p>
+
+					<p><em>Whether you’re using your own local server, or running an app using video from a hosted
+						server, you need to make sure that the videos are being served
+						correctly. If they’re not, they might not work properly.</em>
+					</p>
+
+					<p><em>If you’re on a Mac or Linux using a local server, you’re most likely using Apache.
+						You can modify the httpd.conf file (if you have root access) or
+						create a .htaccess file in the directory where your video files
+						are stored, and add the following lines:</em>
+					</p>
+
+					<pre class="programlisting"><strong>AddType video/ogg .ogv</strong><strong>AddType video/mp4 .mp4</strong></pre>
+
+					<pre class="programlisting"><strong>AddType video/webm .webm</strong></pre>
+
+					<p><em>This tells the server how to serve files with those file extensions.</em></span></p>
+
+					<p><em>You can install Apache on Windows, and do the same thing. For IIS servers, we recommend
+								looking in the Microsoft online documentation for “Configuring
+								MIME types in IIS.”</em>
+					</p>
+				</div>
+			
+<!-- Page 372 -->
+
+				<div class="pagebreak pageNumber">372</div>
+
+				<figure class="center">
+					<img src="/contents/html5/figs/web/372fig01.png" alt="" />
+				</figure>
+
+				<p><strong>At some point we have to treat you like a real developer.</strong></p>
+
+				<p>In this book we’ve (hopefully) helped you every step of the
+					way—we’ve been there to catch you before you fall and to make sure
+					that, in your code, your i’s were dotted and your t’s were crossed.
+					But, part of being a real developer is jumping in, reading other
+					peoples’ code, making out the forest despite all the trees, and
+					working through the complexity of how it all fits together.
+				</p>
+
+				<p>Over the rest of this chapter we’re going to start to let you do
+					that. Up next we’ve got an example that is the closet thing to a
+					real web app we’ve seen so far, and its got lots of pieces, lots of
+					API use and code that handles lots of real details. Now, we can’t
+					step you through every single piece, explaining every nuance like
+					we usually do (or this book will be 1200 pages); nor do we want to,
+					because you also need to acquire the skill of putting all the
+					pieces together, <em>without us.</em>
+				</p>
+
+				<p>Don’t worry, we’re still here and we’re going to tell you what
+					everything does, but we want you to start to learn how to take
+					code, read it, figure it out, and then augment it and alter it to
+					do <em>what you want it to do.</em> So, over the next three chapters, we want you to dig into these
+					examples, study them, and get the code in your head. Really... you’re ready!
+				</p>
+
+<!-- Page 373 -->
+
+				<div class="pagebreak pageNumber">373</div>
+
+			</section> <!-- Section 18 -->
+
+		</section> <!-- Section 15 -->
+
+		<section class="section" data-number="19" data-name="We need your help!">
+
+			<h2 class="title">We need your help!</h2>
+
+			<p>This just in... we just got the contract to build the <strong>Starring
+				You Video</strong> software for their new video booth. What on earth is
+				that? Oh, just the latest HTML5-enabled video messaging booth—a
+				customer enters an enclosed video booth and shoots their own video
+				message. They can then enhance their video using real movie effects;
+				there’s an old-time western sepia filter, a black &amp; white film
+				noir filter, and even an otherwordly sci-fi alien filter. Then the
+				customer can send their message to a friend. We went ahead and
+				commited us all to building the video interface and effects
+				processing system for it.
+			</p>
+			
+			<p>There’s a problem though. The video booths won’t be available
+				for another six weeks, and when they arrive the code has to be done.
+				So, in the meantime, we’re going to get a partly functional demo
+				unit and a few test video files, and we’ll write all our code using
+				those. Then when we’re done, the Starring You folks can just point
+				the code to the just-captured real video. And of course, remember
+				that all this has to be done using HTML5.
+			</p>
+			
+			<p>So, we hope you’re in, because we signed the contract!</p>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/373fig01.png" alt="" />
+			</figure>
+
+			<div class="clear" />
+
+<!-- Page 374 -->
+
+			<div class="pagebreak pageNumber">374</div>
+
+		</section> <!-- Section 19 -->
+
+		<section class="section" data-number="20" data-name="Step inside the booth, let's take a look...">
+
+			<h2 class="title">Step inside the booth, let’s take a look...</h2>
+
+			<p>Below you’ll see our demo unit
+				complete with a user interface. What we’ve got is a video screen
+				where users will see their video played back. They’ll be able to
+				apply a filter like “old-time western” or “sci-fi,” see how it
+				looks, and when they’re happy, send it off to a friend. We don’t
+				have record capability yet, so we’ve got the test videos to play
+				with. Our first job is going to be to wire everything up so the
+				buttons work, and then write the video filters. Before we get into
+				all that, check out the interface:
+			</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/374fig01.png" />
+			</figure>
+
+<!-- Page 375 -->
+
+			<div class="pagebreak pageNumber">375</div>
+
+		</section> <!-- Section 20 -->
+
+		<section class="section" data-number="21" data-name="Unpacking the Demo Unit">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/375fig01.png" />
+			</figure>
+			
+			<h2 class="title">Unpacking the Demo Unit</h2>
+
+			<p>The demo unit just arrived via
+				next day air and it’s time to unpack it. It looks like we’ve got a
+				functioning unit with some simple HTML markup &amp; JavaScript
+				written so far. Let’s have a look at the HTML first (
+				<code class="literal">videobooth.html</code>
+				). By the way, sit back; we’ve got a few pages of factory code to
+				look through, and then we’ll get cracking on the <em>real</em> code.
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/375fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>	&lt;title&gt;Starring YOU Video Booth&lt;/title&gt;</pre>
+<pre>	&lt;meta charset="utf-8"&gt;</pre>
+<pre>	&lt;link rel="stylesheet" href="videobooth.css"&gt;</pre>
+<pre>	&lt;script src="videobooth.js"&gt;&lt;/script&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>&lt;div id="booth"&gt;</pre>
+<pre>	&lt;div id="console"&gt;</pre>
+<pre>		&lt;div id="videoDiv"&gt;</pre>
+<pre>			&lt;video id="video" width="720" height="480"&gt;&lt;/video&gt;</pre>
+<pre>		&lt;/div&gt;</pre>
+<pre>		&lt;div id="dashboard"&gt;</pre>
+<pre>			&lt;div id="effects"&gt;</pre>
+<pre>				&lt;a class="effect" id="normal"&gt;&lt;/a&gt;</pre>
+<pre>				&lt;a class="effect" id="western"&gt;&lt;/a&gt;</pre>
+<pre>				&lt;a class="effect" id="noir"&gt;&lt;/a&gt;</pre>
+<pre>				&lt;a class="effect" id="scifi"&gt;&lt;/a&gt;</pre>
+<pre>			&lt;/div&gt;</pre>
+<pre>			&lt;div id="controls"&gt;</pre>
+<pre>				&lt;a class="control" id="play"&gt;&lt;/a&gt;</pre>
+<pre>				&lt;a class="control" id="pause"&gt;&lt;/a&gt;</pre>
+<pre>				&lt;a class="control" id="loop"&gt;&lt;/a&gt;</pre>
+<pre>				&lt;a class="control" id="mute"&gt;&lt;/a&gt;</pre>
+<pre>			&lt;/div&gt;</pre>
+<pre>			&lt;div id="videoSelection"&gt;</pre>
+<pre>				&lt;a class="videoSelection" id="video1"&gt;&lt;/a&gt;</pre>
+<pre>				&lt;a class="videoSelection" id="video2"&gt;&lt;/a&gt;</pre>
+<pre>			&lt;/div&gt;</pre>
+<pre>		&lt;/div&gt;</pre>
+<pre>&lt;/div&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 376 -->
+
+			<div class="pagebreak pageNumber">376</div>
+
+		</section> <!-- Section 21 -->
+
+		<section class="section" data-number="22" data-name="Inspecting the rest of the factory code">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/376fig00.png" />
+			</figure>
+			
+			<h2 class="title">Inspecting the rest of the factory code</h2>
+			
+			<p>Now let’s take a look at all the
+				JavaScript code that shipped from the factory, including the code
+				that sets up the buttons (which we just looked at in the HTML) and
+				the code for each button handler (which, right now, just makes sure
+				the right buttons are depressed). We’ll review it all before we
+				start adding our own code.
+			</p>
+
+			<section class="subsection" data-number="23" data-name="And now the JavaScript...">
+
+				<div class="titlepage">
+					<h3 class="title">And now the JavaScript...</h3>
+				</div>
+			
+				<p>So let’s crack open the JavaScript (
+					<code class="literal">videobooth.js</code>
+					). It looks like all the interface buttons work, they just don’t do
+					anything interesting, yet. But it’s important that we understand
+					how these are set up because the buttons are going to invoke the
+					code we have to write (like, to play a video or to view a video
+					with an effect filter).
+				</p>
+
+				<p>Below you’ll find the function that is invoked when the page
+					is loaded. For each set of buttons (effects, controls, and the
+					video selection), the code steps through the buttons and assigns
+					click handlers to the anchor links. Let’s take a look:
+				</p>
+				
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/376fig01.png" alt="" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>window.onload = function() {</pre>
+<pre>	var controlLinks = document.querySelectorAll("a.control");</pre>
+<pre>	for (var i = 0; i < controlLinks.length; i++) {</pre>
+<pre>		controlLinks[i].onclick = handleControl;</pre>
+<pre>	}</pre>
+
+<pre>	var effectLinks = document.querySelectorAll("a.effect");</pre>
+<pre>	for (var i = 0; i < effectLinks.length; i++) {</pre>
+<pre>		effectLinks[i].onclick = setEffect;</pre>
+<pre>	}</pre>
+
+<pre>	var videoLinks = document.querySelectorAll("a.videoSelection");</pre>
+<pre>	for (var i = 0; i < videoLinks.length; i++) {</pre>
+<pre>		videoLinks[i].onclick = setVideo;</pre>
+<pre>	}</pre>
+
+<pre>	pushUnpushButtons("video1", []);</pre>
+<pre>	pushUnpushButtons("normal", []);</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+				<div class="sidebar-dotted">
+				
+					<p>You haven’t seen
+						<code class="literal">document.querySelectorAll</code>
+						before; it’s similar to
+						<code class="literal">document. getElementsByTagName</code>
+						except that you’re selecting elements that match a CSS selector.
+						The method returns an array of element objects that match the CSS
+						selector argument.
+					</p>
+
+					<pre class="programlisting"><strong>var elementarray = document.querySelectorall("selector");</strong></pre>
+				</div>
+
+<!-- Page 377 -->
+
+				<div class="pagebreak pageNumber">377</div>
+
+			</section> <!-- Section 23 -->
+
+			<section class="subsection" data-number="24" data-name="Looking at the button handlers">
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web/376fig00.png" alt="" />
+				</figure>
+				
+				<div class="titlepage">
+					<h3 class="title">Looking at the button handlers</h3>
+				</div>
+
+				<p>OK, so far the JavaScript code
+					takes care of setting up all the buttons so that if they are
+					clicked on, the appropriate handler is called. Next, let’s take a
+					look at the actual handlers, starting with the handler for the
+					player buttons (play, pause, loop and mute), to see what they are
+					doing:
+				</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/377fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>function handleControl(e) {</pre>
+<pre>	var id = e.target.getAttribute("id");</pre>
+								<br />
+<pre>	if (id == "play") {</pre>
+<pre>		pushUnpushButtons("play", ["pause"]);</pre>
+								<br />
+<pre>	} else if (id == "pause") {</pre>
+<pre>		pushUnpushButtons("pause", ["play"]);</pre>
+								<br />
+<pre>	} else if (id == "loop") {</pre>
+<pre>		if (isButtonPushed("loop")) {</pre>
+<pre>			pushUnpushButtons("", ["loop"]);</pre>
+<pre>		} else {</pre>
+<pre>			pushUnpushButtons("loop", []);</pre>
+<pre>		}</pre>
+<pre>	} else if (id == "mute") {</pre>
+<pre>		if (isButtonPushed("mute")) {</pre>
+<pre>			pushUnpushButtons("", ["mute"]);</pre>
+<pre>		} else {</pre>
+<pre>			pushUnpushButtons("mute", []);</pre>
+<pre>		}</pre>
+<pre>		video.muted = !video.muted;</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+				
+				<p>Now that’s great and all, but where does <em>our
+					code</em> come in? Let’s think through this: when a button, like play,
+					is pushed, not only are we going to update the interface (which the
+					code already does), we’re also going to add some code that actually
+					<em>does something</em>, like make
+					the video start playing. Let’s go ahead and look at the other two
+					handlers (for setting the video effects and for setting the test
+					video), and it should be pretty obvious (if it isn’t already) where
+					our code is going to go...
+				</p>
+
+<!-- Page 378 -->
+	
+				<div class="pagebreak pageNumber">378</div>
+
+			</section> <!-- Section 24 -->
+
+		</section> <!-- Section 22 -->
+
+		<section class="section" data-number="25" data-name="The setEffect and setVideo handlers">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/376fig00.png" />
+			</figure>
+			
+			<h2 class="title">The setEffect and setVideo handlers</h2>
+
+			<p>Let’s look at the other two handlers. The <code class="literal">setEffect</code>
+				handler handles your choice of effect, like no effect (normal),
+				western, film noir or sci-fi. Likewise the <code class="literal">setVideo</code>
+				handler handles your choice of test video one or two. Here they are:
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/378fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function setEffect(e) {</pre>
+<pre>	var id = e.target.getAttribute("id");</pre>
+							<br />
+<pre>	if (id == "normal") {</pre>
+<pre>		pushUnpushButtons("normal", ["western", "noir", "scifi"]);</pre>
+							<br />
+<pre>	} else if (id == "western") {</pre>
+<pre>		pushUnpushButtons("western", ["normal", "noir", "scifi"]);</pre>
+							<br />
+<pre>	} else if (id == "noir") {</pre>
+<pre>		pushUnpushButtons("noir", ["normal", "western", "scifi"]);</pre>
+							<br />
+<pre>	} else if (id == "scifi") {</pre>
+<pre>		pushUnpushButtons("scifi", ["normal", "western", "noir"]);</pre>
+							<br />
+<pre>	}</pre>
+<pre>}</pre>
+							<br />
+<pre>function setVideo(e) {</pre>
+<pre>	var id = e.target.getAttribute("id");</pre>
+<pre>	if (id == "video1") {</pre>
+<pre>		pushUnpushButtons("video1", ["video2"]);</pre>
+<pre>	} else if (id == "video2") {</pre>
+<pre>		pushUnpushButtons("video2", ["video1"]);</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 379 -->
+
+			<div class="pagebreak pageNumber">379</div>
+
+		</section> <!-- Section 25 -->
+
+		<section class="section" data-number="26" data-name="And here are the helper functions">
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/376fig00.png" alt="" />
+			</figure>
+
+			<h2 class="title">And here are the helper functions</h2>
+
+			<p>And for the sake of completeness (or if you’re on a 11-hour
+				flight to Fiji without Internet access and you really want to type
+				all this in):
+			</p>
+
+			<div class="caption">
+				<p>And remember, if you don’t
+					want to type it in, you can get all the code from <a
+						class="ulink" href="http://wickedlysmart.com/hfhtml5"
+						target="_top">http://wickedlysmart.com/hfhtml5</a>.
+				</p>
+			</div>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/379fig01.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function pushUnpushButtons(idToPush, idArrayToUnpush) {</pre>
+<pre>	if (idToPush != "") {</pre>
+<pre>		var anchor = document.getElementById(idToPush);</pre>
+<pre>		var theClass = anchor.getAttribute("class");</pre>
+<pre>		if (!theClass.indexOf("selected") >= 0) {</pre>
+<pre>			theClass = theClass + " selected";</pre>
+<pre>			anchor.setAttribute("class", theClass);</pre>
+<pre>			var newImage = "url(images/" + idToPush + "pressed.png)";</pre>
+<pre>			anchor.style.backgroundImage = newImage;</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+							<br />
+<pre>	for (var i = 0; i < idArrayToUnpush.length; i++) {</pre>
+<pre>		anchor = document.getElementById(idArrayToUnpush[i]);</pre>
+<pre>		theClass = anchor.getAttribute("class");</pre>
+<pre>		if (theClass.indexOf("selected") >= 0) {</pre>
+<pre>			theClass = theClass.replace("selected", "");</pre>
+<pre>			anchor.setAttribute("class", theClass);</pre>
+<pre>			anchor.style.backgroundImage = "";</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							<br />
+<pre>function isButtonPushed(id) {</pre>
+<pre>	var anchor = document.getElementById(id);</pre>
+<pre>	var theClass = anchor.getAttribute("class");</pre>
+<pre>	return (theClass.indexOf("selected") >= 0);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 380 -->
+
+			<div class="pagebreak pageNumber">380</div>
+
+		</section> <!-- Section 26 -->		
+
+		<section class="section" data-number="27" data-name="That new demo machine smell...test drive time!">
+
+			<h2 class="title left">That new demo machine smell...test drive time!</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" alt="" />
+			</figure>
+
+			<div class="clear" />
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/380fig01.png" alt="" />
+			</figure>
+			
+			<p>We haven’t done much writing code, but we are
+				reading and understanding code, and that can be just as good. So
+				load the <code class="literal">videobooth.html</code>
+				file into your browser and check out the buttons. Give them a good
+				testing. For extra credit, add some alerts into the handler
+				functions. Get a good feel for how this is working. When you come
+				back, we’ll start writing some code to make the buttons work for
+				real.
+			</p>
+
+			<div class="clear" />
+			
+			<div class="sidebar">
+				<img class="left" src="/contents/html5/figs/web/sharpenpencil.png">
+				
+				<p>Mark the buttons below with whether they are like toggle
+					buttons (independent) or like radio buttons (pushing one in pops
+					the other ones out). Also annotate each button with its
+					corresponding click handler. We’ve done a couple for you:
+				</p>
+				
+				<div class="note">
+					<p>You’ll find the solution just a couple of pages on...</p>
+				</div>
+
+				<figure class="">
+					<img src="/contents/html5/figs/web/380fig02.png" alt="" />
+				</figure>
+			</div>
+
+<!-- Page 381 -->
+
+			<div class="pagebreak pageNumber">381</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/381fig01.png" alt="" />
+			</figure>
+
+			<p><strong>That would be the power of CSS.</strong></p>
+
+			<p>It’s a shame this book isn’t <em>Head
+				First HTML5 Programming with JavaScript &amp; CSS</em></span>, but then it
+				would be 1,400 pages, wouldn’t it? Of course, we could be talked
+				into writing an advanced CSS book...
+			</p>
+
+			<p>But seriously, this is the power of markup for structure and CSS for
+				presentation (and if that is a new topic to you, check out <em>Head First HTML with CSS &amp;
+				XHTML</em>). What we’re doing isn’t that complex; here it is in a
+				nutshell for the curious:
+			</p>
+
+			<div class="clear" />
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/381fig02.png" />
+					<aside>
+						<p>Check out the CSS in detail if you want: videobooth.css.</p>
+					</aside>
+			</figure>
+
+<!-- Page 382 -->
+
+			<div class="pagebreak pageNumber">382</div>
+
+			<div class="sidebar" id="sharpen_your_pencil_solution-id00094">
+				<img class="left" src="/contents/html5/figs/web/sharpenyourpencilsolution.png">
+				
+				<p>Mark the buttons below with
+					whether they are like toggle buttons (independent) or like radio
+					buttons (pushing one in pops the other ones out). Also annotate
+					each button with its corresponding click handler. Here’s our
+					solution:
+				</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/382fig01.png" alt="" />
+				</figure>
+			</div>
+
+<!-- Page 383 -->
+
+			<div class="pagebreak pageNumber">383</div>
+
+		</section> <!-- Section 27 -->
+
+		<section class="section" data-number="28" data-name="Getting our demo videos ready...">
+
+			<h2 class="title">Getting our demo videos ready...</h2>
+
+			<p>Before we implement the button controls, we need video to test them with, and
+				as you can see from the buttons, Starring You Video has sent us two
+				demo videos. Let’s go ahead and create an object to hold the two
+				videos and then add some code for our onload handler to set up the
+				source of the video object (just like we did for Webville TV).
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/383fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var videos = {video1: "video/demovideo1",	video2: "video/demovideo2"};</pre>
+							<br />
+<pre>window.onload = function() {</pre>
+							<br />
+<pre>	var video = document.getElementById("video");</pre>
+<pre>	video.src = videos["video1"] + getFormatExtension();</pre>
+<pre>	video.load();</pre>
+							<br />
+<pre>	var controlLinks = document.querySelectorAll("a.control");</pre>
+<pre>	for (var i = 0; i < controlLinks.length; i++) {</pre>
+<pre>		controlLinks[i].onclick = handleControl;</pre>
+<pre>	}</pre>
+<pre>	var effectLinks = document.querySelectorAll("a.effect");</pre>
+<pre>	for (var i = 0; i < effectLinks.length; i++) {</pre>
+<pre>		effectLinks[i].onclick = setEffect;</pre>
+<pre>	}</pre>
+<pre>	var videoLinks = document.querySelectorAll("a.videoSelection");</pre>
+<pre>	for (var i = 0; i < videoLinks.length; i++) {</pre>
+<pre>		videoLinks[i].onclick = setVideo;</pre>
+<pre>	}</pre>
+<pre>	pushUnpushButtons("video1", []);</pre>
+<pre>	pushUnpushButtons("normal", []);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<aside>
+				<p>READ THIS CAREFULLY!</p>
+			</aside>
+			
+			<p>Now before we get sloppy, remember the
+				<code class="literal">getFormatExtension</code>
+				function is in Webville TV, not this code! So open up
+				<code class="literal">webvilletv.js</code>
+				and copy and paste the function into your video booth code. One
+				other small thing: in the video booth code we aren’t keeping a
+				global video object, so add this line to the top of your
+				<code class="literal">getFormatExtension</code>
+				function to make up for that:
+			</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/383fig02.png" />
+			</figure>
+
+<!-- Page 384 -->
+
+			<div class="pagebreak pageNumber">384</div>
+
+		</section> <!-- Section 28 -->
+
+		<section class="section" data-number="29" data-name="Implementing the video controls">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/384fig01.png" alt="" />
+			</figure>
+			
+			<h2 class="title">Implementing the video controls</h2>
+			
+			<p>Alright, time to get to those buttons! Now,
+				it’s important to point out that for this project, we’re going to
+				implement <em>our own</em> video
+				controls. That is, rather than use the built-in video controls,
+				we’re going to control the experience ourselves—so when the user
+				needs to play, pause or mute the video, or even to loop the
+				playback, they’re going to use our custom buttons, not the built-in
+				controls. It also means we’re going to do all this <em>programmatically</em> through the API.
+				Now, we’re not going to go all the way, which would mean
+				implementing our own video scrubber, or perhaps next and previous
+				buttons, because those don’t make sense in this application, <em>but we could if we needed to.</em>
+				You’ll find that just by implementing our small control panel you’ll
+				get the idea and be in perfect shape to take it further if you want
+				to.
+			</p>
+
+			<p>
+				So, let’s get started. How about if we start with the play button
+				and then move to the right (to pause and then to loop and then to
+				mute) from there? So find the
+				<code class="literal">handleControl</code>
+				handler and add this code:
+			</p>
+
+			<div class="hiddencode">
+				<figure class="">
+					<img class="codeimage" src="/contents/html5/figs/web/384fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function handleControl(e) {</pre>
+<pre>	var id = e.target.getAttribute("id");</pre>
+<pre>	var video = document.getElementById("video");</pre>
+<pre>	if (id == "play") {</pre>
+<pre>		pushUnpushButtons("play", ["pause"]);</pre>
+<pre>		if (video.ended) {</pre>
+<pre>			video.load();</pre>
+<pre>		}</pre>
+<pre>		video.play();</pre>
+<pre>	} else if (id == "pause") {</pre>
+<pre>		pushUnpushButtons("pause", ["play"]);</pre>
+<pre>		video.pause();</pre>
+<pre>	} else if (id == "loop") {</pre>
+<pre>		if (isButtonPushed("loop")) {</pre>
+<pre>			pushUnpushButtons("", ["loop"]);</pre>
+<pre>		} else {</pre>
+<pre>			pushUnpushButtons("loop", []);</pre>
+<pre>		}</pre>
+<pre>		video.loop = !video.loop;</pre>
+<pre>	} else if (id == "mute") {</pre>
+<pre>		if (isButtonPushed("mute")) {</pre>
+<pre>			pushUnpushButtons("", ["mute"]);</pre>
+<pre>		} else {</pre>
+<pre>			pushUnpushButtons("mute", []);</pre>
+<pre>		}</pre>
+<pre>		video.muted = !video.muted;</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 385 -->
+
+			<div class="pagebreak pageNumber">385</div>
+
+		</section> <!-- Section 29 -->
+
+		<section class="section" data-number="30" data-name="Implementing the rest of the video controls">
+			<h2 class="title">Implementing the rest of the video controls</h2>
+			
+			<p>Let’s knock out the rest of the
+				controls—they’re so straightforward they’re almost going to write
+				themselves:
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/385fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function handleControl(e) {</pre>
+<pre>	var id = e.target.getAttribute("id");</pre>
+<pre>	var video = document.getElementById("video");</pre>
+<pre>	if (id == "play") {</pre>
+<pre>		pushUnpushButtons("play", ["pause"]);</pre>
+<pre>		if (video.ended) {</pre>
+<pre>			video.load();</pre>
+<pre>		}</pre>
+<pre>		video.play();</pre>
+<pre>	} else if (id == "pause") {</pre>
+<pre>		pushUnpushButtons("pause", ["play"]);</pre>
+<pre>		video.pause();</pre>
+<pre>	} else if (id == "loop") {</pre>
+<pre>		if (isButtonPushed("loop")) {</pre>
+<pre>			pushUnpushButtons("", ["loop"]);</pre>
+<pre>		} else {</pre>
+<pre>			pushUnpushButtons("loop", []);</pre>
+<pre>		}</pre>
+<pre>		video.loop = !video.loop;</pre>
+<pre>	} else if (id == "mute") {</pre>
+<pre>		if (isButtonPushed("mute")) {</pre>
+<pre>			pushUnpushButtons("", ["mute"]);</pre>
+<pre>		} else {</pre>
+<pre>			pushUnpushButtons("mute", []);</pre>
+<pre>		}</pre>
+<pre>		video.muted = !video.muted;</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 30 -->
+
+		<section class="section" data-number="31" data-name="Another test drive!">
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/385fig02.png" />
+			</figure>
+
+			<h2 class="title left">Another test drive!</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+
+			<br />
+
+			<p>Make sure you’ve got all the code changes typed in. Load
+				<code class="literal">videobooth.html</code>
+				into your browser and give your control buttons a test. You should
+				see video start playing, be able to pause it, mute it, or even put
+				it in a loop. Of course, you can’t select the other demo video yet
+				or add an effect, but we’re getting there!
+			</p>
+
+<!-- Page 386 -->
+
+			<div class="pagebreak pageNumber">386</div>
+
+		</section> <!-- Section 31 -->
+
+		<section class="section" data-number="32" data-name="Taking care of a loose end...">
+			<figure class="right">
+				<img src="/contents/html5/figs/web/386fig00.png" alt="" />
+			</figure>
+
+			<h2 class="title">Taking care of a loose end...</h2>
+
+			<p>There’s a little loose end we
+				need to take care of to really make these buttons work like they
+				should. Here’s the use case: let’s say you’re playing a video and
+				you don’t have loop selected, and the video plays to completion and
+				stops. As we have things implemented now, the play button will
+				remain in the pressed position. Wouldn’t it be better if it popped
+				back up, ready to be pressed again?
+			</p>
+
+			<p>Using events we can easily do this. Let’s start by adding a listener
+				for the <code class="literal">ended</code>
+				event. Add this code to the bottom of your
+				<code class="literal">onload</code>
+				handler:
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/386fig01.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>video.addEventListener("ended", endedHandler, false);</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p>Now let’s write the handler, which will be called any time the
+				video playback stops by coming to the end of the video:
+			</p>
+			
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/386fig02.png" alt="" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function endedHandler() {</pre>
+<pre>	pushUnpushButtons("", ["play"]);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+		
+		</section> <!-- Section 32 -->
+
+		<section class="section" data-number="33" data-name="And another...">
+			<h2 class="title left">And another...</h2>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+			
+			<p>Okay, make the changes, save the code and reload. Now start a
+				video and let it play to its conclusion without the loop button
+				pressed, and at the end you should see the play button pop back out
+				on its own.
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/386fig03.png" />
+			</figure>
+
+<!-- Page 387 -->
+
+			<div class="pagebreak pageNumber">387</div>
+
+		</section> <!-- Section 33 -->
+
+		<section class="section" data-number="34" data-name="Switching test videos">
+			<figure class="right">
+				<img src="/contents/html5/figs/web/387fig01.png" />
+			</figure>
+
+			<h2 class="title">Switching test videos</h2>
+
+			<p>We already added an object to
+				hold our two test videos, and we’ve even got two buttons for
+				selecting between them. Each button is assigned the
+				<code class="literal">setVideo</code>
+				handler. Let’s work through writing that now so we can switch
+				between our videos:
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/387fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var videos = {video1: "video/demovideo1", video2: "video/demovideo2"};</pre>
+							<br />
+<pre>function setVideo(e) {</pre>
+<pre>	var id = e.target.getAttribute("id");</pre>
+<pre>	var video = document.getElementById("video");</pre>
+							<br />
+<pre>	if (id == "video1") {</pre>
+<pre>		pushUnpushButtons("video1", ["video2"]);</pre>
+<pre>	} else if (id == "video2") {</pre>
+<pre>		pushUnpushButtons("video2", ["video1"]);</pre>
+<pre>	}</pre>
+<pre>}</pre>
+<pre>video.src = videos[id] + getFormatExtension();</pre>
+<pre>video.load();</pre>
+<pre>video.play();</pre>
+							<br />
+<pre>pushUnpushButtons("play", ["pause"]);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<div class="sect2" id="switch_drivers_and_test_driveexclamation">
+				<figure class="right">
+					<img src="/contents/html5/figs/web/387fig03.png" />
+				</figure>
+
+				<div class="titlepage">
+					<h3 class="title left">Switch drivers and test drive!</h3>
+				</div>
+
+				<figure>
+					<img src="/contents/html5/figs/web/common-10.png" />
+				</figure>
+
+				<br />
+
+				<p>Make these changes to your <code class="literal">setVideo</code>
+					function and then load your page again. You should now be able to
+					easily switch between video sources.
+				</p>
+
+<!-- Page 388 -->
+
+			<div class="pagebreak pageNumber">388</div>
+
+				<div class="sidebar" id="html5_confidential">
+					<figure class="center">
+						<img src="/contents/html5/figs/web/html5confidential.png">
+					</figure>
+
+					<p class="center"><strong>This week’s interview: Confessions of the Video Element</strong></p>
+
+					<p><span class="formalpara-title"><strong>Head First:</strong> </span>Welcome, Video.
+						I’m going to jump right to the topic on
+						everyone’s minds, and that would be YOU and the Canvas element.
+					</p>
+
+					<p><span class="formalpara-title"><strong>Video:</strong> </span>Meaning?</p>
+
+					<p><span class="formalpara-title"><strong>Head First:</strong> </span>Allegedly nights out on the town,
+						early morning breakfasts together. Need I say more?
+					</p>
+
+					<p><span class="formalpara-title"><strong>Video:</strong> </span>What
+						is there to say, Canvas and I have a great relationship. She
+						displays her content in a very, let’s say, visually appealing
+						manner, and I’m a video workhorse. I crunch through codecs and get
+						that video content to the browser.
+					</p>
+
+					<p><span class="formalpara-title"><strong>Head
+						First:</strong> </span>Well, that’s not what I was getting at, but I’ll go with
+						it. Okay, she’s great at 2D display, you’re great at video
+						display. So what? What’s the real connection?
+					</p>
+			
+					<p><span class="formalpara-title"><strong>Video:</strong> </span>Like
+						any relationship, when you put two things together and get out
+						more than the sum of the parts, that’s when you have something
+						special.
+					</p>
+
+					<p><span class="formalpara-title"><strong>Head
+						First:</strong> </span>Okay, well, can you put that in more concrete terms?
+					</p>
+
+					<p><span class="formalpara-title"><strong>Video:</strong> </span>It’s
+						a simple concept. If you want to do anything other than just basic
+						video playback—that is, if you want to do any processing on your
+						video, or custom overlays or display mulitple videos at once—then
+						you want to use Canvas.
+					</p>
+
+					<p><span class="formalpara-title"><strong>Head
+						First:</strong> </span>That all sounds great, but video requires heavy-duty
+						processing, I mean that’s a lot of data coming through. How is
+						JavaScript, a scripting language, going to do anything real?
+						Writing JavaScript code isn’t like writing in a native language.
+					</p>
+
+					<p><span class="formalpara-title"><strong>Video:</strong> </span>Oh
+						you’d be surprised... have you looked at the latest benchmarks on
+						JavaScript? It’s already fast, and getting faster every day. The
+						industry’s brightest virtual machine jockeys are working the
+						problem and kicking butt.
+					</p>
+
+					<p><span class="formalpara-title"><strong>Head First:</strong> </span>Yeah, but video? Really?</p>
+
+					<p><span class="formalpara-title"><strong>Video:</strong> </span>Really.</p>
+
+					<p><span class="formalpara-title"><strong>Head
+						First:</strong> </span>Can you give us some examples of things you can do with
+						JavaScript, canvas and video?
+					</p>
+
+					<p><span class="formalpara-title"><strong>Video:</strong> </span>Sure,
+						you can process video in real time, inspect the video’s
+						characteristics, grab data from video frames, and alter the video
+						data by, say... rotating it, scaling it or even changing the
+						pixels.
+					</p>
+
+					<p><span class="formalpara-title"><strong>Head
+						First:</strong> </span>Can you walk us through how you might do that in code?
+					</p>
+			
+					<p><span class="formalpara-title"><strong>Video:</strong> </span>Uh,
+						I’ll have to get back to you on that, just got a call from
+						Canvas... gotta run...
+					</p>
+				</div> <!-- /sidebar -->
+
+<!-- Page 389 -->
+
+			<div class="pagebreak pageNumber">389</div>
+
+		</section> <!-- Section 34 -->
+
+		<section class="section" data-number="35" data-name="It's time for special effects">
+			<figure class="right">
+				<img src="/contents/html5/figs/web/389fig01.png" />
+			</figure>
+
+			<h2 class="title">It’s time for special effects</h2>
+
+			<p>Isn’t it
+				about time we add those movie effects? What we want to do is take
+				our original video and be able to apply effects, like film noir,
+				western, and even an otherworldly sci-fi effect. But if you look at
+				the video API, you won’t find any effects methods there, or any way
+				to add them directly. So how are we going to add those effects?
+			</p>
+
+			<p>Take a little time to think through how we might add effects
+				to our video. Don’t worry that you don’t know how to process video
+				yet, just think through the high level design.
+			</p>
+			
+			
+			
+			<figure>
+				<img src="/contents/html5/figs/web/389fig02.png" />
+			</figure>
+
+<!-- Page 390 -->
+
+			<div class="pagebreak pageNumber">390</div>
+
+		</section> <!-- Section 35 -->
+
+		<section class="section" data-number="36" data-name="The FX plan">
+			<h2 class="title">The FX plan</h2>
+			
+			<p>We don’t know exactly how to implement the
+				effects yet, but here’s a high level plan of attack:
+			</p>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<figure class="right">
+							<img src="/contents/html5/figs/web/390fig01.png" />
+						</figure>
+
+						<p>We know we’ve still got to hook up
+							those buttons that control the effects. So we’re going to do that
+							first.
+						</p>
+					</li>
+					
+					<div class="clear" />
+
+					<li class="listitem">
+						<figure class="right">
+							<img src="/contents/html5/figs/web/390fig02.png" />
+						</figure>
+
+						<p>We’re going to learn a little
+							about video processing and check out the “scratch buffer”
+							technique for adding our effects.
+						</p>
+					</li>
+					
+					<div class="clear" />
+
+					<li class="listitem">
+						<figure class="right">
+							<img src="/contents/html5/figs/web/390fig03.png" />
+						</figure>
+
+						<p>We’re going to implement the
+							scratch buffer, which is going to give us a chance to see video
+							and canvas together in action.
+						</p>
+					</li>
+					
+					<div class="clear" />
+
+					<li class="listitem">
+						<div class="right">
+							<pre class="programlisting"><strong>function noir(pos, r, g, b, data) {</strong></pre>
+						  <pre><strong>...</strong></pre>
+<pre><strong>}</strong></pre>
+						</div>
+
+						<p>We’re going to implement one function for each effect: western, film noir, and sci-fi.</p>
+					</li>
+					
+					<div class="clear" />
+
+					<li class="listitem">
+						<figure class="right">
+							<img src="/contents/html5/figs/web/390fig04.png" />
+						</figure>
+
+						<p>Finally, we’re going to put it all together and test!</p>
+					</li>
+				</ol>
+			</div> <!-- /orderedlist -->
+
+			<div class="clear" />
+
+			<div class="sidebar">
+				<img class="left" src="/contents/html5/figs/web/brainpower.png">
+
+				<p>Now you know we’re going to implement a function that will
+					handle each effect. Let’s take film noir, for example. How are you
+					going to take a color pixel from the video and make it black and
+					white? Hint: every pixel has three components: red, green, and
+					blue. If we could get our hands on those pieces, what could we do?
+				</p>
+			</div>
+
+<!-- Page 391 -->
+
+			<div class="pagebreak pageNumber">391</div>
+
+		</section> <!-- Section 36 -->
+
+		<section class="section" data-number="37" data-name="Time to get those effects buttons working">
+			<figure class="right">
+				<img src="/contents/html5/figs/web/391fig01.png" />
+			</figure>
+
+			<h2 class="title">Time to get those effects buttons working</h2>
+
+			<p>Alright, the easy part first:
+				we’re going to get those effects buttons wired up and working. We’ll
+				start by creating a global variable named
+				<code class="literal">effectFunction</code>.
+				This variable is going to hold a function that can take data from
+				the video, and apply a filter to it. That is, depending on which
+				effect we want, the
+				<code class="literal">effectFunction</code>
+				variable will hold a function that knows how to process the video
+				data and make it black and white, or sepia, or inverted for sci-fi.
+				So add this global variable to the top of your file:
+			</p>
+
+			<pre class="programlisting"><strong>var effectFunction = null;</strong></pre>
+
+			<p>
+				Now we’re going to set this variable anytime an effects button is
+				clicked on. For now, we’ll use function names like
+				<code class="literal">western</code>, <code class="literal">noir</code>
+				and <code class="literal">scifi</code>, and we’ll write these functions in just a bit.
+			</p>
+
+			<div class="hiddencode".
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/391fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function setEffect(e) {</pre>
+<pre>	var id = e.target.getAttribute("id");</pre>
+							<br />
+<pre>	if (id == "normal") {</pre>
+<pre>		pushUnpushButtons("normal", ["western", "noir", "scifi"]);</pre>
+<pre>		effectFunction = null;</pre>
+<pre>	} else if (id == "western") {</pre>
+<pre>		pushUnpushButtons("western", ["normal", "noir", "scifi"]);</pre>
+<pre>		effectFunction = western;</pre>
+<pre>	} else if (id == "noir") {</pre>
+<pre>		pushUnpushButtons("noir", ["normal", "western", "scifi"]);</pre>
+<pre>		effectFunction = noir;</pre>
+<pre>	} else if (id == "scifi") {</pre>
+<pre>		pushUnpushButtons("scifi", ["normal", "western", "noir"]);</pre>
+<pre>		effectFunction = scifi;</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p>Okay, with that out of the way, we’re going to learn about
+				that “scratch buffer” and then come back and see how these functions
+				fit in, as well as how to write them!
+			</p>
+
+<!-- Page 392 -->
+
+			<div class="pagebreak pageNumber">392</div>
+
+		</section> <!-- Section 37 -->
+
+		<section class="section" data-number="38" data-name="How video processing works">
+			<h2 class="title">How video processing works</h2>
+
+			<p>What we’ve done so far is given ourselves a way to assign a function to
+				the <code class="literal">effectsFunction</code>
+				global variable as a result of clicking on the effects buttons in
+				the interface. For now, just take that knowledge and tuck it in the
+				back of your brain for a little while, because we’ve got to work
+				through how we’re actually going to take video and process it in
+				real time to add an effect. To do that we need to get our hands on
+				the video’s pixels, alter those pixels to achieve our desired
+				effect, and then somehow get them back on the screen.
+			</p>
+			
+			<aside class="right">
+				<p>The details of the scoop, finally revealed!</p>
+			</aside>
+			
+			<p>Now, does the video API offer some special way to process video
+				before it is displayed? Nope. But it does give us a way to get the
+				pixels, so we just need a way to process and display them. Wait,
+				pixels? Display? Remember Chapter 7?
+				The <strong>canvas</strong>! Ah, that’s
+				right, we did mention something about the “special relationship”
+				that the video element and canvas have. So, let’s walk through one
+				of the ways the video and canvas elements can work together:
+			</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/392fig01.png" />
+			</figure>
+
+<!-- Page 393 -->
+
+			<div class="pagebreak pageNumber">393</div>
+
+		</section> <!-- Section 38 -->
+
+		<section class="section" data-number="39" data-name="How to process video using a scratch buffer">
+			<figure class="right">
+				<img src="/contents/html5/figs/web/behindthescenes.png">
+			</figure>
+
+			<h2 class="title">How to process video using a scratch buffer</h2>
+
+			<p>Now, you might ask why we’re using two canvases to process and
+				display the video. Why not just find a way to process the video as
+				it is decoded?
+			</p>
+			
+			<p>The method we’re using here is a proven technique for
+				minimizing visual glitches during intensive video and image
+				processing: it’s known as using a “scratch buffer.” By processing a
+				frame of video in a buffer and then copying it all in one fell swoop
+				to the display canvas, we minimize visual issues.
+			</p>
+			
+			<p>Let’s step through how our scratch buffer implementation is going to work.</p>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p>The browser decodes the video into
+							a series of frames. Each frame is a rectangle of pixels with a
+							snapshot of the video at a given point in time.
+						</p>
+						
+						<figure>
+							<img src="/contents/html5/figs/web/393fig01.png" />
+						</figure>
+					</li>
+					
+					<li class="listitem">
+						<p>As each frame is decoded we copy it into the canvas that is acting as a scratch buffer.</p>
+
+						<figure>
+							<img src="/contents/html5/figs/web/393fig02.png" alt="" />
+						</figure>
+					</li>
+				</ol>
+			</div>
+
+<!-- Page 394 -->
+
+			<div class="pagebreak pageNumber">394</div>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1" start="3">
+					<li class="listitem">
+						<p>We iterate over scratch
+							buffer, pixel by pixel, passing each pixel to our effects
+							function for processing.
+						</p>
+
+						<figure>
+							<img src="/contents/html5/figs/web/394fig01.png" />
+						</figure>
+					</li>
+					
+					<li class="listitem">
+						<p>After all the pixels in the
+							scratch buffer are processed, we copy them from the scratch
+							buffer canvas to the display canvas.
+						</p>
+						
+						<figure>
+							<img src="/contents/html5/figs/web/394fig02.png" />
+						</figure>
+					</li>
+					
+					<li class="listitem">
+						<p>And then we repeat the process on every frame as it is decoded by the video object.</p>
+					</li>
+				</ol>
+			</div>
+
+<!-- Page 395 -->
+
+			<div class="pagebreak pageNumber">395</div>
+
+		</section> <!-- Section 39 -->
+
+		<section class="section" data-number="40" data-name="Implementing a scratch buffer with Canvas">
+			<h2 class="title">Implementing a scratch buffer with Canvas</h2>
+
+			<p>As you already know, to implement a scratch buffer in canvas we need two
+				canvases: one to do our computation in, and one to display our
+				results. To create those canvases, we’ll start back in our HTML file
+				<code class="literal">videobooth.html</code>. Open this file and find the
+				<code class="literal">&lt;div&gt;</code> with the id
+				<code class="literal">“videoDiv”</code> and add two canvas elements below the
+				<code class="literal">&lt;video&gt;</code>:
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/395fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;div id="videoDiv"&gt;</pre>
+<pre>	&lt;video id="video" width="720" height="480"&gt;&lt;/video&gt;</pre>
+<pre>	&lt;canvas id="buffer" width="720" height="480"&gt;&lt;/canvas&gt;</pre>
+<pre>	&lt;canvas id="display" width="720" height="480"&gt;&lt;/canvas&gt;</pre>
+<pre>&lt;/div&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 40 -->
+
+		<section class="section" data-number="41" data-name="How to position the video and canvases">
+			<h2 class="title">How to position the video and canvases</h2>
+
+			<p>Now you might be wondering about positioning these elements; we’re
+				going to position them right on top of each other. So at the bottom
+				will be the video element, on top of that is the buffer, and on top
+				of that, the display canvas element. We’re using CSS to do it, and
+				although we don’t talk much about CSS in this book, if you open
+				<code class="literal">videobooth.css</code>
+				you’ll see the positioning for the three elements:
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/395fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>div#videoDiv {</pre>
+<pre>	position: relative;</pre>
+<pre>	width: 720px;</pre>
+<pre>	height: 480px;</pre>
+<pre>	top: 180px;</pre>
+<pre>	left: 190px;</pre>
+<pre>}</pre>
+<pre>video {</pre>
+<pre>	background-color: black;</pre>
+<pre>}</pre>
+<pre>div#videoDiv canvas {</pre>
+<pre>	position: absolute;</pre>
+<pre>	top: 0px;</pre>
+<pre>	left: 0px;</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 396 -->
+
+			<div class="pagebreak pageNumber">396</div>
+
+		</section> <!-- Section 41 -->
+
+		<section class="section" data-number="42" data-name="Writing the code to process the video">
+			<h2 class="title">Writing the code to process the video</h2>
+
+			<p>We’ve got a video element, a
+				buffer that’s a canvas, and a canvas that is going to display the
+				final video frames. And we’ve also got them stacked on one another
+				so we see only the top display canvas, which will contain the video
+				with the effect applied. To process the video we’re going to use the
+				video element’s <code class="literal">play</code>
+				event, which is called as soon as a video begins playing. Add this
+				to the end of the <code class="literal">onload</code> handler:
+			</p>
+			
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/396fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>video.addEventListener("play"), processFrame, false);</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p>The <code class="literal">processFrame</code>
+				function is where we’ll process the video pixels and get them into
+				the canvas for display. We’ll start by making sure we have access to
+				all our DOM objects:
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/396fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function processFrame(e) {</pre>
+<pre>	var video = document.getElementById("video");</pre>
+<pre>	if (video.paused || video.ended) {</pre>
+<pre>		return;</pre>
+<pre>	}</pre>
+<pre>	var bufferCanvas = document.getElementById("buffer");</pre>
+<pre>	var displayCanvas = document.getElementById("display");</pre>
+<pre>	var buffer = bufferCanvas.getContext("2d");</pre>
+<pre>	var display = displayCanvas.getContext("2d");</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 42 -->
+
+		<section class="section" data-number="43" data-name="How to create the buffer">
+			<h2 class="title">How to create the buffer</h2>
+
+			<p>To create the buffer, we need to take the current video frame, and
+				copy it to the buffer canvas. Once we have it on the canvas, we can
+				process the data in the frame. So, to create that buffer we do this
+				(add this to the bottom of
+				<code class="literal">processFrame</code>):
+			</p>
+			
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/396fig03.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>buffer.drawImage(video, 0, 0, bufferCanvas.width, bufferCanvas.height);</pre>
+<pre>var fram = buffer.getImageData(0, 0, bufferCanvas.width, bufferCanvas.height);</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 397 -->
+
+			<div class="pagebreak pageNumber">397</div>
+
+		</section> <!-- Section 43 -->
+
+		<section class="section" data-number="44" data-name="How to process the buffer">
+			<h2 class="title">How to process the buffer</h2>
+
+			<p>We’ve got our hands on a frame of video data,
+				so let’s do some processing on it! To process the frame, we’re going
+				to loop over every single pixel in the frame data and pull out the
+				RGB color values that are stored in each pixel. Actually, each pixel
+				has 4 values, RGB and Alpha (the opacity), but we’re not going to
+				use the Alpha. Once we’ve got the RGB values, we’ll call the
+				<code class="literal">effectFunction</code>
+				(remember, that’s the function we set back in “How video processing works”
+				and asked you to tuck in the back of your brain!) with the RGB
+				information and the frame.
+			</p>
+
+			<p>Add this code to the bottom of your <code class="literal">processFrame</code> function:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/397fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>buffer.drawImage(video, 0, 0, bufferCanvas.width, displayCanvas.height);</pre>
+<pre>var frame = buffer.getImageData(0, 0, bufferCanvas.width, displayCanvas.height);</pre>
+							<br />
+<pre>var length = frame.data.length / 4;</pre>
+							<br />
+							<br />
+							<br />
+<pre>for (var i = 0; i < length; i++) {</pre>
+<pre>	var r = frame.data[i * 4 + 0];</pre>
+<pre>	var g = frame.data[i * 4 + 1];</pre>
+<pre>	var b = frame.data[i * 4 + 2];</pre>
+<pre>	if (effectFunction) {</pre>
+<pre>		effectFunction(i, r, g, b, frame.data);</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							<br />
+<pre>display.putImageData(frame, 0, 0);</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<section class="subsection" data-number="45" data-name="We've processed one frame, what next?">
+				<div class="titlepage">
+					<h3 class="title">We’ve processed one frame, what next?</h3>
+				</div>
+
+				<aside class="right">
+					<p>setTimeout is just like setInterval, except that it runs only once after a specified time in milliseconds.</p>
+				</aside>
+
+				<p>Yes, that’s one single frame we just processed, and we want to keep
+					processing them all as the video continues to play. We can use
+					<code class="literal">setTimeout</code>
+					and pass it a value of zero milliseconds to ask JavaScript to run
+					<code class="literal">processFrame</code>
+					again as soon as it possibly can. JavaScript won’t actually run the
+					function in <span class="emphasis"><em>zero</em></span>
+					milliseconds, but it will give us the next soonest time slot we can
+					get. To do that, just add this to the bottom of your
+					<code class="literal">processFrame</code> function:
+				</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/397fig02.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>setTimeout(processFrame, 0);</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+<!-- Page 398 -->
+
+				<div class="pagebreak pageNumber">398</div>
+
+				<figure class="left">
+					<img src="/contents/html5/figs/web/398fig01.png" />
+				</figure>
+
+				<p><strong>We wish we could.</strong></p>
+
+				<p>You’re absolutely right: what we’d love to do is have our handler
+					called once for every frame, but the video API doesn’t give us a
+					way to do that. It does give us an event named
+					<code class="literal">timeupdate</code>
+					that can be used to update a running time display of your video,
+					but it doesn’t tend to update at a granularity that you can use for
+					processing frames (in other words, it runs at a slower rate than
+					the video).
+				</p>
+
+				<p>So instead we use <code class="literal">setTimeout</code>. When you pass zero to
+					<code class="literal">setTimeout</code>, you’re asking JavaScript to run your timeout handler as soon as
+					it possibly can—and this leads to your handler running as frequently as it possibly can.
+				</p>
+
+				<p>But might that be faster than the frame rate? Wouldn’t it be
+					better to calculate a timeout close to what is needed for the frame
+					rate? Well, you could, but it’s unlikely that the handler is going
+					to actually get to run in lockstep with the frames of your video,
+					so zero is a good approximation. Of course, if you are looking to
+					enhance the performance characteristics of your app, you can always
+					do some profiling and figure out what the optimal values are. But
+					until we have a more specific API, that’s our story.
+				</p>
+
+<!-- Page 399 -->
+
+				<div class="pagebreak pageNumber">399</div>
+
+			</section> <!-- Section 45 -->
+
+		</section> <!-- Section 44 -->
+
+		<section class="section" data-number="46" data-name="Now we need to write some effects">
+			<h2 class="title">Now we need to write some effects</h2>
+		
+			<p>Finally, we’ve got everything we need to write
+				the video effects: we’re grabbing each frame as it comes in,
+				accessing the frame data pixel by pixel and sending the pixels to
+				our effect filter function. Let’s look at the <em>Film
+				Noir</em> filter (which, in our version, is just a fancy name for black
+				and white):
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/399fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function noir(pos, r, g, b, data) {</pre>
+<pre>	var brightness = (3*r + 4*g + b) >>> 3;</pre>
+<pre>	if (brightness < 0) brightness = 0;</pre>
+<pre>	data[pos * 4 + 0] = brightness;</pre>
+<pre>	data[pos * 4 + 1] = brightness;</pre>
+<pre>	data[pos * 4 + 2] = brightness;</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 46 -->
+
+		<section class="section" data-number="47" data-name="A film noir test drive">
+			<figure class="right">
+				<img src="/contents/html5/figs/web/399fig02.png" />
+			</figure>
+
+			<h2 class="title left">A film noir test drive</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+
+			<br />
+
+			<p>Add this function to <code class="literal">videobooth.js</code>
+				and then reload your page. As soon as the video starts rolling press
+				the Film Noir button and you’ll see a brooding black &amp; white
+				film look. Now choose Normal again. Not bad, eh? And all in
+				JavaScript, in real time!
+			</p>
+
+			<aside>
+				<p>Kind of amazing when you think about it.</p>
+			</aside>
+
+<!-- Page 400 -->
+
+			<div class="pagebreak pageNumber">400</div>
+
+			<div class="sidebar">
+				<img class="left" src="/contents/html5/figs/web/sharpenpencil.png">
+
+				<p>This book isn’t really about video processing
+					and effects, but it sure is fun. Below we’ve got the western and
+					sci-fi effects. Look through the code and make notes on the right
+					as to how each works. Oh, and we added an extra one—what does it
+					do?
+				</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/400fig00.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>function western(pos, r, g, b, data) {</pre>
+<pre>	var brightness = (3*r + 4*g + b) >>> 3;</pre>
+<pre>	data[pos * 4 + 0] = brightness+40;</pre>
+<pre>	data[pos * 4 + 1] = brightness+20;</pre>
+<pre>	data[pos * 4 + 2] = brightness-20;</pre>
+<pre>}</pre>
+								<br />
+<pre>function scifi(pos, r, g, b, data) {</pre>
+<pre>	var offset = pos * 4;</pre>
+<pre>	data[offset] = Math.round(255 - r) ;</pre>
+<pre>	data[offset+1] = Math.round(255 - g) ;</pre>
+<pre>	data[offset+2] = Math.round(255 - b) ;</pre>
+<pre>}</pre>
+								<br />
+<pre>function bwcartoon(pos, r, g, b, outputData) {</pre>
+<pre>	var offset =  pos * 4;</pre>
+<pre>	if( outputData[offset] < 120 ) {</pre>
+<pre>		outputData[offset] = 80;</pre>
+<pre>		outputData[++offset] = 80;</pre>
+<pre>		outputData[++offset] = 80;</pre>
+<pre>	} else {</pre>
+<pre>		outputData[offset] = 255;</pre>
+<pre>		outputData[++offset] = 255;</pre>
+<pre>		outputData[++offset] = 255;</pre>
+<pre>	}</pre>
+<pre>	outputData[++offset] = 255;</pre>
+<pre>	++offset;</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 401 -->
+
+			<div class="pagebreak pageNumber">401</div>
+
+		</section> <!-- Section 47 -->
+
+		<section class="section" data-number="48" data-name="The Big Test Drive">
+			<h2 class="title left">The Big Test Drive</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+
+			<div class="clear" />
+
+			<p>This is it! We have this code wrapped up and ready to ship off to
+				<strong>Starring You Video</strong>. Go ahead
+				and double check that you’ve got all the code typed in, save, and
+				load <code class="literal">videobooth.html</code>.
+				Then have fun playing around with your new app!
+			</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/401fig01.png" />
+			</figure>
+
+<!-- Page 402 -->
+
+			<div class="pagebreak pageNumber">402</div>
+
+			<div class="sidebar">
+				<figure class="right">
+					<img src="/contents/html5/figs/web/402fig01.png" />
+				</figure>
+
+				<h3>IN THE LABORATORY</h3>
+				
+				<p>Obviously we’ve only scratched the surface in terms of video
+					processing, and we’re sure you can think of more creative effects
+					than those we came up with. Go ahead and think up a few, implement
+					them, and document them here.
+				</p>
+				
+				<p>Have you invented something really cool and implemented it?
+					Tell us about it at wickedlysmart.com and we’ll feature it for
+					other readers!
+				</p>
+
+				<figure class="right">
+					<img src="/contents/html5/figs/web/402fig03.png" />
+				</figure>
+				
+				<figure>
+					<img src="/contents/html5/figs/web/402fig02.png" />
+				</figure>
+
+			</div>
+
+			<div class="clear"></div>
+
+<!-- Page 403 -->
+
+			<div class="pagebreak pageNumber">403</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/403fig01.png" />
+			</figure>
+
+			<p><strong>Sure, just use a web URL.</strong></p>
+
+			<p>You can substitute a web URL for any of the sources we been defining locally. For instance:</p>
+
+			<pre class="programlisting"><strong>&lt;video src="http://wickedlysmart.com/myvideo.mp4"&gt;</strong></pre>
+
+			<p>Keep in mind there is more room for bad things to happen when
+				you are delivering on the Web (and we’ll talk about how to handle
+				those things in a moment). Also, the bitrate of your videos starts
+				to matter a lot more when delivering to a browser or a mobile device
+				over the network. Like with video formats, if you’re going down this
+				road, seek out experts and educate yourself.
+			</p>
+			
+			<div class="clear" />
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/403fig02.png" />
+			</figure>
+
+			<p><strong>Yes, a big difference.</strong></p>
+
+			<p>The term streaming often gets used like the term xerox or
+				kleenex—as a generic term for getting video from the Web to your
+				browser. But “progressive video” and “streaming video” are actually
+				technical terms. In this book we’ve been using progressive video,
+				which means when we retrieve the video (either locally or over the
+				network) we’re retrieving a file using HTTP, just like an HTML file
+				or an image, and we try to decode and play it back as we retrieve
+				it. Streaming video is delivered using a protocol that is highly
+				tuned to delivering video in an optimal way (perhaps even altering
+				the bitrate of the video over time as bandwidth becomes more or less
+				available).
+			</p>
+			
+			<p>Streaming video probably sounds like it would provide your
+				user with a better experience (it does), and is perhaps more
+				efficient in terms of your user’s connection and your bandwidth
+				charges (it is). On top of all that, streaming video makes it easier
+				to do things like protect the content of your video if you need that
+				kind of security.
+			</p>
+
+<!-- Page 404 -->
+
+			<div class="pagebreak pageNumber">404</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/404fig01.png" />
+			</figure>
+
+			<p><strong>No.</strong></p>
+
+			<p>There is no standard for streaming video with HTML5. As a
+				matter of fact the problem isn’t HTML5, there isn’t really a
+				supported standard for streaming video anywhere—but there are plenty
+				of proprietary ones. Why? There are a number of reasons ranging from
+				the money to be made with streaming video to the fact that many
+				people in open source don’t want to work on a protocol that could be
+				used for DRM or other protection technologies. Like the situation
+				with video formats, we’re in a complex world with streaming video.
+			</p>
+			
+			<div class="clear" />
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/404fig02.png" />
+			</figure>
+
+			<p><strong>There are solutions out there.</strong></p>
+
+			<p>There are lots of legitimate uses for streaming video
+				technologies, and if you have a large audience, or you have content
+				you think needs to be protected, you should check them out: Apple’s
+				HTTP Live Streaming, Microsoft’s Smooth Streaming and Adobe’s HTTP
+				Dynamic Streaming are good places to start.
+			</p>
+			
+			<p>There’s good news on the horizon too: the standards bodies are
+				starting to look closely at HTTP-based video streaming, so keep an
+				eye out for developments in this area.
+			</p>
+
+			<div class="clear" />
+
+<!-- Page 405 -->
+
+			<div class="pagebreak pageNumber">405</div>
+
+		</section> <!-- Section 48 -->
+
+		<section class="section" data-number="49" data-name="If only it were a perfect world...">
+			<figure class="right">
+				<img src="/contents/html5/figs/web/405fig01.png" />
+			</figure>
+
+			<h2 class="title">If only it were a perfect world...</h2>
+
+			<p>But it’s not: we have all those nasty network issues, incompatible devices
+				and operating systems, and an increasing chance of asteroids hitting
+				the earth. That last one we can’t help with, but for the first two
+				actually knowing you have an error is half the battle, then you can
+				at least do something about it.
+			</p>
+
+			<p>The video object has an error event, which can be thrown for a
+				number of reasons that can be found in the
+				<code class="literal">video.error</code>
+				property, or more specifically in the
+				<code class="literal">video.error.code</code>
+				property. Let’s take a look at what kinds of errors we can detect:
+			</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/405fig02.png" />
+			</figure>
+
+<!-- Page 406 -->
+
+			<div class="pagebreak pageNumber">406</div>
+
+		</section> <!-- Section 49 -->
+
+		<section class="section" data-number="50" data-name="How to use error events">
+			<h2 class="title">How to use error events</h2>
+			
+			<p>Dealing with errors is complex business and how
+				you deal with errors depends a lot on your application, and what
+				would be appropriate for the app and your users. That said, we can
+				at least get you started and point you in the right direction. Let’s
+				take Webville TV and give it the ability to know it has encountered
+				an error—and if it does encounter one, give the audience a PLEASE
+				STAND BY message.
+			</p>
+
+			<p>
+				We want to be notified when there’s an error message, so we need to
+				add a listener for the error event. Here’s how we do that (add this
+				to the onload handler in <code class="literal">webville.js</code> ):
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/406fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>video.addEventListener("error", errorHandler, false);</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p>Now we need to write the function errorHandler, which will
+				check if there is an error, and if so, place our “please stand by”
+				image on the video display by making it the poster image:
+			</p>
+			
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/406fig00.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function errorHandler() {</pre>
+<pre>	var video = document.getElementById("video");</pre>
+<pre>	if (video.error) {</pre>
+<pre>		video.poster = "images/technicaldifficulties.jpg";</pre>
+<pre>		alert(video.error.code);</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 50 -->
+
+		<section class="section" data-number="51" data-name="Test Crash!">
+			<figure class="right">
+				<img src="/contents/html5/figs/web/406fig02.png" />
+			</figure>
+
+			<h2 class="title left">Test Crash!</h2>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/common-11.png" />
+			</figure>
+			
+			<p>There are many ways for the playback of the video to fail, and
+				to test this code you’re going to make it fail. Here are a few
+				suggestions;
+			</p>
+			
+			<div class="itemizedlist">
+				<ul class="itemizedlist">
+					<li class="listitem"><p>Disconnect your network at different points in playback.</p></li>
+					
+					<li class="listitem"><p>Give the player a bad URL.</p></li>
+
+					<li class="listitem"><p>Give the player a video you know it can’t decode.</p></li>
+					
+					<li class="listitem"><p>Give the player a URL that isn’t even a video.</p></li>
+
+					<li class="listitem"><p>Use software to reduce your bandwidth (it’s out there, just look for it).</p></li>
+				</ul>
+			</div>
+
+			<p>So get this code typed in and get testing. Remember you can map the
+				integer in the alert dialog back to a real code by looking at the
+				codes in “Where can you go from here?”.
+			</p>
+
+<!-- Page 407 -->
+
+			<div class="pagebreak pageNumber">407</div>
+
+		</section> <!-- Section 51 -->
+
+		<section class="section" data-number="52" data-name="Where can we go from here?">
+			<h2 class="title">Where can you go from here?</h2>
+			
+			<p>This is where it gets
+				exciting, because think of all you know how to do with HTML markup,
+				with the video element and, of course, the canvas...not to mention
+				web services, geolocation... wow. Sure, we did some cool video
+				processing with canvas, but you can apply everything you know how to
+				do with canvas to video. Here are just a few ideas we had, please
+				add your own. And give yourself a pat on the back from us, you’ve
+				earned it!
+			</p>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/407fig01.png" />
+			</figure>
+
+<!-- Page 408 -->
+
+			<div class="pagebreak pageNumber">408</div>
+
+			<div class="sidebar">
+				<img src="/contents/html5/figs/web/bulletpoints.png">
+
+				<div class="itemizedlist">
+					<ul class="itemizedlist">
+						<li class="listitem"><p>You can play video by using the &lt;video&gt; element with a few simple attributes.</p></li>
+						
+						<li class="listitem"><p>The autoplay attribute starts playback on page load, but use only when appropriate.</p></li>
+						
+						<li class="listitem"><p>The controls attribute causes the browser to expose a set of playback controls.</p></li>
+						
+						<li class="listitem"><p>The look and feel of controls differs among browsers.</p></li>
+						
+						<li class="listitem"><p>You can supply your own poster image with the poster attribute.</p></li>
+						
+						<li class="listitem"><p>The src attribute holds a URL to the video to be played.</p></li>
+						
+						<li class="listitem"><p>There are many “standards” for video and audio formats.</p></li>
+						
+						<li class="listitem"><p>Three formats are in common usage, WebM, MP4/H.264 and Ogg/Theora.</p></li>
+						
+						<li class="listitem"><p>Know your audience to know what formats you need to supply.</p></li>
+						
+						<li class="listitem"><p>Use the &lt;source&gt; tag to specify alternative video formats.</p></li>
+						
+						<li class="listitem">
+							<p>Use fully specified types in your &lt;source&gt; tag to save the browser work and time.</p>
+						</li>
+						
+						<li class="listitem">
+							<p>You can continue to support other video frameworks, like Flash, by adding a
+								fallback &lt;object&gt; tag in the video element.
+							</p>
+						</li>
+						
+						<li class="listitem"><p>The video object provides a rich set of properties, methods and events.</p></li>
+
+						<li class="listitem"><p>Video supports play, pause, load, loop and mute methods and properties
+							to directly control the playback of the video.</p>
+						</li>
+						
+						<li class="listitem">
+							<p>The ended event can be used to know when video playback has ended (for instance, to implement a
+								playlist).
+							</p>
+						</li>
+						
+						<li class="listitem">
+							<p>You can programmatically ask the
+							video object if it can play a format with canPlayType.
+							</p>
+						</li>
+						
+						<li class="listitem">
+							<p>The canPlayType method returns
+								empty string (no support for format), maybe (if it might be able
+								to play the format) or probably (if it confidently thinks it can
+								play the format).
+							</p>
+						</li>
+						
+						<li class="listitem">
+							<p>Canvas can be used as a display
+								surface for video to implement custom controls or other effects
+								with video.
+							</p>
+						</li>
+						
+						<li class="listitem"><p>You can use a scratch buffer to process video before copying it to the display.</p></li>
+
+						<li class="listitem">
+							<p>You can use a setTimeout handler
+								to process video frames; while it isn’t linked directly to every
+								frame of the video, it is the best method we have right now.
+							</p>
+						</li>
+						
+						<li class="listitem"><p>You can use a URL as a video source to play network-based videos.</p></li>
+						
+						<li class="listitem">
+							<p>Some browsers enforce a same
+								origin policy on video so that you need to serve the video from
+								the same origin as your source page.
+							</p>
+						</li>
+						
+						<li class="listitem">
+							<p>Errors are always possible, if not probable, with video, especilly when a network is involved.</p>
+						</li>
+
+						<li class="listitem">
+							<p>The error event can be used to
+								notify a handler when video retrieval, decoding or playback
+								errors occur.
+							</p>
+						</li>
+						
+						<li class="listitem">
+							<p>The video element relies on
+								progressively downloaded video. Currently there is no HTML5
+								standard for streaming, although the standards bodies are
+								looking at HTTP-based streaming solutions.
+							</p>
+						</li>
+						
+						<li class="listitem">
+							<p>There is currently no standard way of protecting video
+							delivered through the video element.
+							</p>
+						</li>
+					</ul>
+				</div> <!-- /itemizedlist -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 409 -->
+
+			<div class="pagebreak pageNumber">409</div>
+
+			<div class="sidebar" id="html5cross-id00097">
+				<img src="/contents/html5/figs/web/html5cross2.png">
+				
+				<p>Before you sit back and watch some more
+					Webville TV, do a quick crossword to make it all stick. Here’s your Chapter 8 crossword puzzle.
+				</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/409fig01.png" />
+				</figure>
+
+				<div class="informaltable">
+					<table style="border-collapse: collapse;">
+						<colgroup>
+							<col class="c1" />
+							<col class="c2" />
+							<col class="c3" />
+							<col class="c4" />
+						</colgroup>
+
+						<thead>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;" colspan="2">
+									<p>Across</p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;" colspan="2"><p>Down</p></td>
+							</tr>
+						</thead>
+						
+						<tbody>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>2.</p></td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>Type of delivery the video element uses for video.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>1.</p></td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>Use __________ if you want a built-in way to control video.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>4.</p></td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>To provide several video options, use _____ source elements.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>3.</p></td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;"><p>We saw ‘50s ______ films.</p></td>
+							</tr>
+
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>5.</p></td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>Kind of buffer we used canvas for.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>5.</p></td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>What you should do if an asteroid is going to hit the earth.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>7.</p></td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>Property to play your video over and over</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>6.</p></td>
+							
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>The Starbuzz CEO spills his ___________.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>8.</p></td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>Starts a video as soon as it can.</p>
+								</td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>9.</p></td>
+
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>What we processed on every setTimeout call.</p>
+								</td>
+							</tr>
+						
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>11.</p></td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>The open source audio codec.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>10.</p></td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>Clint Eastwood would like this effects style.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>12.</p></td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>Used to display processed video.</p>
+								</td>
+								
+								<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+
+								<td style="border-bottom: 0.5pt solid;"></td>
+							</tr>
+
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>13.</p></td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>When the show is over, this event is thrown.</p>
+								</td>
+								
+								<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+								
+								<td style="border-bottom: 0.5pt solid;"></td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>14.</p></td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>I can play this type, can you?</p>
+								</td>
+								
+								<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+
+								<td style="border-bottom: 0.5pt solid;"> </td>
+							</tr>
+
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid;"><p>15.</p></td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid;">
+									<p>Look and feel of browser controls _____.</p>
+								</td>
+								
+								<td style="border-right: 0.5pt solid;"></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- /informaltable -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 410 -->
+
+			<div class="pagebreak pageNumber">410</div>
+
+			<div class="sidebar">
+				<img class="left" src="/contents/html5/figs/web/sharpenyourpencilsolution.png">
+				
+				<p>This book isn’t really about video processing
+					and effects, but it sure is fun. Below we’ve got the western and
+					sci-fi effects. Look through the code and make notes on the right
+					as to how each works. Oh, and we added an extra one—what does it
+					do? Here’s our solution.
+				</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/410fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>function western(pos, r, g, b, data) {</pre>
+<pre>	var brightness = (3*r + 4*g + b) >>> 3;</pre>
+<pre>	data[pos * 4 + 0] = brightness+40;</pre>
+<pre>	data[pos * 4 + 1] = brightness+20;</pre>
+<pre>	data[pos * 4 + 2] = brightness-20;</pre>
+<pre>}</pre>
+								<br />
+<pre>function scifi(pos, r, g, b, data) {</pre>
+<pre>	var offset = pos * 4;</pre>
+<pre>	data[offset] = Math.round(255 - r) ;</pre>
+<pre>	data[offset+1] = Math.round(255 - g) ;</pre>
+<pre>	data[offset+2] = Math.round(255 - b) ;</pre>
+<pre>}</pre>
+								<br />
+<pre>function bwcartoon(pos, r, g, b, outputData) {</pre>
+<pre>	var offset =  pos * 4;</pre>
+<pre>	if( outputData[offset] < 120 ) {</pre>
+<pre>		outputData[offset] = 80;</pre>
+<pre>		outputData[++offset] = 80;</pre>
+<pre>		outputData[++offset] = 80;</pre>
+<pre>	} else {</pre>
+<pre>		outputData[offset] = 255;</pre>
+<pre>		outputData[++offset] = 255;</pre>
+<pre>		outputData[++offset] = 255;</pre>
+<pre>	}</pre>
+<pre>	outputData[++offset] = 255;</pre>
+<pre>	++offset;</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 411 -->
+
+			<div class="pagebreak pageNumber">411</div>
+
+			<figure>
+				<img src="/contents/html5/figs/web/411fig01.png" />
+			</figure>
+			
+			<img src="/contents/html5/figs/web/html5crosssolution.png">
+			
+			<figure>
+				<img src="/contents/html5/figs/web/411fig02.png" />
+			</figure>
+
+		</section> <!-- Section 52 -->
+
+	</div> <!-- /container -->
+
+</body>
+</html>

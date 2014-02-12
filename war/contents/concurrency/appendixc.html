@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h2>Appendix C</h2>
+				<h2><em>FSP</em> Semantics</h2>
+				<div class="border"></div>
+
+				<p><span class="first-sentence">The semantics of basic <em>FSP</em> are defined in terms of Labeled Transition Systems (<em>LTSs</em>).</span> In the body of the book, we have depicted the <em>LTS</em> that corresponds to an <em>FSP</em> process as a graph. In the following, we formally define what an <em>LTS</em> is and then describe the correspondence between <em>FSP</em> process expressions and <em>LTSs</em>. This correspondence is defined by the function:</p>
+
+				<pre class="times">
+<em>lts: Exp</em> &rarr; &weierp;
+				</pre>
+
+				<p>where <em>Exp</em> is the set of <em>FSP</em> process expressions, and &weierp; the set of <em>LTSs</em>. The function <em>lts</em> is defined inductively on the structure of <em>FSP</em> process expressions.</p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Labeled Transition System (LTS)">
+
+				<h3>C.1 Labeled Transition System (LTS)</h3>
+
+				<p><span class="first-sentence">Let <em>States</em> be the universal set of states including &pi; a designated <em>error</em> state, <em>L</em> be
+				the universal set of labels, and <em>Act</em> = <em>L</em> &cup; {&tau;}, where &tau; is used to denote an internal
+				action that cannot be observed by the environment of an <em>LTS</em>.</span>
+				A finite <em>LTS P</em> is a quadruple &lt; <em>S</em>, <em>A</em>, &Delta;, <em>q</em> > where:</p>
+
+				<ul>
+					<li><em>S</em> &sube; <em>States</em> is a finite set of states.</li>
+
+					<li><em>A</em> = &alpha;<em>P</em> &cup; {&tau;}, where &alpha;<em>P</em> &sube; <em>L</em> denotes the <em>alphabet</em> of <em>P</em>.</li>
+
+					<li>&Delta; &sube; <em>S</em> &minus; {&pi;} x <em>A</em> x <em>S</em>, denotes a transition relation that maps from a state and an action onto another state.</li>
+
+					<li><em>q</em> &isin; <em>S</em> indicates the initial state of P.</li>
+				</ul>
+
+				<p>The only <em>LTS</em> that is allowed to have the error state &pi; as its initial state is &lt; {&pi;}, <em>Act</em>, {}, &pi; >, named &Pi;. The alphabet of this process &alpha;&Pi; = <em>L</em>.</p>
+
+				<p class="i">An <em>LTS P</em> = &lt; <em>S</em>, <em>A</em>, &Delta;, <em>q</em> > <em>transits</em> with action <em>a</em> &isin; <em>A</em> into an <em>LTS P'</em>, denoted as <em>P</em><img src="/contents/concurrency/images/a-arrow.png" class="inline"><em>P'</em>, if:</p>
+
+				<div class="pagebreak pageNumber">390</div>
+
+				<ul>
+					<li><em>P'</em> = &lt; <em>S</em>, <em>A</em>, &Delta;, <em>q'</em> >, where <em>q'</em> &ne; &pi; and (<em>q</em>, <em>a</em>, <em>q'</em>) &isin; &Delta;, or</li>
+
+					<li><em>P'</em> = &Pi;, and (<em>q</em>, <em>a</em>, &pi;) &isin; &Delta;.</li>
+				</ul>
+
+				<p>We use <em>P</em><img src="/contents/concurrency/images/a-arrow.png" class="inline"> to mean that &exist;<em>P'</em> such that <em>P</em><img src="/contents/concurrency/images/a-arrow.png" class="inline"><em>P'</em>, and <em>P</em><img src="/contents/concurrency/images/a-slash.png" class="inline"> to mean that &#8708;<em>P'</em> such that <em>P</em><img src="/contents/concurrency/images/a-arrow.png" class="inline"><em>P'</em>.</p>
+
+				<p class="i">We define a set of designated end states <em>ES</em> &sube; <em>States</em> such that an <em>LTS P</em> = &lt; <em>S</em>, <em>A</em>, &Delta;, <em>q</em> > is terminating if there is a state <em>e</em> &isin; <em>S</em> and <em>e</em> &isin; <em>ES</em> and &#8708;(<em>e, a, q)</em> &isin; &Delta; for all <em>a</em> &isin; <em>A</em>.</p>
+
+			</section>
+
+			<section class="section" data-number="2" data-name="Processes">
+
+				<h3>C.2 Processes</h3>
+
+				<p><span class="first-sentence">In the following, <em>E</em> ranges over <em>FSP</em> process expressions, <em>Q</em> ranges over process identifiers, and <em>A, B</em> range over sets of observable actions (i.e. <em>A</em> &sube; <em>L</em> and <em>B</em> &sube; <em>L</em>).</span></p><br/>
+
+				<p><strong>Process Definition:</strong></p>
+
+				<pre class="times">
+<em>Q = E</em> means that <em>lts(Q)</em> =<sub>def</sub> <em>lts(E)</em>.
+				</pre>
+
+				<p><strong>Process Constants:</strong></p>
+
+				<pre class="times">
+<em>lts</em>(<code>END</code>) = &lt; {<em>e</em>}, {&tau;}, {}, <em>e</em> > where <em>e</em> &isin; <em>ES</em> 
+<em>lts</em>(<code>STOP</code>) = &lt; {<em>s</em>}, {&tau;}, {}, <em>s</em> >
+<em>lts</em>(<code>ERROR</code>) = &Pi;
+				</pre>
+
+				<p><strong>Prefix <code>-></code>:</strong></p>
+
+				
+
+				<pre class="times">
+If <em>lts</em> = &lt; <em>S</em>, <em>A</em>, &Delta;, <em>q</em> > and <em>E</em> is not <code>ERROR</code>
+      then <em>lts</em>(a <code>-></code> <em>E</em>) = &lt; <em>S</em> &cup; {<em>p</em>}, <em>A</em> &cup; {<em>a</em>}, &Delta; &cup; {(<em>p, a, q</em>)}, <em>p</em> >, where <em>p</em> &notin; <em>S</em>.
+      <em>lts</em>(<em>a</em> <code>-> ERROR</code>) = &lt; {<em>p</em>, &pi;}, {<em>a</em>}, {(<em>p, a,</em> &pi;)}, <em>p</em> >, where <em>p</em> &ne; &pi;.
+				</pre>
+
+				<p><strong>Choice <code>|</code>:</strong></p>
+
+				<pre class="times">
+Let 1 &le; <em>i</em> &le; <em>n</em>, and <em>lts</em>(<em>E</em><sub>i</sub>) = &lt; <em>S</em><sub>i</sub>, <em>A</em><sub>i</sub>, &Delta;<sub>i</sub>, <em>q</em><sub>i</sub> >, 
+then <em>lts</em>(<em>a</em><sub>1</sub> <code>-></code> <em>E</em><sub>1</sub> <code>|</code> ... <code>|</code> <em>a</em><sub>n</sub> <code>-></code> <em>E</em><sub>n</sub>)
+   = &lt; <em>S</em> &cup; {<em>p</em>}, <em>A</em> &cup; {<em>a</em><sub>1</sub>...<em>a</em><sub>n</sub>}, &Delta; &cup; {(<em>p</em>, <em>a</em><sub>1</sub>, <em>q</em><sub>1</sub>)...(<em>p</em>, <em>a</em><sub>n</sub>, <em>q</em><sub>n</sub>)}, <em>p</em> >,
+where <em>p</em> &notin; <em>S</em><sub>i</sub>, <em>S</em> = <img src="/contents/concurrency/images/big-union.png" class="inline"><em>Si</em>, A = <img src="/contents/concurrency/images/big-union.png" class="inline"><em>Ai</em>, &Delta; = <img src="/contents/concurrency/images/big-union.png" class="inline">&Delta;<em>i</em>. 
+If <em>E</em><sub>i</sub> is <code>ERROR</code> then <em>A</em><sub>i</sub> = {}.
+				</pre>
+
+				<p><strong>Alphabet Extension <code>+</code>:</strong></p>
+
+				<pre class="times">
+If <em>lts</em>(<em>E</em>) = &lt; <em>S</em>, <em>A</em>, &Delta;, <em>q</em> >,
+then <em>lts</em>(<em>E</em> + <em>B</em>) = &lt; <em>S</em>, <em>A</em> &cup; <em>B</em>, &Delta;, <em>q</em> >.
+				</pre>
+
+				<p><strong>Recursion:</strong></p>
+
+				<pre class="times">
+We represent the <em>FSP</em> process defined by the recursive equation <em>X</em> = <em>E</em> as <em>rec</em>(<em>X</em> = <em>E</em>), 
+where <em>X </em>is a variable in <em>E</em>. For example, the process defined by the recursive definition 
+<em>X</em> = (<em>a</em> <code>-></code> <em>X</em>) is represented as <em>rec</em>(<em>X</em> =(<em>a</em> <code>-></code> <em>X</em>)).
+				</pre>
+
+				<div class="pagebreak pageNumber">391</div>
+
+				<pre class="times">
+We use <em>E</em>[<em>X</em> &larr; <em>rec</em>(<em>X</em> = <em>E</em>)] to denote the <em>FSP</em> expression that is obtained by substituting 
+<em>rec</em>(<em>X</em> = <em>E</em>) for <em>X</em> in <em>E</em>. Then <em>lts</em>(<em>rec</em>(<em>X</em> = <em>E</em>)) is the smallest <em>LTS</em> that satisfies the following 
+rule:
+					</pre>
+
+				<pre class="times">
+<em>rec</em>(<em>X</em> = (<em>a</em> <code>-></code> <em>X</em>)) &sim; <em>lts</em>(<em>E</em>[<em>X</em> &larr; <em>rec</em>(<em>X</em> = <em>E</em>)])
+				</pre>
+
+				<pre class="times">
+where "&sim;" is strong semantic equivalence defined in section C.6.1. Mutually recursive 
+equations can be reduced to the simple form described above. For local processes, 
+all occurrences of process variables are guarded by an action prefix and consequently, 
+recursive definitions are guaranteed to have a fixed-point solution.
+				</pre>
+
+				<p><strong>Sequential Composition:</strong></p>
+
+				<pre class="times">
+If <em>lts(P)</em> = &lt; <em>S</em><sub>p</sub>, <em>A</em><sub>p</sub>, &Delta;<sub>p</sub>, <em>q</em><sub>p</sub> > is terminating with end state <em>e</em><sub>p</sub> &isin; <em>ES</em>
+and <em>lts(E)</em> = &lt; <em>S</em><sub>e</sub>, <em>A</em><sub>e</sub>, &Delta;<sub>e</sub>, <em>q</em><sub>e</sub> >
+then <em>lts(P;E)</em> = &lt; <em>S</em><sub>p</sub> &cup; <em>S</em><sub>p</sub>, <em>A</em><sub>p</sub> &cup; <em>A</em><sub>e</sub>, &Delta;<sub>p</sub> &cup; &Delta;<sub>e</sub>, <em>q</em><sub>p</sub> > where <em>q</em><sub>e</sub> = <em>e</em><sub>p</sub>.
+				</pre>
+
+			</section>
+
+			<section class="section" data-number="3" data-name="Composite Processes">
+
+				<h3>C.3 Composite Processes</h3>
+
+				<p><span class="first-sentence">Before defining the meaning of composition in <em>FSP</em> and of the priority operators on composite processes, we must first describe the meaning of composition and priority in the underlying <em>LTS</em> model.</span></p>
+
+				<section class="subsection" data-number="4" data-name="LTS Composition">
+
+					<h4>C.3.1 <em>LTS</em> Composition</h4>
+
+					<p><span class="first-sentence">The parallel composition <em>P</em>||<em>Q</em> of two <em>LTSs</em> <em>P</em> and <em>Q</em> is defined as follows:</span><p><br/>
+
+					<p>If <em>P</em> = &Pi; or <em>Q</em> = &Pi;, then <em>P</em>||<em>Q</em> = &Pi;.<br/>
+					For <em>P</em> = &lt; <em>S</em><sub>1</sub>, <em>A</em><sub>1</sub>, &Delta;<sub>1</sub>, <em>q</em><sub>1</sub> > and <em>Q</em> = &lt; <em>S</em><sub>2</sub>, <em>A</em><sub>2</sub>, &Delta;<sub>2</sub>, <em>q</em><sub>2</sub> >, such that <em>P</em> &ne; &Pi; and <em>Q</em> &ne; &Pi;,<br/>
+					<em>P</em>||<em>Q</em> = &lt; <em>S</em><sub>1</sub> x <em>S</em><sub>2</sub>, <em>A</em><sub>1</sub> &cup; <em>A</em><sub>2</sub>, &Delta;, (<em>q</em><sub>1</sub>, <em>q</em><sub>2</sub>) >,<br/>
+					where &Delta; is the smallest relation satisfying the rules:</p><br/>
+
+					<p class="i">Let <em>a</em> &isin; <em>Act</em> in</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/appendix-c.png">
+					</figure>
+
+					<p>Parallel composition is both commutative and associative. Consequently, the order in which <em>LTSs</em> are composed is not significant.</p>
+
+					<div class="pagebreak pageNumber">392</div>
+
+					<p>In addition:<br/>
+						<em>P</em> || <em>lts</em>(<code>END</code>) = <em>P</em>, <em>lts</em>(<code>END</code>) || <em>P</em> = <em>P</em> and <em>lts</em>(<code>END</code>) || <em>lts</em>(<code>END</code>) = <em>lts</em>(<code>END</code>).</p>
+
+				</section>
+
+				<section class="subsection" data-number="5" data-name="LTS Priority">
+
+					<h4>C.3.2 <em>LTS</em> Priority</h4>
+
+					<p><span class="first-sentence">The set of actions <em>B</em> &sube; <em>Act</em> are <em>high</em> priority in the <em>LTS</em> <em>P</em> &lt;&lt; <em>B</em>, where <em>P</em> = &lt; <em>S</em>, <em>A</em>, &Delta;', <em>q</em> >.</span></p><br/>
+
+					<p><em>P</em> &lt;&lt; <em>B</em> = &lt;<em>S</em>, <em>A</em>, &Delta;, <em>q</em> > where &Delta; is the smallest relation satisfying the rule:</p>
+
+					<p class="i">Let <em>a</em>, <em>b</em> &isin; <em>Act</em> in</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/appendix-c0.png">
+					</figure>
+
+					<p>The set of actions <em>B</em> &sube; <em>Act</em> are <em>low</em> priority in the <em>LTS</em> <em>P</em> &gt;&gt; <em>B</em>, where <em>P</em> = &lt; <em>S</em>, <em>A</em>, &Delta;', <em>q</em> >.<br/><br/>
+					<em>P</em> &gt;&gt; <em>B</em> = &lt; <em>S</em>, <em>A</em>, &Delta;, <em>q</em> > where &Delta; is the smallest relation satisfying the rule:
+					</p>
+
+					<p class="i">Let <em>a</em>, <em>b</em> &isin; <em>Act</em> in</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/appendix-c1.png">
+					</figure>
+
+				</section>
+
+				<section class="subsection" data-number="6" data-name="FSP Composition and Priority">
+
+					<h4>C.3.3 <em>FSP</em> Composition and Priority</h4>
+
+					<p><span class="first-sentence">Using the definitions for <em>LTS</em> composition and priority, we can now simply define the meaning of composition and priority in <em>FSP</em>.</span> In the following, <em>CE</em> refers to <em>FSP</em> composition expressions of the form (<em>Q<sub>1</sub></em> || ... || <em>Q<sub>n</sub></em>) and <em>Q</em> refers to the identifier of a process or composite process.</p><br/>
+
+					<p><strong>Parallel Composition ||:</strong></p>
+
+					<pre class="times">
+<em>lts</em>(<em>Q<sub>1</sub></em> || <em>Q<sub>2</sub></em>) = <em>lts</em>(<em>Q<sub>1</sub></em>) || <em>lts</em>(<em>Q<sub>2</sub></em>).
+					</pre>
+
+					<p><strong>Priority High &lt;&lt;:</strong></p>
+
+					<pre class="times">
+<em>lts</em>(<em>CE</em> &lt;&lt; <em>B</em>) = <em>lts</em>(<em>CE</em>) &lt;&lt; <em>B</em>.
+					</pre>
+
+					<p><strong>Priority Low >>:</strong></p>
+
+					<pre class="times">
+<em>lts</em>(<em>CE</em> >> <em>B</em>) = <em>lts</em>(<em>CE</em>) >> <em>B</em>.
+					</pre>
+
+					<div class="pagebreak pageNumber">393</div>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="7" data-name="Common Operators">
+
+				<h3>C.4 Common Operators</h3>
+
+				<p><span class="first-sentence">To define the <em>FSP</em> re-labeling, hiding and interface operators, which can be applied to processes and composite processes, we first describe the meaning of re-labeling and hiding in the underlying <em>LTS</em> model.</span></p>
+
+				<section class="subsection" data-number="8" data-name="Re-Labeling">
+
+					<h4>C.4.1 Re-Labeling</h4>
+
+					<p><span class="first-sentence">Re-labeling applies a relation over action labels <em>R</em> &sube; <em>L</em> x <em>L</em>, to an <em>LTS P</em> = &lt; <em>S</em>, <em>A</em>, &Delta;, <em>q</em> > such that:</span></p>
+
+					<pre class="times">
+<em>P</em>/<em>R</em> = &lt; <em>S</em>, (<em>A</em> &minus; <em>B</em><sub>1</sub>) &cup; <em>B</em><sub>2</sub>, (&Delta; &minus; &Delta;<sub>1</sub>) &cup; &Delta;<sub>2</sub>, <em>q</em> >
+					</pre>
+
+					<p>where</p>
+
+					<pre class="times">
+<em>B</em><sub>1</sub> = {<em>a</em> &isin; <em>A</em>|&exist;<em>a'</em>.(<em>a</em>, <em>d</em>) &isin; <em>R</em>},
+<em>B</em><sub><em></em>1</sub> = {<em>a'</em>|&exist;<em>a</em> &isin; <em>A</em>.(<em>a</em>, <em>a'</em>) &isin; <em>R</em>},
+&Delta;<sub>1</sub> = {(<em>p</em>, <em>a</em>, <em>p'</em>) &isin; &Delta;|<em>a</em> &isin; <em>B</em><sub>1</sub>}, and
+&Delta;<sub>2</sub> = {(<em>p</em>, <em>a'</em>, <em>p'</em>)|(<em>p</em>, <em>a</em>, <em>p'</em>) &isin; &Delta;<sub>1</sub> ^ (<em>a</em>, <em>a'</em>) &isin; <em>R</em>}.
+					</pre>
+
+				</section>
+
+				<section class="subsection" data-number="9" data-name="Hiding">
+
+					<h4>C.4.2 Hiding</h4>
+
+					<p><span class="first-sentence">The set of actions <em>B</em> &sube; <em>Act</em> are <em>hidden</em> in the <em>LTS</em> <em>P\B</em>, where <em>P</em> = &lt; <em>S</em>, <em>A</em>, &Delta;, <em>q</em> >.</span><p><br/>
+
+					<p>If <em>P</em> = &Pi; then <em>P</em>\<em>B</em> = &Pi; otherwise<br/>
+					<em>P</em>\<em>B</em> = &lt; <em>S</em>, (<em>A</em> &minus; <em>B</em>) &cup; {&tau;}, &Delta;, <em>q</em> >
+					where &Delta; is the smallest relation satisfying the rule:</p><br/>
+
+					<p class="i">Let <em>a</em> &isin; <em>Act</em> in</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/appendix-c2.png">
+					</figure>
+
+				</section>
+
+				<section class="subsection" data-number="10" data-name="FSP Re-Labeling, Hiding, and Interface">
+
+					<h4>C.4.3 <em>FSP</em> Re-Labeling, Hiding, and Interface</h4>
+
+					<p><strong><span class="first-sentence">Re-labeling /:</span></strong></p>
+
+					<pre class="times">
+<em>lts</em>(<em>E</em>/<em>R</em>) = <em>lts</em>(<em>E</em>)/<em>R</em>.
+<em>lts</em>((<em>Q</em><sub>1</sub> || ... || <em>Q</em><sub><em>n</em></sub>)/<em>R</em>) = <em>lts</em>(<em>Q</em><sub>1</sub>)/<em>R</em> || ... || <em>lts</em>(<em>Q</em><sub><em>n</em></sub>)/<em>R</em>
+					</pre>
+
+					<p><strong>Hiding \:</strong></p>
+
+					<pre class="times">
+<em>lts</em>(<em>E</em>\<em>B</em>) = <em>lts</em>(<em>E</em>)\<em>B</em>.
+					</pre>
+
+					<div class="pagebreak pageNumber">394</div>
+
+					<p><strong>Interface @:</strong></p>
+
+					<pre class="times">
+<em>lts</em>(<em>E</em>@<em>I</em>) = <em>lts</em>(<em>E</em>)\<em>B</em> where <em>B</em> = &alpha;(<em>lts</em>(<em>E</em>)) &minus; <em>I</em>.
+					</pre>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="11" data-name="Safety Properties">
+
+				<h3>C.5 Safety Properties</h3>
+
+				<p><span class="first-sentence">A safety property <em>Q</em> in <em>FSP</em> is represented by an <em>image</em> of the <em>LTS</em> of the process expression that defines the property.</span> The image <em>LTS</em> has each state of the original <em>LTS</em> and has a transition from each state for every action in the alphabet of the original. Transitions added to the image <em>LTS</em> are to the error state.</p>
+
+				<pre class="times">
+<code><strong>property</strong></code> <em>Q</em> = <em>E</em>:
+<em>lts</em>(<em>Q</em>) = <em><sub>def</sub>image</em>(<em>lts</em>(<em>E</em>)),
+
+for an <em>LTS P</em> = &lt; <em>S</em>, <em>A</em>, &Delta;, <em>p</em> >, <em>image</em>(<em>P</em>) = &lt; <em>S</em> &cup; {&pi;}, <em>A</em>, &Delta;', <em>q</em> >, 
+where &Delta;' = &Delta; &cup; {(<em>s</em>, <em>a</em>, &pi;)|<em>s</em> &isin; <em>S</em>, <em>a</em> &isin; <em>A</em>, and &#8708;<em>s'</em> &isin; <em>S</em>:(<em>s</em>, <em>a</em>, <em>s'</em>) &isin; &Delta;}.
+				</pre>
+
+			</section>
+
+			<section class="section" data-number="12" data-name="Semantic Equivalences">
+
+				<h3>C.6 Semantic Equivalences</h3>
+
+				<p><span class="first-sentence">Minimization of the <em>LTS</em> corresponding to an <em>FSP</em> process definition results in a semantically equivalent <em>LTS</em>.</span> The equivalence relations used in performing minimization are defined in the following sections.</p>
+
+				<section class="subsection" data-number="13" data-name="Strong Equivalence">
+
+					<h4>C.6.1 Strong Equivalence</h4>
+
+					<p><span class="first-sentence">Strong semantic equivalence equates <em>LTSs</em> that have identical behavior when the occurrence of all their actions can be observed, including that of the silent action &tau;.</span></p>
+
+					<p class="i">Let &weierp; be the universal set of <em>LTSs</em>. <em>Strong semantic equivalence</em> "&sim;" is the union of all relations <em><strong>R</strong></em> &sube; &weierp; x &weierp; satisfying that (<em>P, Q</em>) &isin; <em><strong>R</strong></em> implies:</p>
+
+					<ol class="regular">
+
+						<li>&alpha;<em>P</em> = &alpha;<em>Q</em>;</li>
+
+						<li>&forall;<em>a</em> &isin; <em>Act</em>:
+						
+							<ul>
+				
+								<li><em>P</em><img src="/contents/concurrency/images/a-arrow.png" class="inline"><em>P'</em> implies &exist;<em>Q'</em>, <em>Q</em><img src="/contents/concurrency/images/a-arrow.png" class="inline"><em>Q'</em> and (<em>P', Q'</em>) &isin; <strong><em>R</em></strong>.</li>
+						
+								<li><em>Q</em><img src="/contents/concurrency/images/a-arrow.png" class="inline"><em>Q'</em> implies &exist;<em>P'</em>, <em>P</em><img src="/contents/concurrency/images/a-arrow.png" class="inline"><em>P'</em> and (<em>P', Q'</em>) &isin; <strong><em>R</em></strong>.</li>
+						
+							</ul>
+						</li>
+
+						<li><em>P</em> = &Pi; iff <em>Q</em> = &Pi;.</li>
+
+					</ol>
+
+					<p>The <em>LTSA</em> tool performs minimization using strong equivalence if an <em>LTS</em> contains no silent actions (&tau;). For an <em>LTS P</em>, without &tau;-actions:</p>
+
+					<pre class="times">
+<em>minimized</em>(<em>P</em>) &sim; <em>P</em>.
+					</pre>
+
+					<div class="pagebreak pageNumber">395</div>
+
+				</section>
+
+				<section class="subsection" data-number="14" data-name="Weak Equivalence">
+
+					<h4>C.6.2 Weak Equivalence</h4>
+
+					<p><span class="first-sentence">Weak semantic equivalence equates systems that exhibit the same behavior to an external observer who cannot detect the occurrence of &tau;-actions.</span></p><br/>
+
+					<p>Let <em>P</em><img src="/contents/concurrency/images/a-double.png" class="inline"><em>P'</em> denote <em>P</em><img src="/contents/concurrency/images/tau-arrow.png" class="inline"><em>P'</em>, where &tau;* means a sequence of zero or more &tau;s. Then <em>weak</em> (or <em>observational</em>) <em>semantic equivalence</em> "&asymp;" is the union of all relations <em>R</em> &sube; &weierp; x &weierp; satisfying that (<em>P, Q</em>) &isin; <em><strong>R</strong></em> implies:</p>
+
+					<ol class="regular">
+
+						<li>&alpha;<em>P</em> = &alpha;<em>Q</em>;</li>
+
+						<li>&forall;<em>a</em> &isin; <em>L</em> &cup; {&epsilon;}, where <em>L</em> = <em>Act</em> &minus; {&tau;}, and &epsilon; is the empty sequence:
+
+							<ul>
+
+								<li><em>P</em><img src="/contents/concurrency/images/a-double.png" class="inline"><em>P'</em> implies &exist;<em>Q'</em>, <em>Q</em><img src="/contents/concurrency/images/a-double.png" class="inline"><em>Q'</em> and (<em>P', Q'</em>) &isin; <strong><em>R</em></strong>.</li>
+
+								<li><em>Q</em><img src="/contents/concurrency/images/a-double.png" class="inline"><em>Q'</em> implies &exist;<em>P'</em>, <em>P</em><img src="/contents/concurrency/images/a-double.png" class="inline"><em>P'</em> and (<em>P', Q'</em>) &isin; <strong><em>R</em></strong>.</li>
+
+							</ul>
+
+						</li>
+
+						<li><em>P</em> = &Pi; iff <em>Q</em> = &Pi;.</li>
+
+					</ol>
+
+					<p>The <em>LTSA</em> tool performs minimization using weak equivalence if an <em>LTS</em> contains silent actions(&tau;). For an <em>LTS P</em>, with &tau;-actions:</p>
+
+					<pre class="times">
+<em>minimized</em>(<em>P</em>) &asymp; <em>P</em>.
+					</pre>
+
+					<p>Both strong and weak equivalence are congruences with respect to the composition, re-labeling, and hiding operators. This means that strongly or weakly equivalent components may substitute one another in any system constructed with these operators, without affecting the behavior of the system with respect to strong or weak equivalence, respectively.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="15" data-name="Fluent Linear Temporal Logic (FLTL)">
+
+				<h3>C.7 Fluent Linear Temporal Logic (FLTL)</h3>
+
+				<section class="subsection" data-number="16" data-name="Linear Temporal Logic">
+
+					<h4>C.7.1 Linear Temporal Logic</h4>
+
+					<p><span class="first-sentence">Given a set of atomic propositions &weierp;, a well-formed LTL formula is defined inductively using the standard Boolean operators<code> <strong>!</strong></code> (not), <code><strong>||</strong></code> (or), <code><strong>&amp;&amp;</strong></code> (and), and the temporal operators <code><strong>X</strong></code> (next) and <code><strong>U</strong></code> (strong until) as follows:</span></p>
+
+					<ul>
+						<li>each member of &weierp; is a formula,</li>
+
+						<li>if <em>&phi;</em> and <em>&psi;</em> are formulae, then so are <code><strong>!</strong></code> <em>&phi;</em>, <em>&phi;</em><code><strong>||</strong></code><em>&psi;</em>, <em>&phi;</em> <code><strong>&amp;&amp;</strong></code> <em>&psi;</em>, <code><strong>X</strong></code> <em>&phi;</em>, <em>&phi;</em> <code><strong>U</strong> </code><em>&psi;</em>.</li>
+					</ul>
+
+					<p>An interpretation for an LTL formula is an infinite word <em>w</em> = <em>x</em><sub>0</sub><em>x</em><sub>1</sub><em>x</em><sub>2</sub> ... over 2<sup>&weierp;</sup>. In other words, an interpretation maps to each instant of time a set of propositions that hold at that instant. We write <em>w<sub>i</sub></em> for the suffix of <em>w</em> starting at <em>x<sub>i</sub></em>. LTL semantics is then defined inductively as follows:</p>
+
+					<ul>
+						<li><em>w</em> |= <em>p</em> iff <em>p</em> &isin; <em>x</em><sub>0</sub>, for <em>p</em> &isin; &weierp;</li>
+
+						<li><em>w</em> |= <strong><code>!</code></strong> <em>&phi;</em> iff not <em>w</em>| = <em>&phi;</em></li>
+					</ul>
+
+					<div class="pagebreak pageNumber">396</div>
+
+					<ul>
+
+						<li><em>w</em> |= <em>&phi;</em> <strong><code>||</code></strong> <em>&psi;</em> iff (<em>w</em> |= <em>&phi;</em>) or (<em>w</em> |= <em>&psi;</em>)</li>
+
+						<li><em>w</em> |= <em>&phi;</em> <strong><code>&amp;&amp;</code></strong> <em>&psi;</em> iff (<em>w</em> |= <em>&phi;</em>) and (<em>w</em> |= <em>&psi;</em>)</li>
+
+						<li><em>w</em> |= <strong><code>X</code></strong> <em>&phi;</em> iff <em>w</em><sub>1</sub> |= <em>&phi;</em></li>
+
+						<li><em>w</em> |= <em>&phi;</em> <strong><code>U</code></strong> <em>&psi;</em> iff &exist;<em>i</em></li>
+
+					</ul>
+
+					<p>We introduce the abbreviations "true &equiv; <em>&phi;</em> <strong><code>||!</code></strong> <em>&phi;</em>" and "false &equiv; <strong><code>!</code></strong> true". Implication <strong><code>-></code></strong> and equivalence <strong><code>&lt;-></code></strong> are defined as:</p>
+
+					<pre class="times">
+     <em>&phi;</em> <strong><code>-></code></strong> <em>&psi;</em> &equiv; <strong><code>!</code></strong> <em>&phi;</em> <strong><code>||</code></strong> <em>&psi;</em>,
+and <em>&phi;</em> <code><strong>&lt;-></strong></code> <em>&psi;</em> &equiv; (<em>&phi;</em> <strong><code>-></code></strong> <em>&psi;</em>) <strong><code>&amp;&amp;</code></strong> (<em>&phi;</em> <code><strong>&lt;-</strong></code> <em>&psi;</em>)
+					</pre>
+
+					<p>Temporal operators <code><strong>&lt;></strong></code> (eventually), <code><strong>[]</strong></code> (always), and <code><strong>W</strong></code> (weak until) are defined in terms of the main temporal operators:</p>
+
+					<pre class="times">
+     <strong><code>&lt;></code></strong><em>&phi;</em> &equiv; true <strong>U</strong>
+     <strong><code>[]</code></strong><em>&phi;</em> &equiv; <strong><code>!&lt;>!</code></strong> <em>&phi;</em>
+and <em>&phi;</em> <strong><code>W</code></strong> <em>&psi;</em> &equiv; ((<em>&phi;</em> <strong><code>U</code></strong> <em>&psi;</em>)<strong><code>|| []</code></strong> <em>&phi;</em>).
+					</pre>
+
+				</section>
+
+				<section class="subsection" data-number="17" data-name="Fluents">
+
+					<h4>C.7.2 Fluents</h4>
+
+					<p><span class="first-sentence">We define a fluent <em>Fl</em> by a pair of sets, a set of initiating actions <em>I<sub>Fl</sub></em> and a set of terminating actions <em>T<sub>Fl</sub></em>:</span></p>
+
+					<pre class="times">
+<em>Fl</em> &equiv; &lang;<em>I<sub>Fl</sub></em>, <em>T<sub>Fl</sub></em>&rang; where <em>I<sub>Fl</sub></em>, <em>T<sub>Fl</sub></em> &sub; <em>Act</em> and <em>I<sub>Fl</sub></em> &cap; <em>T<sub>Fl</sub></em> = &empty;
+					</pre>
+
+					<p>In addition, a fluent <em>Fl</em> may initially be true or false at time zero as denoted by the attribute <em>Initially<sub>Fl</sub></em>.</p>
+
+					<p class="i">The set of atomic propositions from which FLTL formulae are built is the set of fluents <em>&phi;</em>. Therefore, an interpretation in FLTL is an infinite word over 2<sup><em>&phi;</em></sup>, which assigns to each time instant the set of fluents that hold at that time instant. An infinite word &lt; <em>a<sub>0</sub>a<sub>1</sub>a<sub>2</sub></em> ... > over Act (i.e. an infinite trace of actions) also defines an FLTL interpretation &lt; <em>f<sub>0</sub>f<sub>1</sub>f<sub>2</sub></em> ... > over 2<sup><em>&phi;</em></sup> as follows:</p>
+
+					<pre class="times">
+&forall;<em>i</em>
+
+- <em>Initially<sub>Fl</sub> </em>^ (&forall;<em>k</em> &isin; <em>N</em> &sdot; 0 &le; <em>k</em> &le; <em>i</em>, <em>a<sub>k</sub></em> &notin; <em>T<sub>Fl</sub></em>)
+
+- &exist;<em>j</em> &isin; <em>N</em> : ((<em>j</em> &le; <em>i</em>) ^ (<em>a</em><sub><em>j</em></sub> &isin; <em>I</em><sub><em>Fl</em></sub>) ^ (&forall;<em>k</em> &isin; <em>N</em> &sdot; <em>j</em> &lt; <em>k</em> &le; <em>i</em>, <em>a</em><sub><em>k</em></sub> &notin; <em>T</em><sub><em>Fl</em></sub>))
+					</pre>
+
+					<p>In other words, a fluent holds at a time instant if and only if it holds initially or some initiating action has occurred, and, in both cases, no terminating action has</p>
+
+					<div class="pagebreak pageNumber">397</div>
+
+					<p>yet occurred. Note that the interval over which a fluent holds is <em>closed</em> on the left and <em>open</em> on the right, since actions have immediate effect on the values of fluents. Since the sets of initiating and terminating actions are disjoint, the value of a fluent is always deterministic with respect to a system execution.</p>
+
+					<p class="i">Every action <em>a</em> implicitly defines a fluent whose initial set of actions is the singleton {<em>a</em>} and whose terminating set contains all other actions in the alphabet of a process <em>A</em> &sube; <em>Act</em>:</p>
+
+					<pre class="times">
+<em>Fluent</em>(<em>a</em>) &equiv; &lang;{<em>a</em>}, A &minus; {<em>a</em>}&rang; <em>Initially<sub>a</sub></em> = false
+					</pre>
+
+					<p><em>Fluent</em>(<em>a</em>) becomes true the instant <em>a</em> occurs and becomes false with the first occurrence of a different action. It is often more succinct in defining properties to declare a fluent implicitly for a set of actions as in:</p>
+
+					<pre class="times">
+<em>Fluent</em>(<em>S</em>) &equiv; &lang;<em>S</em>, <em>A</em> &minus; <em>S</em>&rang; <em>Initially<sub>s</sub></em> = false, where <em>S</em> = {<em>a</em><sub>0</sub>, <em>a</em><sub>1</sub>, ..., <em>a</em><sub>n</sub>}
+					</pre>
+
+					<p>This is equivalent to <em>a</em><sub>0</sub> <code><strong>||</strong></code> <em>a</em><sub>1</sub> <code><strong>||</strong></code> ... <code><strong>||</strong></code> <em>a</em><sub>n</sub> where <em>a</em><sub><em>i</em></sub> represents the implicitly defined <em>Fluent</em>(<em>a</em><sub><em>i</em></sub>).</p>
+
+				</section>
+
+			</section>
+
+		</div>
+
+	</div>
+
+</body>
+</html>

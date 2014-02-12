@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>TEEMSS2</title>
+	<meta charset="utf-8">
+</head>
+
+<body>
+
+	<div class="teemss2">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Investigation Introduction">
+
+				<figure>
+					<img class="center-wide" src="/contents/teemss2/images/teemss2.png">
+				</figure>
+
+				<h2>Unit 13 - Adaptation - Investigation - 2 - Selection</h2>
+
+				<p class="bold">Explore population, selection pressure, and adaptation</p>
+
+				<p><span class="first-sentence">This unit addresses NSES standards for life science and inquiry at grades 5-8 and NCTM standards on Algebra and
+				Data Analysis at grades 6-8.</span></p>
+
+				<p><span class="bold">sensors:</span> computer model</p>
+
+				<p>Discovery Question: How do populations adjust to changing environments?</p>
+
+				<div class="small-white"></div>
+
+				<div class="pagebreak"><span class="pageNumber">0</span></div>
+
+				<h2>Investigation Introduction</h2>
+
+				<p class="bold">Discovery Question: How do populations adjust to changing environments?</p>
+
+				<figure>
+					<img src="/contents/teemss2/images/fig26-1.png">
+				</figure>
+
+				<p>In this investigation, you will use a computer model to observe how heredity and natural selection allow a population
+				to adapt to a changing environment by making favorable traits or mutations more common and unfavorable traits less
+				common.</p>
+
+				<div class="small-white"></div>
+
+				<div class="pagebreak"><span class="pageNumber">1</span></div>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Thinking About The Question">
+
+				<h2>Thinking About The Question</h2>
+
+				<p class="red"><span class="first-sentence">How do populations adjust to changing environments?</span></p>
+
+				<p>In the natural world, the environment is constantly changing. The weather in a region may get wetter or drier. A plant
+				species that some animal depended on for food may be crowded out by another plant species. A new predator or
+				competing species may spread into the area.</p>
+
+				<p>Suppose a region gradually has less and less rainfall over many years. It has a mixture of plants, some of which are
+				more tolerant of drought than others. Describe what you think will happen to the plant life in the region over these
+				years. Be prepared to discuss your thoughts with the class.</p>
+
+				<div class="essay-answer">essay answer:</div>
+
+				<p>Suppose that the seeds of a certain kind of cactus in that region are not all the same. Some of them sprout even if there
+				is little rain. Others produce plants whose leaves conserve internal moisture better when it gets dry. Others have
+				slightly deeper root systems. Describe how you think that cactus species might change over many generations.</p>
+
+				<figure>
+					<img src="/contents/teemss2/images/fig26-2.png">
+				</figure>
+
+				<div class="pagebreak"><span class="pageNumber">2</span></div>
+
+				<div class="essay-answer">essay answer:</div>
+
+				<p>An individual cactus can't "learn" to have a deeper root system. Yet over many generations, this species may develop
+				a deeper root system if it helps with survival in times of drought. How do you think this is possible? Be prepared to
+				discuss your thoughts with the class.</p>
+
+				<div class="essay-answer">essay answer:</div>
+
+				<p>"Adaptation" -- how plant and animal populations change in response to their environment -- is possible because of
+				this process, which is called natural selection. Natural selection occurs when organisms with certain traits tend to
+				survive and reproduce more than organisms without those traits. They pass those traits to their offspring. In time, a
+				larger percentage of the population has those traits. If a trait is favored by the environment in this way, it is said there
+				is a "selection pressure" for that trait. The selective breeding of domestic animals -- for example, choosing cows that
+				give more milk or sheep that have better wool -- uses human-caused selection pressure.</p>
+
+				<p>The model of sheep and grass will help you explore the process of adaptation through selection -- both natural
+				selection and selective breeding.</p>
+
+				<div class="small-white"></div>
+
+				<div class="pagebreak"><span class="pageNumber">3</span></div>
+
+			</section>
+
+			<section class="section" data-number="2" data-name="Materials">
+
+				<h2>Materials</h2>
+
+				<p><span class="first-sentence">NetLogo computer models:</span></p>
+
+				<ol>
+					<li>Sheep adaptation</li>
+
+					<li>Sheep mutation</li>
+
+					<li>Fussy females</li>
+				</ol>
+
+				<div class="big-white"></div>
+
+				<div class="pagebreak"><span class="pageNumber">4</span></div>
+
+			</section>
+
+			<section class="section" data-number="3" data-name="Safety">
+
+				<h2>Safety</h2>
+
+				<p><span class="first-sentence">There are no special safety concerns in this investigation.</span></p>
+
+				<div class="big-white"></div>
+
+				<div class="pagebreak"><span class="pageNumber">5</span></div>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="Trial 1 - Better teeth">
+
+				<h2>Trial 1 - Better teeth</h2>
+
+				<ol>
+					<li><span class="first-sentence">Picture yourself as a farmer with a large field of sheep.</span> You start with an equal number of males (horns) and
+					females (no horns). They live for six years. The sheep move around the field and eat grass, which grows back
+					at a certain rate. The patch is green if there is grass, and brown if there is no grass. In the model, the sheep
+					move and eat during each year. They use up energy as they move, and they gain energy from eating grass. If
+					their energy goes to zero, they die.</li>
+
+					<li>
+						<p>Open the Sheep Adaptation model. See <strong>Technical Hint: Running NetLogo</strong> to run and save the NetLogo
+						model.</p>
+
+						<figure>
+							<img class="center" src="/contents/teemss2/images/butterfly.png">
+						</figure>
+					</li>
+
+					<li>
+						<p>Here are the features of this model:</p>
+
+						<p>The sheep have one variable trait -- the quality of their teeth. The ones with better teeth get more energy from
+						the grass they eat, so they are less likely to lose energy and die as they wander around the field. This trait is
+						turned on if SELECTION? = ON. It has no effect if SELECTION? = OFF.</p>
+
+						<p>There are three levels of teeth:</p>
+
+						<ul>
+							<li>TEETH = 1.2 better</li>
+
+							<li>TEETH = 1.0 standard</li>
+
+							<li>TEETH = 0.8 worse</li>
+						</ul>
+
+						<p>The quality of better teeth is an example of a trait that is favored by the environment, because sheep with
+						better teeth are more likely to survive and reproduce. This is called <span class="bold">selection pressure</span>.</p>
+
+						<p>Once a year, from age 3 to age 6, each female sheep gives birth to a baby. The baby inherits its TEETH trait
+						from both its parents.</p>
+
+						<p>If SELECTION? = ON, what do you think will happen to the average value of TEETH over time?</p>
+
+						<div class="essay-answer">essay answer:</div>
+
+						<div class="pagebreak"><span class="pageNumber">6</span></div>
+					</li>
+
+					<li>
+						<p>If SELECTION? = OFF, what do you think will happen to the average value of TEETH over time?</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>Run the model at least three times with the initial settings. Make sure SELECTION? = OFF. Note that the
+						average value of TEETH, which is shown in the monitor above the graph starts at 1.0. Watch the three graphs
+						and notice what happens to the proportions of better, standard, and worse teeth. Also record the average value
+						of TEETH after 50 years.</p>
+
+						<table class="center-table bordered">
+							<tr>
+								<th>Run #</th>
+								<th>TEETH after 50 years</th>
+							</tr>
+
+							<tr>
+								<td>1</td>
+								<td class="table-answer"></td>
+							</tr>
+
+							<tr>
+								<td>2</td>
+								<td class="table-answer"></td>
+							</tr>
+
+							<tr>
+								<td>3</td>
+								<td class="table-answer"></td>
+							</tr>
+
+							<tr>
+								<td>4</td>
+								<td class="table-answer"></td>
+							</tr>
+						</table>
+					</li>
+
+					<li>
+						<p>What can you conclude about the changing characteristics of teeth in the flock? Compare your results with
+						those of other groups in the class.</p>
+
+						<div class="pagebreak"><span class="pageNumber">7</span></div>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>Why do you think it is not the same every time?</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>Using the Sheep adaptation model, set SELECTION? = ON. Now sheep with better teeth will get more food
+						from grass and have less chance of starving to death. Run the Adaptation model at least three times. Watch the
+						three graphs and notice what happens to the proportions of better, standard, and worse teeth. Also record the
+						average value of TEETH after 50 years.</p>
+
+						<table class="center-table bordered">
+							<tr>
+								<th>Run #</th>
+								<th>TEETH after 50 years</th>
+							</tr>
+
+							<tr>
+								<td>1</td>
+								<td class="table-answer"></td>
+							</tr>
+
+							<tr>
+								<td>2</td>
+								<td class="table-answer"></td>
+							</tr>
+
+							<tr>
+								<td>3</td>
+								<td class="table-answer"></td>
+							</tr>
+
+							<tr>
+								<td>4</td>
+								<td class="table-answer"></td>
+							</tr>
+						</table>
+					</li>
+
+					<li>
+						<p>Combine your results with other groups. What can you conclude about the changing characteristics of teeth in
+						the flock? Be prepared to share your results with the class.</p>
+
+						<div class="pagebreak"><span class="pageNumber">8</span></div>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>Here's a challenge, designed to test our theory that the sheep population gradually has better teeth over several
+						generations because the ones with worse teeth starve to death more often. If that's true, think about the effect
+						of the value of GRASS-REGROWTH-RATE. As this value decreases (grass grows back more slowly), what
+						would happen to how fast the trait of better teeth would become common in the population?</p>
+
+						<ol>
+							<li>Better teeth would become common more quickly.</li>
+
+							<li>Better teeth would become common more slowly.</li>
+
+							<li>The rate would not change.</li>
+
+							<li>The result would be unpredictable.</li>
+						</ol>
+					</li>
+
+					<li>
+						<p>Explain your answer.</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>Now test this idea by running the Adaptation model. Try changing GRASS-REGROWTH-RATE and record
+						the average value of TEETH after 50 years. Keep all of the other variables constant.</p>
+
+						<div class="pagebreak"><span class="pageNumber">9</span></div>
+
+						<p>(INITIAL-NUMBER=100, BIRTHRATE-%=60, GAIN-FROM-FOOD=2)</p>
+
+						<table class="center-table bordered">
+							<tr>
+								<th>GRASS-REGROWTH-RATE</th>
+								<th>TEETH after 50 years</th>
+							</tr>
+
+							<tr>
+								<td>85</td>
+								<td class="table-answer"></td>
+							</tr>
+
+							<tr>
+								<td>70</td>
+								<td class="table-answer"></td>
+							</tr>
+
+							<tr>
+								<td>55</td>
+								<td class="table-answer"></td>
+							</tr>
+
+							<tr>
+								<td>40</td>
+								<td class="table-answer"></td>
+							</tr>
+						</table>
+					</li>
+
+					<li>
+						<p>Combine your results with other groups. What can you conclude about the effect of a scarcity of grass on the
+						changing characteristics of teeth? Be prepared to share your results with the rest of the class.</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>People use the word "adaptation" in many ways. In this situation, the individual sheep does NOT adapt,
+						because its teeth are determined at birth and cannot change. But the population as a whole DOES adapt,
+						because over many generations, the average quality of teeth increases.</p>
+
+						<p>Give another example of a trait that does not change for an individual, but can change for a population over
+						many generations.</p>
+
+						<div class="pagebreak"><span class="pageNumber">10</span></div>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+				</ol>
+
+				<div class="big-white"></div>
+
+				<div class="pagebreak"><span class="pageNumber">11</span></div>
+
+			</section>
+
+			<section class="section" data-number="5" data-name="Trial 2 - Conflicting selection pressures">
+
+				<h2>Trial 2 - Conflicting selection pressures</h2>
+
+				<ol>
+					<li>
+						<p><span class="first-sentence">There is another option in the <span class="bold">Adaptation</span> model.</span> Each year, the rancher can remove a certain number of
+						sheep. The sheep with better teeth are chosen because they have the most market value. What do you think
+						will happen? Be prepared to share your ideas with the class.</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>Open the <span class="bold">Adaptation</span> model. See <strong>Technical Hint: Running NetLogo</strong> to run and save the <span class="bold">Adaptation</span> model.</p>
+
+						<figure>
+							<img class="center" src="/contents/teemss2/images/butterfly.png">
+						</figure>
+					</li>
+
+					<li>
+						<p>Set SELECTION? = OFF. Run the model four times, using different values of REMOVE-NUMBER. Watch
+						the three graphs and notice what happens to the proportions of better, standard, and worse teeth. Also record
+						how long it takes for TEETH AVERAGE to reach 0.9 or less.</p>
+
+						<table class="center-table bordered">
+							<tr>
+								<th>REMOVE-NUMBER</th>
+								<th>Years to reach 0.9</th>
+							</tr>
+
+							<tr>
+								<td class="table-answer"></td>
+								<td class="table-answer"></td>
+							</tr>
+
+							<tr>
+								<td class="table-answer"></td>
+								<td class="table-answer"></td>
+							</tr>
+
+							<tr>
+								<td class="table-answer"></td>
+								<td class="table-answer"></td>
+							</tr>
+
+							<tr>
+								<td class="table-answer"></td>
+								<td class="table-answer"></td>
+							</tr>
+						</table>
+
+						<div class="pagebreak"><span class="pageNumber">12</span></div>
+					</li>
+
+					<li>
+						<p>Combine your results with other groups. What can you conclude about the effect of removing sheep with
+						better teeth? Be prepared to discuss your conclusions with the class.</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>Using the <span class="bold">Adaptation</span> model, set SELECTION? = ON. Natural selection will lead to better teeth in the flock,
+						but the farmer's action will lead to worse teeth. This is common in nature: a trait will be favorable for one
+						reason, but not favorable for another. There will be selection pressure both for and against a trait.</p>
+
+						<p>Run the <span class="bold">Adaptation</span> model at least three times, using different values of REMOVE-NUMBER. Watch the
+						three graphs and notice what happens to the proportions of better, standard, and worse teeth. Also record the
+						average value of TEETH after 50 years. See if you can find a balance point that will keep the average of
+						TEETH close to 1.0. What is the value of REMOVE-NUMBER that seems to be a balance point?</p>
+
+						<div class="short-answer"></div>
+					</li>
+
+					<li>
+						<p>What can you conclude about situations with conflicting selection pressures? Be prepared to share your
+						conclusions with the class and compare your results to those of other groups.</p>
+
+						<div class="essay-answer">essay answer:</div>
+
+						<div class="pagebreak"><span class="pageNumber">13</span></div>
+					</li>
+
+					<li>
+						<p>Moose may have evolved to become larger because they could better protect themselves from predators. What
+						other factors might have caused this?</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>If these factors existed, why didn't moose just keep getting bigger and bigger? Think of some possible
+						reasons.</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+				</ol>
+
+				<div class="small-white"></div>
+
+				<div class="pagebreak"><span class="pageNumber">14</span></div>
+
+			</section>
+
+			<section class="section" data-number="6" data-name="Trial 3 - Mutations">
+
+				<h2>Trial 3 - Mutations</h2>
+
+				<ol>
+					<li>
+						<p><span class="first-sentence">The change in teeth demonstrates how an existing trait could become more or less common in a population, in
+						response to selection pressure from the environment.</span> But it doesn't explore how new features could arise that
+						weren't present at all.</p>
+
+						<p>New features arise from mutations in the genes -- chance alterations in genetic structure. The genes, made up
+						of DNA, carry all of the information about an organism that is inherited. If the DNA is changed, the inherited
+						characteristics of the organism are changed as well. This is an important source of variation that allows
+						organisms to adapt to new environments.</p>
+					</li>
+
+					<li>
+						<p>Suppose a mutation occurs in an individual animal. What do you think would happen if the mutation had these
+						different effects on the animal?</p>
+
+						<ol>
+							<li>
+								<p>The mutation has a greater number of offspring.</p>
+
+								<p class="indented">The mutation will become more common.</p>
+
+								<p class="indented">The mutation will disappear.</p>
+
+								<p class="indented">The mutation will remain at a low level.</p>
+
+								<p>Why?</p>
+
+								<div class="essay-answer">essay answer:</div>
+							</li>
+
+							<li>
+								<p>The mutation is more resistant to some deadly disease.</p>
+
+								<p class="indented">The mutation will become more common.</p>
+
+								<p class="indented">The mutation will disappear.</p>
+
+								<p class="indented">The mutation will remain at a low level.</p>
+
+								<div class="pagebreak"><span class="pageNumber">15</span></div>
+							</li>
+
+							<li>
+								<p>The mutation is less attractive to potential mates.</p>
+
+								<p class="indented">The mutation will become more common.</p>
+
+								<p class="indented">The mutation will disappear.</p>
+
+								<p class="indented">The mutation will remain at a low level.</p>
+							</li>
+
+							<li>
+								<p>The mutation produces no change in the animal.</p>
+
+								<p class="indented">The mutation will become more common.</p>
+
+								<p class="indented">The mutation will disappear.</p>
+
+								<p class="indented">The mutation will remain at a low level.</p>
+							</li>
+						</ol>
+					</li>
+
+					<li>
+						<p>Now explore these questions in the computer model. In this version, all of the sheep have standard teeth.
+						There is a new feature -- an ADD MUTANTS button. When you click on this button, some blue sheep are
+						added to the flock. Sheep pass their color gene on to their offspring.</p>
+
+						<p>If SELECTION? = ON, a blue sheep gets twice as much energy from grass as a regular sheep. If
+						SELECTION? = OFF, the blue color has no effect on its eating or how likely it is to survive and have
+						offspring.</p>
+					</li>
+
+					<li>
+						<p>Open the computer model <span class="bold">Sheep mutation</span>. See <strong>Technical Hint: Running NetLogo</strong> to run and save the Sheep
+						mutation model.
+						</p>
+
+						<figure>
+							<img class="center" src="/contents/teemss2/images/butterfly.png">
+						</figure>
+
+						<div class="pagebreak"><span class="pageNumber">16</span></div>
+					</li>
+
+					<li>
+						<p>Set SELECTION? = OFF. Run the model and let the population settle down. Hit the ADD MUTANT button.
+						Watch the BLUE SHEEP monitor. What happens to the number of blue sheep?</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>Keep running the model and add more blue sheep. Does the mutation become common?</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>What can you conclude about a mutation that is neither favorable nor unfavorable? Be prepared to share your
+						conclusions with the class.</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>Now set SELECTION? = ON. This changes the model so that blue sheep also have much better teeth. This
+						link between color and teeth is not true in real sheep! It was done so that you could see whether a favorable
+						mutation becomes more common in the populaltion as time goes by.</p>
+
+						<div class="pagebreak"><span class="pageNumber">17</span></div>
+					</li>
+
+					<li>
+						<p>Run the model and add a mutation. If the mutation dies out, add a few more. What happens? Be prepared to
+						share you results with the class.</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>How does selection help a mutation to become more common?</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>What if the mutation were not favorable? Would it become more common in the population?</p>
+
+						<div class="short-answer"></div>
+					</li>
+
+					<li>
+						<p>Here's a variation on the model. Suppose that blue sheep had much better teeth, but females refused to breed
+						with blue males. What do you think would happen?</p>
+
+						<div class="pagebreak"><span class="pageNumber">18</span></div>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>Open the <span class="bold">Fussy females</span> model. See <strong>Technical Hint: Running NetLogo</strong> to run and save this model.</p>
+
+						<figure>
+							<img class="center" src="/contents/teemss2/images/butterfly.png">
+						</figure>
+					</li>
+
+					<li>
+						<p>Now test your thinking with this model. When SELECTION? is on, sheep that are blue also have better teeth.
+						When FUSSYFEMALES? is on, females will not breed with blue males. Try the model with SELECTION?
+						on or off, and FUSSYFEMALES? on or off. Run the model, add at least 15 mutants, and then answer the
+						following questions. Be prepared to share your reasoning with the class.<br/>
+						What happens if SELECTION? is OFF, and FUSSYFEMALES? is ON? Why?</p>
+
+						<div class="essay-answer">essay answer:</div>
+
+						<p>What happens if SELECTION? is ON, and FUSSYFEMALES? is OFF? Why?</p>
+
+						<div class="pagebreak"><span class="pageNumber">19</span></div>
+
+						<div class="essay-answer">essay answer:</div>
+
+						<p>What happens if SELECTION? is ON, and FUSSYFEMALES? is also ON? Why?</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+				</ol>
+
+				<div class="small-white"></div>
+
+				<div class="pagebreak"><span class="pageNumber">20</span></div>
+
+			</section>
+
+			<section class="section" data-number="7" data-name="Investigation Technical Hints">
+
+				<h2><span class="first-sentence">Investigation Technical Hints</span></h2>
+
+				<section class="subsection" data-number="8" data-name="Technical Hint - Running NetLogo">
+
+					<h3>Technical Hint - Running NetLogo</h3>
+
+					<p><span class="first-sentence">The links below will open the appropriate NetLogo model.</span> Move the window to one side so that you can go back and
+					forth between the investigation and the model.</p>
+
+					<p class="bold">Investigation 1</p>
+
+					<ul>
+						<li>Trial 1: <a href="http://ccl.northwestern.edu/netlogo/models/community/run.cgi?sheep-populationA.717.483.0">
+						http://ccl.northwestern.edu/netlogo/models/community/run.cgi?sheep-populationA.717.483.0</a></li>
+
+						<li>Trial 2: <a href="http://ccl.northwestern.edu/netlogo/models/community/run.cgi?sheep-populationB.737.561.0">
+						http://ccl.northwestern.edu/netlogo/models/community/run.cgi?sheep-populationB.737.561.0</a></li>
+
+						<li>Trial 3: <a href="http://ccl.northwestern.edu/netlogo/models/community/run.cgi?sheep-populationC.737.561.0">
+						http://ccl.northwestern.edu/netlogo/models/community/run.cgi?sheep-populationC.737.561.0</a></li>
+					</ul>
+
+					<p class="bold">Investigation 2</p>
+
+					<ul>
+						<li>Trial 1: <a href="http://ccl.northwestern.edu/netlogo/models/community/run.cgi?sheep-selection.687.559.0">
+						http://ccl.northwestern.edu/netlogo/models/community/run.cgi?sheep-selection.687.559.0</a></li>
+
+						<li>Trial 2: <a href="http://ccl.northwestern.edu/netlogo/models/community/run.cgi?sheep-mutation.729.576.0">
+						http://ccl.northwestern.edu/netlogo/models/community/run.cgi?sheep-mutation.729.576.0</a></li>
+
+						<li>Trial 3: <a href="http://ccl.northwestern.edu/netlogo/models/community/run.cgi?sheep-fussyfemales.729.609.0">
+						http://ccl.northwestern.edu/netlogo/models/community/run.cgi?sheep-fussyfemales.729.609.0</a></li>
+					</ul>
+
+					<p><span class="bold">NetLogo</span> is a programming language for modeling complex complex systems, such as a population. In this
+					investigation, you can run the model and adjust different variables, but you cannot make changes to the rules for how
+					the model works. Also, you cannot save your data.</p>
+
+					<p>If you want to explore NetLogo further, go to <span class="bold">http://ccl.northwestern.edu/netlogo/</span></p>
+
+					<div class="small-white"></div>
+
+					<div class="pagebreak"><span class="pageNumber">21</span></div>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="9" data-name="Analysis">
+
+				<h2>Analysis</h2>
+
+				<ol>
+					<li>
+						<p><span class="first-sentence">Think of some other examples of mutations, besides getting more energy from grass, which might be favored
+						to become more common in the sheep population in this computer model.</span><br/>
+						Mutation:</p>
+
+						<div class="short-answer"></div>
+
+						<p>Why it might become more common:</p>
+
+						<div class="essay-answer">essay answer:</div>
+
+						<p>Mutation:</p>
+
+						<div class="short-answer"></div>
+
+						<p>Why it might become more common:</p>
+
+						<div class="essay-answer">essay answer:</div>
+
+						<p>Mutation:</p>
+
+						<div class="short-answer"></div>
+
+						<div class="pagebreak"><span class="pageNumber">22</span></div>
+
+						<p>Why it might become more common:</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>Suppose the environment changes. For example:</p>
+
+						<ol>
+							<li>The rainfall decreases.</li>
+
+							<li>A competing species (goats) moves in that eats the same kind of grass.</li>
+
+							<li>Small coyotes arrive with a fondness for baby sheep.</li>
+						</ol>
+
+						<p>Think of some small mutations that might help the sheep population survive in these new circumstances.</p>
+
+						<p>Mutation:</p>
+
+						<div class="short-answer"></div>
+
+						<p>Why it might help:</p>
+
+						<div class="essay-answer">essay answer:</div>
+
+						<p>Mutation:</p>
+
+						<div class="short-answer"></div>
+
+						<div class="pagebreak"><span class="pageNumber">23</span></div>
+
+						<p>Why it might help:</p>
+
+						<div class="essay-answer">essay answer:</div>
+
+						<p>Mutation:</p>
+
+						<div class="short-answer"></div>
+
+						<p>Why it might help:</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>Male peacocks have very large tails, and they can hardly fly because their tails are so big! How could you
+						explain the development of such large tails?</p>
+
+						<div class="essay-answer">essay answer:</div>
+
+						<div class="pagebreak"><span class="pageNumber">24</span></div>
+					</li>
+
+					<li>
+						<p>One way that two different species develop from one is that two populations become geographically
+						separated. Mutations occur in each group, and they gradually become distinct -- especially if environmental
+						pressures are different.</p>
+
+						<p>Create a short story of deer that become separated by a large desert that they don't like to cross. They live
+						separately in two somewhat different habitats. One is mainly forest and the other is mainly grasslands. How
+						might the two groups be different after 10,000 years?</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>Instead of a rancher removing some sheep each year, imagine natural predators, such as wolves. How would
+						this have the same or a different effect on the genetic features of the sheep, compared to selection by a
+						rancher? (Hint: what are the features of a sheep that a rancher or a wolf is most likely to remove?)</p>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+
+					<li>
+						<p>Think about these two theories about how giraffes acquired long necks.</p>
+
+						<p>Theory 1: As they grew up, giraffes stretched out their necks to reach higher in trees for leaves. The babies
+						inherited their parents' longer necks. This was repeated every generation until all giraffes had longer necks.</p>
+
+						<p>Theory 2: There were different neck lengths in the giraffe population, due to natural variations and mutations.
+						The giraffes with longer necks were more successful getting food because they could reach higher into the
+						trees. They were more likely to reproduce, and their babies inherited their longer neck feature. Gradually there
+						were more giraffes with long necks than short necks. Over many generations, the average neck length of
+						giraffes increased.</p>
+
+						<p>Which theory do you think is more correct, and why?</p>
+
+						<div class="pagebreak"><span class="pageNumber">25</span></div>
+
+						<div class="essay-answer">essay answer:</div>
+					</li>
+				</ol>
+
+				<div class="big-white"></div>
+
+				<div class="pagebreak"><span class="pageNumber">26</span></div>
+
+			</section>
+
+			<section class="section" data-number="10" data-name="Further Investigations">
+
+				<h2>Further Investigations</h2>
+
+				<ul>
+					<li><span class="first-sentence">Draft horses (which are heavy, slow, patient, and strong) and racehorses (which are lighter, very fast, and
+					skittish) come from the same original stock thousands of years ago.</span> How do you think they came to be so
+					different?</li>
+
+					<li>Read about how bacteria can evolve to be resistant to antibiotic drugs. Explain how this process works, and
+					what can be done slow it down. Here sample reference.
+					<a href="http://www.fda.gov/fdac/features/795_antibio.html">http://www.fda.gov/fdac/features/795_antibio.html</a></li>
+
+					<li>Suppose you wanted to breed a special kind of dog that would be happy and easy to care for in a city. You
+					start with about 20 dogs of different breeds, and you have 50 years to develop your new "urban hound." What
+					characteristics would you look for? How would you proceed with your project?</li>
+
+					<li>Write down what you would like to try that involves making changes in the rules of this computer model.
+					Send them to the Concord Consortium (info@concord.org). If the changes aren't too difficult, someone will
+					send you a new model following your suggestions. Anyone who writes to us will get a response.</li>
+				</ul>
+
+				<div class="small-white"></div>
+
+				<div class="pagebreak"><span class="pageNumber">27</span></div>
+
+			</section>
+
+		</div>
+
+	</div>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

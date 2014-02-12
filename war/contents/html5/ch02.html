@@ -1,0 +1,3685 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+
+	<title>Chapter 2. Introducing JavaScript and the DOM: A Little Code</title>
+	
+	
+	<META name="javascript" javascript="/contents/html5/html5.js">
+	
+
+</head>
+
+<body>
+	
+  <div id="html51" class="html5 container">
+
+    <section class="section" data-number="0" data-name="Introduction">
+
+<!-- Page 35 -->
+ 	
+ 			<div class="pagebreak pageNumber">35</div>
+
+ 			<h1>Chapter 2. Introducing JavaScript and the DOM: A Little Code</h1>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web2/035fig01.png">
+			</figure>
+			
+			<p>
+				<strong>JavaScript is going to take you to new places.</strong> You already know all about HTML markup (otherwise
+				known as <em>structure</em>) and you know all about CSS style (otherwise known as <em>presentation</em>), but what
+				you've been missing is JavaScript (otherwise known as <em>behavior</em>). If all you know about are structure and
+			 presentation, sure, you can create some great-looking pages, but they're still <em>just pages</em>. When you add
+			 behavior with JavaScript, you can create an interactive experience; or, even better, you can create full blown web
+			 applications. Get ready to add the most interesting and versatile skill in your web toolkit: JavaScript and programming!
+			</p>
+			
+			<aside>And if you need more motivation, the most lucrative!</aside>
+	
+		</section> <!-- Section 0 -->
+
+		<section class="section" data-number="1" data-name="The Way JavaScript Works">
+
+<!-- Page 36 -->
+
+			<div class="pagebreak pageNumber">36</div>
+
+			<h2>The Way JavaScript Works</h2>
+			
+			<p>
+				<strong>Our goal is to write JavaScript code that runs in the browser when your web page is loaded—that code might
+					respond to user actions, update or change the page, communicate with web services, and in general make your page
+					feel more like an application than a document. Let's look at how all that works:</strong>
+			</p>
+			
+			<figure class="left">
+				<img src="/contents/html5/figs/web2/036fig01a.png">
+			</figure>
+			
+			<figure class="left">
+				<img src="/contents/html5/figs/web2/036fig01b.png">
+			</figure>
+			
+			<figure>
+				<img src="/contents/html5/figs/web2/036fig01c.png">
+			</figure>
+
+			<div class="clear" />
+
+		</section> <!-- Section 1 -->
+			
+		<section class="section" data-number="2" data-name="What can you do with JavaScript?">
+
+<!-- Page 37 -->
+
+			<div class="pagebreak pageNumber">37</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web2/037fig01.png">
+			</figure>
+	
+			<h2>What can you do with JavaScript?</h2>
+
+			<p>
+				Once you've got a page with a <code class="literal">&lt;script&gt;</code> element (or a reference to a separate
+				JavaScript file), you're ready to start coding. JavaScript is a full-fledged programming language and you can do
+				pretty much anything with it you can with other languages, and even more because we're programming inside a web page!
+			</p>
+		
+			<p>
+				You can tell JavaScript to:
+			</p>
+			
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p>
+							<strong>make a statement</strong>
+						</p>
+						
+						<p>
+							Create a variable and assign values, add things together, calculate things, use built-in functionality
+							from a JavaScript library.
+						</p>
+						
+<pre><strong>var temp = 98.6;</strong></pre>
+						
+<pre><strong>var beanCounter = 4;</strong></pre>
+						
+<pre><strong>var reallyCool = true;</strong></pre>
+						
+<pre><strong>var motto = "I Rule";</strong></pre>
+						
+<pre><strong>temp = (temp - 32) * 5 / 9;</strong></pre>
+						
+<pre><strong>motto = motto + " and so do you!";</strong></pre>
+					
+<pre><strong>var pos = Math.random();</strong></pre>
+					</li>
+
+					<li class="listitem">
+						<p>
+							<strong>do things more than once, or twice</strong>
+						</p>
+						
+						<p>
+							Perform statements over and over, as many times as you need to.
+						</p>
+						
+<pre><strong>while (beanCounter &gt; 0) {</strong></pre>
+						
+<pre>	<strong>processBeans();</strong></pre>
+						
+<pre>	<strong>beanCounter = beanCounter - 1;</strong></pre>
+						
+<pre><strong>}</strong></pre>
+					</li>
+					
+					<li class="listitem">
+						<p>
+							<strong>make decisions</strong>
+						</p>
+					
+						<p>
+							Write code that is conditional, depending on the state of your app.
+						</p>
+						
+<pre><strong>if (isReallyCool) {</strong></pre>
+						
+<pre>	<strong>invite = "You're invited!";</strong></pre>
+						
+<pre><strong>} else {</strong></pre>
+						
+<pre>	<strong>invite = "Sorry, we're at capacity.";</strong></pre>
+						
+<pre><strong>}</strong></pre>
+					</li>
+				</ol>
+			
+		</section> <!-- Section 2 -->
+			
+		<section class="section" data-number="3" data-name="Declaring a variable">
+
+<!-- Page 38 -->
+
+			<div class="pagebreak pageNumber">38</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web2/038fig05.png">
+			</figure>
+	
+			<h2>Declaring a variable</h2>
+		
+			<p>
+				Variables hold things. With JavaScript they can hold lots of different things. Let's declare a few variables
+				that hold things:
+			</p>
+			
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web2/038fig01.png">
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  <div class="modal-body">
+				  	<code>
+				  <pre>var winners = 2;</pre>
+				  <pre>var boilingPt = 212.0;</pre>
+				  <pre>var name = "Dr. Evil";</pre>
+				  <pre>var isEligible = false;</pre>
+				  	</code>
+				  </div>
+		 		</div>
+			</div>
+		
+			<section class="subsection" data-number="4" data-name="Three steps of creating a variable">
+				
+				<h3>Three steps of creating a variable</h3>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/038fig02.png">
+				</figure>
+
+				<div class="sidebar-right-borderless">
+					<h3>
+						Variables are containers for holding values. JavaScript variables don't have strict types,
+						so any variable can hold a number, a string or a boolean.
+					</h3>
+				</div>
+		
+				<div class="orderedlist">
+					<ol class="orderedlist" type="1">
+						<li class="listitem">
+							<p>
+								The first step is to declare your variable, in this case <code class="literal">scoops</code>. Notice
+								that JavaScript, unlike some languages, doesn't need a type for the variable, it just creates a generic
+								container that can hold lots of things:
+							</p>
+							
+							<figure>
+								<img src="/contents/html5/figs/web2/038fig03.png">
+							</figure>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								Next we need a value to put in the variable. We can specify a value in a few ways:
+							</p>
+							
+							<div class="hiddencode">
+								<figure>
+									<img class="codeimage" src="/contents/html5/figs/web2/038fig04.png">
+								</figure>
+
+								<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								  <div class="modal-body">
+								  	<code>
+								  <pre>var scoops = 10;</pre>
+								  <pre>var scoops = totalScoops / people;</pre>
+								  <pre>var scoops = Math.random() * 10;</pre>
+								  	</code>
+								  </div>
+								</div>
+							</div>
+						</li>
+					</ol>
+				</div>
+
+<!-- Page 39 -->
+
+				<div class="pagebreak pageNumber">39</div>
+
+				<div class="sidebar-right">
+					<h3>Syntax Fun</h3>
+				
+					<figure>
+						<img src="/contents/html5/figs/web/common-2.png">
+					</figure>
+				
+					<div class="itemizedlist">
+						<ul class="itemizedlist">
+							<li class="listitem">
+								<p>
+									Each statement ends in a semicolon.
+								</p>
+								
+<pre>x = x + 1;</pre>
+							</li>
+						
+							<li class="listitem">
+								<p>
+									A single line comment begins with two forward slashes. Comments are just notes to you or other developers
+									about the code.They aren't evaluated.
+								</p>
+								
+<pre>// I'm a comment</pre>
+							</li>
+						
+							<li class="listitem">
+								<p>
+									White space doesn't matter (almost everywhere).
+								</p>
+								
+<pre>x        =        2233;</pre>
+							</li>
+						
+							<li class="listitem">
+								<p>
+									Surround strings of characters with double quotes.
+								</p>
+								
+<pre>"You rule!"</pre>
+							</li>
+							
+							<li class="listitem">
+								<p>
+									Variables are declared using var and a name. No types are required, unlike some other languages.
+								</p>
+								
+<pre>var width;</pre>
+							</li>
+							
+							<li class="listitem">
+								<p>
+									Don't use quotes around the boolean values true and false.
+								</p>
+								
+<pre>rockin = true;</pre>
+							</li>
+							<li class="listitem">
+							
+								<p>
+									Variables don't have to be given a value when they are declared:
+								</p>
+								
+<pre>var width;</pre>
+							</li>
+						</ul>
+					</div> <!-- /itemizedlist -->
+				</div> <!-- /sidebar -->
+	
+				<div class="orderedlist">
+					<ol class="orderedlist" type="1" start="3">
+						<li class="listitem">
+							<p>
+								Finally, we have a variable and we have a value (a literal value, like 10, or the result of evaluating
+								an expression (like <code class="literal">totalScoops / people</code>)), and all we need to do is assign
+								the value to the variable:
+							</p>
+						
+							<figure>
+								<img src="/contents/html5/figs/web2/039fig01.png">
+							</figure>
+						</li>
+					</ol>
+				</div>
+			
+				<p>
+					Of course, once you have a variable created, you can change its value at any time, or even change it to a value
+					that has a different type. Here are some examples:
+				</p>
+
+				<div class="hiddencode">				
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/039fig02.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+				  		<code>
+				  <pre>scoops = 5;</pre>
+				  <pre>scoops = scoops * 10;</pre>
+				  <pre>scoops = "Tired of being an integer";</pre>
+				  <pre>scoops = null;</pre>
+				  		</code>
+				  	</div>
+				  </div>
+				</div>
+
+				<div class="clear">
+				
+				<div class="sidebar">
+					<figure class="center">
+						<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+					</figure>
+					
+					<div class="blockquote">
+						<blockquote class="blockquote">
+							<div class="qandaset" id="ch02qa1">
+								<table style="border: 0;">
+									<colgroup>
+										<col style="text-align: left; width: 1%;">
+										<col>
+									</colgroup>
+									
+									<tbody>
+										<tr class="question" id="id36176666">
+											<td style="text-align: left; vertical-align: top;" id="ch02qa1q1">
+												<p>
+													<strong>Q:</strong>
+												</p>
+											</td>
+											
+											<td style="text-align: left; vertical-align: top;">
+												<p>
+													<strong>What is the value of my variable when I just write:</strong>
+												</p>
+											
+												<p>
+													<strong><code class="literal">var winner;</code></strong>
+												</p>
+											</td>
+										</tr>
+									
+										<tr class="answer" id="ch02qa1q1a1">
+											<td style="text-align: left; vertical-align: top;">
+												<p>
+													<strong>A:</strong>
+												</p>
+											</td>
+										
+											<td style="text-align: left; vertical-align: top;">
+												<p>
+													<strong>A:</strong> After this statement is executed, the variable
+													<code class="literal">winner</code> will be assigned the value
+													<code class="literal">undefined</code>, which is another JavaScript value and type.
+													We'll see where and how to use this later in the book.
+												</p>
+											</td>
+										</tr>
+									
+										<tr class="question" id="id36176706">
+											<td style="text-align: left; vertical-align: top;" id="ch02qa1q2">
+												<p>
+													<strong>Q:</strong>
+												</p>
+											</td>
+										
+											<td style="text-align: left; vertical-align: top;">
+												<p>
+													<strong>I've seen other programming languages where variables are declared with a type. Like
+														<code class="literal">int x</code> or <code class="literal">String y</code>. Does JavaScript
+														not have types?</strong>
+												</p>
+											</td>
+										</tr>
+									
+										<tr class="answer" id="ch02qa1q2a2">
+											<td style="text-align: left; vertical-align: top;">
+												<p>
+													<strong>A:</strong>
+												</p>
+											</td>
+											
+											<td style="text-align: left; vertical-align: top;">
+												<p>
+													<strong>A:</strong> JavaScript does have types, but unlike languages you might have
+													used before, JavaScript has dynamic typing, which means that you don't have to specify
+													a type, and the JavaScript interpreter will figure out what type to use as your code is running.
+												</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</blockquote>
+					</div> <!-- /blockquote -->
+				</div> <!-- /sidebar -->
+	
+			</section> <!-- Section 4 -->
+
+		</section> <!-- Section 3 -->
+		
+		<section class="section" data-number="5" data-name="How to name your variables">
+
+<!-- Page 40 -->
+
+			<div class="pagebreak pageNumber">40</div>
+
+			<div class="sidebar-right">
+				<img src="/contents/html5/figs/web/seriouscoding.png">
+				
+				<p>
+					Numbers, strings and booleans are all known as <em>primitive types</em> in JavaScript. There is one other
+					thing you can store in a variable, an <em>object</em>. We'll be talking about objects soon enough, but for
+					now you can think of an object as a collection of things, whereas a primitive is just one thing that can't be
+					broken up into anything else.
+				</p>
+			</div>
+	
+			<h2>How to name your variables</h2>
+
+			<p>
+				You might be wondering how you pick names for your variables? If you're used to naming ids in your HTML
+				elements, you'll find variables very similar. There are only a few rules for creating names:
+			</p>
+			
+			<section class="subsection" data-number="6"
+				data-name="Rule #1: Start your variables with a letter, an underscore or a dollar sign">
+				
+				<h3>Rule #1: Start your variables with a letter, an underscore or a dollar sign</h3>
+				
+				<p>
+					You want to get off to a good start with naming your variables, not just by making them meaningful,
+					but also by using a letter (small or uppercase), an underscore character or a dollar sign. Here are some examples:
+				</p>
+				
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/040fig01.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-body">
+					  	<code>
+					  <pre>var thisIsNotAJoke;</pre>
+					  <pre>var _myVariable;</pre>
+					  <pre>var $importantVar;</pre>
+					  	</code>
+					  </div>
+				 	</div>
+				</div>
+				
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/040fig02.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-body">
+					  	<code>
+					  <pre>var 3zip;</pre>
+					  <pre>var %entage;</pre>
+					  <pre>var ~approx;</pre>
+					  	</code>
+					  </div>
+					</div>
+				</div>
+					
+			</section> <!-- Section 6 -->
+
+			<section class="subsection" data-number="7" data-name="Rule #2: Then you can use any number of letters,
+				numeric digits, underscores or dollar signs">
+				
+				<h3>Rule #2: Then you can use any number of letters, numeric digits, underscores or dollar signs</h3>
+				
+				<p>
+					Keep using letters, dollar signs, and underscores to create your variable name. After the first character
+					you can also throw in numbers if you like:
+				</p>
+				
+				<div class="hiddencode">
+					<figure class="left">
+						<img class="codeimage" src="/contents/html5/figs/web2/040fig03.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-body">
+					  	<code>
+					  <pre>var my3sons;</pre>
+					  <pre>var cost$;</pre>
+					  <pre>var vitaminB12;</pre>
+					  	</code>
+					  </div>
+					</div>
+				</div>
+
+				<div class="hiddencode">				
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/040fig04.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-body">
+					  	<code>
+					  <pre>var zip code;</pre>
+					  <pre>var first-name;</pre>
+					  <pre>var to+do;</pre>
+					  	</code>
+					  </div>
+					</div>
+				</div>
+
+			</section> <!-- Section 7 -->
+
+			<section class="subsection" data-number="8" data-name="Rule #3: Make sure you avoid all of JavaScript's reserved words">
+
+<!-- Page 41 -->
+
+			<div class="pagebreak pageNumber">41</div>
+
+				<h3>Rule #3: Make sure you avoid all of JavaScript's reserved words</h3>
+				
+				<p>
+					JavaScript contains a number of words that are reserved, such as if, else, while, and for (to name just a few),
+					and JavaScript doesn't take too kindly to you trying to use those reserved words for your variable names. Here's
+					a list of JavaScript's reserved words. Now, you don't need to memorize them, and you'll develop a sense of what
+					they are as you learn JavaScript, but if you're ever perplexed by JavaScript complaining about how you've declared
+					your variables, think, "Hmm, is that a reserved word I'm trying to use?"
+				</p>
+
+				<figure class="right">
+					<img src="/contents/html5/figs/web2/041fig01.png">
+				</figure>
+					
+				<div class="informaltable">
+					<table style="border-collapse: collapse;">
+						<colgroup>
+							<col class="c1">
+							<col class="c2">
+							<col class="c3">
+							<col class="c4">
+							<col class="c5">
+						</colgroup>
+						
+						<tbody>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid ;">
+									<p>abstract</p>
+
+									<p>as</p>
+
+									<p>boolean</p>
+
+									<p>break</p>
+
+									<p>byte</p>
+
+									<p>case</p>
+
+									<p>catch</p>
+
+									<p>char</p>
+
+									<p>class</p>
+
+									<p>continue</p>
+
+									<p>const</p>
+
+									<p>debugger</p>
+
+									<p>default</p>
+								</td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid ;">
+									<p>delete</p>
+
+									<p>do</p>
+
+									<p>double</p>
+
+									<p>else</p>
+
+									<p>enum</p>
+
+									<p>export</p>
+
+									<p>extends</p>
+
+									<p>false</p>
+
+									<p>final</p>
+
+									<p>finally</p>
+
+									<p>float</p>
+
+									<p>for</p>
+
+									<p>function</p>
+								</td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid ;">
+									<p>goto</p>
+
+									<p>if</p>
+
+									<p>implements</p>
+
+									<p>import</p>
+
+									<p>in</p>
+
+									<p>instanceof</p>
+
+									<p>int</p>
+
+									<p>interface</p>
+
+									<p>is</p>
+
+									<p>long</p>
+
+									<p>namespace</p>
+
+									<p>native</p>
+
+									<p>new</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid ;">
+									<p>null</p>
+
+									<p>package</p>
+
+									<p>private</p>
+
+									<p>protected</p>
+
+									<p>public</p>
+
+									<p>return</p>
+
+									<p>short</p>
+
+									<p>static</p>
+
+									<p>super</p>
+
+									<p>switch</p>
+
+									<p>synchronized</p>
+
+									<p>this</p>
+
+									<p>throw</p>
+								</td>
+
+								<td style="vertical-align: top;">
+									<p>throws</p>
+
+									<p>transient</p>
+
+									<p>true</p>
+
+									<p>try</p>
+
+									<p>typeof</p>
+
+									<p>use</p>
+
+									<p>var</p>
+
+									<p>void</p>
+
+									<p>volatile</p>
+
+									<p>while</p>
+
+									<p>with</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			
+				<aside>Avoid these as variable names!</aside>
+				
+				<div class="sidebar">
+					<figure class="center">
+						<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+					</figure>
+					
+					<div class="blockquote">
+						<blockquote class="blockquote">
+							<table style="border: 0;">
+								<colgroup>
+									<col style="text-align: left; width: 1%;">
+									<col>
+								</colgroup>
+							
+								<tbody>
+									<tr class="question" id="id36177327">
+										<td style="text-align: left; vertical-align: top;" id="ch02qa2q1">
+											<p>
+												<strong>Q:</strong>
+											</p>
+										</td>
+									
+										<td style="text-align: left; vertical-align: top;">
+											<p>
+												<strong>What if I used a reserved word as part of my variable name? Like, can I have a variable
+													named ifOnly (that is, a variable that contains the reserved word if)?</strong>
+											</p>
+										</td>
+									</tr>
+								
+									<tr class="answer" id="ch02qa2q1a1">
+										<td style="text-align: left; vertical-align: top;">
+											<p>
+												<strong>A:</strong>
+											</p>
+										</td>
+									
+										<td style="text-align: left; vertical-align: top;">
+											<p>
+												<strong>A:</strong> You sure can, just don't match the reserved word exactly. It's also good
+												to write clear code, so you wouldn't in general want to use something like
+												<code class="literal">elze</code>, which might be confused with <code class="literal">else</code>.
+											</p>
+										</td>
+									</tr>
+								
+									<tr class="question" id="id36177359">
+										<td style="text-align: left; vertical-align: top;" id="ch02qa2q2">
+											<p>
+												<strong>Q:</strong>
+											</p>
+										</td>
+									
+										<td style="text-align: left; vertical-align: top;">
+											<p>
+												<strong>Is JavaScript case sensitive? In other words are myvariable and MyVariable the same
+												thing?</strong>
+											</p>
+										</td>
+									</tr>
+								
+									<tr class="answer" id="ch02qa2q2a2">
+										<td style="text-align: left; vertical-align: top;">
+											<p>
+												<strong>A:</strong>
+											</p>
+										</td>
+									
+										<td style="text-align: left; vertical-align: top;">
+											<p>
+												<strong>A:</strong> If you're used to HTML markup you may be used to case insentitive languages,
+												after all &lt;head&gt; and &lt;HEAD&gt; are treated the same by the browser. With JavaScript
+												however, case matters and myvariable and MyVariable are two different variables.
+											</p>
+										</td>
+									</tr>
+								
+									<tr class="question" id="id36177385">
+										<td style="text-align: left; vertical-align: top;" id="ch02qa2q3">
+											<p>
+												<strong>Q:</strong>
+											</p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p>
+												<strong>I get that JavaScript can assign a value at any time (number, string, and so on) to
+													a variable. But what happens when I add two variables together and one is a number and the
+													other is a string of characters?</strong>
+											</p>
+										</td>
+									</tr>
+								
+									<tr class="answer" id="ch02qa2q3a3">
+										<td style="text-align: left; vertical-align: top;">
+											<p>
+												<strong>A:</strong>
+											</p>
+										</td>
+									
+										<td style="text-align: left; vertical-align: top;">
+											<p>
+												<strong>A:</strong> JavaScript tries to be smart about converting types for you as needed.
+												For instance if you add a string and a number, it usually tries to convert the number to a
+												string and concatenate the two together. Now in some cases that is great, and in some cases
+												it isn't what you wanted. Hang on to that thought and we'll come back to it in just a sec.
+											</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</blockquote>
+					</div> <!-- /blockquote -->
+				</div> <!-- /sidebar -->
+
+<!-- Page 42 -->
+
+			<div class="pagebreak pageNumber">42</div>
+
+				<div class="sidebar-yellowed-nofloat">
+					<figure class="right">
+						<img src="/contents/html5/figs/web2/042fig01.png">
+					</figure>
+
+					<h3>Webville Guide to Better Naming</h3>
+				
+					<p>
+						You've got a lot of flexibility in choosing your variable names, so we wanted to give you a few tips
+						to make your naming easier:
+					</p>
+					
+					<p>
+						<strong>Choose names that mean something.</strong>
+					</p>
+					
+					<p>
+						Variable names like _m, r and foo might mean something to you but they are generally frowned upon in
+						Webville. Not only are you likely to forget them over time, your code will be much more readable with
+						names like angle, currentPressure and passed.
+					</p>
+					
+					<p>
+						<strong>Use "camel case" when creating multiword variable names.</strong>
+					</p>
+				
+					<p>
+						At some point you're going to have to decide how you name a variable that represents, say, a two-headed
+						dragon with fire. How? Just use camel case, in which you capitalize the first letter of each word (other
+						than the first): twoHeadedDragonWithFire. Camel case is easy to form, widely spoken in Webville and gives
+						you enough flexibility to create as specific a variable name as you need. There are other schemes too, but
+						this is one of the more commonly used (even beyond JavaScript).
+					</p>
+				
+					<p>
+						<strong>Use variables that begin with _ and $ only with very good reason.</strong>
+					</p>
+				
+					<p>
+						Variables that begin with $ are usually reserved for JavaScript libraries and while some authors use
+						variables beginning with _ for various conventions, they aren't widely used and we recommend you stay
+						away from both unless you have very good reason (you'll know if you do).
+					</p>
+				
+					<p>
+						<strong>Be safe.</strong>
+					</p>
+				
+					<p>
+						Be safe in your variable naming; we'll cover a few more tips for staying safe later in the book, but
+						for now be clear in your naming, avoid reserved words, and always use var when declaring a variable.
+					</p>
+
+				</div>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/042fig02.png">
+				</figure>			
+
+			</section> <!-- Section 8 -->
+
+		</section> <!-- Section 5 -->
+			
+		<section class="section" data-number="9" data-name="Getting Expressive">
+
+<!-- Page 43 -->
+
+			<div class="pagebreak pageNumber">43</div>
+
+			<h2>Getting Expressive</h2>
+
+			<p>
+				<strong>We've already seen some JavaScript statements that look like:</strong>
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web2/043fig01.png">
+			</figure>
+			
+			<p>
+				<strong>But let's take a closer look at expressions, like the one in this statement. It turns out
+					expressions are everywhere in JavaScript, so it's important to know the kinds of things you can express.
+					Here are a few...</strong>
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web2/043fig02.png">
+			</figure>
+		
+			<p>
+				<strong>Keep an eye on expressions over the next few pages (not to mention the rest of the book), and you're
+					going to see how they are used to compute things, do things multiple times and to make decisions in your code.</strong>
+			</p>
+
+<!-- Page 44 -->
+
+			<div class="pagebreak pageNumber">44</div>
+			
+			<div class="sidebar-right">
+				<figure>
+					<img src="/contents/html5/figs/web/sharpenpencil.png">
+				</figure>
+				
+				<p>
+					Based on what you know so far about JavaScript variables, expressions and statements, see if you can figure
+					out which of these are legal and which might cause an error.
+				</p>
+				
+				<p>
+					From the following list, circle the statements that are <em>legal</em>.
+				</p>
+				
+<pre><strong>var x = 1138;</strong></pre>
+				
+<pre><strong>var y = 3/8;</strong></pre>
+				
+<pre><strong>var s = "3-8";</strong></pre>
+				
+<pre><strong>x = y;</strong></pre>
+				
+<pre><strong>var n = 3 - "one";</strong></pre>
+				
+<pre><strong>var t = "one" + "two";</strong></pre>
+				
+<pre><strong>var 3po = true;</strong></pre>
+				
+<pre><strong>var level_ = 11;</strong></pre>
+				
+<pre><strong>var highNoon = false;</strong></pre>
+				
+<pre><strong>var $ = 21.30;</strong></pre>
+				
+<pre><strong>var z = 2000;</strong></pre>
+				
+<pre><strong>var isBig = y &gt; z;</strong></pre>
+				
+<pre><strong>z = z + 1;</strong></pre>
+				
+<pre><strong>z--;</strong></pre>
+				
+<pre><strong>z y;</strong></pre>
+				
+<pre><strong>x = z * t;</strong></pre>
+				
+<pre><strong>while (highNoon) {</strong></pre>
+				
+<pre>   <strong>z--;</strong></pre>
+				
+<pre><strong>}</strong></pre>
+			</div>
+
+			<div class="sidebar-left">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/exercise.png">
+				</figure>
+
+				<p>
+					<strong>Express Yourself!</strong>
+				</p>
+				
+				<p>
+					You've seen the different types of expressions you can use in JavaScript; now it's time to put that knowledge
+					to work by evaluating some expressions yourself. Check your answers at the end of the chapter.
+				</p>
+			
+				<figure>
+					<img src="/contents/html5/figs/web2/044fig00.png">
+				</figure>
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web2/044fig01.png">
+				</figure>
+			</div>
+
+			<div class="clear" />
+
+<!-- Page 45 -->
+
+			<div class="pagebreak pageNumber">45</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web2/045fig01.png">
+			</figure>
+			
+			<p>
+				<strong>Remember when we said JavaScript makes programming easy to get into?</strong> One of the ways it does
+				that is by taking care of converting types to other types as needed to make expressions make sense.
+			</p>
+			
+			<p>
+				As an example, say you have the expression:
+			</p>
+			
+<pre><strong>message = 2 + " if by sea";</strong></pre>
+			
+			<p>
+				Now, we know that + could be for adding numbers together, and it's also the operator used to concatenate strings
+				together. So which is it? Well, JavaScript knows that the string "if by sea" is never going to look like a number,
+				so it decides this is a string expression, converts the 2 to a string "2", and the variable message is assigned
+				to "2 if by sea".
+			</p>
+			
+			<p>
+				Or, if we have the statement:
+			</p>
+			
+<pre><strong>value = 2 * 3.1;</strong></pre>
+
+			<p>
+				JavaScript converts the integer 2 into a floating point number and the result is 6.2.
+			</p>
+			
+			<p>
+				As you might guess, however, JavaScript doesn't always do what you want, and in some cases it needs a
+				little help in conversions. We'll be coming back to that topic a little later.
+			</p>
+			
+			<div class="sidebar">
+				<figure>
+					<img src="/contents/html5/figs/web/brainpower.png">
+				</figure>
+				
+				<p>
+					What does JavaScript evaluate the following statements to?
+				</p>
+
+<pre>	<strong>numORString1 = "3" + "4"</strong></pre>
+
+<pre>	<strong>numORString2 = "3" * "4"</strong></pre>
+
+				<p>
+					And why?
+				</p>
+			</div>
+
+<!-- Page 46 -->
+
+			<div class="pagebreak pageNumber">46</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web2/046fig01.png">
+			</figure>
+
+			<div class="clear" />
+
+		</section> <!-- Section 9 -->
+
+		<section class="section" data-number="10" data-name="Doing things over and over...">
+				
+			<h2>Doing things over and over...</h2>
+
+			<p>
+				If we did everything just once in a JavaScript program it would probably be a pretty boring program. You do
+				a lot of things multiple times—you rinse, lather, repeat, until hair is clean, or, keep driving until you reach
+				your destination, or keep scooping your ice cream until it's all gone—and to handle these situations, JavaScript
+				gives you a few ways to loop over blocks of code.
+			</p>
+			
+			<p>
+				You can use JavaScript's <code class="literal">while</code> loop to do something until a condition is met:
+			</p>
+
+			<div class="hiddencode">			
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web2/046fig02.png">
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  <div class="modal-body">
+				  	<code>
+				  <pre>var scoops = 10;</pre>
+				  		<br />
+				  <pre>while (scoops &gt; 0) {</pre>
+				  <pre>	alert("More icecream!")</pre>
+				  <pre>	scoops = scoops - 1;</pre>
+				  <pre>}</pre>
+				  		<br />
+				  <pre>alert("life without ice cream isn't the same");</pre>
+				  	</code>
+				  </div>
+				</div>
+			</div>
+
+<!-- Page 47 -->
+
+			<div class="pagebreak pageNumber">47</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web2/047fig01.png">
+			</figure>
+
+			<p>
+				So if you think about the <code class="literal">while</code> loop, we're <em>initializing</em> some values,
+				say, the number of ice cream scoops left, which the <code class="literal">while</code> loop <em>tests</em>,
+				and if true, we <em>execute</em> a block of code. And, the block of code does some work that at some point
+				<em>updates</em> the value involved in the conditional test so that the <em>condition fails</em> and the loop ends.
+			</p>
+			
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web2/047fig02.png">
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  <div class="modal-body">
+				  	<code>
+					  <pre>var scoops = 10;</pre>
+				  		<br />
+				  <pre>while (scoops &gt; 0) {</pre>
+				  <pre>	alert("More icecream!")</pre>
+				  <pre>	scoops = scoops - 1;</pre>
+				  <pre>}</pre>
+				  		<br />
+				  <pre>alert("life without ice cream isn't the same");</pre>
+				  	</code>
+				  </div>
+				</div>
+			</div>
+
+			<p>
+				JavaScript also provides a <code class="literal">for</code> loop, which formalizes this structure a little more.
+				Here's our ice cream code written with a <code class="literal">for</code> loop instead:
+			</p>
+			
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web2/047fig03.png">
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  <div class="modal-body">
+				  	<code>
+				  <pre>for (scoops = 10; scoops > 0; scoops--) {</pre>
+				  <pre>	alaert("There's more ice cream!");</pre>
+				  <pre>}</pre>
+				  <pre>alert("life without ice cream isn't the same");</pre>
+				  	</code>
+				  </div>
+				</div>
+			</div>
+			
+			<div class="sidebar" id="there_are_no_dumb_questions-id00010">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+				</figure>
+			
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<table style="border: 0;">
+							<colgroup>
+								<col style="text-align: left; width: 1%;">
+								<col>
+							</colgroup>
+							
+							<tbody>
+								<tr class="question" id="id36178456">
+									<td style="text-align: left; vertical-align: top;" id="ch02qa3q1">
+										<p>
+											<strong>Q:</strong>
+										</p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>The while and for loops seem the same to me. When do I use which?</strong>
+										</p>
+									</td>
+								</tr>
+								
+								<tr class="answer" id="ch02qa3q1a1">
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong>
+										</p>
+									</td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> In general you can do the same things with a for or a while; however, as you
+											can see with the ice cream example, the for loop is a little more compact, and you might argue the
+											while loop is more readable. So, it really is a matter of which fits best given your situation. In
+											general, for loops get used more for iterating over a fixed number of values (say, over the items
+											in a shopping cart), and while loops are used more to loop until a condition is met (say, giving
+											the user a test until he gets it right).
+										</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 48 -->
+
+			<div class="pagebreak pageNumber">48</div>
+
+			<div class="sidebar">
+	
+				<figure class="left">
+					<img src="/contents/html5/figs/web/bethebrowser2.png">
+				</figure>
+
+				<h3>Snippet 1</h3>
+				
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/048fig01.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-body">
+					  	<code>
+					  <pre>var count = 0;</pre>
+					  <pre>for (var i = 0; i &lt; 5; i++) {</pre>
+					  <pre>	count = count + 1;</pre>
+					  <pre>}</pre>
+					  <pre>alert("count is" + count);</pre>
+					  	</code>
+					  </div>
+					</div>
+				</div>
+
+				<div class="clear"></div>
+
+				<aside>Check your answers at the end of the chapter</aside>
+				
+				<h3>Snippet 2</h3>
+				
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/048fig02.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-body">
+					  	<code>
+					  <pre>var tops = 5;</pre>
+					  <pre>while (tops &gt; 0) {</pre>
+					  <pre>	for (var spins = 0; spins &lt; 3; spins++) {</pre>
+					  <pre>		alert("Top is spinning!");</pre>
+					  <pre>	}</pre>
+					  <pre>	tops = tops - 1;</pre>
+					  <pre>}</pre>
+					  	</code>
+					  </div>
+					</div>
+				</div>
+
+				<h3>Snippet 3</h3>
+
+				<div class="hiddencode">				
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/048fig03.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-body">
+					  	<code>
+					  <pre>for (var berries = 5; berries &gt; 0; berries--) {</pre>
+					  <pre>	alert("Eating a berry");</pre>
+					  <pre>}</pre>
+					  	</code>
+					  </div>
+					</div>
+				</div>
+
+				<h3>Snippet 4</h3>
+
+				<div class="hiddencode">				
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/048fig04.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-body">
+					  	<code>
+					  <pre>for (scoops = 0; scoops &lt; 10; scoop++) {</pre>
+					  <pre>	alert("There's more ice cream!");</pre>
+					  <pre>}</pre>
+					  <pre>alert("life without ice cream isn't the same");</pre>
+					  	</code>
+					  </div>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 49 -->
+
+			<div class="pagebreak pageNumber">49</div>
+
+			<figure>
+				<img src="/contents/html5/figs/web2/049fig01.png">
+			</figure>
+
+		</section> <!-- Section 10 -->
+		
+		<section class="section" data-number="11" data-name="Make decisions with JavaScript">
+				
+			<h2>Make decisions with JavaScript</h2>
+
+			<p>
+				We've been using boolean expressions in <code class="literal">for</code> and <code class="literal">while</code>
+				statements as a conditional test to decide whether to continue looping. You can also use them to make decisions
+				in JavaScript. Here's an example:
+			</p>
+
+			<div class="hiddencode">			
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web2/049fig02.png">
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  <div class="modal-body">
+				  	<code>
+				  <pre>if (scoops &lt; 3) {</pre>
+				  <pre>	alert("Ice cream is running low!");</pre>
+				  <pre>}</pre>
+				  	</code>
+				  </div>
+				</div>
+			</div>
+			
+			<p>
+				We can string together more than one test too:
+			</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web2/049fig03.png">
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  <div class="modal-body">
+				  	<code>
+				  <pre>if (scoops &lt; 3) {</pre>
+				  <pre>	alert("Ice cream is running low!");</pre>
+				  <pre>} else if (scoops &gt; 9) {</pre>
+				  <pre>	alert("eat faster, the ice cream is going to melt!");</pre>
+				  <pre>}</pre>
+				  	</code>
+				  </div>
+				</div>
+			</div>
+
+		</section> <!-- Section 11 -->
+
+		<section class="section" data-number="12" data-name="Making more decisions... and, adding a catchall">
+
+<!-- Page 50 -->
+
+			<div class="pagebreak pageNumber">50</div>
+	
+			<figure class="right">
+				<img src="/contents/html5/figs/web2/050fig02.png">
+			</figure>
+			
+			<h2>Making more decisions... and, adding a catchall</h2>
+
+			<p>
+				You can provide a catchall for your <code class="literal">if</code> statements as well—a final
+				<code class="literal">else</code> that is run if all the other conditions fail. Let's add a few more if/elses
+				and also a catchall:
+			</p>
+			
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web2/050fig01.png">
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  <div class="modal-body">
+						<code>
+<pre>if (scoops == 3) {</pre>
+<pre>	alert("Ice cream is running low!");</pre>
+<pre>} else if (scoops > 9) {</pre>
+<pre>	alert("Eat faster, the ice cream is going to melt!");</pre>
+<pre>} else if (scoops == 2) {</pre>
+<pre>	alert("Going once!");</pre>
+<pre>} else if (scoops == 1) {</pre>
+<pre>	alert("Going twice!");</pre>
+<pre>} else if (scoops == 0) {</pre>
+<pre>	alert("Gone!");</pre>
+<pre>} else {</pre>
+<pre>	alert("Still lots of ice cream left, come and get it.");</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<div class="sidebar">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/exercise.png">
+				</figure>
+				
+				<p>
+					Take the code above and insert it into the while loop below. Walk through the while loop and write down the
+					alerts in the sequence they occur. Check your answer at the end of the chapter.
+				</p>
+				
+				<div class="clear"></div>
+
+				<div class="hiddencode"
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/050fig03.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+				  		<code>
+				  <pre>var scoops = 10;</pre>
+				  <pre>while (scoops &gt;= 0) {</pre>
+				  			<br />
+				  			<br />
+				  			<br />
+				  <pre>	scoops = scoops - 1;</pre>
+				  <pre>}</pre>
+				  <pre>alert("life without ice cream isn't the same");</pre>
+				  		</code>
+				  	</div>
+				  </div>
+				</div>
+			</div>
+
+<!-- Page 51 -->
+
+			<div class="pagebreak pageNumber">51</div>
+				
+			<div class="sidebar" id="code_magnets">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/xxviifig00.png">
+				</figure>
+
+				<div class="titlepage">
+					<div class="sidebar-title">
+						Code Magnets
+					</div>
+				</div>
+				
+				<p>
+					This code prints out a well-known palindrome in an alert. The problem is that some of the code was on fridge
+					magnets and fell on the floor. It's your job to put the code back together again to make the palindrome work.
+					Watch out; there were a few magnets already on the floor that don't belong here, and you'll have to use some
+					of the magnets more than once! Check your answer at the end of the chapter before you go on.
+				</p>
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web2/051fig01.png">
+				</figure>
+				
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/051fig02.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-body">
+							<code>
+<pre>	var word1 = "a";</pre>
+<pre>	var word2 = "nam";</pre>
+<pre>	var word3 = "nal p";</pre>
+<pre>	var word4 = "lan a c";</pre>
+<pre>	var word5 = "a man a p";</pre>
+								<br />
+<pre>	var phrase = "";</pre>
+								<br />
+<pre>	for (var i = 0; _____ ; _____ ) {</pre>
+<pre>		if (i == 0) {</pre>
+<pre>			phrase = _____ ;</pre>
+<pre>		}</pre>
+<pre>		else if (i == 1) {</pre>
+<pre>			phrase = _____ + word4;</pre>
+<pre>		}</pre>
+<pre>		_____ (i == 2) {</pre>
+<pre>			_____ = phrase + word1 + word3;</pre>
+<pre>		}</pre>
+<pre>		_____ (_____) {</pre>
+<pre>			phrase = phrase + _____ + word2 + word1;</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>	var message = document.getElementById("message");</pre>
+<pre>	message.innerHTML = phrase;</pre>
+<pre>	alert(phrase);</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 52 -->
+
+			<div class="pagebreak pageNumber">52</div>
+				
+			<figure class="left">
+				<img src="/contents/html5/figs/web2/052fig01.png">
+			</figure>
+			
+			<p>
+				<strong>Yes, that is the point.</strong> First, you needed to know a few basics. Here's what we've done so far:
+				you know how to declare and use JavaScript variables, and you know how to build basic statements and expressions.
+				You also know how to use all those together to write conditional code with <code class="literal">if</code>/
+				<code class="literal">else</code> statements, not to mention do things iteratively with
+				<code class="literal">while</code> and <code class="literal">for</code> statements.
+			</p>
+			
+			<p>
+				With that under your belt, now we're going to see how to place JavaScript in your page, and more importantly,
+				how JavaScript interacts with your page. That is, how you determine what's in your page, how you change your
+				page, and, a bit more down the road, how you write code to react to things happening in your pages.
+			</p>
+			
+			<p>
+				So, while we're not done with JavaScript yet, your wait is over; it's time to see how markup and behavior work together...
+			</p>
+
+			<div class="clear" />
+
+		</section> <!-- Section 12 -->
+
+		<section class="section" data-number="13" data-name="How and where to add JavaScript to your pages">
+
+<!-- Page 53 -->
+
+			<div class="pagebreak pageNumber">53</div>
+	
+			<h2>How and where to add JavaScript to your pages</h2>
+
+			<p>
+				To use JavaScript you've got to add it to a web page. But where and how? You already know there is a
+				<code class="literal">&lt;script&gt;</code> element, so let's see where we can use it and how that affects
+				the way JavaScript executes within your pages. Here are three different ways you might add code to your page:
+			</p>
+			
+			<figure class="left">
+				<img src="/contents/html5/figs/web2/052fig02.png">
+			</figure>
+			
+			<p>
+				<strong>Place your script inline, in the &lt;head&gt; element.</strong>
+			</p>
+			
+			<p>
+				The most common way to add code to your pages is to put a <code class="literal">&lt;script&gt;</code>
+				element in the head of your page. When you add JavaScript in the <code class="literal">&lt;head&gt;</code>
+				element, it is executed as soon as the browser parses the head (which it does first!), before it has parsed
+				the rest of the page.
+			</p>
+			
+			<p>
+				<strong>Add your script by referencing a separate JavaScript file.</strong>
+			</p>
+			
+			<p>
+				You can also link to a separate file containing JavaScript code. Put the URL of the file in the
+				<code class="literal">src</code> attribute of the opening <code class="literal">&lt;script&gt;</code> tag
+				and make sure you close the script element with <code class="literal">&lt;/script&gt;</code>. If you're
+				linking to a file in the same directory, you can just use the name of the file.
+			</p>
+			
+			<p>
+				<strong>Add your code in the body of the document, either inline or as a link to a separate file.</strong>
+			</p>
+			
+			<p>
+				Or, you can put your code right in the body of your HTML. Again, enclose your JavaScript code in the
+				<code class="literal">&lt;script&gt;</code> element (or reference a separate file in the
+				<code class="literal">src</code> attribute). JavaScript in the body of your page is executed when the
+				browser parses the body (which it does, typically, top down).
+			</p>
+			
+		</section> <!-- Section 13 -->
+			
+		<section class="section" data-number="14" data-name="How JavaScript interacts with your pages">
+
+<!-- Page 54 -->
+
+			<div class="pagebreak pageNumber">54</div>
+					
+			<h2>How JavaScript interacts with your page</h2>
+
+			<p>
+				<strong>JavaScript and HTML are two different things. HTML is markup and JavaScript is code.
+					So how do you get JavaScript to interact with the markup in your page? You use the Document Object Model.</strong>
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web2/054fig01.png">
+			</figure>
+
+		</section> <!-- Section 14 -->
+			
+		<section class="section" data-number="15" data-name="How to bake your very own DOm">
+
+<!-- Page 55 -->
+
+			<div class="pagebreak pageNumber">55</div>
+	
+			<h2>How to bake your very own DOM</h2>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web2/055fig00.png">
+			</figure>
+			
+			<p>
+				Let's take some markup and create a DOM for it. Here's a simple recipe for doing that:
+			</p>
+			
+			<p>
+				<strong>Ingredients</strong>
+			</p>
+			
+			<p>
+				One well-formed HTML5 page
+			</p>
+			
+			<p>
+				One or more web browsers
+			</p>
+
+			<p>
+				<strong>Instructions</strong>
+			</p>
+			
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p>
+							Start by creating a document node at the top.
+						</p>
+						
+						<div class="informalfigure" id="med_id00121a">
+							<div class="mediaobject" id="med_id00121">
+								<img src="/contents/html5/figs/web2/055fig01.png">
+							</div>
+						</div>
+					</li>
+					
+					<li class="listitem">
+						<p>
+							Next, take the top level element of your HTML page, in our case the &lt;html&gt; element,
+							call it the current element and add it as a child of the document.
+						</p>
+					
+						<div class="informalfigure" id="med_id00122a">
+							<div class="mediaobject" id="med_id00122">
+								<img src="/contents/html5/figs/web2/055fig02.png">
+							</div>
+						</div>
+					</li>
+					
+					<li class="listitem">
+						<p>
+							For each element nested in the current element, add that element as a child of the current element in the DOM.
+						</p>
+					
+						<div class="informalfigure" id="med_id00123a">
+							<div class="mediaobject" id="med_id00123">
+								<img src="/contents/html5/figs/web2/055fig03.png">
+							</div>
+						</div>
+					</li>
+				
+					<li class="listitem">
+						<p>
+							Return to (3) for each element you just added, and repeat until you are out of elements.
+						</p>
+					</li>
+				</ol>
+			</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web2/055fig04.png">
+			</figure>
+
+			<div class="clear" />
+
+		</section> <!-- Section 15 -->
+
+		<section class="section" data-number="16" data-name="A first taste of the DOM">
+
+<!-- Page 56 -->
+
+			<div class="pagebreak pageNumber">56</div>
+					
+			<h2>A first taste of the DOM</h2>
+
+			<p>
+				The beauty of the Document Object Model is that it gives us a consistent way, across all browsers, to gain
+				access to the structure and content of the HTML from code. That's huge. And we're going to see how all that
+				works in a sec...
+			</p>
+			
+			<p>
+				Back to our example; if you follow the recipe for creating a DOM you'll end up with a structure like the one
+				below. Every DOM has a document object at the top and then a tree complete with branches and leaf nodes for
+				each of the elements in the HTML markup. Let's take a closer look.
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web2/056fig01.png">
+			</figure>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web2/056fig02.png">
+			</figure>
+
+			<div class="clear" />
+
+<!-- Page 57 -->
+
+			<div class="pagebreak pageNumber">57</div>
+				
+			<div class="sidebar" id="be_the_browser-id00012">
+				<figure class="left">
+					<img src="/contents/html5/figs/web2/057fig00.png">
+				</figure>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/057fig01.png">
+				</figure>
+
+				<div class="clear"></div>
+				
+<pre><strong>&lt;!doctype html&gt;</strong></pre>
+				
+<pre><strong>&lt;html lang="en"&gt;</strong></pre>
+				
+<pre>  <strong>&lt;head&gt;</strong></pre>
+				
+<pre>	<strong>&lt;title&gt;Movies&lt;/title&gt;</strong></pre>
+				
+<pre>  <strong>&lt;/head&gt;</strong></pre>
+				
+<pre>  <strong>&lt;body&gt;</strong></pre>
+				
+<pre>	<strong>&lt;h1&gt;Movie Showtimes&lt;/h1&gt;</strong></pre>
+				
+<pre>	<strong>&lt;h2 id="movie1" &gt;Plan 9 from Outer Space&lt;/h2&gt;</strong></pre>
+				
+<pre>	<strong>&lt;p&gt;Playing at 3:00pm, 7:00pm.</strong></pre>
+				
+<pre>	  <strong>&lt;span&gt;</strong></pre>
+				
+<pre>		<strong>Special showing tonight at &lt;em&gt;midnight&lt;/em&gt;!</strong></pre>
+				
+<pre>	  <strong>&lt;/span&gt;</strong></pre>
+				
+<pre>	<strong>&lt;/p&gt;</strong></pre>
+				
+<pre>	<strong>&lt;h2 id="movie2"&gt;Forbidden Planet&lt;/h2&gt;</strong></pre>
+				
+<pre>	<strong>&lt;p&gt;Playing at 5:00pm, 9:00pm.&lt;/p&gt;</strong></pre>
+				
+<pre>  <strong>&lt;/body&gt;</strong></pre>
+				
+<pre><strong>&lt;/html&gt;</strong></pre>
+
+				<figure>
+					<img src="/contents/html5/figs/web2/057fig02.png">
+				</figure>
+			</div>
+
+<!-- Page 58 -->
+
+			<div class="pagebreak pageNumber">58</div>
+			
+			<figure class="left">
+				<img src="/contents/html5/figs/web2/058fig01.png">
+			</figure>
+			
+			<p>
+				<strong>Or, how two totally different technologies hooked up.</strong>
+			</p>
+			
+			<p>
+				HTML and JavaScript are from different planets for sure. The proof? HTML's DNA is made of declarative markup
+				that allows you to describe a set of nested elements that make up your pages. JavaScript, on the other hand,
+				is made of pure algorithmic genetic material, meant for describing computations.
+			</p>
+			
+			<p>
+				Are they so far apart they can't even communicate? Of course not, because they have something in common: the
+				DOM. Through the DOM, JavaScript can communicate with your page, and vice versa. There are a few ways to make
+				this happen, but for now let's concentrate on one—it's a little wormhole of sorts that allows JavaScript to get
+				access to any element, and it's called getElementById.
+			</p>
+			
+			<p>
+				Let's see how it works...
+			</p>
+
+			<div class="clear" />
+
+<!-- Page 59 -->
+
+			<div class="pagebreak pageNumber">59</div>
+				
+			<p>
+				<strong>Let's start with a DOM.</strong> Here's a simple DOM; it's got a few HTML paragraphs, each with an
+				<code class="literal">id</code> identifying it as the green, red or blue planet. Each paragraph has some text
+				as well. Of course there's a &lt;head&gt; element too, but we've left the details out to keep things simpler.
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web2/059fig01.png">
+			</figure>
+			
+			<p>
+				<strong>Now let's use JavaScript to make things more interesting.</strong> Let's say we want to change
+				the greenplanet's text from "All is well" to "Red Alert: hit by phaser fire!' Down the road you might want
+				to do something like this based on a user's actions or even based on data from a web service. But we'll get
+				to all that; for now let's just get the greenplanet text updated. To do that we need the element with an
+				<code class="literal">id</code> of greenplanet. Here's some code that does that:
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web2/059fig02.png">
+			</figure>
+
+<!-- Page 60 -->
+
+			<div class="pagebreak pageNumber">60</div>
+				
+			<p>
+				<strong>Once getElementById gives you an element, you're ready do something with it</strong> (like change its
+				text to "Red Alert: hit by phaser fire!"). To do that, we typically assign the element to a variable so we can
+				refer to the element thoughout our code; let's do that and then change the text:
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web2/060fig01a.png">
+			</figure>
+			
+			<figure>
+				<img src="/contents/html5/figs/web2/060fig01b.png">
+			</figure>
+
+<!-- Page 61 -->
+
+			<div class="pagebreak pageNumber">61</div>
+			
+			<div class="sidebar">
+				<figure>
+					<img src="/contents/html5/figs/web/sharpenpencil.png">
+				</figure>
+				
+				<p>
+					Here's a DOM with a secret message hidden in it. Evaluate the code below to reveal the secret! The answer
+					is upside down on this page.
+				</p>
+				
+<pre><strong>document.getElementById("e7")</strong></pre>
+				
+<pre><strong>document.getElementById("e8")</strong></pre>
+				
+<pre><strong>document.getElementById("e16")</strong></pre>
+				
+<pre><strong>document.getElementById("e9")</strong></pre>
+				
+<pre><strong>document.getElementById("e18")</strong></pre>
+				
+<pre><strong>document.getElementById("e13")</strong></pre>
+				
+<pre><strong>document.getElementById("e12")</strong></pre>
+				
+<pre><strong>document.getElementById("e2")</strong></pre>
+
+				<div class="note" id="ch02note07">
+					<p>
+						Write the element each line of code selects, as well as the content of the element to reveal the secret message!
+					</p>
+				</div>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/061fig01.png">
+				</figure>
+				
+				<aside>Answer: "You can turn back pages but not time"</aside>
+
+		</section> <!-- Section 16 -->
+
+		<section class="section" data-number="17" data-name="Test drive the planets">
+
+<!-- Page 62 -->
+
+			<div class="pagebreak pageNumber">62</div>
+	
+			<figure class="right">
+				<img src="/contents/html5/figs/web2/062fig01.png">
+			</figure>
+			
+			<h2 class="left">Test drive the planets</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png">
+			</figure>
+			
+			<br />
+
+			<p>
+				You've seen how to use <code class="literal">document.getElementById</code> to get access to an element,
+				and how to use <code class="literal">innerHTML</code> to change the content of that element. Let's do it for real, now.
+			</p>
+			
+			<p>
+				Here's the HTML for the planets; we've got a <code class="literal">&lt;script&gt;</code> element in the head
+				where we'll put the code, and three paragraphs for the green, red, and blue planets. If you haven't already,
+				go ahead and type in the HTML and the JavaScript to update the DOM:
+			</p>
+	
+			<div class="hiddencode">		
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web2/062fig02.png">
+				</figure>
+			
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  <div class="modal-body">
+						<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>	&lt;title&gt;Planets&lt;/title&gt;</pre>
+<pre>	&lt;meta charset="utf-8"&gt;</pre>
+<pre>&lt;script&gt;</pre>
+<pre>	var planet = document.getElementById("greenplanet");</pre>
+<pre>	planet.innerHTML = "Red Alert: hit by phaser fire!";</pre>
+<pre>&lt;/script&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;h1&gt;Green Planet&lt;/h1&gt;</pre>
+<pre>	&lt;p id="greenplanet"&gt;All is well&lt;/p&gt;</pre>
+<pre>	&lt;h1&gt;Red Planet&lt;/h1&gt;</pre>
+<pre>	&lt;p id="redplanet"&gt;Nothing to report&lt;/p&gt;</pre>
+<pre>	&lt;h1&gt;Blue Planet&lt;/h1&gt;</pre>
+<pre>	&lt;p id="blueplanet"&gt;All systems A-OK&lt;/p&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web2/062fig03.png">
+			</figure>
+				
+			<p>
+				After you've got it typed in, go ahead and load the page into your browser and see the DOM magic happen on the green planet.
+			</p>
+
+			<div class="clear" />
+
+<!-- Page 63 -->
+
+			<div class="pagebreak pageNumber">63</div>
+				
+			<figure class="left">
+				<img src="/contents/html5/figs/web2/063fig01.png">
+			</figure>
+			
+			<p>
+				<strong>Oh yeah, we forgot to mention one thing.</strong>
+			</p>
+			
+			<p>
+				Most of the time it makes sense to start executing your JavaScript code <em>after</em> the page is fully loaded.
+				The reason? Well, if you don't wait until the page has loaded, then the DOM won't be fully created when your code
+				executes. In our case, the JavaScript is executing when the browser first loads the head of the page, and before
+				the rest of the page has loaded, and so the DOM hasn't been fully created yet. And, if the DOM isn't created, then
+				the <code class="literal">&lt;p id="greenplanet"&gt;</code> element doesn't exist yet!
+			</p>
+			
+			<p>
+				So what happens? The call to get the element with an id of <code class="literal">greenplanet</code> isn't going
+				to return anything because there is no matching element, and so the browser just keeps moving on and renders the
+				page anyway after your code has run. So you'll see the page rendered, but the text in the green planet won't be
+				altered by the code.
+			</p>
+			
+			<p>
+				What we need is a way to tell the browser "run my code after you've fully loaded in the page and created the DOM."
+				Let's see how to do that next.
+			</p>
+			
+		</section> <!-- Section 17 -->
+			
+		<section class="section" data-number="18" data-name="You can't mess with the DOM until the page has fully loaded">
+
+<!-- Page 64 -->
+
+			<div class="pagebreak pageNumber">64</div>
+					
+			<h2>You can't mess with the DOM until the page has fully loaded</h2>
+
+			<p>
+				But how do you tell the browser to execute your code only <em>after</em> it's loaded?
+			</p>
+			
+			<p>
+				To tell the browser to wait before executing code we're going to use two parts of JavaScript you haven't seen
+				much of yet: the <code class="literal">window</code> object, and a function. We'll get to the details of both
+				these later; for now, just go with it so you can get the code to work.
+			</p>
+			
+			<p>
+				Update your JavaScript code like this:
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web2/064fig01.png">
+			</figure>
+			
+			<section class="subsection" data-number="19" data-name="Reload the page">
+				
+				<h3 class="left">Reload the page</h3>
+				
+				<figure>
+					<img src="/contents/html5/figs/web/common-10.png">
+				</figure>
+				
+				<div class="clear" />
+
+				<p>
+					Go ahead and reload the page and see if you have the answer:
+				</p>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/064fig02.png">
+				</figure>
+
+<!-- Page 65 -->
+
+			<div class="pagebreak pageNumber">65</div>
+					
+				<div class="sidebar">
+					<figure class="left">
+						<img src="/contents/html5/figs/web/sharpenpencil.png">
+					</figure>
+				
+					<p>
+						Here's some HTML for a playlist of songs, except that the list is empty. It's your job to complete the
+						JavaScript below to add the songs to the list. Fill in the blank with the JavaScript that will do the job.
+						Check your answer with our solution at the end of the chapter before you go on.
+					</p>
+				
+					<div class="hiddencode">
+						<figure>
+							<img class="codeimage" src="/contents/html5/figs/web2/065fig01.png">
+						</figure>
+
+						<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  		<div class="modal-body">
+								<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>&lt;title&gt;My Playlist&lt;/title&gt;</pre>
+<pre>&lt;script&gt;</pre>
+<pre>_____ addSongs() {</pre>
+<pre>	var song1 = document._____("_____");</pre>
+<pre>	var _____ = _____ ("_____");</pre>
+<pre>	var _____ = _____.getElementById("_____");</pre>
+
+<pre>	_____.innerHTML = "Blue Suede Strings, by Elvis Pagely";</pre>
+<pre>	_____ = "Great Objects on Fire, by Jerry JSON Lewis";</pre>
+<pre>	song3._____ = "I Code the Line, by Johnny JavaScript";</pre>
+<pre>}</pre>
+<pre>window._____ = _____;</pre>
+<pre>&lt;/script&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+
+<pre>	&lt;h1&gt;My awesome playlist&lt;/h1&gt;</pre>
+<pre>	&lt;ul id="playlist"&gt;</pre>
+<pre>		&lt;li id="song1"&gt;&lt;/li&gt;</pre>
+<pre>		&lt;li id="song2"&gt;&lt;/li&gt;</pre>
+<pre>		&lt;li id="song3"&gt;&lt;/li&gt;</pre>
+<pre>	&lt;/ul&gt;</pre>
+
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+								</code>
+							</div>
+						</div>
+					</div>
+				
+					<figure>
+						<img src="/contents/html5/figs/web2/065fig02.png">
+					</figure>
+
+					<div class="clear"></div>
+
+				</div>
+
+			</section> <!-- Section 19 -->
+
+		</section> <!-- Section 18 -->
+
+		<section class="section" data-number="20" data-name="So, what else is a DOM good for anyway?">
+
+<!-- Page 66 -->
+
+			<div class="pagebreak pageNumber">66</div>
+	
+			<h2>So, what else is a DOM good for anyway?</h2>
+
+			<p>
+				The DOM can do a fair bit more than we've seen so far and we'll be using a lot of its other functionality
+				as we move forward in the book, but for now let's just take a quick look so you've got it in the back of your mind:
+			</p>
+			
+			<figure class="left">
+				<img src="/contents/html5/figs/web2/066fig01.png">
+			</figure>
+			
+			<p>
+				<strong>Get elements from the DOM.</strong>
+			</p>
+		
+			<p>
+				Of course you already know this because we've been using document.getElementById, but there are other ways
+				to get elements as well; in fact, you can use tag names, class names and attributes to retrieve not just one
+				element, but a whole set of elements (say all elements in the class "on_sale"). And you can get form values
+				the user has typed in, like the text of an input element.
+			</p>
+		
+			<p>
+				<strong>Create or add elements to the DOM.</strong>
+			</p>
+			
+			<p>
+				You can create new elements and you can also add those elements to the DOM. Of course, any changes you make
+				to the DOM will show up immediately as the DOM is rendered by the browser (which is a good thing!).
+			</p>
+			
+			<p>
+				<strong>Remove elements from the DOM.</strong>
+			</p>
+			
+			<p>
+				You can also remove elements from the DOM by taking a parent element and removing any of its children. Again,
+				you'll see the element removed in your browser window as soon as it is deleted from the DOM.
+			</p>
+		
+			<p>
+				<strong>Get and set the attributes of elements.</strong>
+			</p>
+		
+			<p>
+				So far you've accessed only the text content of an element, but you can access attributes as well. For instance,
+				you might want to know what an element's class is, and then change the class it belongs to on the fly.
+			</p>
+		
+			<div class="clear" />
+
+		</section> <!-- Section 20 -->
+		
+		<section class="section" data-number="21" data-name="Can we talk about JavaScript again? Or, how to store
+			multiple values in JavaScript">
+
+<!-- Page 67 -->
+
+			<div class="pagebreak pageNumber">67</div>
+	
+			<h2>Can we talk about JavaScript again? Or, how to store multiple values in JavaScript</h2>
+
+			<p>
+				You've been hanging right in there with JavaScript and the DOM, and before we let you get some rest and relaxation,
+				we wanted to tell you about one more JavaScript type that you'll use all the time—the Array. Let's say you wanted to
+				store the names of thirty-two ice cream flavors or the item numbers of all the items in your user's shopping cart or
+				maybe the outside temperature by the hour. To do that with variables would get awkward fast, especially if we need
+				to store tens, hundreds or thousands of values. Luckily, we've got the Array to help out.
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web2/067fig01.png">
+			</figure>
+			
+			<section class="subsection" data-number="22" data-name="How to create an array">
+				
+				<h3>How to create an array</h3>
+				
+				<p>
+					We need to create an array before we use it, and we need to assign the array itself to a variable so we
+					have something to refer to it by in our code. Let's create the array above with hourly temperatures:
+				</p>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/067fig02.png">
+				</figure>
+				
+				<p>
+					Or, if you're really in a hurry, JavaScript gives you a shortcut to type in an array (what we call a
+					"literal array") to create and intialize it with values:
+				</p>
+
+			</section> <!-- Section 22 -->
+
+			<section class="subsection" data-number="23" data-name="Adding another item to an array">
+
+<!-- Page 68 -->
+
+			<div class="pagebreak pageNumber">68</div>
+	
+				<h3>Adding another item to the array</h3>
+
+				<p>
+					At any time you can keep adding new items to your array simply by using the next, unused index, like this:
+				</p>
+			
+				<figure>
+					<img src="/contents/html5/figs/web2/068fig01.png">
+				</figure>
+
+			</section> <!-- Section 23 -->
+
+			<section class="subsection" data-number="24" data-name="Using your array items">
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web2/068fig02.png">
+				</figure>
+			
+			
+				<h3>Using your array items</h3>
+				
+				<p>
+					You can get the value of an array item just by referencing the array variable with an index, like this:
+				</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web2/068fig03.png">
+				</figure>
+
+			</section> <!-- Section 24 -->
+		
+			<section class="subsection" data-number="25" data-name="Know the size of your array, or else">
+				
+				<h3>Know the size of your array, or else</h3>
+				
+				<p>
+					You can easily get the size of your array by referring to a property of the array called length:
+				</p>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/068fig04.png">
+				</figure>
+				
+				<p>
+					And now that we know how to get the length of an array, let's see if we can combine what you know about loops
+					with arrays...
+				</p>
+
+<!-- Page 69 -->
+
+			<div class="pagebreak pageNumber">69</div>
+					
+				<div class="sidebar" id="sharpen_your_pencil-id00015">
+					<figure class="left">
+						<img src="/contents/html5/figs/web/sharpenpencil.png">
+					</figure>
+				
+					<p>
+						Below you'll find a web page with a list of empty items ready for your JavaScript to fill in with temperatures.
+						We've given you most of the code; it's your job to finish it up so that it sets the content of each list item
+						to the corresponding temperature from the array (e.g., the list item with id = "temp0" will get the temperature
+						at index 0 in the array, and so on). So, the list item with id = "temp3" will read, "The temperature at 3 was 65".
+						For extra credit, see if you can figure out how to get the temperature at 0 to read "noon" instead of 0.
+					</p>
+				
+					<div class="hiddencode">
+						<figure>
+							<img class="codeimage" src="/contents/html5/figs/web2/069fig01.png">
+						</figure>
+
+						<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  		<div class="modal-body">
+								<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>&lt;title&gt;Temperatures&lt;/title&gt;</pre>
+<pre>&lt;meta charset="utf-8"&gt;</pre>
+<pre>&lt;script&gt;</pre>
+<pre>function showTemps() {</pre>
+<pre>	var tempByHour = new _____;</pre>
+<pre>	tempByHour[0] = 59.2;</pre>
+<pre>	tempByHour[1] = 60.1;</pre>
+<pre>	tempByHour[2] = 63;</pre>
+<pre>	tempByHour[3] = 65;</pre>
+<pre>	tempByHour[4] = 62;</pre>
+									<br />
+<pre>	for (var i = 0; i &lt; _____; _____) {</pre>
+<pre>		var theTemp = _____ [i];</pre>
+<pre>		var id = "_____" + i;</pre>
+<pre>		var li = document._____(id);</pre>
+<pre>		if (i == _____) {</pre>
+<pre>			li._____ = "The temperature at noon was " + theTemp;</pre>
+<pre>		} else {</pre>
+<pre>			li.innerHTML = "The temperature at " + _____ + " was " + _____;</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>}</pre>
+<pre>&lt;/script&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>&lt;h1&gt;Temperatures&lt;/h1&gt;</pre>
+<pre>&lt;ul&gt;</pre>
+<pre>	&lt;li id="temp0"&gt;&lt;/li&gt;</pre>
+<pre>	&lt;li id="temp1"&gt;&lt;/li&gt;</pre>
+<pre>	&lt;li id="temp2"&gt;&lt;/li&gt;</pre>
+<pre>	&lt;li id="temp3"&gt;&lt;/li&gt;</pre>
+<pre>	&lt;li id="temp4"&gt;&lt;/li&gt;</pre>
+<pre>&lt;/ul&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+								</code>
+							</div>
+						</div>
+					</div>
+				</div>
+
+<!-- Page 70 -->
+
+				<div class="pagebreak pageNumber">70</div>
+						
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/070fig01.png">
+					</figure>
+					
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					  <div class="modal-body">
+							<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>	&lt;title&gt;Phrase-o-matic&lt;/title&gt;</pre>
+<pre>&lt;meta charset="utf-8"&gt;</pre>
+<pre>&lt;style&gt;</pre>
+<pre>body {</pre>
+<pre>	font-family: Verdana, Helvetica, sans-serif;</pre>
+<pre>}</pre>
+<pre>&lt;/style&gt;</pre>
+<pre>&lt;script&gt;</pre>
+<pre>function makePhrases() {</pre>
+<pre>	var words1 = ["24/7", "multi-Tier", "30,000 foot", "B-to-B", "win-win"];</pre>
+<pre>	var words2 = ["empowered", "value-added", "oriented", "focused", "aligned"];</pre>
+<pre>	var words3 = ["process", "solution", "tipping-point", "strategy", "vision"];</pre>
+								<br />
+<pre>	var rand1 = Math.floor(Math.random() * words1.length);</pre>
+<pre>	var rand2 = Math.floor(Math.random() * words2.length);</pre>
+<pre>	var rand3 = Math.floor(Math.random() * words3.length);</pre>
+								<br />
+<pre>	var phrase = words1[rand1] + " " + words2[rand2] + " " + words3[rand3];</pre>
+<pre>	var phraseElement = document.getElementById("phrase");</pre>
+<pre>	phraseElement.innerHTML = phrase;</pre>
+<pre>}</pre>
+<pre>window.onload = makePhrases;</pre>
+<pre>&lt;/script&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;h1&gt;Phrase-o-Matic says:&lt;/h1&gt;</pre>
+<pre>	&lt;p id="phrase"&gt;&lt;/p&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			
+				<figure>
+					<img src="/contents/html5/figs/web2/070fig02.png">
+				</figure>
+				
+				<aside>
+					You didn't think our serious business application from Chapter 1 was serious enough? Fine. Try this one, if
+					you need something to show the boss.
+				</aside>
+	
+			</section> <!-- Section 25 -->
+
+		</section> <!-- Section 21 -->
+		
+		<section class="section" data-number="26" data-name="The Phrase-O-Matic">
+
+<!-- Page 71 -->
+
+			<div class="pagebreak pageNumber">71</div>
+	
+			<h2>The Phrase-O-Matic</h2>
+
+			<p>
+				We hope you figured out this code is the perfect tool for creating your next start-up marketing slogan. It has
+				created winners like "Win-win value-added solution" and "24/7 empowered process" in the past and we have high
+				hopes for more winners in the future. Let's see how this thing really works:
+			</p>
+			
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p>
+							First, we define the makePhrases function, which we run after the page has fully loaded so we know we
+							can safely access the DOM:
+						</p>
+					
+						<div class="informalfigure" id="med_id00154a">
+							<div class="mediaobject" id="med_id00154">
+								<img src="/contents/html5/figs/web2/071fig01.png">
+							</div>
+						</div>
+					</li>
+				
+					<li class="listitem">
+						<p>
+							With that out of the way we can write the code for the makePhrases function. Let's start by setting up
+							three arrays. Each will hold words that we'll use to create the phrases. We'll use the short cut for
+							creating these arrays:
+						</p>
+					
+						<div class="informalfigure" id="med_id00155a">
+							<div class="mediaobject" id="med_id00155">
+								<img src="/contents/html5/figs/web2/071fig02.png">
+							</div>
+						</div>
+					</li>
+				</ol>
+			</div> <!-- /orderedlist -->
+
+<!-- Page 72 -->
+
+			<div class="pagebreak pageNumber">72</div>
+				
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1" start="3">
+					<li class="listitem">
+						<p>
+							Okay, we've got three new arrays of nice buzzwords; now, what we're going to do is randomly choose
+							one word from each, and then put them together to create a phrase.
+						</p>
+				
+						<p>
+							Here's how we choose one word from each array:
+						</p>
+				
+						<div class="informalfigure" id="med_id00156a">
+							<div class="mediaobject" id="med_id00156">
+								<img src="/contents/html5/figs/web2/072fig01.png">
+							</div>
+						</div>
+					</li>
+			
+					<li class="listitem">
+						<p>
+							Now we create the slick marketing phrase by taking each randomly chosen word and concatenating them
+							all together, with a nice space in between for readability:
+						</p>
+				
+						<div class="informalfigure" id="med_id00157a">
+							<div class="mediaobject" id="med_id00157">
+								<img src="/contents/html5/figs/web2/072fig02.png">
+							</div>
+						</div>
+					</li>
+				
+					<li class="listitem">
+						<p>
+							We're almost done, we have the phrase, now we just have to display it. By now you already know the drill:
+							we're going to use <code class="literal">getElementById</code> to locate our paragraph element and then use
+							its <code class="literal">innerHTML</code> to put the new phrase there.
+						</p>
+				
+						<div class="informalfigure" id="med_id00158a">
+							<div class="mediaobject" id="med_id00158">
+								<img src="/contents/html5/figs/web2/072fig03.png">
+							</div>
+						</div>
+					</li>
+				</ol>
+			</div>
+
+<!-- Page 73 -->
+
+			<div class="pagebreak pageNumber">73</div>
+				
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1" start="6">
+					<li class="listitem">
+						<p>
+							Okay, finish that last line of code, have one more look over it all and feel that sense of accomplishment
+							before you load it into your browser. Give it a test drive and enjoy the phrases.
+						</p>
+					
+						<div class="informalfigure" id="med_id00159a">
+							<div class="mediaobject" id="med_id00159">
+								<img src="/contents/html5/figs/web2/073fig01.png">
+							</div>
+						</div>
+					</li>
+				</ol>
+			</div>
+		
+			<div class="sidebar" id="there_are_no_dumb_questions-id00016">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+				</figure>
+			
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<table style="border: 0;">
+							<colgroup>
+								<col style="text-align: left; width: 1%;">
+								<col>
+							</colgroup>
+						
+							<tbody>
+								<tr class="question" id="id36181770">
+									<td style="text-align: left; vertical-align: top;" id="ch02qa4q1">
+										<p>
+											<strong>Q:</strong>
+										</p>
+									</td>
+								
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>What exactly is Math, and what do Math.random and Math.floor do?</strong>
+										</p>
+									</td>
+								</tr>
+							
+								<tr class="answer" id="ch02qa4q1a1">
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong>
+										</p>
+									</td>
+								
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> Math is a built-in JavaScript library that has a bunch of math-related functions
+											in it. Math.random generates a random number between 0 and 1. We multiply that by the number of items
+											in the array (which we get using the length property of the array) to get a number between 0 and the
+											length of the array. The result is likely to be a floating point number, like 3.2, so we use Math.floor
+											to make sure we get an integer number that we can use as an index into the array to pick the random
+											word. All Math.floor does is drop the numbers after the decimal point in a floating point number.
+											For example, Math. floor(3.2) is 3.
+										</p>
+									</td>
+								</tr>
+							
+								<tr class="question" id="id36181797">
+									<td style="text-align: left; vertical-align: top;" id="ch02qa4q2">
+										<p>
+											<strong>Q:</strong>
+										</p>
+									</td>
+								
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Where can I find documentation on things like Math?</strong>
+										</p>
+									</td>
+								</tr>
+							
+								<tr class="answer" id="ch02qa4q2a2">
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong>
+										</p>
+									</td>
+							
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> A great reference for JavaScript is <em>JavaScript: The Definitive Guide</em>
+											by David Flanagan (O'Reilly).
+										</p>
+									</td>
+								</tr>
+							
+								<tr class="question" id="id36181823">
+									<td style="text-align: left; vertical-align: top;" id="ch02qa4q3">
+										<p>
+											<strong>Q:</strong>
+										</p>
+									</td>
+						
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Earlier you said that you can store primitives (like number, string and boolean) in
+												variables or objects. But we're storing arrays in variables. So what is an array, a primitive
+												or an object?</strong>
+										</p>
+									</td>
+								</tr>
+						
+								<tr class="answer" id="ch02qa4q3a3">
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong>
+										</p>
+									</td>
+						
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> Good catch! An array is a special kind of object that's built into JavaScript.
+											It's special because you can use numerical indexes to access the values stored in the array,
+											something you can't do with other (non-array) objects, or objects that you create yourself. You'll
+											learn how to create your own objects in Chapter&nbsp;4.
+										</p>
+									</td>
+								</tr>
+						
+								<tr class="question" id="id36181860">
+									<td style="text-align: left; vertical-align: top;" id="ch02qa4q4">
+										<p>
+											<strong>Q:</strong>
+										</p>
+									</td>
+							
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>What happens if I try to access an array index that doesn't exist? Like if I have 5
+											words stored in myWords and I tried to access myWords[10].</strong>
+										</p>
+									</td>
+								</tr>
+						
+								<tr class="answer" id="ch02qa4q4a4">
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong>
+										</p>
+									</td>
+						
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> You get undefined, which, if you recall, is the value of a variable that
+											hasn't been assigned a value yet.
+										</p>
+									</td>
+								</tr>
+							
+								<tr class="question" id="id36181885">
+									<td style="text-align: left; vertical-align: top;" id="ch02qa4q5">
+										<p>
+											<strong>Q:</strong>
+										</p>
+									</td>
+							
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>Can I remove an item from an Array? If so, what happens to the index of the other elements?</strong>
+										</p>
+									</td>
+								</tr>
+						
+								<tr class="answer" id="ch02qa4q5a5">
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong>
+										</p>
+									</td>
+							
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											<strong>A:</strong> You can remove an item from an Array, and you can do it a couple of different
+											ways. You could set the value of the array at the index to null; for example, myArray[2] = null.
+											But that would mean the length of the Array stays the same. Or you can remove the item altogether
+											(using the function splice). In that case, the indexes of the items that come after the one you
+											remove will all shift down by 1. So if myArray[2] = "dog" and myArray[3] = "cat", and you remove
+											"dog", then myArray[2] = "cat" and the length of your array is 1 shorter than it was.
+										</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 74 -->
+
+			<div class="pagebreak pageNumber">74</div>
+			
+			<figure>
+				<img src="/contents/html5/figs/web2/074fig01.png">
+			</figure>
+
+<!-- Page 75 -->
+
+			<div class="pagebreak pageNumber">75</div>
+			
+			<div class="sidebar" id="bullet_points-id00017">
+				<figure>
+					<img src="/contents/html5/figs/web/bulletpoints.png">
+				</figure>
+		
+				<div class="itemizedlist">
+					<ul class="itemizedlist">
+						<li class="listitem">
+							<p>
+								Declare a JavaScript variable using var.
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								Number, boolean and string are primitive types.
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								Boolean values are true and false.
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								Numbers can be integers or floating point numbers.
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								An unassigned variable has the value undefined.
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								Undefined and null are two different values. Undefined means a variable hasn't been assigned a
+								value; null means the variable has the no value.
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								Numerical, boolean and string expressions result in a number, a boolean, or a string value respectively.
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								To repeat blocks of code, use a for or a while loop.
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								For loops and while loops can do the same thing; use whichever one works best for the situation.
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								To end a for or while loop, the conditional test must be false at some point.
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								Use if/else statements to make a decision based on a conditional test.
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								Conditional tests are boolean expressions.
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								You can add JavaScript to the head or body of your web page, or put it in a separate file and link
+								to it from your web page.
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								Enclose your JavaScript (or link to it) using the &lt;script&gt; element.
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								When the browser loads a web page, it creates a Document Object Model (DOM), which is an internal
+								representation of the web page.
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								You make your web pages interactive by examining and changing the DOM using JavaScript.
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								Get access to an element in your web page using document.getElementById.
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								document.getElementById uses the id of an element to find the element in the DOM.
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								Use the innerHTML property of an element to change the element's content.
+							</p>
+						</li>
+						
+						<li class="listitem">
+							<p>
+								If you try to access or change elements before the web page has completely loaded, you'll get a
+								JavaScript error and your code won't work.
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								Assign a function to the window.onload property to run the code in that function after the browser
+								has finished loading the web page.
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								Use an array to store more than one value.
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								To access a value in an array, use an index. An index is an integer number that is the position of
+								the item in the array (starting at 0).
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								The length property of an array tells you how many items are in the array.
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								By combining loops and arrays, you can access each item of an array sequentially.
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								Math is a JavaScript library with several math-related functions in it.
+							</p>
+						</li>
+					
+						<li class="listitem">
+							<p>
+								Math.random returns a floating point number between 0 and 1 (but never 1 precisely).
+							</p>
+						</li>
+				
+						<li class="listitem">
+							<p>
+								Math.floor converts a floating point number to an integer by dropping all the digits after the decimal point.
+							</p>
+						</li>
+					</ul>
+				</div> <!-- /itemizedlist -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 76 -->
+
+			<div class="pagebreak pageNumber">76</div>
+			
+			<div class="sidebar" id="html5cross-id00018">
+				<figure>
+					<img src="/contents/html5/figs/web/html5cross2.png">
+				</figure>
+			
+				<p>
+					Time to work a different part of your brain with a crossword. Have fun!
+				</p>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/076fig01.png">
+				</figure>
+				
+				<div class="informaltable">
+					<table style="border-collapse: collapse;">
+						<colgroup>
+							<col class="c1">
+							<col class="c2">
+							<col class="c3">
+							<col class="c4">
+						</colgroup>
+						
+						<thead>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;" colspan="2">
+									<p>
+										Across
+									</p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid ;" colspan="2">
+									<p>
+										Down
+									</p>
+								</td>
+							</tr>
+						</thead>
+					
+						<tbody>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										2.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										5 &lt; 10 is a _________ expression.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										1.
+									</p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid ;">
+									<p>
+										While and for loops use a __________ expression as a conditional test.
+									</p>
+								</td>
+							</tr>
+					
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										7.
+									</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										You can add your JavaScript to the ________ or body of your HTML.
+									</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										3.
+									</p>
+								</td>
+			
+								<td style="vertical-align: top; border-bottom: 0.5pt solid ;">
+									<p>
+										The browser builds a Document _______ _______ when it loads a page.
+									</p>
+								</td>
+							</tr>
+						
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										8.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										____________ is the root of the DOM tree.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										4.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-bottom: 0.5pt solid ;">
+									<p>
+										The id of the planet hit by phaser fire.
+									</p>
+								</td>
+							</tr>
+						
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										9.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										Variables start with a ________, $ or _.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										5.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-bottom: 0.5pt solid ;">
+									<p>
+										Add this to make your web pages interactive.
+									</p>
+								</td>
+							</tr>
+						
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										10.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										The DOM is an internal representation of ________.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										6.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-bottom: 0.5pt solid ;">
+									<p>
+										Enclose your JavaScript with a &lt;_________&gt; tag if it's in an HTML page.
+									</p>
+								</td>
+							</tr>
+						
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										11.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										Use an ________ to get a value from an array.
+									</p>
+								</td>
+						
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										14.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-bottom: 0.5pt solid ;">
+									<p>
+										If you're almost done, drink tea, ________ not even close, keep working!
+									</p>
+								</td>
+							</tr>
+						
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										12.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										Pick good names and use _______ case for long names.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										19.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-bottom: 0.5pt solid ;">
+									<p>
+										Don't mess with the _______ until the page has fully loaded.
+									</p>
+								</td>
+							</tr>
+						
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										13.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										If you write 3 + "Stooges", JavaScript will ________ 3 into a string.
+									</p>
+								</td>
+							
+								<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									&nbsp;
+								</td>
+							
+								<td style="border-bottom: 0.5pt solid ;">
+									&nbsp;
+								</td>
+							</tr>
+						
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										15.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										Store all your ice cream flavors together in one _______.
+									</p>
+								</td>
+							
+								<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									&nbsp;
+								</td>
+							
+								<td style="border-bottom: 0.5pt solid ;">
+									&nbsp;
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										16.
+									</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										Do things again and again with a _________ loop.
+									</p>
+								</td>
+								
+								<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									&nbsp;
+								</td>
+							
+								<td style="border-bottom: 0.5pt solid ;">
+									&nbsp;
+								</td>
+							</tr>
+						
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										17.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									<p>
+										You know how many items are in an array if you check the ___________.
+									</p>
+								</td>
+						
+								<td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ;">
+									&nbsp;
+								</td>
+						
+								<td style="border-bottom: 0.5pt solid ;">
+									&nbsp;
+								</td>
+							</tr>
+					
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid ;">
+									<p>
+										18.
+									</p>
+								</td>
+							
+								<td style="vertical-align: top; border-right: 0.5pt solid ;">
+									<p>
+										document._____________ is how you get an element from the DOM in JavaScript.
+									</p>
+								</td>
+							
+								<td style="border-right: 0.5pt solid ;">
+									&nbsp;
+								</td>
+							
+								<td>
+									&nbsp;
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- /informaltable -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 77 -->
+
+			<div class="pagebreak pageNumber">77</div>
+					
+			<div class="sidebar-right">
+				<figure>
+					<img src="/contents/html5/figs/web/sharpenyourpencilsolution.png">
+				</figure>
+				
+				<p>
+					Based on what you know so far about JavaScript variables, expressions and statements, see if you can
+					figure out which of these are legal and which might cause an error.
+				</p>
+				
+				<p>
+					From the following list, circle the statements that are <span class="bolditalic">legal</span>.
+				</p>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/077fig03.png">
+				</figure>
+			</div>
+
+			<div class="sidebar-left">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/exercisesolution.png">
+				</figure>
+				
+				<p>
+					<strong>Express Yourself!</strong>
+				</p>
+				
+				<p>
+					You've seen the different types of expressions you can use in JavaScript, now it's time to put that
+					knowledge to work by evaluating some expressions yourself. Here's our solution.
+				</p>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/077fig01.png">
+				</figure>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/077fig02.png">
+				</figure>
+			</div>
+	
+			<div class="clear" />
+
+<!-- Page 78 -->
+
+			<div class="pagebreak pageNumber">78</div>
+				
+			<div class="sidebar" id="be_the_browser_solution">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/bethebrowser2.png">
+				</figure>
+				
+				<p>
+					<strong>Snippet 1</strong>
+				</p>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/078fig01.png">
+				</figure>
+
+				<div class="clear"></div>
+				
+				<p>
+					<strong>Snippet 2</strong>
+				</p>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/078fig02.png">
+				</figure>
+				
+				<p>
+					<strong>Snippet 3</strong>
+				</p>
+			
+				<figure>
+					<img src="/contents/html5/figs/web2/078fig03.png">
+				</figure>
+				
+				<p>
+					<strong>Snippet 4</strong>
+				</p>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/078fig04.png">
+				</figure>
+			</div>
+
+<!-- Page 79 -->
+
+			<div class="pagebreak pageNumber">79</div>
+				
+			<div class="sidebar" id="exercise_solution-id00020">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/exercisesolution.png">
+				</figure>
+				
+				<p>
+					Take the code above and insert it into the code below. Walk through the while loop and write down the
+					alerts in the sequence they occur. Here's our solution.
+				</p>
+				
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/079fig01.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>var scoops = 10;</pre>
+<pre>while (scoops &gt;= 0) {</pre>
+<pre>	if (scoops == 3) {</pre>
+<pre>		alert("Ice cream is running low!");</pre>
+<pre>	} else if (scoops &gt; 9) {</pre>
+<pre>		alert("Eat faster, the ice cream is going to melt!");</pre>
+<pre>	} else if (scoops == 2) {</pre>
+<pre>		alert("Going once!");</pre>
+<pre>	} else if (scoops == 1) {</pre>
+<pre>		alert("Going twice!");</pre>
+<pre>	} else if (scoops == 0) {</pre>
+<pre>		alert("Gone!");</pre>
+<pre>	} else {</pre>
+<pre>		alert("Still lots of ice cream left, come and get it.");</pre>
+<pre>	}</pre>
+<pre>	scoops = scoops - 1;</pre>
+<pre>}</pre>
+<pre>alert("life without ice cream isn’t the same");</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 80 -->
+
+			<div class="pagebreak pageNumber">80</div>
+				
+			<div class="sidebar" id="code_magnets_solution">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/xxviifig00.png">
+				</figure>
+
+				<h3>Code Magnets Solution</h3>
+				
+				<p>
+					This code prints out a well-known palindrome in an alert. The problem is that some of the code was on fridge
+					magnets and fell on the floor. It's your job to put the code back together again to make the palindrome work.
+					Watch out; we put a few extra in, and you'll have to use some of the magnets more than once! Here's our solution.
+				</p>
+
+				<div class="clear"></div>
+
+				<div class="hiddencode">				
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/080fig01.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>var word1 = "a";</pre>
+<pre>var word2 = "nam";</pre>
+<pre>var word3 = "nal p";</pre>
+<pre>var word4 = "lan a c";</pre>
+<pre>var word5 = "a man a p";</pre>
+								<br />
+<pre>var phrase = "";</pre>
+								<br />
+<pre>for (var i = 0; i < 4; i++) {</pre>
+<pre>	if (i == 0) {</pre>
+<pre>		phrase = word5;</pre>
+<pre>	}</pre>
+<pre>	else if (i == 1) {</pre>
+<pre>		phrase = phrase + word4;</pre>
+<pre>	}</pre>
+<pre>	else if (i == 2) {</pre>
+<pre>		phrase = phrase + word1 + word3;</pre>
+<pre>	}</pre>
+<pre>	else if (i == 3) {</pre>
+<pre>		phrase = phrase + word1 + word2 + word1;</pre>
+<pre>	}</pre>
+<pre>}</pre>
+<pre>var message = document.getElementById("message");</pre>
+<pre>message.innerHTML = phrase;</pre>
+<pre>alert(phrase);</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/080fig02.png">
+				</figure>
+			</div>
+
+<!-- Page 81 -->
+
+			<div class="pagebreak pageNumber">81</div>
+				
+			<div class="sidebar">
+				<figure class="left">
+					<img src="/contents/html5/figs/web2/081fig00.png">
+				</figure>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/081fig01.png">
+				</figure>
+
+				<div class="clear"></div>
+
+<pre><strong>&lt;!doctype html&gt;</strong></pre>
+				
+<pre><strong>&lt;html lang="en"&gt;</strong></pre>
+				
+<pre>  <strong>&lt;head&gt;</strong></pre>
+				
+<pre>	<strong>&lt;title&gt;Movies&lt;/title&gt;</strong></pre>
+				
+<pre>  <strong>&lt;/head&gt;</strong></pre>
+				
+<pre>  <strong>&lt;body&gt;</strong></pre>
+				
+<pre>	<strong>&lt;h1&gt;Movie Showtimes&lt;/h1&gt;</strong></pre>
+				
+<pre>	<strong>&lt;h2 id="movie1" &gt;Plan 9 from Outer Space&lt;/h2&gt;</strong></pre>
+				
+<pre>	<strong>&lt;p&gt;Playing at 3:00pm, 7:00pm.</strong></pre>
+				
+<pre>	  <strong>&lt;span&gt;</strong></pre>
+				
+<pre>		<strong>Special showing tonight at &lt;em&gt;midnight&lt;/em&gt;!</strong></pre>
+				
+<pre>	  <strong>&lt;/span&gt;</strong></pre>
+				
+<pre>	<strong>&lt;/p&gt;</strong></pre>
+				
+<pre>	<strong>&lt;h2 id="movie2"&gt;Forbidden Planet&lt;/h2&gt;</strong></pre>
+				
+<pre>	<strong>&lt;p&gt;Playing at 5:00pm, 9:00pm.&lt;/p&gt;</strong></pre>
+				
+<pre>  <strong>&lt;/body&gt;</strong></pre>
+				
+<pre><strong>&lt;/html&gt;</strong></pre>
+
+				<figure>
+					<img src="/contents/html5/figs/web2/081fig02.png">
+				</figure>
+			</div>
+
+<!-- Page 82 -->
+
+			<div class="pagebreak pageNumber">82</div>
+				
+			<div class="sidebar" id="sharpen_your_pencil_solution-id00022">
+				<figure class="right">
+					<img src="/contents/html5/figs/web2/082fig01.png">
+				</figure>
+				
+				<figure>
+					<img src="/contents/html5/figs/web/sharpenyourpencilsolution.png">
+				</figure>
+				
+				<p>
+					Here's some HTML for a playlist of songs, except that the list is empty. It was your job to complete the
+					JavaScript below to add the songs to the list. Our solution is below.
+				</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/082fig02.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>&lt;title&gt;My Playlist&lt;/title&gt;</pre>
+<pre>&lt;meta charset="utf-8"&gt;</pre>
+<pre>&lt;link rel="icon" </pre>
+<pre>      type="image/ico" </pre>
+<pre>      href="http://wickedlysmart.com/favicon.ico"&gt;</pre>
+<pre>&lt;script&gt;</pre>
+<pre>function addSongs() {</pre>
+<pre>	var song1 = document.getElementById("song1");</pre>
+<pre>	var song2 = document.getElementById("song2");</pre>
+<pre>	var song3 = document.getElementById("song3");</pre>
+
+<pre>	song1.innerHTML = "Blue Suede Strings, by Elvis Pagely";</pre>
+<pre>	song2.innerHTML = "Great Objects on Fire, by Jerry JSON Lewis";</pre>
+<pre>	song3.innerHTML = "I Code the Line, by Johnny JavaScript";</pre>
+<pre>}</pre>
+<pre>window.onload = addSongs;</pre>
+<pre>&lt;/script&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;h1&gt;My awesome playlist&lt;/h1&gt;</pre>
+<pre>	&lt;ul id="playlist"&gt;</pre>
+<pre>		&lt;li id="song1"&gt;&lt;/li&gt;</pre>
+<pre>		&lt;li id="song2"&gt;&lt;/li&gt;</pre>
+<pre>		&lt;li id="song3"&gt;&lt;/li&gt;</pre>
+<pre>	&lt;/ul&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 83 -->
+
+			<div class="pagebreak pageNumber">83</div>
+				
+			<div class="sidebar" id="sharpen_your_pencil_solution-id00023">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/sharpenpencil.png">
+				</figure>
+				
+				<p>
+					Below you'll find a web page with a list of empty items ready for your JavaScript to fill in with temperatures.
+					We gave you most of the code; it was your job to finish it up so that it set the content of each list item to
+					the corresponding temperature from the array. Did you get the extra credit? Our solution is below.
+				</p>
+
+				<div class="clear"></div>
+				
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web2/083fig01.png">
+					</figure>
+					
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				  	<div class="modal-body">
+							<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>&lt;title&gt;Temperatures&lt;/title&gt;</pre>
+<pre>&lt;meta charset="utf-8"&gt;</pre>
+<pre>&lt;script&gt;</pre>
+<pre>function showTemps() {</pre>
+<pre>	var tempByHour = new Array();</pre>
+<pre>	tempByHour[0] = 59.2;</pre>
+<pre>	tempByHour[1] = 60.1;</pre>
+<pre>	tempByHour[2] = 63;</pre>
+<pre>	tempByHour[3] = 65;</pre>
+<pre>	tempByHour[4] = 62;</pre>
+
+<pre>	for (var i = 0; i &lt; tempByHour.length; i++) {</pre>
+<pre>		var theTemp = tempByHour[i];</pre>
+<pre>		var id = "temp" + i;</pre>
+<pre>		var li = document.getElementById(id);</pre>
+<pre>		if (i == 0) {</pre>
+<pre>			li.innerHTML = "The temperature at noon was " + theTemp;</pre>
+<pre>		} else {</pre>
+<pre>			li.innerHTML = "The temperature at " + i + " was " + theTemp;</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>}</pre>
+<pre>&lt;/script&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>&lt;h1&gt;Temperatures&lt;/h1&gt;</pre>
+<pre>&lt;ul&gt;</pre>
+<pre>	&lt;li id="temp0"&gt;&lt;/li&gt;</pre>
+<pre>	&lt;li id="temp1"&gt;&lt;/li&gt;</pre>
+<pre>	&lt;li id="temp2"&gt;&lt;/li&gt;</pre>
+<pre>	&lt;li id="temp3"&gt;&lt;/li&gt;</pre>
+<pre>	&lt;li id="temp4"&gt;&lt;/li&gt;</pre>
+<pre>&lt;/ul&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+				<figure>
+					<img src="/contents/html5/figs/web2/083fig02.png">
+				</figure>
+
+			</div>
+
+<!-- Page 84 -->
+
+			<div class="pagebreak pageNumber">84</div>
+				
+			<div class="sidebar" id="html5cross_solution-id00024">
+				<figure>
+					<img src="/contents/html5/figs/web/html5crosssolution.png">
+				</figure>
+				
+				<figure>
+					<img src="/contents/html5/figs/web2/084fig01.png">
+				</figure>
+			</div>
+
+		</section> <!-- Section 26 -->
+
+	</div> <!-- /container -->
+
+</body>
+</html>

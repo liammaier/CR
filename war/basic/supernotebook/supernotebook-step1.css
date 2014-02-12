@@ -1,0 +1,45 @@
+.panel {
+	width: 33%;
+	float: left;
+	margin-top: 20px;
+}
+
+#Start {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	width: 100px;
+}
+
+.book, .content, .section {
+	border: 1px solid #000;
+	padding: 10px;
+}
+
+.book:hover, .content:hover, .section:hover, .selected {
+	background-color: #AAA;
+}
+
+#chapters, #sections {
+	display:none;
+}
+
+.panel h2{
+	text-align: center;
+}
+
+input[type="checkbox"] {
+	float: left;
+	margin-right: 10px;
+	margin-top: 3px;
+}
+
+#loading {
+	text-align: center;
+	margin-top: 50px;
+}
+
+.loadingtext {
+	margin-top: 15px;
+	font-size: 16px;
+}

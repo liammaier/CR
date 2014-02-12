@@ -1,0 +1,200 @@
+.crpublications.container {
+	font-family: "Times New Roman";
+	max-width: 1000px;
+	width: 900px;
+	background-color: white;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 3em;
+}
+
+
+/* COMMON */
+
+.crpublications p {
+	margin-top: 0em;
+	margin-bottom: 0em;
+	margin-left: 0em;
+	margin-right: 0em;
+}
+
+.crpublications .indent {
+	text-indent: 1em;
+}
+
+.crpublications h1 {
+	margin-left: 0em;
+	margin-right: 0em;
+	margin-top: .5em;
+	margin-bottom: 3em;
+	font-size: 125%;
+	font-weight: bold;
+	font-family: Helvetica;
+}
+
+.crpublications h2 {
+	margin-left: 0em;
+	margin-right: 0em;
+	margin-top: 2em;
+	margin-bottom: 1em;
+	font-size: 100%;
+	font-family: Helvetica;
+	font-weight: bold;
+	border-top: 1px black solid;
+}
+
+.crpublications h3 {
+	margin-top: 2em;
+	margin-bottom: 1em;
+	font-size: 100%;
+	font-weight: normal;
+	font-style: normal;
+}
+
+.crpublications .publication {
+	font-size: 80%;
+	margin-bottom: 1.5em;
+}
+
+.crpublications .pagebreak {
+	border-bottom: 2px dotted black;
+	width: 100%;
+	margin-top: 2em;
+	margin-bottom: 2em;
+}
+
+.crpublications .pageNumber {
+	color: grey;
+	display: block;
+	text-align: center;
+}
+
+.crpublications .clear {
+	clear: both;
+}
+
+.crpublications .introP {
+	text-indent: -1em;
+}
+
+.crpublications .superscript {
+	vertical-align: super;
+	font-size: 75%;
+}
+
+.crpublications p.formula {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.crpublications p.reference {
+	text-indent: -1.5em;
+	margin-left: 2em;
+	margin-bottom: .5em;
+}
+
+/* FIGURES */
+
+.crpublications img {
+	max-width: 100%;
+	padding: 1em;
+}
+
+/* TABLES */
+
+.crpublications table.basicTable {
+	border-collapse: collapse;
+	display: block;
+	border-spacing: 2px;
+	border-color: black;
+	margin-bottom: 2em;
+}
+
+.crpublications table.basicTable tr {
+	border-top: 1px solid black;
+	border-bottom: 2px solid black;	
+}
+
+.crpublications table.basicTable thead th {
+	font-weight: normal;
+	border-left: none;
+	border-right: none;
+	text-align: left;
+}
+
+.crpublications table.basicTable tbody tr {
+	border: none;
+	font-weight: normal;
+}
+
+.crpublications table.basicTable tbody td {
+	padding: 10px;
+	vertical-align: top;
+}
+
+.crpublications table.basicTable.fourColumns tbody td {
+	width: 25%;
+}
+
+.crpublications table.basicTable.fiveColumns tbody td {
+	width: 20%;
+}
+
+.crpublications table.basicTable tbody tr td p {
+	text-indent: -5px;
+}
+
+.crpublications table.basicTable tbody tr:last-child {
+	border-bottom: 1px solid black;
+}
+
+.crpublications table.levelTable {
+	border: collapse;
+	border: none;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.crpublications table.levelTable tr {
+	border: none;
+}
+
+.crpublications table.levelTable tr td {
+	padding: .3em;
+}
+
+/* LISTS */
+
+.crpublications ul {
+	padding-left: 4em;
+}
+
+.crpublications ul li {
+	padding-bottom: .5em;
+}
+
+/* STYLE */
+
+.crpublications .borderedIntro {
+	background-color: black;
+	color: white;
+	margin-right: 5em;
+	width: 30%;
+	margin-bottom: 4em;
+	padding: .25em;
+}
+
+.crpublications .topBorder {
+	border-top: 2px solid black;
+}
+
+.crpublications .lineBreak {
+	margin-top: 1em;
+	border-top: 1px solid black;
+	margin-bottom: .5em;
+}
+
+.crpublications .credits {
+	font-size: 80%;
+	margin-bottom: 1em;
+}

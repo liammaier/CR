@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+  <head>
+  	<title> App Inventor Chapter 4 </title>
+
+  </head>
+
+  <body>
+  	<div id="appinventor4" class="appinventor container"> 
+  		<div class="page">
+	  		<div class="chapter_head">
+				CHAPTER 4
+			</div>
+			<h2> No Texting While Driving</h2>
+	  		<section id="introduction" class="section" data-number="0" data-name="Introduction">
+		  		<div class="chapter_4">
+			  			<figure class="leftfig">
+				  			<img id="no_texting" src="/contents/appinventor/images/figure_4_0.png" height="300px">
+			  			</figure>
+			  			<p class="chapter_description">
+			  				<span class="first-sentence">This chapter walks you through the development of No Texting
+			  				While Driving, an app that autoresponds to text messages you receive while you’re driving.
+				  			</span> The app, first created with App Inventor by a beginning computer science student,
+				  			is similar to a now-mass-produced app developed by State Farm Insurance. It is a prime example
+				  			of how App Inventor provides access to some of the great features of the Android phone,
+				  			including SMS text processing, database management, text-to-speech, and the location sensor.
+				  		</p>
+		  		</div> <!-- chapter description -->
+		  		<div>
+		  				<figure class="rightfig">
+							<img src="/contents/appinventor/images/figure_4_1.png" width="200px">
+							<figcaption>Figure 4-1. The No Texting While Driving app</figcaption>
+						</figure>
+	  				<div class="next_to_rightfig">
+	  				<p>
+	  					In January 2010, the National Safety Council (NSC) announced the results of a study that found that at least 28 percent of all traffic accidents—close to 1.6 million crashes every year—are caused by drivers using cell phones, and at least 200,000 of those accidents occurred while drivers were texting.<sup>1</sup> As a result, many states have banned drivers from using cell phones altogether.
+	  				</p>
+	  				<p>
+	  					Daniel Finnegan, a student in the Fall 2010 session of the University of San Francisco App Inventor programming class, came up with a great app idea to help with the driving and texting epidemic. The app he created, which is shown in Figure 4-1, responds automatically (and hands-free) to any text with a message such as “I’m driving right now, I’ll contact you shortly.”
+	  				</p>
+	  				</div>
+		  		</div>
+		  		<div class="footnote">
+		  			<p>
+						<ol>
+							<li>http://www.nsc.org/pages/nscestimates16millioncrashescausedbydriversusingcellphonesandtexting.aspx</li>
+						</ol>
+					</p>
+				</div>
+			  	<div class="pagebreak">
+			  		<span class="pageNumber"> 52 </span> Chapter 4: No Texting While Driving
+			  	</div>
+			  	<p>
+			  		Some in-class brainstorming led to a few additional features that were developed for a tutorial posted on the App Inventor site:
+			  	</p>
+			  	<div class="indented">
+			  		<h4>The user can change the response for different situations</h4>
+			  		<p>
+			  			For example, if you’re going into a meeting or a movie instead of driving, the response can be modified accordingly.
+			  		</p>
+			  		<h4>The app speaks the text aloud</h4>
+			  		<p>
+			  			Even if you know the app will autorespond, the jingle of incoming texts can kill you with curiosity.
+			  		</p>
+			  		<h4>The response message can contain your current location</h4>
+			  		<p>
+			  			If your partner is at home making dinner, he or she would probably like to know how much longer your commute will last, without endangering you by having you answer the text.
+			  		</p>
+			  	</div> <!-- indented -->
+			  	<p>
+			  		Some weeks after the app was posted on the App Inventor site, State Farm Insurance created an Android app called “On the Move,” which has similar func- tionality to No Texting While Driving.<sup>2</sup> The service is free to anyone, as part of State Farm’s updated Pocket Agent→ for AndroidTM application, which the company announced in a YouTube video that can be found here: <span class="url">http://www.youtube.com/ watch?v=3xtjzO0-Hfw.</span>
+			  	</p>
+			  	<p>
+			  		We don’t know if Daniel’s app or the tutorial on the App Inventor site influenced “On the Move,” but it’s interesting to consider the possibility that an app created in a beginning programming course (by a creative writing student, no less!) might have inspired this mass-produced piece of software, or at least contributed to the ecosys- tem that brought it about. It certainly demonstrates how App Inventor has lowered the barrier of entry so that anyone with a good idea can quickly and inexpensively turn his idea into a tangible, interactive app.
+			  	</p>
+			</section>
+			<section id="what_youll_learn" class="section clear" data-number="1" data-name="What You'll Learn">
+		  		<h3>What You’ll Learn</h3>
+		  		<p><span class="first-sentence">This is a more complex app than those in the previous chapters, so you’ll build it one piece of functionality at a time, starting with the autoresponse message.</span> You’ll learn about:</p>
+		  		<ul class="clear">
+		  			<li>
+		  				The <span class="code">Texting</span> component for sending texts and processing received texts.
+		  			</li>
+		  			<li>
+		  				An input form for submitting the custom response message.
+		  			</li>
+		  			<li>
+		  				The <span class="code">TinyDB</span> database component for saving the customized message even after the app is closed.
+		  			</li>
+		  		<div class="footnote">
+		  			<p>
+		  				<ol start="2">
+								<li>http://www.statefarm.com/aboutus/newsroom/20100819.asp</li>
+							</ol>
+					</p>
+				</div>
+		  		<div class="pagebreak unlisted">
+		  			<span class="pageNumber"> 53 </span> Getting Started
+		  		</div>
+		  			<li class="clear">
+		  				The <span class="program_block">Screen.Initialize</span> event for loading the custom response when the app launches.
+		  			</li>
+		  			<li>
+		  				The <span class="code">Text-to-Speech</span> component for speaking the texts aloud.
+		  			</li>
+		  			<li>
+		  				The <span class="code">LocationSensor</span> component for reporting the driver’s current location.
+		  			</li>
+		  		</ul>
+			</section>
+			<section  id="getting_started" class="section" data-number="2" data-name="Getting Started">
+		  		<h3>Getting Started</h3>
+		  		<p>
+		  			<span class="first-sentence">For this app to work, you need a text-to-speech module, <span class="file_path_name">Text-To-Speech Extended</span>, on your phone. </span> This module is included in Android version 2 or higher, but if you are running an Android 1.x operating system, you’ll need to download it from the Android Market. On your phone:
+		  		</p>
+		  		<ol>
+		  			<li><!-- 1 -->
+		  				Open the Market app.
+		  			</li>
+		  			<li><!-- 2 -->
+		  				Search for TTS.
+		  			</li>
+		  			<li><!-- 3 -->
+		  				Select the app <span class="file_path_name">Text-To-Speech Extended</span> to install.
+		  			</li>
+		  		</ol>
+		  		<p>
+		  			Once the Text-To-Speech module is installed, open it to test its features. When it opens, set the default language as desired. Then select “Listen to Preview.” If you don’t hear anything, make sure the volume on your phone is turned up. You can also change the way the voice sounds by changing the setting for the TTS Default Engine property.
+		  		</p>
+		  		<p>
+		  			After you’ve set up the Text-To-Speech module to your liking, connect to the App Inventor website and start a new project. Name it “NoTextingWhileDriving” (project names can’t have spaces) and set the screen’s title to “No Texting While Driving”. Open the Blocks Editor and connect to the phone.
+		  		</p>
+		  	</section> <!-- getting started dn3 -->
+			<section  id="designing_the_components" class="section" data-number="3" data-name="Designing the Components">
+				<h4>Designing the Components</h4>
+
+				<p>
+					<span class="first-sentence"> The user interface for the app is relatively simple: it has a label that displays the auto- mated response, along with a text box and a button for submitting a change. </span> You’ll also need to drag in a <span class="code">Texting</span> component, a <span class="code">TinyDB</span> component, a <span class="code">TextToSpeech</span> component, and a <span class="code">LocationSensor</span> component, all of which will appear in the “Non- visible components” area. You can see how this should look in the snapshot of the Component Designer shown in Figure 4-2.
+				</p>
+
+				<div class="pagebreak">
+		  			<span class="pageNumber"> 54 </span> Chapter 4: No Texting While Driving
+		  		</div>
+		  		<figure class="centered">
+					<img src="/contents/appinventor/images/figure_4_2.png">
+					<figcaption>
+						Figure 4-2. The No Texting While Driving app in the Component Designer
+					</figcaption>
+				</figure>
+				<p>
+					You can build the user interface shown in Figure 4-2 by dragging out the components listed in Table 4-1.
+				</p>
+				<p>
+					Set the properties of the components in the following way:
+				</p>
+				<ul>
+					<li>
+						Set the Text of PromptLabel to “The text below will be sent in response to all SMS texts received while this app is running.”
+					</li>
+					<li>
+						 Set the Text of ResponseLabel to “I’m driving right now, I’ll contact you shortly.” Check its boldness property.
+					</li>
+					<li>
+						Set the Text of NewResponseTextbox to “”. (This leaves the text box blank for the user’s input.)
+					</li>
+					<li>
+						Set the Hint of NewResponseTextbox to “Enter new response text.”
+					</li>
+					<li>
+						Set the Text of SubmitResponseButton to “Modify Response.”
+					</li>
+				</ul>
+			</section>
+			<section class="section" id="adding_behaviors_to_the_components" data-number="4" data-name="Adding Behaviors to the Components">
+				<h4>Adding Behaviors to the Components</h4>
+				<p>
+					<span class="first-sentence">You’ll start by programming the basic text autoresponse behavior, and then successively add more functionality. </span>
+				</p>
+				<div class="pagebreak">
+		  			<span class="pageNumber">  55 </span> Getting Started
+		  		</div>
+				<figcaption> Table 4-1. All the components for the No Texting While Driving app </figcaption>
+	  			<table>
+			        <thead>
+			            <tr >
+			              <th> Component type</th>
+			              <th> Palette group </th>
+			              <th> What you'll name it</th>
+			              <th> Purpose </th>
+			             </tr>
+			        </thead>
+			        <tbody>
+			            <tr>
+			              <td> <span class="code">Label</span> </td>
+			              <td> Basic </td>
+			              <td> <span class="code">PromptLabel</span> </td>
+			              <td> Let the user know how the app works.</td>
+			            </tr>
+			             <tr>
+			              <td> <span class="code">Label</span> </td>
+			              <td> Basic </td>
+			              <td> <span class="code">ResponseLabel</span> </td>
+			              <td> The response that will be sent back to the sender of original text. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="code">TextBox</span> </td>
+			              <td> Basic </td>
+			              <td> <span class="code">NewResponseTextbox</span> </td>
+			              <td> The user will enter the custom response here. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="code">Button</span> </td>
+			              <td> Basic </td>
+			              <td> <span class="code">SubmitResponseButton</span> </td>
+			              <td> The user clicks this to submit response. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="code">Texting</span> </td>
+			              <td> Social </td>
+			              <td> <span class="code">Texting1</span> </td>
+			              <td> Process the texts.</td>
+			            </tr>
+			             <tr>
+			              <td> <span class="code">TinyDB</span> </td>
+			              <td> Basic </td>
+			              <td> <span class="code">TinyDB1</span> </td>
+			              <td> Store the response in the database. </td>
+			            </tr>
+			            <tr>
+			              <td> <span class="code">TextToSpeech</span> </td>
+			              <td> Other Stuff </td>
+			              <td> <span class="code">TextToSpeech1</span> </td>
+			              <td> Speak the texts aloud. </td>
+			            </tr>
+			            <tr>
+			              <td> <span class="code">LocationSensor</span> </td>
+			              <td> Sensors </td>
+			              <td> <span class="code">LocationSensor1</span> </td>
+			              <td> Sense where the phone is. </td>
+			            </tr>
+			          </tbody>
+	  			</table>
+		  		<section class="subsection" id="programming_an_autoresponse" data-number="5" data-name="Programming an autoresponse">
+	  				<h5>Programming an autoresponse</h5>
+	  				<p>
+	  					<span class="first-sentence">For the autoresponse behavior, you’ll use App Inventor’s <span class="code">Texting</span> component.</span> You can think of this component as a little person inside your phone that knows how to read and write texts. For reading texts, the component provides a <span class="program_block">Texting .MessageReceived </span>event block. You can drag this block out and place blocks inside it to show what should happen when a text is received. In the case of this app, we want to automatically send back a prewritten response text.
+	  				</p> 
+	  				<p>
+	  					To program the response text, you’ll place a <span class="program_block">Texting1.SendMessage</span> block within the <span class="program_block">Texting1.MessageReceived</span> block. <span class="program_block">Texting1.SendMessage</span> actually sends the text—so you’ll first need to tell the component what message to send, and who to send it to, before calling <span class="program_block">Texting1.SendMessage</span>. Table 4-2 lists all the blocks you’ll need for this autoresponse behavior, and Figure 4-3 shows how they should look in the Blocks Editor.
+	  				</p>
+	  				<figcaption> Table 4-2. The blocks for sending an autoresponse </figcaption>
+	  			<table>
+			        <thead>
+			            <tr>
+			              <th> Block type</th>
+			              <th> Drawer </th>
+			              <th> Purpose </th>
+			             </tr>
+			        </thead>
+			        <tbody>
+			            <tr>
+			              <td> <span class="program_block">Texting1.MessageReceived</span> </td>
+			              <td> Texting </td>
+			              <td> The event handler that is triggered when the phone reveives a text.</td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">set Texting1.PhoneNumber to</span> </td>
+			              <td> Texting </td>
+			              <td> Set the PhoneNumber property before sending. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">value number</span> </td>
+			              <td>  My Definitions </td>
+			              <td> The phone number of the person who sent the text. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">set Texting1.Message to</span> </td>
+			              <td> Texting </td>
+			              <td> Set the <span class="code">Message</span> property before sending. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">ResponseLabel.Text</span> </td>
+			              <td> ResponseLabel </td>
+			              <td> The message the user has entered.</td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">Texting1.SendMessage</span> </td>
+			              <td> Texting </td>
+			              <td> Send the message. </td>
+			            </tr>
+			          </tbody>
+	  			</table>
+	  			<div class="pagebreak">
+	  				<span class="pageNumber"> 56 </span> Chapter 4: No Texting While Driving
+	  			</div>
+	  			</section>
+	  			<figure class="centered">
+					<img src="/contents/appinventor/images/figure_4_3.png">
+					<figcaption>
+						Figure 4-3. Responding to an incoming text
+					</figcaption>
+				</figure>
+				<section class="subsection" data-number="6" data-name="How the blocks work">
+					<h5>How the blocks work</h5>
+					<p>
+						<span class="first-sentence">When the phone receives a text message, the <span class="program_block">Texting1.MessageReceived</span> event is triggered.</span> As shown in Figure 4-3, the phone number of the sender is in the argument <span class="code">number</span>, and the message received is in the argument <span class="code">messageText</span>. For the autoresponse, the app needs to send a text message to the sender. To send the text, you first need to set the two key properties of the <span class="code">Texting</span> component: <span class="code">PhoneNumber</span> and <span class="code">Message.Texting.PhoneNumber</span> is set to the number of the sender, and Texting.Message is set to the text you typed into ResponseLabel: “I’m driving right now, I’ll contact you shortly.” Once these are set, the app calls <span class="program_block">Texting.SendMessage</span> to actually send the response.
+					</p>
+					<p>
+						You may be wondering about the yellow boxes that we have in the Blocks Editor. Those are <span class="new_term">comments</span>, and you can add them by right-clicking a block and selecting Add Comment. Once you add a comment, you can show or hide it by clicking the black question mark that appears. You don’t have to add comments in your app— we’ve simply included them here to help describe each block and what it does.
+					</p>
+					<p>
+						Most people use comments to document how they are building their app; comments explain how the program works, but they won’t make the app behave differently. Comments are important, both for you as you build the app and modify it later, and for other people who might customize it. The one thing everyone agrees on about software is that it changes and transforms often. For this reason, commenting code is very important in software engineering, and especially so with open source software like App Inventor.
+					</p>
+					<div class="test_your_app"> 
+  					<div class="leftimagenowrap"><img src="/contents/appinventor/images/test_phone.jpg"></div>
+	  				<div class="next_to_leftimagenowrap">	
+	  					<p>
+  						<span class="apptest_header">Test your app.</span> 
+  							You’ll need a second phone to test this behavior. If you don’t have one, you can register with Google Voice or a similar service and send texts from that service to your phone.
+  						</p>
+  						<p>
+  							From the second phone, send a text to the phone running the app. Does the second phone receive the response text?
+  						</p>
+  					</div>
+	  			</div> <!-- test_your_app -->
+	  			<div class="pagebreak">
+	  				<span class="pageNumber"> 57 </span> Getting Started
+	  			</div>
+				</section><!--  dn7 how the blocks work -->
+		  	</section> <!-- dn5adding behaviours to the components	 -->
+		  	<section class="section" data-number="7" data-name="Entering a Custom Response">
+				<h4>Entering a Custom Response</h4>
+				<p>
+					<span class="first-sentence">Next, let’s add blocks so the user can enter her own custom response.</span> In the Component Designer, you added a <span class="code">TextBox</span> component named <span class="code">NewResponseTextbox</span>; this is where the user will enter the custom response. When the user clicks on the <span class="code">SubmitResponseButton</span>, you need to copy her entry (<span class="code">NewResponseTextbox</span>) into the <span class="code">ResponseLabel</span>, which is used to respond to texts. Table 4-3 lists the blocks you’ll need for transferring a newly entered response into the <span class="code">ResponseLabel</span>.
+				</p>
+				<figcaption>Table 4-3. Blocks for displaying the custom response</figcaption>
+  			<table>
+		        <thead>
+		            <tr>
+		              <th> Block type</th>
+		              <th> Drawer </th>
+		              <th> Purpose </th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		            <tr>
+		              <td> <span class="program_block">SubmitResponseButton.Click</span> </td>
+		              <td> SubmitResponseButton </td>
+		              <td> The user clicks this button to submit a new response message.</td>
+		            </tr>
+		             <tr>
+		              <td> <span class="program_block">set ResponseLabel.Text to</span> </td>
+		              <td> ReponseLabel </td>
+		              <td> Move (set) the newly input value to this label. </td>
+		            </tr>
+		             <tr>
+		              <td> <span class="program_block">￼NewResponseTextbox.Text</span> </td>
+		              <td>￼NewResponseTextbox </td>
+		              <td> The user has entered the new response here. </td>
+		            </tr>
+		          </tbody>
+  			</table>
+  				<section class="subsection" data-number="8" data-name="How the blocks work1">
+  					<h5>How the blocks work</h5>
+  					<p>
+  						<span class="first-sentence">Think of how a typical input form works: you first enter something in a text box, and then click a submit button to tell the system to process it.</span> The input form for this app is no different. Figure 4-4 shows how the blocks are programmed so that when the user clicks the <span class="code">SubmitResponseButton</span>, the <span class="program_block">SubmitResponseButton.Click</span> event is triggered.
+  					</p>
+  					<figure class="centered">
+						<img src="/contents/appinventor/images/figure_4_4.png">
+						<figcaption>
+							Figure 4-4. Setting the response to the user’s entry
+						</figcaption>
+					</figure>
+					<p>
+						The event handler in this case copies (or sets, in programming terms) what the user has entered in <span class="code">NewResponseTextbox</span> into the <span class="code">ResponseLabel</span>. Recall that <span class="code">ResponseLabel</span> holds the message that will be sent out in the autoresponse, so you want to be sure to place the newly entered custom message there.
+					</p>
+					<div class="test_your_app"> 
+	  					<div class="leftimagenowrap"><img src="/contents/appinventor/images/test_phone.jpg">
+	  					</div>
+		  				<div class="next_to_leftimagenowrap">	
+		  					<p>
+	  						<span class="apptest_header">Test your app.</span> Enter a custom response and submit it, and then use the second phone to send another text to the phone running the app. Was the custom response sent?
+	  						</p>
+	  						<div class="clear"></div>
+	  					</div>
+		  			</div> <!-- test_your_app -->
+		  			<div class="pagebreak">
+		  			<span class="pageNumber"> 58 </span> Chapter4: No Texting While Driving
+		  			</div>
+  				</section><!--  dn9 How the blocks work -->
+			</section> <!-- dn8 Entering a Custom Response -->
+			<section class="subsection" data-number="9" data-name="Storing the Custom Response in a Database">
+				<h4>Storing the Custom Response in a Database</h4>
+				<p>
+					<span class="first-sentence">You’ve built a great app already, with one catch: if the user enters a custom response, and then closes the app and relaunches it, the custom response will not appear (instead, the default one will).</span> This behavior is not what your users will expect; they’ll want to see the custom response when they restart the app. To make this happen, you need to store that custom response <span class="new_term">persistently</span>.
+				</p>
+				<p>
+					You might think that placing data in the <span class="code">ResponseLabel.Text</span> property is technically “storing” it, but the issue is that data stored in component properties is <span class="new_term">transient</span> data. Transient data is like your short-term memory; the phone “forgets” it as soon as an app closes. If you want your app to remember something <span class="emph">persistently</span>, you have to transfer it from short-term memory (a component property or variable) to long-term memory (a database).
+				</p>
+				<p>
+					To store data persistently, you’ll use the <span class="code">TinyDB</span> component, which stores data in a database that’s already on the Android device. <span class="code">TinyDB</span> provides two functions: <span class="code">StoreValue</span> and <span class="code">GetValue</span>. The former allows the app to store information in the device’s database, while the latter lets the app retrieve information that has already been stored.
+				</p>
+				<p>
+					For many apps, you’ll use the following scheme:
+				</p>
+				<ol>
+					<li>
+						Store data to the database each time the user submits a new value.
+					</li>
+					<li>
+						When the app launches, load the data from the database into a variable or property.
+					</li>
+				</ol>
+				<p>
+					You’ll start by modifying the <span class="program_block">SubmitResponseButton.Click</span> event handler so that it stores the data persistently, using the blocks listed in Table 4-4.
+				</p>
+				<figcaption>Table 4-4. Blocks for storing the custom response with TinyDB</figcaption>
+	  			<table class="widefirst">
+			        <thead>
+			            <tr>
+			              <th> Block type</th>
+			              <th> Drawer </th>
+			              <th> Purpose </th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			            <tr>
+			              <td> <span class="program_block">TinyDB1.StoreValue</span> </td>
+			              <td> TinyDB1 </td>
+			              <td> Store the custom message in the phone’s database.</td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">text</span>("response message") </td>
+			              <td> Text </td>
+			              <td> Use this as the tag for the data. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">￼ResponseLabel.Text</span> </td>
+			              <td>ResponseLabel </td>
+			              <td> The response message is now here. </td>
+			            </tr>
+			          </tbody>
+	  			</table>
+	  				<section class="subsection" data-number="10" data-name="How the blocks work2">
+	  					<h5>How the blocks work</h5>
+	  					<p>
+	  						This app uses <span class="program_block">TinyDB</span> to take the text it just put in <span class="code">ResponseLabel</span> and store it in the database. As shown in Figure 4-5, when you store something in the database, you provide a tag with it; in this case, the tag is “responseMessage.” Think of the tag as the name for the data’s spot in the database; it uniquely identifies the data you are storing. As you’ll see in the next section, you’ll use the same tag (“responseMessage”) when you load the data back in from the database.
+	  					</p>
+			  			<div class="pagebreak">
+			  			<span class="pageNumber"> 59 </span> Getting Started
+			  			</div>
+	  					<figure class="centered">
+							<img src="/contents/appinventor/images/figure_4_5.png">
+							<figcaption>
+								Figure 4-5. Storing the custom response persistently
+							</figcaption>
+						</figure>
+  				</section> <!-- dn12 How the blocks work2 -->
+			</section> <!-- Storing the Custom Response in a Database dn10 -->
+			<section class="section" data-number="11" data-name="Retrieving the Custom Response When the App Opens">
+					<h4>Retrieving the Custom Response When the App Opens</h4>
+					<p>
+						<span class="first-sentence">The reason for storing the custom response in the database is so it can be loaded back into the app the next time the user opens it.</span> App Inventor provides a special event block that is triggered when the app opens: <span class="program_block">Screen1.Initialize</span> (if you com- pleted MoleMash in Chapter 3, you’ve seen this before). If you drag this event block out and place blocks in it, those blocks will be executed right when the app launches.
+					</p>
+					<p>
+						For this app, your <span class="program_block">Screen1.Initialize</span> event handler should check to see if a custom response has been put in the database. If so, the custom response should be loaded in using the <span class="program_block">TinyDB.GetValue</span> function. The blocks you’ll need for this are shown in Table 4-5.
+					</p>
+					<figcaption>Table 4-5. Blocks for loading the data back in when the app is opened</figcaption>
+	  			<table class="widefirst">
+			        <thead>
+			            <tr>
+			              <th> Block type</th>
+			              <th> Drawer </th>
+			              <th> Purpose </th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			            <tr>
+			              <td> <span class="program_block">def variable</span> ("response") </td>
+			              <td> Definition (don’t forget: this is differ- ent than the My Definitions drawer) </td>
+			              <td> A temporary variable to hold the retrieved data.</td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">text</span>("") </td>
+			              <td> Text </td>
+			              <td> The initial value for the variable can be anything. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">Screen1.Initialize</span> </td>
+			              <td>Screen1 </td>
+			              <td> This is triggered when the app begins. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">set global response to</span> </td>
+			              <td>My Definitions </td>
+			              <td> Set this variable to the value retrieved from the database </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">TinyDB1.GetValue</span> </td>
+			              <td>TinyDB1 </td>
+			              <td> Get the stored response text from the database </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">text</span>("responseMessage") </td>
+			              <td>Text </td>
+			              <td> Plug this into the tag slot of TinyDB .GetValue, making sure the text is the same as that used in TinyDB.Store Value earlier. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">if</span> </td>
+			              <td>Control </td>
+			              <td> Ask if the retrieved value has some text. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">></span> </td>
+			              <td>Math </td>
+			              <td> Check if the length of the retrieved value is greater than (>) 0. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">length text</span> </td>
+			              <td>Text </td>
+			              <td> Check if the length of the retrieved value is greater than 0. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">global response</span> </td>
+			              <td>My Definitions </td>
+			              <td> This variable holds the value retrieved from TinyDB1.GetValue.</td>
+			            </tr>
+			            <tr>
+			              <td> <span class="program_block">number</span>(0)</td>
+			              <td>Math </td>
+			              <td> Compare this with the length of the response.</td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">set ResponseLabel.Text to</span></td>
+			              <td>ResponseLabel </td>
+			              <td> If we retrieved something, place it in ResponseLabel.</td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">global response</span></td>
+			              <td>My Definitions </td>
+			              <td> This variable holds the value retrieved from TinyDB1.GetValue.</td>
+			            </tr>
+			          </tbody>
+	  			</table>
+	  			<div class="pagebreak">
+	  			<span class="pageNumber"> 60 </span> Chapter4: No Texting While Driving
+	  			</div>
+				<section class="subsection" data-number="12" data-name="How the blocks work3">
+					<h5>How the blocks work</h5>
+					<p>
+						<span class="first-sentence">The blocks are shown in Figure 4-6. To understand them, you must envision a user opening the app for the first time, entering a custom response, and opening the app subsequent times.</span> The first time the user opens the app, there won’t be any custom response in the database to load, so you want to leave the default response in the ResponseLabel. On successive launches, you want to load the previously stored custom response from the database and place it in the <span class="code">ResponseLabel</span>.
+					</p>
+					<figure class="centered">
+						<img src="/contents/appinventor/images/figure_4_6.png">
+						<figcaption>
+							Figure 4-6. Loading the custom response from the database upon app initialization
+						</figcaption>
+					</figure>
+					<p>
+						When the app begins, the <span class="program_block">Screen1.Initialize</span> event is triggered. The app calls the <span class="program_block">TinyDB1.GetValue</span> with a tag of “responseMessage,” the same tag you used when you stored the user’s custom response entry earlier. The retrieved value is placed in the variable <span class="code">response</span> so that it can be checked before we place it as the <span class="code">ResponseLabel</span>. Can you think of why you’d want to check what you get back from the database before displaying it as the custom message to the user?
+					</p>
+					<div class="pagebreak">
+	  					<span class="pageNumber"> 61 </span> Getting Started
+	  				</div>
+	  				<p>
+	  					<span class="code">TinyDB</span> returns empty text if there is no data for a particular tag in the database. There won’t be data the first time the app is launched; this will be the case until the user enters a custom response. Because the variable <span class="code">response</span> now holds the returned value, we can use the <span class='program_block'>if</span> block to check if the length of what was returned by the database is greater than 0. If the length of the value contained in response is greater than 0, the app knows that <span class="code">TinyDB</span> did return something, and the re- trieved value can be placed into the <span class="code">ResponseLabel</span>. If the length isn’t greater than 0, the app knows there is no previously stored response, so it doesn’t modify the <span class="code">ResponseLabel</span> (leaving the default response in it).
+	  				</p>
+	  				<div class="test_your_app"> 
+  					<div class="leftimagenowrap"><img src="/contents/appinventor/images/test_phone.jpg"></div>
+	  				<div class="next_to_leftimagenowrap">	
+	  					<p>
+  						<span class="apptest_header">Test your app.</span> 
+  							You cannot test this behavior through live testing, as the database gets emptied each time you “Connect to Device” to restart the app.
+  						</p>
+  						<p>
+  							Instead, select “Package for Phone”→Show Barcode, and then download the app to your phone by scanning the barcode. Once the app is installed, enter a new response message in the <span class="code">NewResponseTextbox</span> and click the <span class="code">SubmitResponseButton</span>. Then close the app and restart it. Does your custom message appear?
+  						</p>
+  					</div>
+	  			</div> <!-- test_your_app -->
+				</section><!--  how the blocks work3 dn14 -->
+			</section><!--  dn13 Retrieving the Custom Response When the App Opens -->
+			<section class="section" data-number="13" data-name="Speaking the Incoming Texts Aloud">
+				<h4>Speaking the Incoming Texts Aloud</h4>
+				<p>
+					<span class="first-sentence">In this section, you’ll modify the app so that when you receive a text, the sender’s phone number, along with the message, is spoken aloud.</span> The idea here is that when you’re driving and hear a text come in, you might be tempted to check the text even if you know the app is sending an autoresponse. With text-to-speech, you can hear the incoming texts and keep your hands on the wheel.
+				</p>
+				<p>
+					Android devices provide text-to-speech capabilities and App Inventor provides a component, <span class="program_block">TextToSpeech</span>, that will speak any text you give it. (Note that here “text” is meant in the general sense of the word—a sequence of letters, digits, and punctuation—not an SMS text.)
+				</p>
+				<p>
+					In the “Getting Started” section of this app, we asked you to download a text-to- speech module from the Android Market. If you didn’t do so then, you’ll need to now. Once that module is installed and configured as desired, you can use the <span class="code">TextToSpeech</span> component within App Inventor.
+				</p>
+				<p>
+					The <span class="code">TextToSpeech</span> component is very simple to use—you just call its Speak function and plug in the text you want spoken into its <span class="new_term">message</span> slot. For instance, the function shown in Figure 4-7 would say, “Hello World.”
+				</p>
+				<div class="pagebreak">
+	  				<span class="pageNumber"> 62 </span> Chapter4: No Texting While Driving
+	  			</div>
+	  			<figure class="centered">
+						<img src="/contents/appinventor/images/figure_4_7.png">
+						<figcaption>
+							Figure 4-7. Blocks for speaking “Hello World” aloud
+						</figcaption>
+				</figure>
+				<p>
+					For the No Texting While Driving app, you’ll need to provide a more complicated message to be spoken, one that includes both the text received and the phone num- ber of the person who sent it. Instead of plugging in a static text object like the “Hello World” text block, you’ll plug in a <span class="program_block">make text </span>block. An incredibly useful function, <span class="program_block">make text</span> allows you to combine separate pieces of text (or numbers and other characters) into a single text object.
+				</p>
+				<p>
+					You’ll need to make the call to <span class="program_block">TextToSpeech.Speak</span> within the <span class="program_block">Texting.Message Received</span> event handler you programmed earlier. The blocks you programmed previ- ously handle this event by setting the <span class="code">PhoneNumber</span> and <span class="code">Message</span> properties of the Texting component appropriately and then sending the response text. You’ll extend that event handler by adding the blocks listed in Table 4-6.
+				</p>
+				<figcaption>Table 4-6. Blocks for speaking the incoming text aloud</figcaption>
+	  			<table class="widefirst">
+			        <thead>
+			            <tr>
+			              <th> Block type</th>
+			              <th> Drawer </th>
+			              <th> Purpose </th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			            <tr>
+			              <td> <span class="program_block">TextToSpeech1.Speak</span> </td>
+			              <td> TextToSpeech1 </td>
+			              <td> Speak the message received out loud.</td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">make text</span></td>
+			              <td> Text </td>
+			              <td> Build the words that will be spoken. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">text </span> ("SMS text received from") </td>
+			              <td>Text </td>
+			              <td> The first words spoken </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">value number</span> </td>
+			              <td>My Definitions </td>
+			              <td> The number from which the original text was received. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">text</span>(".The message is") </td>
+			              <td>Text </td>
+			              <td> Put a period in after the phone number and then say, “The message is.” </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">value messageText</span> </td>
+			              <td>My Definitions </td>
+			              <td> The original message received. </td>
+			            </tr>
+			          </tbody>
+	  			</table>
+	  			<section class="subsection" data-number="14" data-name="How the blocks work4">
+	  				<h5>How the blocks work</h5>
+	  				<p>
+	  					<span class="first-sentence">After the response is sent, the <span class="program_block">TextToSpeech1.Speak</span> function is called, as shown at the bottom of Figure 4-8.</span> You can plug any text object into the message slot of the <span class="program_block">TextToSpeech1.Speak</span> function. In this case, <span class="program_block">make text</span> is used to build the words to be spoken—it <span class="new_term">concatenates</span> (or adds) together the text “SMS text received from” and the phone number from which the message was received (<span class="program_block">value number</span>), plus the text “.The message is,” and finally the message received (<span class="program_block">value messageText</span>). So, if the text “hello” was sent from the number “111–2222,” the phone would say, “SMS text received from 111–2222. The message is hello.”
+	  				</p>
+	  				<div class="pagebreak">
+	  					<span class="pageNumber"> 63 </span> Getting Started
+	  				</div>
+	  				<figure class="centered">
+						<img src="/contents/appinventor/images/figure_4_8.png">
+						<figcaption>
+							Figure 4-8. Speaking the incoming text aloud
+						</figcaption>
+					</figure>
+	  			</section> <!-- how the blocks work4 dn16 -->
+	  			<div class="test_your_app"> 
+		  					<img src="/contents/appinventor/images/test_phone.jpg">
+			  				<div>	
+			  					<p>
+		  						<span class="apptest_header">Test your app.</span> You’ll need a second phone to test your app. From the second phone, send a text to the phone running the app. Does the phone running the app speak the text aloud? Does it still send an automated response?
+		  						</p>
+		  					</div>
+			  			</div> <!-- test_your_app -->
+			</section><!--  dn15 Speaking the Incoming Texts Aloud -->
+			<section class="section" data-number="15" data-name="Adding Location Information to the Response">
+				<h4>Adding Location Information to the Response</h4>
+				<p>
+					<span class="first-sentence">Apps like Facebook’s Place and Google’s Latitude use GPS information to help people track one another’s location.</span>There are major privacy concerns with such apps, one reason being that location tracking kindles people’s fear of a “Big Brother” apparatus that a totalitarian government might set up to track its citizens’ whereabouts. But apps that use location information can be quite useful—think of a lost child, or hikers who’ve gotten off the trail in the woods.
+				</p>
+				<p>
+					In the No Texting While Driving app, location tracking can be used to convey a bit more information in response to incoming texts. Instead of just “I’m driving,” the response message can be something like “I’m driving and I’m at 3413 Cherry Avenue.” For someone awaiting the arrival of a friend or family member, this extra information can be helpful.
+				</p>
+				<p>
+					App Inventor provides the <span class="code">LocationSensor</span> component for interfacing with the phone’s GPS (or <span class="new_term">geographical positioning system</span>). Besides latitude and longitude in- formation, the <span class="code">LocationSensor</span> can also tap into Google Maps to provide the driver’s current street address.
+				</p>
+				<div class="pagebreak">
+	  				<span class="pageNumber"> 64 </span> Chapter4: No Texting While Driving
+	  			</div>
+	  			<p>
+	  				<span class="first-sentence">It’s important to note that <span class="code">LocationSensor</span> doesn’t always have a reading. For this reason, you need to take care to use the component properly. </span>Specifically, your app should respond to the <span class="program_block">LocationSensor.LocationChanged</span> event handler. A <span class="program_block">LocationChanged</span> event occurs when the phone’s location sensor first gets a read- ing, and when the phone is moved to generate a new reading. Using the blocks listed in Table 4-7, our scheme will respond to the <span class="program_block">LocationChanged</span> event by placing the current address in a variable we’ll name <span class="code">lastKnownLocation</span>. Later, we’ll change the response message to incorporate the address we get from this variable.
+	  			</p>
+	  			<figcaption>Table 4-7. Blocks to set up the location sensor</figcaption>
+	  			<table class="widefirst">
+			        <thead>
+			            <tr>
+			              <th> Block type</th>
+			              <th> Drawer </th>
+			              <th> Purpose </th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			            <tr>
+			              <td> <span class="program_block">def variable</span>("lastKnownLocation")</td>
+			              <td> Definitions </td>
+			              <td> Create a variable to hold the last read address.</td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">text</span>("unknown")</td>
+			              <td> Text </td>
+			              <td> Set the default value in case the phone’s sensor is not working. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">LocationSensor1.LocationChanged </span></td>
+			              <td>LocationSensor1 </td>
+			              <td> This is triggered on the first location reading and every location change.</td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">set global lastKnownLocation to</span> </td>
+			              <td>My Definitions </td>
+			              <td> Set this variable to be used later. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">LocationSensor1.CurrentAddress</span></td>
+			              <td>LocationSensor1 </td>
+			              <td> This is a street address such as “2222 Willard Street, Atlanta, Georgia.” </td>
+			            </tr>
+			          </tbody>
+	  			</table>
+	  			<section class="subsection" data-number="16" data-name="How the blocks work5">
+	  				<h5>How the blocks work</h5>
+	  				<p>
+	  					<span class="first-sentence">The <span class="program_block">LocationSensor1.LocationChanged</span> event is triggered the first time the sensor gets a location reading and when the device is moved so that a new reading is generated.</span> Since you eventually want to send a street address as part of the response message, Figure 4-9 shows how the <span class="program_block">LocationSensor1.CurrentAddress</span> function is called to get that information and store it in the <span class="code">lastKnownLocation</span> variable. Behind the scenes, this function makes a call to Google Maps (via an API, something you’ll learn about in Chapter 24) to determine the closest street address for the latitude and longitude that the sensor reads.
+	  				</p>
+	  				<figure class="centered">
+						<img src="/contents/appinventor/images/figure_4_9.png">
+						<figcaption>
+							Figure 4-9. Recording the phone’s location in a variable each time the GPS location is sensed
+						</figcaption>
+					</figure>
+					<div class="pagebreak">
+	  					<span class="pageNumber"> 65 </span> Getting Started
+	  				</div>
+	  				<p>
+	  					Note that with these blocks, you’ve finished only half of the job. The app still needs to incorporate the location information into the autoresponse text that will be sent back to the sender. Let’s do that next.
+	  				</p>
+	  			</section> <!-- dn18 how the blocks work5 -->
+			</section> <!-- dn17 adding location informationa -->
+			<section class="section" data-number="17" data-name="Sending the Location As Part of the Response">
+				<h4>Sending the Location As Part of the Response</h4>
+				<p>
+					Using the variable <span class="code">lastKnownLocation</span>, you can modify the <span class="program_block">Texting1.Message Received</span> event handler to add location information to the response. Table 4-8 lists the blocks you’ll need for this.
+				</p>
+				<figcaption>Table 4-8. Blocks to display location information in the autoresponse</figcaption>
+	  			<table class="widefirst">
+			        <thead>
+			            <tr>
+			              <th> Block type</th>
+			              <th> Drawer </th>
+			              <th> Purpose </th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			            <tr>
+			              <td> <span class="program_block">make text</span></td>
+			              <td> Text </td>
+			              <td> If there is a location reading, build a compound text object.</td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">ResponseLabel.Text</span></td>
+			              <td> MessageTextBox </td>
+			              <td> This is the (custom) message in the text box. </td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block">text</span>("My last known location is:")</td>
+			              <td>Text </td>
+			              <td> This will be spoken after the custom message (note the leading space).</td>
+			            </tr>
+			             <tr>
+			              <td> <span class="program_block"> global lastKnownLocation</span> </td>
+			              <td> LocationSensor </td>
+			              <td> This is an address such as “2222 Willard Street, Atlanta, Georgia.” </td>
+			            </tr>
+			          </tbody>
+	  			</table>
+	  			<section class="subsection" data-number="18" data-name="How the blocks work6">
+	  				<h5>How the blocks work</h5>
+	  				<p>
+	  					<span class="first-sentence">This behavior works in concert with the LocationSensor1.LocationChanged event and the variable lastKnownLocation. </span> As you can see in Figure 4-10, instead of directly sending a message containing the text in ResponseLabel.Text, the app first builds a message using make text. It combines the response text in ResponseLabel.Text with the text “My last known location is:” followed by the variable lastKnownLocation.
+	  				</p>
+	  				<figure class="centered">
+						<img src="/contents/appinventor/images/figure_4_10.png">
+						<figcaption>
+							Figure 4-10. Including location information in the response text
+						</figcaption>
+					</figure>
+
+					<div class="pagebreak">
+	  					<span class="pageNumber"> 66 </span> Chapter 4: No Texting While Driving
+	  				</div>
+	  				<p>
+	  					The default value of <span class="program_block">lastKnownLocation</span> is “unknown,” so if the location sensor hasn’t yet generated a reading, the second part of the response message will contain the text “My last known location is: unknown.” If there has been a reading, the second part of the response will be something like “My last known location is: 876 Willard Street, San Francisco, CA 95422.”
+	  				</p>
+	  				<div class="test_your_app"> 
+		  					<img src="/contents/appinventor/images/test_phone.jpg">
+			  				<div>	
+			  					<p>
+		  						<span class="apptest_header">Test your app.</span>From the second phone, send a text to the phone running the app. Does the second phone receive the response text with the location information? If it doesn’t, make sure you’ve turned GPS on in the first phone’s Location settings.
+		  						</p>
+		  					</div>
+			  			</div> <!-- test_your_app -->
+	  			</section> <!-- dn20 how the blocks work6 -->
+			</section><!--  Sending the Location As Part of the Response dn19 -->
+			<section class="section" data-number="19" data-name="The Complete App: No Texting While Driving">
+				<h3>The Complete App: No Texting While Driving</h3>
+				<p>
+					Figure 4-11 shows the final block configuration for No Texting While Driving.
+				</p>
+				
+			</section><!--  The Complete App: No Texting While Driving dn21 -->
+			<section class="section" data-number="20" data-name="Variations">
+				<h3>Variations</h3>
+				<p>
+					Once you get the app working, you might want to explore some variations. For example:
+				</p>
+				<ul>
+					<li>
+						Write a version that lets the user define custom responses for particular incom- ing phone numbers. You’ll need to add conditional (<span class="code">if</span>) blocks that check for those numbers. For more information on conditional blocks, see Chapter 18.
+					</li>
+					<li>
+						Write a version that sends custom responses based on whether the user is within certain latitude/longitude boundaries. So, if the app determines that you’re in room 222, it will send back “Bob is in room 222 and can’t text right now.” For more information on the <span class="code">LocationSensor</span> and determining boundaries, see Chapter 23.
+					</li>
+					<li>
+						Write a version that sounds an alarm when a text is received from a number in a “notify” list. For help working with lists, see Chapter 19.
+					</li>
+				</ul>
+				<div class="pagebreak">
+				<span class="pageNumber"> 67 </span> Variations
+				</div>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_4_11.png">
+					<figcaption>
+						Figure 4-11. The complete No Texting While Driving app (with all comments showing)
+					</figcaption>
+				</figure>
+				<div class="pagebreak">
+					<span class="pageNumber"> 67 </span> Variations
+				</div>
+			</section>
+			<section class="section" data-number="21" data-name="Summary">
+				<h3>Summary</h3>
+				<p>
+					Here are some of the concepts we’ve covered in this tutorial:
+				</p>
+				<ul>
+					<li>
+						The <span class='code'>Texting</span> component can be used to both send text messages and process the ones that are received. Before calling <span class="program_block">Texting.SendMessage</span>, you should set the <span class="code">PhoneNumber</span> and <span class="code">Message</span> properties of the Texting component. To respond to an incoming text, program the <span class="program_block">Texting.MessageReceived</span> handler.
+					</li>
+					<li>
+						The <span class="code">TinyDB</span> component is used to store information persistently—in the phone’s database—so that the data can be reloaded each time the app is opened. For more information on <span class="code">TinyDB</span>, see Chapter 22.
+					</li>
+					<li>
+						The <span class="code">TextToSpeech</span> component takes any text object and speaks it aloud.
+					</li>
+					<li>
+						<span class="program_block">make text</span> is used to piece together (or concatenate) separate text items into a single text object.
+					</li>
+					<li>
+						The <span class="code">LocationSensor</span> component can report the phone’s latitude, longitude, and current street address. To ensure that it has a reading, you should access its data within the <span class="program_block">LocationSensor.LocationChanged</span> event handler, which is triggered the first time a reading is made and upon every change thereafter. For more information on the <span class="code">LocationSensor</span>, see Chapter 23.
+					</li>
+				</ul>
+				<p>
+					If you’re interested in exploring SMS-processing apps further, check out the Broadcast Hub app in Chapter 11.
+				</p>
+			</section>
+		</div>
+	</div>	
+</body>
+

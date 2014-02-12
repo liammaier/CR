@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<head>
+<title>App Inventor Chapter 24</title>
+</head>
+<body>
+	<div id="appinventor24" class="appinventor container">
+		<div class="page">
+			<div class="chapter_head">CHAPTER 24</div>
+			<div class="chapter_name">
+				<h2>Communicating with Web APIs</h2>
+			</div>
+			<section id="introduction" class="section" data-number="0"
+				data-name="Introduction">
+				<div class="chapter_description chapter_24">
+					<figure class="rightfig">
+						<img id="figure_24_0"
+							src="/contents/appinventor/images/figure_24_0.png" alt="">
+					</figure>
+					<p>
+						<span class="first_sentence">Mobile technology and the
+							ubiquitous nature of the Web have changed the world we live in.</span>
+						You can now sit in the park and do your banking, search Amazon.com
+						to find reviews of the book you&#39;re reading, and check Twitter
+						to see what people in every other park in the world are thinking
+						about. Mobile phones have moved well past just calling and
+						texting&#8212;now you have instant access to the world&#39;s data,
+						too.
+					</p>
+					<p>You can use your phone&#39;s browser to reach the Web, but
+						often the small screen and limited speed of a mobile device can
+						make this prob- lematic. Custom apps, specially designed to pull
+						in small chunks of particularly suitable in- formation from the
+						Web, can provide a more attractive alternative to the mobile
+						browser.</p>
+					<p>
+						In this chapter, we&#39;ll take a broader look at apps that source
+						information from the Web. You&#39;ll start by creating an app that
+						asks a website to generate a bar chart (image) of a game
+						player&#39;s scores for display. Then we&#39;ll discuss how <span
+							class="code">TinyWebDB</span> can be used to access any type of
+						data (not just images) from the Web, and we&#39;ll provide a
+						sample that accesses stock data from Yahoo! Finance. Finally,
+						we&#39;ll discuss how you can create your own web information
+						sources that can be used by App Inventor apps.
+					</p>
+				</div>
+				<!-- chapter description -->
+				<p>
+					Creativity is about remixing the world, combining (<span
+						class="new_term">mashing</span>) old ideas and content in
+					interesting new ways. Eminem popularized the music <span
+						class="new_term">mashup</span> when he set his Slim Shady vocal
+					over AC/DC and Vanilla Ice tracks. This kind of
+					&#8220;sampling&rdquo; is now common, and numerous
+					artists&mdash;including Girl Talk and Negativland&mdash;focus
+					primarily on creating new tracks from mashing old content.
+				</p>
+				<div class="pagebreak">
+					<span class="pageNumber"> 334 </span> Chapter 24: Communicating
+					with Web APIs
+				</div>
+				<p>
+					The web and mobile world are no different: websites and apps remix
+					content from various data sources, and most sites are now designed
+					with such <span class="new_term">interoperability</span> in mind.
+					An illustrative example of a web mashup is Housing Maps (<span
+						class="url">http://www. housingmaps.com</span>), pictured in
+					Figure 24-1, which takes apartment rental information from
+					Craigslist (<span class="url">http://www.craigslist.org</span>) and
+					mashes it with the Google Maps API.
+				</p>
+				<figure class="centered">
+					<img id="figure_24_1"
+						src="/contents/appinventor/images/figure_24_1.png" alt="">
+					<figcaption>Figure 24-1. Housing Maps mashes
+						information from Craigslist and Google Maps</figcaption>
+				</figure>
+				<p>
+					Mashups like Housing Maps are possible because services like Google
+					Maps provide both a website and a corresponding <span
+						class="new_term">web service API</span>. We humans visit <span
+						class="new_term">http://maps.google.com/</span> in a browser, but
+					apps like Housing Maps communicate machine to machine with the
+					Google Maps API. Mashups process the data, combine it with data
+					from other sites (e.g., Craigslist), and then present it in new and
+					interesting ways.
+				</p>
+				<p>
+					Just about every popular website now provides this alternative,
+					machine-to-machine access. The program providing the data is called
+					a <span class="new_term">web service</span>, and the protocol for
+					how a <span class="new_term">client</span> app should communicate
+					with the service is called an <span class="new_term">application
+						programmer interface</span>, or API. In practice, the term <span
+						class="new_term">API</span> is used to refer to the web service as
+					well.
+				</p>
+				<p>
+					The Amazon Web Service (AWS) was one of the first web services, as
+					Amazon realized that opening its data for use by third-party
+					entities would eventually lead to more books being sold. When
+					Facebook launched its API in 2007, many people raised their
+					eyebrows. Facebook&#39;s data isn&#39;t book advertisements, so why
+					should it let other apps &ldquo;steal&rdquo; that data and
+					potentially draw many users away from the Facebook site (and its
+					advertisements!). But its openness led Facebook toward becoming a <span
+						class="new_term">platform</span> instead of just a
+					site&mdash;meaning that other programs, like FarmVille, could build
+					on and tap into Facebook&#39;s functionality&mdash;and no one can
+					argue with its success today. By the time Twitter launched in 2009,
+					API access was an expectation, not a novelty, and Twitter acted
+					accordingly. Now, as shown in Figure 24-2, most websites offer both
+					an API and a human interface.
+				</p>
+				<div class="pagebreak">
+					<span class="pageNumber"> 335 </span> Talking to Web APIs That
+					Generate Images
+				</div>
+				<figure class="centered">
+					<img id="figure_24_2"
+						src="/contents/appinventor/images/figure_24_2.png" alt="">
+					<figcaption>Figure 24-2. Most websites provide both a
+						human interface and an API for client apps</figcaption>
+				</figure>
+				<p>So the Web is one thing to us average humans&mdash;a
+					collection of sites to visit. To programmers, it is the world&#39;s
+					largest and most diverse database of information.
+					Machine-to-machine communication is now poised to outpace
+					human&#8212;machine communication on the Web!</p>
+			</section>
+			<section class="section" data-number="1"
+				data-name="Talking to Web APIs That Generate Images">
+				<h4>Talking to Web APIs That Generate Images</h4>
+				<p>
+					<span class="first_sentence">As we saw in Chapter 13
+						(&ldquo;Amazon at the Bookstore&rdquo;), most APIs accept requests
+						in the form of a URL and return data (typically in standard
+						formats like XML, or Extensible Markup Language; and JSON,
+						JavaScript Object Notation).</span> For these APIs, you use the <span
+						class="code">TinyWebDB</span> component to communicate, a topic
+					we&#39;ll discuss in greater detail later in the chapter.
+				</p>
+				<p>Some APIs, however, don&#39;t return data; they return a
+					picture. In this section, we&#39;ll dis- cuss how you can
+					communicate with these image-generating APIs in order to extend App
+					Inventor&#39;s user interface capabilities.</p>
+				<p>The Google Chart API is such a service. Your app can send it
+					some data within a URL, and it will send back a chart that you can
+					display in your app. The service creates many types of charts,
+					including bar charts, pie charts, maps, and Venn diagrams. The
+					Chart API is a great example of an interoperable web service whose
+					purpose is to enhance the capabilities of other sites. Since App
+					Inventor doesn&#39;t provide much in terms of visualization
+					components, the ability to leverage a service like the Chart API is
+					crucial.</p>
+				<div class="pagebreak">
+					<span class="pageNumber"> 336 </span> Chapter 24: Communicating
+					with Web APIs
+				</div>
+				<p>
+					The first thing to do is to understand the format of the URL you
+					should send to the API. If you go to the Google Chart API site (<span
+						class="code">http://code.google.com/apis/chart</span>), you will
+					see the overview shown in Figure 24-3.
+				</p>
+				<figure class="centered">
+					<img id="figure_24_3"
+						src="/contents/appinventor/images/figure_24_3.png" alt="">
+					<figcaption>Figure 24-3. The Google Chart API
+						generates numerous types of charts</figcaption>
+				</figure>
+				<p>The site includes complete documentation and a wizard to
+					interactively create charts and explore how to build the URLs. The
+					wizard is especially helpful, because you can use a form to specify
+					the kind of chart you want and then examine the URL that the wizard
+					generates to reverse-engineer what you want to send it for your
+					specific data.</p>
+				<p>Go ahead and play around with the website and the wizard and
+					build some charts, and then take a look at the details of the URLs
+					used to build them. For example, if you enter the following URL in
+					a browser:</p>
+				<div class="indented">
+					<p class="code">
+						http://chart.apis.google.com/chart?cht=bvg&chxt=y&chbh=a&chs=300x225&chco=
+						A2C180&chtt=Vertical+bar+chart&chd=t:10,50,60,80,40,60,30</p>
+				</div>
+				you&#39;ll get the chart shown in Figure 24-4.
+				<p></p>
+				<div class="pagebreak">
+					<span class="pageNumber"> 337 </span> Talking to Web APIs That
+					Generate Images
+				</div>
+				<figure class="centered">
+					<img id="figure_24_4"
+						src="/contents/appinventor/images/figure_24_4.png" alt="">
+					<figcaption>Figure 24-4. Google&#39;s Chart API
+						generates this chart from the URL</figcaption>
+				</figure>
+				<p>
+					To understand the rather complicated-looking URL specified
+					previously, you need to understand how URLs work. In your browsing
+					experience, you&#39;ve probably noticed URLs with question marks
+					(?) and ampersands (&). The ? character specifies that the first
+					parameter of the URL request is coming. The & character then
+					separates each succeeding parameter. Each parameter has a name, an
+					equals sign, and a value. So the sample URL is calling the Chart
+					API (<span class="url">http://chart.apis.google.com/chart</span>)
+					with the parameters listed in Table 24-1.
+				</p>
+				<figcaption>Table 24-1. The Chart API utilizes a URL
+					with these parameters</figcaption>
+				<table>
+					<thead>
+						<tr>
+							<td>Parameter</td>
+							<td>Value</td>
+							<td>Meaning</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>cht</td>
+							<td>bvg</td>
+							<td>The chart type is bar, vertical, grouped.</td>
+						</tr>
+						<tr>
+							<td>chxt</td>
+							<td>y</td>
+							<td>Show the numbers on the y-axis.</td>
+						</tr>
+						<tr>
+							<td>chbh</td>
+							<td>a</td>
+							<td>Width/spacing is automatic.</td>
+						</tr>
+						<tr>
+							<td>chs</td>
+							<td>300x225</td>
+							<td>The size of the chart in pixels.</td>
+						</tr>
+						<tr>
+							<td>chco</td>
+							<td>A2C180</td>
+							<td>The bar colors in hexadecimal notation.</td>
+						</tr>
+						<tr>
+							<td>chd</td>
+							<td>t:10,50,60,80,40,60,30</td>
+							<td>The data of the chart, with basic text format (t).</td>
+						</tr>
+						<tr>
+							<td>chtt</td>
+							<td>Vertical+bar+chart</td>
+							<td>The chart title; a + character indicates a space.</td>
+						</tr>
+					</tbody>
+				</table>
+				<p>
+					By modifying the parameters, you can generate various graphs. For
+					more information on the types of graphs you can create, check out
+					the API documentation at <span class="url">http://
+						code.google.com/apis/chart/index.html</span>.
+				</p>
+			</section>
+			<section class="subsection" data-number="2"
+				data-name="Setting the Image.Picture Property to a Chart API">
+				<h4>Setting the Image.Picture Property to a Chart API</h4>
+				<p>
+					<span class="first_sentence">Now you know how to type the
+						sample Chart API URL into a web browser to see the chart that is
+						generated.</span> To get a chart to appear in an app, you&#39;ll need to
+					set the <span class="code">Picture</span> property of an <span
+						class="code">Image</span> component to that same URL. To explore
+					this, do the following:
+				</p>
+				<div class="pagebreak">
+					<span class="pageNumber"> 338 </span> Chapter 24: Communicating
+					with Web APIs
+				</div>
+				<ol class="clear">
+					<li>Create a new app with a screen title of &ldquo;Sample
+						Chart App&rdquo;.</li>
+					<li>Add an <span class="code">Image</span> component with a <span
+						class="code">Width</span> of &ldquo;Fill parent&rdquo; and <span
+						class="code">Height</span> of 300.
+					</li>
+					<li>Set the <span class="code">Image.Picture</span> property
+						to the sample URL (<span class="url">http://chart.apis.google.com/chart?cht=bvg&chxt=y&chbh=a&chs=300x225&chco=A2C180&chtt=Vertical+bar+chart&chd=t:10,50,60,80,40,60,30</span>).
+						You can&#39;t set the property in the Component Designer, as it
+						only allows you to upload a file. But you can set it in the Blocks
+						Editor, as shown in Figure 24-5, so add a <span
+						class="program_block">Screen.Initialize</span> event handler and
+						set the <span class="code">Image.Picture</span> property there
+						(note that you can&#39;t copy and paste on some machines, so
+						you&#39;ll have to type out the full URL).
+					</li>
+				</ol>
+				<figure class="centered">
+					<img id="figure_24_5"
+						src="/contents/appinventor/images/figure_24_5.png" alt="">
+					<figcaption>Figure 24-5. When the app starts, it sets
+						the picture to a chart returned from the Chart API URL</figcaption>
+				</figure>
+				<figure class="leftfig">
+					<img src="/contents/appinventor/images/figure_24_6.png" alt="">
+					<figcaption>Figure 24-6. The chart in an app</figcaption>
+				</figure>
+				<p>You should see the image in Figure 24-6 on your phone or
+					emulator.</p>
+			</section>
+			<section class="subsection" data-number="3"
+				data-name="Building a Chart API URL Dynamically">
+				<h4>Building a Chart API URL Dynamically</h4>
+				<p>
+					<span class="first_sentence">The preceding example shows how
+						you can get a generated chart in your app, but it uses a URL with
+						fixed data (10,50,60,80,40,60,30).</span> Generally, you&#39;ll show <span
+						class="new_term">dynamic</span> data in your chart&mdash;that is,
+					data stored in your variables. For example, in a game app, you
+					might show the user&#39;s previous scores, which are stored in a
+					variable <span class="code">Scores</span>.
+				</p>
+				<p>
+					To create such a dynamic chart, you must <span class="new_term">build</span>
+					the URL for the Chart API and load your variable data into it. In
+					the sample URL, the data for the chart is fixed and specified in
+					the parameter <span class="code">chd</span> (<span class="code">chd</span>
+					stands for chart data):
+				</p>
+				<p class="code">chd=t:10,50,60,80,40,60,30</p>
+				<p>
+					To build your scores chart dynamically, you&#39;ll start with the
+					fixed part, <span class="code">chd=t:</span>, and then step through
+					the <span class="code">Scores</span> list, concatenating each score
+					to the text (along with a comma). Figure 24-7 shows a complete
+					solution.
+				</p>
+				<div class="pagebreak">
+					<span class="pageNumber"> 339 </span> Talking to Web APIs That
+					Generate Images
+				</div>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_24_7.png" alt="">
+					<figcaption>Figure 24-7. Dynamically building a URL to
+						send to the Chart API</figcaption>
+				</figure>
+				<div class="pagebreak">
+					<span class="pageNumber"> 340 </span> Chapter 24: Communicating
+					with Web APIs
+				</div>
+				<p>Let&#39;s examine the blocks more closely, because
+					there&#39;s a lot going on in here, much of which we&#39;ve covered
+					in previous chapters. To understand such code, it&#39;s important
+					to envision some real data. So let&#39;s assume the user has played
+					three games in this app and that the variable Scores has three
+					items: 11, 22, and 15.</p>
+				<p>
+					The blocks in Figure 24-8 define a variable <span class="code">chdParam</span>
+					to store the part of the URL that will contain the <span
+						class="code">chd</span> data. The first row of blocks initializes
+					the text of the <span class="code">chdParam</span> from the list of
+					<span class="code">Scores</span>.
+				</p>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_24_8.png" alt="">
+					<figcaption>Figure 24-8. Beginning the chd parameter
+						with &ldquo;chd=t:&rdquo; and the first score</figcaption>
+				</figure>
+				<p>
+					After these blocks are performed, <span class="code">chdParam</span>
+					will contain <span class="code">chd=t:11</span>, as <span
+						class="code">11</span> is the first value of the <span
+						class="code">Scores</span> list.
+				</p>
+				<p>
+					The next set of blocks, shown in Figure 24-9, adds the rest of the
+					scores to the <span class="code">chdParam</span>.
+				</p>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_24_9.png" alt="">
+					<figcaption>Figure 24-9. Adding the successive scores
+						to the chdParam variable</figcaption>
+				</figure>
+				<p>
+					We use a <span class="program_block">while</span> block in this
+					example instead of a <span class="program_block">foreach</span>
+					because <span class="program_block">foreach</span> only allows you
+					to do the same thing to each item. Here, we want to insert commas
+					before the second item and any items that come after it (but not
+					the first). With <span class="program_block">while</span>, we can
+				</p>
+				<div class="pagebreak">
+					<span class="pageNumber"> 341 </span> Talking to Web Data APIs
+				</div>
+				put the first item in (Figure 24-8) and then loop starting from the
+				second item, always inserting a comma <span class="emph">before</span>
+				the item (make sure not to put a space afterward). For more
+				information on <span class="program_block">while</span> and <span
+					class="program_block">foreach</span>, see Chapter 20.
+				<p></p>
+				<p>
+					An index is used to keep track of where we are in the <span
+						class="code">Scores</span> list. On each iteration, <span
+						class="program_block">make text</span> adds a comma and the next
+					item in <span class="code">Scores</span>. After these blocks are
+					performed, the <span class="code">chdParam</span> will contain <span
+						class="code">chd=t:11,22,15</span>. We have built the <span
+						class="code">chd</span> parameter dynamically! (And we&#39;ve also
+					built it so that if more scores are added beyond these first three,
+					it will still work.)
+				</p>
+				<p>
+					The blocks&rsquo; last job is to concatenate the <span class="code">chd</span>
+					parameter with the rest of the Chart API URL, as shown in Figure
+					24-10.
+				</p>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_24_10.png" alt="">
+					<figcaption>Figure 24-10. Setting the picture to the
+						full URL, including the chd parameter just built</figcaption>
+				</figure>
+				<p>
+					The blocks set the <span class="code">ScoreChartImage.Picture</span>
+					property to this full URL: <span class="url">http://chart.apis.google.com/chart?cht=bvg&chxt=y&chbh=a&chs=300x225&chco=A2C180&chtt=Game+Scores&chd=t:11,22,15</span>.
+					Your users will see something similar to what is shown in Figure
+					24-11.
+				</p>
+				<figure class="rightfig">
+					<img id="figure_24_11"
+						src="/contents/appinventor/images/figure_24_11.png" alt="">
+					<figcaption>Figure 24-11. The dynamically generated
+						chart</figcaption>
+				</figure>
+				<p>
+					You could add such a display to any game or app by adding blocks
+					similar to this example. You could also talk to other APIs that
+					generate images and bring those into your app as well. The key is
+					that App Inventor provides a useful connection to the Web through
+					the <span class="code">Image</span> component.
+				</p>
+			</section>
+			<section class="section" data-number="4"
+				data-name="Talking to Web Data APIs">
+				<h4>Talking to Web Data APIs</h4>
+				<p>
+					<span class="first_sentence">The Google Chart API is a web
+						API that responds to requests by returning a picture.</span> More
+					commonly, APIs will return data that an app can process and use
+					how- ever it wants. The &ldquo;Amazon at the Bookstore&rdquo; app
+					in Chapter 13, for instance, returns data in the form of a list of
+					books, with each book including a title, current lowest price, and
+					ISBN.
+				</p>
+				<div class="pagebreak">
+					<span class="pageNumber"> 342 </span> Chapter 24: Communicating
+					with Web APIs
+				</div>
+				<p class="clear">
+					To talk to an API from an App Inventor app, you don&#39;t need to
+					build a URL, as we did with the Chart API example. Instead, you
+					query the API much like you would a web database (Chapter 22): just
+					send your request as the tag to the <span class="program_block">TinyWebDB.GetValue</span>
+					block. The <span class="code">TinyWebDB</span> component takes care
+					of actually generating the URL that you send to the API.
+				</p>
+				<p>
+					<span class="code">TinyWebDB</span> does not provide access to all
+					APIs, even those that return a standard data format such as RSS. <span
+						class="code">TinyWebDB</span> can only talk to web services for
+					which an App Inventor &ldquo;wrapper&rdquo; service, with a
+					particular protocol, has been created. Fortunately, a number of
+					these services have been created already, and more will soon
+					follow. You can find some of these at <span class="url">http://appinventorapi.com</span>.
+				</p>
+			</section>
+			<section class="subsection" data-number="5"
+				data-name="Exploring the Web Interface of an API">
+				<h4>Exploring the Web Interface of an API</h4>
+				<p>
+					<span class="first_sentence">In this section, you&#39;ll
+						learn how to use <span class="code">TinyWebDB</span> to bring in
+						stock price data from the App Inventor&#8212;compliant API at <span
+						class="url">http://yahoostocks.appspot.com</span>.
+					</span> If you go to the site, you&#39;ll see the web (human) interface of
+					the service pictured in Figure 24-12.
+				</p>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_24_12.png" alt="">
+					<figcaption>Figure 24-12. The web interface of the App
+						Inventor&#8212;compliant Yahoo! Finance API</figcaption>
+				</figure>
+				<p>Try entering &ldquo;IBM&rdquo; or some other stock symbol
+					into the Tag input box. The web page returns current stock
+					information as a list, with each item representing a different
+					piece of information, as described in the numerical listing further
+					down the page.</p>
+				<p>
+					Note that this web interface isn&#39;t meant as a new or
+					interesting way to find stock information; its sole purpose is to
+					allow <span class="emph">programmers</span> to explore the API for
+					communicating with the underlying machine-to-machine web service.
+				</p>
+				<div class="pagebreak">
+					<span class="pageNumber"> 343 </span> Talking to Web Data APIs
+				</div>
+			</section>
+			<section class="subsection" data-number="6"
+				data-name="Accessing the API Through TinyWebDB">
+				<h4>Accessing the API Through TinyWebDB</h4>
+				<p>
+					<span class="first_sentence">The first step in creating an
+						app that talks to the preceding web service is to drag a <span
+						class="code">TinyWebDB</span> component into the Component
+						Designer.
+					</span> There is only one property associated with <span class="code">TinyWebDB</span>,
+					its <span class="code">ServiceURL</span>, shown in Figure 24-13. By
+					default, it is set to a default web database, <span class="url">http://appinvtinywebdb.appspot.com</span>.
+					Since we want to instead access the Yahoo! Stocks API, set this
+					property to <span class="url">http://yahoostocks.appspot.com</span>,
+					the same URL you entered at the browser address bar earlier to see
+					the web page interface.
+				</p>
+				<figure class="leftfig">
+					<img src="/contents/appinventor/images/figure_24_13.png" alt="">
+					<figcaption>Figure 24-13. The ServiceURL is set to
+						http:// yahoostocks.appspot.com</figcaption>
+				</figure>
+				<p>
+					The next step is to make a <span class="program_block">TinyWebDB.GetValue</span>
+					call to request data from the site. You might do this in response
+					to the user entering a stock symbol and clicking a Submit button in
+					your app&#39;s UI, or you might do it in the <span
+						class="program_block">Screen.Initialize</span> event to bring in
+					information about a particular stock right when the app is opened.
+					In any case, when you call <span class="program_block">GetValue</span>,
+					you should set the tag to a stock symbol, as illustrated in Figure
+					24-14, just as you did at the <span class="url">http://yahoostocks.appspot.com</span>
+					website.
+				</p>
+				<figure class="centered clear">
+					<img src="/contents/appinventor/images/figure_24_14.png" alt="">
+					<figcaption>Figure 24-14. Requesting stock information
+					</figcaption>
+				</figure>
+				<p>
+					As we covered in Chapter 10&#39;s MakeQuiz app and in Chapter
+					22&#39;s discussion of data- bases, the <span class="code">TinyWebDB</span>
+					communication is asynchronous: your app requests the data with <span
+						class="program_block">TinyWebDB.GetValue</span> and then goes
+					about its business. You must provide a separate event handler, <span
+						class="program_block">TinyWebDB.GotValue</span>, to program the
+					steps the app should take when the data actually comes back from
+					the web service. From our examination of the human interface of <span
+						class="url">http://yahoostocks.appspot.com</span>, we learned that
+					the data returned from <span class="program_block">GetValue</span>
+					is a list, with particular list items representing different data
+					about the stock (e.g., item 2 is the latest price).
+				</p>
+				<p>A client app can use some or all of the data the service
+					provides. For example, if you just wanted to display the current
+					stock price and its change since the day&#39;s opening, you might
+					configure blocks as shown in Figure 24-15.</p>
+				<div class="pagebreak">
+					<span class="pageNumber"> 344 </span> Chapter 24: Communicating
+					with Web APIs
+				</div>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_24_15.png" alt="">
+					<figcaption>Figure 24-15. Using the GotValue event to
+						process the data that arrives from Yahoo!</figcaption>
+				</figure>
+				<p>
+					If you check the API specification at <span class="url">http://yahoostocks.appspot.com</span>,
+					you&#39;ll see that the second item in the returned list is indeed
+					the current price, and the fifth item is the change since stocks
+					began trading that day. This app simply extracts those items from
+					what is returned by the API, and shows them in the labels <span
+						class="code">PriceLabel</span> and <span class="code">ChangeLabel</span>.
+					Figure 24-16 provides a snapshot of the app in action.
+				</p>
+				<figure class="centered">
+					<img src="/contents/appinventor/images/figure_24_16.png" alt="">
+					<figcaption>Figure 24-16. The Stocks App in action</figcaption>
+				</figure>
+				<div class="pagebreak">
+					<span class="pageNumber"> 345 </span> Creating Your Own App
+					Inventor&#8212;Compliant APIs
+				</div>
+			</section>
+			<section class="section" data-number="7"
+				data-name="Creating Your Own App Inventor&#8212;Compliant APIs">
+				<h4>Creating Your Own App Inventor&#8212;Compliant APIs</h4>
+				<p>
+					<span class="first_sentence"><span class="code">TinyWebDB</span>
+						is the bridge from an App Inventor app to the Web.</span> It lets App
+					Inventor programmers talk to web services with the simple tag-value
+					protocol inherent in the <span class="code">GetValue</span>
+					function. You send a particular tag as the parameter, and a list or
+					text object is returned as the value. In this way, the App Inventor
+					programmer is shielded from the difficult programming required to <span
+						class="new_term">parse</span> (understand and extract data from)
+					standard data formats like XML or JSON.
+				</p>
+				<p>
+					The tradeoff is that App Inventor apps can talk only to web
+					services that follow <span class="code">TinyWebDB</span>&rsquo;s
+					expected protocol&mdash;it expects data to be returned in a very
+					specific way, and the API has to provide its data accordingly. App
+					Inventor doesn&#39;t have a component for accessing an arbitrary
+					web service that returns standard data formats such as XML or JSON.
+					If there isn&#39;t an App Inventor&#8212;compliant API already
+					available, someone with the ability to write a web program must
+					create it.
+				</p>
+				<p>In the past, building APIs was difficult because you not only
+					needed to understand the programming and web protocols, but you
+					also needed to set up a server to host your web service, and a
+					database to store the data. Now it&#39;s much easier, as you can
+					leverage cloud-computing tools like Google&#39;s App Engine and
+					Amazon&#39;s Elastic Compute Cloud to immediately deploy the
+					service you create. These platforms will not only host your web
+					service, but they&#39;ll also let thousands of users access it
+					before charging you a single dime. As you can imagine, these sites
+					are a great boon to innovation.</p>
+			</section>
+			<section class="subsection" data-number="8"
+				data-name="Customizing Template Code">
+				<h4>Customizing Template Code</h4>
+				<p>
+					<span class="first_sentence">Writing your own API may seem
+						daunting, but the good news is that you don&#39;t need to start
+						from scratch.</span> You can leverage some provided template code that
+					makes it especially easy to create App Inventor&#8212;compliant
+					APIs. The code is written in the Python programming language and
+					uses Google&#39;s App Engine. The template pro- vides boilerplate
+					code for getting the data into the form that App Inventor needs,
+					and a function, <span class="code">get_value</span>, that you can
+					customize.
+				</p>
+				<p>
+					You can download the template code and instructions for deploying
+					it on Google&#39;s App Engine servers at <span class="url">http://appinventorapi.com/using-tinywebdb-to-talk-to-an-api/</span>.
+					You might notice that the link takes you to the same <span
+						class="url">appinventorapi.com</span> site that was used in
+					Chapter 21 to create a custom web database. Building an API is
+					similar, only instead of just storing and retrieving data,
+					you&#39;ll call some other service to access the data you need.
+				</p>
+				<p>
+					To create your own web API, you&#39;ll download the template,
+					modify a few key places in the code, and then upload it to App
+					Engine. Within minutes, you will have your own API that can be
+					called using <span class="code">TinyWebDB</span> in an App Inventor
+					app.
+				</p>
+				<div class="pagebreak">
+					<span class="pageNumber"> 346 </span> Chapter 24: Communicating
+					with Web APIs
+				</div>
+				<p>Here&#39;s the particular code from the template that
+					you&#39;ll need to customize (don&#39;t worry about the text that
+					comes after the # symbol; like the comments in App Inventor, it
+					just describes what the code following it is doing):</p>
+
+				<pre>def get_value(self, tag):</pre>
+				<pre>    #For this simple example, we just return hello:tag, where tag is sent in by client</pre>
+				<pre>    <strong>value="hello:"+tag</strong></pre>
+				<pre>    <strong>value = "\""+value+"\""</strong> # add quotes if the value is has multiple words</pre>
+				<pre>    if self.request.get('fmt') == "html":</pre>
+				<pre>        WriteToWeb(self,tag,value )</pre>
+				<pre>    else:</pre>
+				<pre>        WriteToPhone(self,tag,value)</pre>
+
+				<p>
+					This code is for a <span class="new_term">function</span> (same as
+					a procedure in App Inventor) called <span class="code">get_value</span>,
+					and it&#39;s indeed the code that is invoked when your app calls an
+					API with the <span class="program_block">TinyWebDB.GetValue</span>
+					function. <span class="code">tag</span> is a <span class="emph">parameter</span>
+					of the function and corresponds to the tag you send in the <span
+						class="program_block">GetValue</span> call.
+				</p>
+				<p>
+					The bolded code is the part you&#39;ll change. By default, it
+					simply takes the tag sent in with the request and sends back
+					&ldquo;hello tag.&rdquo; (In other words, if you call this code
+					with the tag &ldquo;joe,&rdquo; it returns &ldquo;hello
+					joe&rdquo;). It does this by setting the variable <span
+						class="code">value</span>, which is then sent to the function <span
+						class="code">WriteToWeb</span> if the request came from the Web,
+					or <span class="code">WriteToPhone</span> if the request came from
+					a phone.
+				</p>
+				<div class="note">
+					<figure class="leftfig">
+						<img src="/contents/appinventor/images/note_icon.png" alt="">
+					</figure>
+					<p>
+						<span class="program_block">Note.</span> Even if you&rsquo;ve
+						never looked at Python or other programming code, you may find the
+						sample above somewhat readable from your experience with App
+						Inventor. The &ldquo;def get_value...&rdquo; line defines a
+						procedure, the &ldquo;value=...&rdquo; lines are setting the
+						variable &ldquo;value&rdquo; to something, and the &ldquo;if..
+						&ldquo; statements should look familiar. The fun- damental
+						concepts are the same, its just text instead of blocks.
+					</p>
+					<p></p>
+				</div>
+				<p>
+					To customize the template, you replace the bold code with any
+					computation you want, as long as that code places something in the
+					variable <span class="code">value</span>. Often, your API will make
+					a call to another API (this is called &ldquo;wrapping&rdquo; a
+					call&mdash;more specifically, your <span class="code">get_value</span>
+					function will make the call to some other API).
+				</p>
+				<p>Many APIs are complicated, with hundreds of functions and
+					complex user authoriza- tion schemes. Others, however, are quite
+					simple, and you can even find sample code for accessing them on the
+					Web, as you&rsquo;ll see in the next section.</p>
+				<div class="pagebreak">
+					<span class="pageNumber"> 347 </span> Creating Your Own App
+					Inventor&#8212;Compliant APIs
+				</div>
+			</section>
+			<section class="subsection" data-number="9"
+				data-name="Wrapping the Yahoo! Finance API">
+				<h4>Wrapping the Yahoo! Finance API</h4>
+				<p>
+					<span class="first_sentence">The Yahoo! Stocks API for App
+						Inventor used in this chapter was created by modifying the
+						template code above with code found through a simple web search.</span>
+					As the goal was wrapping the Yahoo! Stocks API for use by App
+					Inventor, the developer (Wolber) did a web search for &ldquo;Python
+					Yahoo Stocks API&rdquo;. From the site
+					http://www.gummy-stuff.org/Yahoo-data.htm, he found that a URL in
+					the form:
+				</p>
+				<p>
+					http://download.finance.yahoo.com/d/quotes.csv?f=sl1d1t1c1ohgv&e=.cs
+					v&s=IBM</p>
+				<p>would return a text file with a single comma-separated string
+					of data. The preceding URL returns this text string:</p>
+				<pre>
+					<code>
+	    "IBM",140.85,"10/15/2010","3:00pm",-0.65,142.10,142.10,140.60,4974553
+					</code>
+				</pre>
+				<p>He then found some Python code for accessing the Yahoo!
+					Stocks API at http://www .goldb.org/ystockquote.html. With some
+					quick cutting and pasting and a bit of editing, the App Inventor
+					wrapper API was created by modifying the template in the following
+					manner:</p>
+				<pre>
+					<code>
+	def get_value(self, tag):
+	    # Need to generate a string or list and send it to WriteToPhone/WriteToWeb
+	    # Multi-word strings should have quotes in front and back
+	    # e.g.,
+	    #    value = "\""+value+"\""
+	    # call the Yahoo Finance API and get a handle to the file that is returned
+	    <strong>quoteFile=urllib.urlopen("http://download.finance.yahoo.com/d/quotes.csv?f=
+	    sl1d1t1c1ohgv&e=.csv&s="+tag)</strong>
+	    line = quoteFile.readline() # there's only one line
+	    splitlist = line.split(",") # split the data into a list
+	    # the data has quotes around the items, so eliminate them
+	    i=0
+	    while i<\len(splitlist):
+	        item=splitlist[i]
+	        splitlist[i]=item.strip('"') # remove " around strings
+	        i=i+1
+	    value=splitlist
+	    if self.request.get('fmt') == "html":
+	        WriteToWeb(self,tag,value )
+	    else:
+	        WriteToPhone(self,tag,value)
+	              	</code>
+				</pre>
+				<p>
+					The bolded code calls the Yahoo! API within the <span class="code">urllib.urlopen</span>
+					function call (this is one way to call APIs from the Python
+					language). The URL has a parameter, <span class="code">f</span>,
+					that specifies the type of stock data you want (this parameter is
+					something like the cryptic parameters required by the Google Chart
+					API). The data returned from Yahoo! is then put into the variable <span
+						class="code">line</span>. The rest of the code splits up the items
+					into a list, removes the quotation marks around each item, and
+					sends the result to the requester (either the web interface or an
+					App Inventor app).
+				</p>
+				<div class="pagebreak">
+					<span class="pageNumber"> 348 </span> Chapter 24: Communicating
+					with Web APIs
+				</div>
+			</section>
+			<section class="section" data-number="10" data-name="Summary">
+				<h4>Summary</h4>
+				<p>
+					<span class="first_sentence">Most websites and many mobile
+						apps are not standalone entities; they rely on the in-
+						teroperability of other sites to do their jobs.</span> With App Inventor,
+					you can build games, quizzes, and other standalone apps, but soon
+					enough, you&rsquo;ll encounter issues related to web access. Can I
+					write an app that tells me when the next bus will arrive at my
+					usual stop? Can I write an app that texts a special subset of my
+					Facebook friends? Can I write an app that sends tweets? App
+					Inventor provides two hooks to the Web: (1) you can set the <span
+						class="code">Image.Picture</span> property to a URL to bring in a
+					(generated) image, and (2) you can use <span class="code">TinyWebDB</span>
+					to access data in a specially designed web API.
+				</p>
+				<p>
+					App Inventor does not provide arbitrary access to APIs. Instead,
+					the system relies on programmers to create &ldquo;wrapper&rdquo;
+					APIs that follow a particular protocol. Once created, these APIs
+					are available to App Inventor app programmers using the same <span
+						class="program_block">TinyWebDB.GetValue</span> scheme they use to
+					access databases. Actually writing APIs is certainly a bigger
+					hurdle than writing apps in App Inventor, but if you&rsquo;re
+					interested in learning how, be sure to check out some Python books
+					and courses (O&rsquo;Reilly has a few of those!), and you&rsquo;ll
+					be on your way.
+				</p>
+			</section>
+		</div>
+	</div>
+</body>
+</html>
+

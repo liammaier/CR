@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<!-- CSS -->
+		<style>
+			body {
+				font-family: calibri, arial, sans-serif;
+				width:100%;
+				height:100%;
+			}
+			#radio {
+				text-align:center;
+			}
+			
+		</style>
+		
+		<!-- lib JS -->
+		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script>
+		$(document).ready(init);
+		function init(){
+			$("#accept").click(function(event){
+				$.get( "database.txt", function( data ) {
+					  console.log(data);
+				});
+				var food = $('input[type=radio]:checked').val();
+				$.post( "",{message:food}, function( data ) {
+				  	$( "#radio" ).html("Your selection has been registered.");
+				  	
+				});
+			});
+		}
+		</script>
+	</head>
+	<body>
+	<div id="radio">
+		<h1>What is your Favorite Food</h1>
+	    <label for="fruit">Fruit</label>  
+	    <input id="fruit" type="radio" name="food" value="fruit" checked>
+	    <label for="meat">Meat</label>   
+	    <input id="meat" type="radio" name="food" value="meat">  
+	    <label for="vegetable">Vegetable</label>  
+	    <input id="vegetable" type="radio" name="food" value="vegetable">
+	    <label for="meat">Female</label>  
+	    <input id="meat" type="radio" name="food" value="meat">  
+	    <label for="dairy">Dairy</label>  
+	    <input id="dairy" type="radio" name="food" value="dairy">
+	    <label for="bread">Bread</label>
+	    <input id="bread" type="radio" name="food" value="bread">
+	    <input id="accept" type="button" value="Accept"> 
+	</div>  
+	
+	</body>
+
+</html>

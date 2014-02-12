@@ -1,0 +1,80 @@
+.nytimes.container {
+	font-family: Georgia;
+	font-size: 1.5em;
+	line-height: 1.467em;
+	max-width: 800px;
+	width: 600px;
+	background-color: white;
+	font-size: 12pt;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 2em;
+}
+
+/* COMMON */
+
+.nytimes h1 {
+	font-weight: normal;
+	margin-top: 0;
+	margin-bottom: .3em;
+}
+
+.nytimes h2 {
+	font-size: 75%;
+	color: grey;
+	margin: 0;
+	font-family: Arial;
+	font-weight: normal;
+}
+
+.nytimes .clear {
+	clear: both;
+}
+
+.nytimes .right {
+	text-align: right;
+}
+
+.nytimes .arial {
+	font-family: Arial;
+}
+
+.nytimes .credit {
+	color: grey;
+	font-size: 75%;
+	margin: 0;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-family: Arial;
+	line-height: 1.5em;
+}
+
+/* FIGURES */
+
+.nytimes .leftFigure {
+	float: left;
+	margin-top: .5em;
+	margin-bottom: 1em;
+	margin-right: .5em;
+}
+
+.nytimes .leftFigure.sizeOne {
+	width: 190px;
+}
+
+.nytimes .leftFigure.sizeOne img {
+	max-width: 190px;
+}
+
+.nytimes .multimediaBorderOne {
+	border-top: solid grey 1px;
+	margin-top: 1px;
+}
+
+.nytimes .multimediaBorderTwo {
+	border-top: solid grey 2px;
+	width: 190px;
+	margin: 0;
+	position: relative;
+	top: 8px;
+}

@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+
+<head>
+
+    <title>Chapter 18</title>
+
+</head>
+
+<body>
+
+    <div id="FLU" class="container fit">
+
+        <section class="intro" data-number="0" data-name="Chapter 18 Introduction">
+            <img src="/contents/fluency/images/sidepic.png"/>
+
+            <div class="content">
+                <h1><span class="first-sentence">Fundamental Concepts Expressed in JavaScript</span></h1>
+                <h2>Get with the Program</h2>
+
+                <h3>learning objectives</h3>
+                <ul class="learning-objectives">
+                    <li>Tell the difference between name, value, and variable</li>
+                    <li>List three basic data types and the rules for specifying them in a program</li>
+                    <li>Explain the way in which the assignment statement changes a variable's value</li>
+                    <li>Write expressions using arithmetic, relational, and logical operators</li>
+                    <li>Write conditional and compound statements</li>
+                </ul>
+            </div> <!-- /content -->
+        </section> <!-- /intro1 -->
+
+        <div class="pagebreak pageNumber"></div>
+
+        <section class="intro"> <!-- intro2 -->
+
+            <div class="content">
+
+                <blockquote>
+                    Everything is vague to a degree you do not realize till rou have tried to make it precise.
+                    <p class="citation">&dash;Bertrand Russell</p>
+                </blockquote>
+
+                <div class="intro-text">
+                    <p><strong>Programming</strong> a profession, yet we all need to know something about it to be effective computer users. This is analogous to medicine. Doctors and nurses are professionals, but we need to know something about their specialties &dash; our bodies, disease symptoms, nutrition, first aid, and so forth &dash; to care for ourselves and benefit fully from their care. In neither case do we need an expert's knowledge, and in both cases we could probably survive with near total ignorance. But knowing some of what the professionals know is unquestionably beneficial and worth learning, despite its technical nature. What do we need to know?</p>
+
+                    <p>What we need to know about programming is a fuller elaboration of the concepts already discussed in Chapter 10 on algorithms. These concepts are deep and subtle. We cannot expect to understand them fully the first time we meet them. Indeed, our goal is to change our thinking habits to be more "abstract." Just as we need experience writing, reading, and speaking a foreign language in order to acquire it, so too do we need experience writing, reading, and executing algorithms and programs to acquire the thought processes of computation.</p>
+
+                    <p>After preliminary remarks, we present a sample program. Though it might look like gibberish at the start, the plan is to introduce all of the concepts used in the program. We begin by explaining about names, variables, and declarations, giving ourselves the ability to refer to the program's data. Then we cover the types of data values: numbers, character strings, and Booleans. Next, we introduce assignment statements and expressions, so we can compute new values. The last concepts are compound statements for grouping and conditional statements for testing. With this list of concepts, we return to the program and work through its execution. By the end of the chapter, we'll be programming!</p>
+                </div>
+
+            </div> <!-- /content -->
+
+            <img src="/contents/fluency/images/sidepic.png">
+
+        </section> <!-- /intro2 -->
+
+        <div class="pagebreak pageNumber">551</div>
+
+        <section class="page"> <!-- page1 -->
+
+            <section class="section" data-number="1" data-name="Overview: Programming Concepts"> <!-- section1 -->
+                <h2>Overview: Programming Concepts</h2>
+
+                <p><span class="first-sentence"><strong>Programming</strong> is the act of formulating an algorithm or program</span>. It entails developing a systematic means of solving a problem so that an agent &dash; someone other than the programmer and usually a computer &dash; can follow the instructions and produce the intended result for every input, every time. The agent must also be able to perform or execute the program without any intervention from the programmer. This means that all of the steps must be spelled out precisely and effectively, and that all contingencies must be planned for.</p>
+
+                <p>This summary of programming &dash; that everything must be explained clearly and all contingencies planned for &dash; is perhaps best expressed by Adele Mildred Koss, one of the first programmers of UNIVAC I in 1950. She described her view of this challenge for the <em>Annals of the History of Computing</em>.</p>
+
+                <p><em>[Computers] couldn't think in the way a human thinks, but had to be given a set of step&dash;by&dash;step machine instructions to be executed before they could provide answers to a specific problem. Before the computer could solve a problem, a human would have to solve it first, using mathematics, physics, or a business process. The human would have to segment the solution into little building blocks that the machine could handle, and use the machine code to write a program that would execute that process correctly, at high speed and for many iterations without human intervention. Problems could be solved in many different ways, but to devise a correct and elegant solution &dash; and I stress elegant &dash; was the challenge.</em></p>
+
+                <p>Programming has become much easier in the years since Ms. Koss programmed, but the principles are the same. Programming actually requires thinking. But relying on thinking alone makes programming too difficult. Instead, in this and following chapters, we introduce basic programming concepts developed over the years. These are the tools you will need to formulate any computation. And, trying to program an algorithm precisely using English is hopeless. Natural languages are too ambiguous for directing anything as clueless as a computer. So, programming languages have been developed to help programmers in two ways: they are precise, and they are specialized in using the concepts mentioned in the previous paragraphs. Using a programming language is actually easier than writing in English. We will use <strong>JavaScript</strong>, a modern programming language that is especially effective for Web applications. You won't become a JavaScript expert from reading this chapter, but you might learn enough to make a glitzy personal Web page.</p>
+
+                <p>This chapter introduces the following programming concepts:</p>
+
+                <ul>
+                    <li>Names, values, and variables</li>
+                    <li>Declarations</li>
+                    <li>Data types, numbers, string literals, and Booleans</li>
+                    <li>Assignment</li>
+                    <li>Expressions</li>
+                    <li>Conditionals</li>
+                </ul>
+
+                <div class="pagebreak pageNumber">552</div>
+
+                <p>With just these few concepts, you will be able to write actual programs. The program in Figure 18.1 is an example. It probably looks like gibberish to you at this moment, but by the end of this chapter you'll be able to read and understand it. (We present it now to make it clear where we are headed, but skip it if it appears intimidating.)</p>
+
+                <p>Finally, in introducing the deep ideas of the chapter, we must set down the practical details of programming. These rules can be as burdensome as a chapter&dash;long list of dos and don'ts. So, we skip the more obvious rules here &dash; the ones you would guess intuitively &dash; you can reference them in Appendix C.</p>
+
+                <figure>
+                    <img src="/contents/fluency/images/extra18.1.png" align="left"/><br/><strong>At the Espresso Stand</strong><br/>
+                    Espresso is concentrated liquid coffee. Some people enjoy drink ing espresso straight, but others prefer a café latte, espresso ir steamed milk; a cappuccino, espresso in equal parts of steamed milk and milk foam; or an Americano, espresso in near-boiling water. Espressc drinks are sold in three sizes: short (8 oz.), tall (12 oz.), and grande (16 oz.). Thes( drinks are made with a standard amount of espresso, but coffee addicts offen order additional shots of espresso. The price of the additional shots is added tc the base price of the drink, and tax is figured in to produce the charge for th( drink. The program to compute the price of an espresso drink is:<br/><br/>
+
+                    <span class="paragraph-header">Input:</span><br/>
+                    <code>drink</code> &dash; a character string with one of the values: <code>"espresso", "latte",<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"cappuccino", "Americano"</code><br/>
+                    <code>ounce</code> &dash; an integer, giving the size of the drink in ounces<br/> 
+                    <code>shots</code> &dash; an integer, giving the number of shots<br/><br/>
+
+                    <span class="paragraph-header">Output:</span><br/>
+                    <code>price</code> in dollars of an order, including 8.8% sales tax<br/><br/>
+
+                    <span class="paragraph-header">Program:</span><br/>
+                    <code>var price;<br/>
+                    var taxRate = 0.088;<br/>
+                    if (drink == "espresso")<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;price = 1.40;<br/>
+                    if (drink == "latte" II drink == "cappuccino") {<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (ounce == 8)<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price = 1.95;<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (ounce=12)<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price = 2.35;<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;if (ounce == 16)<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price = 2.75;<br/>
+                    }<br/>
+                    if (drink == "Americano")<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;price = 1.20 + .30 * (ounce/8);<br/>
+                    price = price + (shots - 1) * .50;<br/>
+                    price = price + price * taxRate;</code>
+                </figure>
+                <figcaption>
+                    <span class="figureId">Figure 18.1</span> Sample JavaScript computation to figure the cost of espresso drinks. 
+                </figcaption>
+
+                <div class="pagebreak pageNumber">553</div>
+
+                <p>This allows us to emphasize the few rules that you cannot guess on your own. When in doubt, refer to Appendix C. All of the rules are listed there.</p>
+
+                <section class="subsection" data-number="2" data-name="Names, Values, and Variables">
+                    <h3>Names, Values, and Variables</h3>
+
+                    <p><span class="first-sentence">Though we are familiar with the concepts of a name (the letter sequence used to refer to something), and a value (the thing itself), in normal conversation we tend not to distinguish carefully between the two.</span> Thus, when we use the letter sequences "Kate Winslet" or "Harrison Ford," we mean those specific movie stars. There are many people with those names, of course, and if your friend from geology class is also named Harrison Ford, that name has one value for you in the context of that class and another in the context of the movies. People understand this distinction in everyday conversation. In everyday life we treat names as "bound to" their values.</p>                
+                </section>
+
+                <section class="subsection" data-number="3" data-name="Names Have Changing Values">
+                    <h3>Names Have Changing Values</h3>
+
+                    <p><span class="first-sentence">Names and values are separable in programming.</span> The best way to think of names and values in programming is to think of names as if they were offices or tides, or other designations purposely selected to have changing values. There are plenty of examples:</p>
+
+                    <div class="table large">
+
+                        <div class="small-table">
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Current Value<br/>(7/1/2009)</th>
+                                        <th>Previous Values</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>U.S President</td>
+                                        <td>Barack Obama</td>
+                                        <td>Bill Clinton, George Washington</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cheif Justice<br/>U.S. Supreme Court</td>
+                                        <td>John Roberts</td>
+                                        <td>Warren Burger, Earl Warren</td>
+                                    </tr>
+                                    <tr>
+                                        <td>James Bond</td>
+                                        <td>Daniel Craig</td>
+                                        <td>Sean Connery, Roger Moore</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Queen of England</td>
+                                        <td>Elizabeth II</td>
+                                        <td>Victoria I, Elizabeth I</td>
+                                    </tr>
+                                    <tr>
+                                        <td>U.N. Secretary General</td>
+                                        <td>Ban Ki-moon</td>
+                                        <td>Boutros Boutros-Ghali, Kofi Annan</td>
+                                    </tr>                                                                
+                                </tbody>
+                            </table>
+                        </div> <!-- /small-table -->
+                    </div> <!-- /table large -->                    
+
+                    <p>The names used in the middle and right columns are, of course, the informal usage of names from everyday conversation.</p>
+
+                    <p>The reason we focus on the case where the values associated with a name can change is because they change in programs. A program is a fixed specification of a process. As the process evolves and the program transforms data to produce new values, the old names must refer to these new values, that is, the names have changed values. This is a natural result of the fixed specification of the process. So, for example, the U.S. Constitution contains this specification of a process: "The President&dash;elect will be sworn into office by the Chief Justice on the January 20 following the election." The intent of this command is to describe a process that applies no matter who wins the presidential election, that is, the value of "President&dash;elect," and who is the senior justice of</p>
+
+                    <div class="pagebreak pageNumber">554</div>
+
+                    <p>the Supreme Court on that date, that is, the value of "Chief Justice." We naturally interpret the U.S. Constitution this way. The names "President&dash;elect" and "Chief Justice" have changing values.</p>
+
+                    <p>Names used in this way—a single letter sequence with a varying value &dash; are an already familiar concept to you from your previous computing experience. The file named <code>EnglishPaper</code> changes its value every time you save a version of your composition. In computing, the name is always separable from the value, and the value can be changed. It's a basic idea worth thinking about.</p>
+
+
+                    <div class="try-it">
+                        <p><strong>18.1 What's in a name?</strong> Explain the difference between the names "Best Picture" and the name "Slumdog Millionaire."</p>
+                    </div>
+
+                </section>        
+
+            </section> <!--section1 -->
+
+            <section class="section" data-number="4" data-name="Names in a Program Are Called Variables"><!-- section2 -->
+                <h2>Names in a Program Are Called Variables</h2>
+
+                <p><span class="first-sentence">In programming terminology, the names just discussed are called variables, a term that reminds us that their values <em>vary</em>.</span> For example, in the <em>Alphabetize CDs</em> program in Chapter 10, two variables, <em>Alpha</em> and <em>Beta</em>, were used. Nearly every step in that program changed the value of one or the other of those variables. That's typical. The most commonly used programming language operation is the command to change the value of a variable. That command is called <strong>assignment</strong>, and it will be discussed shortly.</p>
+
+                <div class="fluency-bit"><strong class="fluency-bit-title">Names and Values.</strong> We've seen one other example of names having multiple values over time. Memory locations &dash; their names are called <em>addresses</em> &dash; have different values at different times. This is not a coincidence. Variables are memory locations in the computer. Variables <em>are</em> simply a more readable and conve- nient way to reference computer memory than are the actual numerical addresses. The value of the address is the current contents of the memory location, and it is the value of the corresponding variable.</div>
+
+                <section class="subsection" data-number="5" data-name="Identifiers and Their Rules">
+                    <h3>Identifiers and Their Rules</h3>
+
+                    <p><span class="first-sentence">The letter sequence that makes up a variable's name is called the <strong>identifier</strong>.</span> In every programming language, identifiers must have a particular form, although the form is somewhat different from language to language. Generally, identifiers must begin with a letter, followed by any sequence of letters, numerals (the digits 0 through 9), or the underscore symbol (JavaScript permits slightly more general identifiers than suggested here, but throughout this book, tiny limitations are implied to make it easier to learn and to help avoid errors. There is no loss of expressiveness in programming.)</p>
+
+                    <p>Identifiers are not allowed to contain spaces. The following are eight identifiers:</p>
+
+                    <p><code>X<br/>
+                        x<br/>
+                        ru4it
+                    </code></p>
+
+                    <div class="pagebreak pageNumber">555</div>
+
+                    <p><code>nineteen_eighty_four<br/>
+                        Time_O_Day<br/>
+                        Identifiers_can_Blong_but_if_so_typing_them_can_be_a_pain<br/>
+                        oO00Oo<br/>
+                        elizaBETH<br/>
+                    </code></p>
+
+                    <p>Notice two features of identifiers: The underscore symbol can be used as a word separator to make identifiers more readable, and identifiers in most programming languages, including JavaScript, are case sensitive, meaning that uppercase and lowercase letters are different.</p>
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">Form Rules.</strong> User IDs, logins, and email names follow similar rules, but with a few important differences. For example, login and email names often allow a dash (&dash;), but variable names do not, because a dash could be confused with a minus sign between variables.</div>
+
+                </section>
+
+            </section> <!-- /section2 --> 
+
+            <section class="section" data-number="6" data-name="A Variable Declaration Statement"><!-- section3 --> 
+                <h2>A Variable Declaration Statement</h2>
+
+                <p><span class="first-sentence">Programs are usually written "starting from scratch."</span> That is, when you begin to program, you can think of the computer as if it were newly manufactured; it knows nothing except how to understand the programming language. So the first thing to do when writing any program is to state what variables will be used. This is called <strong>declaring variables</strong>, and we do it using a command called a declaration. In JavaScript, the <strong>declaration command</strong> is the word <code>var</code>, short for <em>variable</em>, followed by a list of the identifiers for the variables to be declared, separated by commas. For example, to write a computation that computes the area of a circle given its radius, we need variables area and radius. So we declare,</p>
+
+                <p><code>var area, radius;</code></p>
+
+                <p>This command <em>declares</em> that in the program we will use these two identifiers as variables. Notice that the first command in the espresso computation in Figure 18.1</p>
+
+                <p><code>var price;</code></p>
+
+                <p>is a variable declaration of this type. (The program uses other variables that will be explained momentarily.)</p>
+
+                <p>The declaration was just called a <em>command</em>, because it is commanding the computer to record which identifiers will be used as variables. But everything we tell a computer to do is a command, so we should call the declaration by its proper term, declaration <strong>statement</strong>.</p>
+
+                <section class="subsection" data-number="7" data-name="The Statement Terminator">
+                    <h3>The Statement Terminator</h3>
+
+                    <p><span class="first-sentence">A program is simply a list of statements.</span> Because we can't always write one statement per line as in a normal list, the statements are often run together,</p>                
+
+                    <div class="pagebreak pageNumber">556</div>
+
+                    <p>which means that each statement must be terminated by some punctuation symbol. The <strong>statement terminator</strong> in JavaScript is the semicolon (;). It's the same idea as terminating sentences in English with periods, question marks, or exclamation points. The main difference is this If I forget to terminate an English sentence, like I just did, you still understand &dash; both from the meaning and from the capital letter beginning the next sentence &dash; that the sentence is over, that is, terminated. The computer isn't that clever. It needs the semicolon. So, the rule is: Terminate every statement with a semicolon.</p>
+
+
+                    <div class="fluency-tip">
+                        <strong class="fluency-tip-title">First Mistake.</strong> Everyone makes mistakes when programming. Everyone. One of the most common mistakes for beginners is to forget the semicolon. When the semicolon is missing the computer becomes confused and debugging is necessary. Remembering semicolons makes programming easier.
+                    </div>                    
+
+                </section>
+
+                <section class="subsection" data-number="8" data-name="Rules for Declaring Variables">
+                    <h3>Rules for Declaring Variables</h3>
+
+                    <p><span class="first-sentence"><em>Every variable used in a program must be declared</em></span>. JavaScript allows declaration statements anywhere in the list of program statements. But because variable declarations announce what variables <em>will</em> be used in the program, programmers like to place them first in the program. It's like saying, "Here's the list of variables I'll be using in the program that follows." We will declare variables first.</p>
+
+                    <p><span class="paragraph-header">Undefined values.</span> The declaration states that the identifier is the name of a variable. But what is the name's value? It has no value at first! The value of a declared variable is not defined. It's a name that doesn't yet name anything. Similarly, when a group of people forms an intramural basketball team, say, Crunch, the intramural sports office can refer to the Crunch captain, even if the person who will be captain hasn't been chosen. The name is declared &dash; it will be meaningful when the season is under way &dash; but there is no value assigned yet. The value is <strong>undefined</strong>.</p>
+
+                    <p><span class="paragraph-header">Initializing a declaration.</span> Often we know an initial value for the identifiers we declare. So JavaScript allows us to set the initial value as part of the declaration, that is, to <strong>initialize</strong> the variable. To declare that taxRate and balanceDue will be variables in the program, and that their initial values are .088 and 0, respectively, we write</p>
+
+                    <p><code>var taxRate = .088;<br/>
+                        val balanceDue = 0;
+                    </code></p>
+
+                    <p>We don't have to declare and initialize just one variable at a time in the <code>var</code> statement. We can declare and initialize any number of variables by separating them with commas:</p>
+
+                    <p><code>var taxRate = .088, balanceDue = 0;</code></p>
+
+                    <p>The computer doesn't care which style is used. They're equivalent. Typically, programmers include several variables in a single declaration statement when</p>
+
+                    <div class="pagebreak pageNumber">557</div>
+
+                    <p>the variables are logically related. This serves as a reminder that the variables are related. For example, variables describing a person's features might be declared</p>
+
+                    <p><code>var height, weight, hairColor, eyeColor, astrological_sign;</code></p>
+
+                    <p>If the variables are not related, they are usually specified in separate state- ments. All approaches are equivalent; there is no "proper" way.</p>
+
+                    <div class="try-it">
+                        <p><strong>18.2 Make a Declaration.</strong> The <em>Alphabetize CDs</em> program used two variables, <em>Alpha</em> and <em>Beta</em>. Write a JavaScript declaration statement to declare them.</p>
+                    </div>
+
+                </section>                  
+
+            </section> <!-- /section3 -->
+
+            <section class="section" data-number="9" data-name="Three Basic Data Types of JavaScript"><!-- section4 --> 
+                <h2>Three Basic Data Types of JavaScript</h2>
+
+                <p><span class="first-sentence">We will use three types of data in our JavaScript programs: numbers, strings, and Booleans.</span></p>
+
+                <section class="subsection" data-number="10" data-name="Rules for Writing Numbers">
+                    <h3>Rules for Writing Numbers</h3>
+
+                    <p><span class="first-sentence">The values assigned to the variables <code>taxRate</code> and <code>balanceDue</code> are <strong>numbers</strong>.</span> Like everything in programming, there are rules for writing numbers, but basically numbers are written in the "usual way." (Details are provided in Appendix C.)</p>
+
+                    <p>One "unusual" aspect of numbers in programming is that there are no "units." We can't write <code>33%</code> or <code>$10.89</code>; we must write <code>0.33</code> and <code>10.89</code>. This explains why there are no dollar signs in the program in Figure 18.1 even though it is a computation to figure the price of a coffee drink in dollars. Standard computer numbers can have about ten significant digits and range from as small as 10<sup>-324</sup> to as large as 10<sup>308</sup>. (Numbers and computer arithmetic are unexpectedly subtle. Our uses of numbers will be trivial to avoid any difficulties. As a general rule, the "safe zone" is the range from 2 billionths to 2 billion plus or minus. Outside that range, we must learn more about computer arithmetic.)</p>
+
+                    <p>Though computers frequently compute on numbers, they compute on other kinds of data as well.</p>
+
+                </section>
+
+                <section class="subsection" data-number="11" data-name="Strings">
+                    <h3>Strings</h3>
+
+                    <p><span class="first-sentence">For us, strings will be the most common kind of data.</span> Strings are sequences of keyboard characters. For example, here are nine strings:</p>
+
+                    <p><code>"abcdefghijklmnopqrstuvwxyz"&nbsp;&nbsp;&nbsp;&nbsp;"May"&nbsp;&nbsp;&nbsp;&nbsp;'!@#$%A&amp;*()_+|}{ : ]['<br/> 
+                        "strings are surrounded by quotes"&nbsp;&nbsp;&nbsp;&nbsp;" "&nbsp;&nbsp;&nbsp;&nbsp;"M&amp;M's"<br/>
+                        'strings can contain blanks'&nbsp;&nbsp;&nbsp;&nbsp;""&nbsp;&nbsp;&nbsp;&nbsp;'"No," she said.'
+                    </code></p>
+
+                    <p>Notice that a string is always surrounded by single (') or double (") quotes.</p>
+
+                    <p><span class="paragraph-header">Strings can initializa a declaration.</span> Like numbers, strings can be used to initialize variables in a declaration. For example,</p>
+
+                    <div class="pagebreak pageNumber">558</div>
+
+                    <p><code>var hairColor = "black", eyeColor = "brown", astrological_sign = "Leo";</code></p>
+
+                    <p>We need strings when manipulating text, as when we're building Web pages, for example. The program in Figure 18.1 uses several string constants: <code>"espresso"</code>, <code>"latte"</code>, <code>"cappuccino"</code>, and <code>"Americano"</code>.</p>
+
+                    <p><span class="paragraph-header">Rules for writing string in JavaScript.</span> The rules for writing strings in JavaScript, most of which can be seen in the preceding examples, are as follows:</p>
+
+                    <ol>
+                        <li>Strings must be surrounded by quotes, either single (') or double ("), <em>which are not curly</em>.</li>
+                        <li>Most characters are allowed within quotes except the return character ([Enter]), backspace character, tab character, \, and two others (little used).</li>
+                        <li>Double quoted strings can contain single quotes, and vice versa.</li>
+                        <li>The apostrophe (') is the same as the single quote.</li>
+                        <li>Any number of characters is allowed in a string.</li>
+                        <li>The minimum number of characters in a string is zero (" "), which is called the <strong>empty string</strong>.</li>
+                    </ol>
+
+                    <p>Rule (3) lets us include quotes in a string. To use double quotes in a string, for example, we enclose the string in single quotes, as in <code>'He said, "No!"'</code>. If our string contains single quotes, we enclose it in double quotes, as in <code>"Guide to B&amp;B's"</code>. Because the apostrophe is commonly used in English's possessives and contractions, it's a good idea to use double quotes as the default. This allows the free use of apostrophes. We change to single quotes only when the string contains double quotes. Both methods work, and the computer doesn't care which one we use.</p>
+
+                    <p>Notice that by rule (6) the empty string is a legitimate value. That is, writing</p>
+
+                    <p><code>var exValDef =<br/>
+                        var exValUndef;
+                    </code></p>
+
+                    <p>results in two quite different situations. After these two statements, if we ask the computer what kind of value <code>exValUndef</code> has, the answer would be "a string," but the answer for <code>exValUndef</code> would be "an undefined value."</p>
+
+                    <p><span class="paragraph-header">Literals.</span> The numbers and strings discussed are known as either <strong>string constants</strong> or <strong>string literals</strong>. The term <em>literal</em> conveys the idea that the characters are typed literally in the program. So there are rules about how to write these values explicitly in a computation. However, when literals become the values of variables and are stored in the computer, the representation changes slightly, especially for strings.</p>  
+                    
+                    <p><span class="paragraph-header">String literals stored in the computer.</span> First, because the surrounding quotes or double quotes are used only to delimit the string literal, they are removed when the literal is stored in the computer. That's why the empty string <code>""</code> has a length of 0, rather than 2.</p>
+
+                    <div class="pagebreak pageNumber">559</div>
+
+                    <p>Second, any character can be stored in the computer's memory. Specifically, although a prohibited character such as a tab character cannot be <em>typed</em> in a literal, it can be the value of a string in the computer. To do this we use the "escape" mechanism, which we discussed in Chapter 4.</p>
+
+                    <p>For JavaScript, the escape symbol is the backslash (\) and the escape sequences are shown in Table 18.1. Thus we can write declarations such as</p>
+
+                    <p><code>var fourTabs = "\t\t\t\t", backUp = "\b",<br/>
+                        bothQuotesInOne = " '\"";
+                    </code></p> 
+
+                    <p>which give values to the variables that cannot be typed literally. The escape sequences are converted to the single characters they represent when they are stored in the computer's memory. So, the lengths of the values of these three string variables are 4, 1, and 2, respectively.</p>
+
+                    <div class="table large">
+
+                        <div class="small-table">
+
+                            <div class="small-table-title"><span class="tableNum">Table 8.1</span> Possible interpretations of two PandA patterns</div>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Sequence</th>
+                                        <th>Character</th>
+                                        <th>Sequence</th>
+                                        <th>Character</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>\b</td>
+                                        <td>Backspace</td>
+                                        <td>\f</td>
+                                        <td>Form feed</td>
+                                    </tr>
+                                    <tr>
+                                        <td>\n</td>
+                                        <td>New line</td>
+                                        <td>\r</td>
+                                        <td>Carriage return</td>
+                                    </tr>
+                                    <tr>
+                                        <td>\t</td>
+                                        <td>Tab</td>
+                                        <td>\'</td>
+                                        <td>Apostrophe or single quote</td>
+                                    </tr>
+                                    <tr>
+                                        <td>\"</td>
+                                        <td>Double quote</td>
+                                        <td>\\</td>
+                                        <td>Backslash</td>
+                                    </tr>                               
+                                </tbody>
+                            </table>
+                        </div> <!-- /small-table -->
+                    </div> <!-- /table large -->
+
+                </section>                
+
+                <section class="subsection" data-number="12" data-name="Boolean Values">
+                    <h3>Boolean Values</h3>
+
+                    <p><span class="first-sentence">Another kind of value is the <strong>Boolean value (Booleans)</strong>.</span> Unlike numbers and strings, there are only two Boolean values: true and false. Boolean values have their obvious logical meaning. We should emphasize that although true and false are written as letter sequences, they are values, like 1 is a value, not identifiers or strings. Although Booleans are used implicitly throughout the programming process, as you'll see, they are used only occasionally for initializing variables. Examples might be</p>
+
+                    <p><code>var foreignLanguageReq = false, mathReq = true, totalCredits = 0;</code></p>
+
+                    <p>This last declaration illustrates that variables appearing in the same declaration can be initialized with different kinds of values.</p>
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">It's True.</strong> Boolean values get their name from George Boole. True. Boole was an English mathematician who invented true and false. False. True and false have been around since humans began to reason. Boole invented an algebra based on these two values that is basic to computer engineering and other fields.</div>                    
+
+                    <p>The different kinds of values of a programming language are called its <strong>data types</strong> or its <strong>value types</strong> or simply its types. We have introduced three types for JavaScript: numbers, strings, and Booleans. There are several other types,</p>
+
+                    <div class="pagebreak pageNumber">560</div>
+
+                    <p>but these are sufficient for most of what we will do in JavaScript. JavaScript is very kind to programmers with respect to types, as you will see later in the chapter.</p>
+
+                    <div class="try-it">
+                        <p><strong>18.3 Literary Work.</strong> Declare variables (of your choosing) to describe literary personalities, and initialize them to values appropriate for MarkTwain: his real name, the century in which he wrote <em>Tom Sawyer</em>, whether he was a humorist, and a famous quotation in quotation marks: <em>Nothing so needs reforming as other people's habits.</em></p>
+                    </div>
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">Meta&dash;Brackets.</strong> In discussing programming languages, we often need to describe syntactic structures, such as declaration statements. To separate the language being defined from the language doing the defining, we enclose terms of the defining language in "angle brackets": (&lt; &gt;), known as <strong>meta&dash;brackets</strong>. Thus, the general form of the earlier initializing variable declaration would be var <code><em>&lt;variable name&gt; = &lt;initial value&gt;</em></code>, where the symbols not in meta&dash;brackets are written literally, and symbols or words in the meta&dash;brackets represent things of the sort indicated, as a kind of placeholder. Notice that these are not tags.</div>
+
+                </section>
+
+            </section><!-- section4 -->
+
+            <section class="section" data-number="13" data-name="The Assignment Statement"><!-- section5 --> 
+                <h2>The Assignment Statement</h2>
+
+                <p><span class="first-sentence">If variables are to change values in an algorithm or program, there should be a command to do so.</span> The <strong>assignment statement</strong> changes a variable's value; it is the workhorse of programming.</p>
+
+                <p>An assignment statement has three parts that always occur in this order:</p>
+
+                <p><code><em>&lt;variable&gt; &lt;assignment symbol&gt; &lt;expression&gt;;</em></code></p>
+
+                <p>Here <code><em>&lt;variable&gt;</em></code> is any declared variable in the program, <code><em>&lt;assignment symbol&gt;</em></code> is the language's notation for the assignment operation (discussed next), and <code><em>&lt;expression&gt;</em></code> is a kind of formula telling the computer how to compute the new value. Like any other statement, an assignment statement is terminated by a semicolon. JavaScript's <code><em>&lt;assignment symbol&gt;</em></code> is the equal sign (<code>=</code>), and you've already seen the assignment operation as the initializer for variable declarations.</p>
+
+                <section class="subsection" data-number="14" data-name="Assignment Symbol">
+                    <h3>Assignment Symbol</h3>
+
+                    <p><span class="first-sentence">Different programming languages use different symbols for indicating assignment.</span> The three most widely used symbols are the equal sign (<code>=</code>); the colon, equal sign pair (<code>:=</code>); and the left pointing arrow (<code>&larr;</code>). There are others, but these are the most common. The <code>:=</code> is considered a single symbol even though it is formed from two keyboard characters. Like JavaScript, most languages use <code>=</code>. Pascal uses <code>:=</code> and more mathematical languages like APL</p>
+
+                    <div class="pagebreak pageNumber">561</div>
+
+                    <p>use <code>&larr;</code>. Regardless of which symbol the language uses, assignment is a standard and commonly used operation in every programming language.</p>
+
+                    <p>An example of an assignment statement is</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/extra18.2.png" />
+                    </figure>
+
+                    <p>where <code>weeks</code> is the variable whose value is being changed, <code>=</code> is the assignment symbol, and <code>days/7</code> is the expression. Therefore, this assignment statement illustrates the standard form.</p>
+
+                </section>
+
+                <section class="subsection" data-number="15" data-name="Interpreting an Assianment Statement">
+                    <h3>Interpreting an Assianment Statement</h3>
+
+                    <p><span class="first-sentence">To understand how assignment works, you <em>must</em> think of a value flowing from the right side (expression side) of the assignment symbol to the left side (variable side).</span> (This view makes the left arrow, <code>&larr;</code>, perhaps the most intuitive assignment symbol.) The <em>assignment symbol</em> should be read as <em>"is assigned"</em> or <em>"becomes"</em> or <em>"gets"</em>. Therefore, our example can be read</p>
+
+                    <ul>
+                        <li>"the variable <code>weeks</code> is <em>assigned</em> the value resulting fromdividing the value of the variable <code>days</code> by 7"</li>
+                        <li>"the value of <code>weeks</code> <em>becomes</em> the value resulting from dividing the value of the variable <code>days</code> by 7"</li>
+                        <li>"the variable <code>weeks</code> <em>gets</em> the value resulting from dividing the value of the variable <code>days</code> by 7"</li>
+                    </ul>
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">Get with the Program.</strong> Most programmers prefer <em>gets</em> when reading assignments. It conveys the idea of filling a container, as in a "mailbox <em>gets</em> a letter" or a "flour tin <em>gets</em> refilled." The variable is the container.</div>
+
+                    <p>Terms like is <em>assigned</em>, <em>becomes</em>, and <em>gets</em> emphasize the role that the assignment symbol plays, namely, to change the value of the variable named on the left side.</p>
+
+                    <p>In an assignment statement, the expression (that is, everything to the right of the assignment symbol) is computed or evaluated first. If there are any vari- ables used in the expression, their current values are used. This evaluation produces a value that then becomes the new value of the variable named on the left side. So, the effect of executing the sample assignment statement</p>
+
+                    <p><code>weeks = days/7;</code></p>
+
+                    <p>is that the current value of the variable days is determined by looking in the memory (suppose it is <code>77</code>), and that value is divided by <code>7</code>, producing a new value, <code>11</code>. This new value then becomes the new value of the variable <code>weeks</code>, that is, <code>weeks</code> is assigned <code>11</code>.</p>
+
+                    <div class="pagebreak pageNumber">562</div>
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">Assignment to Memory.</strong> In the computer, an assignment statement causes the value in the memory location(s) corresponding to the variable to be replaced by the new value resulting from the expression.</div>
+
+                </section>
+
+                <section class="subsection" data-number="16" data-name="Three Key Points About Assignment">
+                    <h3>Three Key Points About Assignment</h3>
+
+                    <p><span class="first-sentence">There are three key points to remember about assignment statements.</span> First, all three of the components must be given; if anything is missing, the statement is meaningless. Second, the flow of the value to the name is always right to left. Thus the two variable names in the assignment statement</p>
+
+                    <p><code>variable_receiving_new_value = newly_computed_value;</code></p>
+
+                    <p>correctly show the motion of information. Notice that the expression can simply be some other variable; it doesn't have to be a complicated formula. Third, the values of any variables used in the expression are their values before the start of execution of the assignment. This point is extremely important, because the variable being changed in the assignment statement might also be used in the expression.</p>
+
+                    <p>For example, a program simulating a basketball game would probably use the assignment statement</p>
+
+                    <p><code>totalScore = totalScore + 3;</code></p>
+
+                    <p>for a basket from outside the three&dash;point circle. When the expression on the right side of the assignment statement, <code>totalScore + 3</code>, is evaluated, the value of <code>totalScore</code> used in the computation is its value before starting this statement, that is, the score before the shot. When the assignment statement is completed, <code>totalScore</code> is the updated value reflecting the three&dash;point shot.</p>
+
+                    <p>Similarly, the program might contain the code</p>
+
+                    <p><code>shotClock = shotClock &dash; 1;</code></p>
+
+                    <p>to implement the "tick" of the shot clock. Again, when evaluating the right side expression, the values used for variables are those <em>before</em> the statement is executed.</p>
+
+                    <p>Repeating, because this is the most important of all of the ideas in this chapter: The role of <code>=</code> is to <em>assign</em> the value computed on the right side to be the new value of the variable named on the left side.</p>
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">Programming Is Not Algebra.</strong> Like algebra, many programming languages use an equal sign in assignments. In programming "=" is read "becomes," which suggests the dynamic meaning of the right&dash;to&dash;left value flow. In algebra "=" is read "equals," which emphasizes the static meaning that both sides are identical. In programming, the statement "<em>x</em> = <em>x</em> + 1" means the value of <em>x</em> becomes 1 larger; in algebra, the equation "<em>x</em> = <em>x</em> + 1" is meaningless because there is no number that is identical to itself plus 1. The unknowns in algebra are names whose values do not change.</div>
+
+                    <div class="pagebreak pageNumber">563</div>
+
+                    <div class="try-it">
+                        <p><strong>18.4 An Assignment.</strong> Declare a variable <code>bestPicture</code> and then write an assignment statement to give it the value <em>Slumdog Millionaire</em>.</p>
+                    </div>
+
+                </section>
+
+            </section><!-- section5 -->
+
+            <section class="section" data-number="17" data-name="An Expression and Its Syntax"><!-- section6 --> 
+                <h2>An Expression and Its Syntax</h2>
+
+                <p><span class="first-sentence">Although programming is not mathematics, it has its roots in higher math.</span> So, it is not surprising that one of the concepts in programming is an algebra- like formula called an <strong>expression</strong>. Expressions describe the means of performing the actual computation. As you've already seen in earlier spreadsheet chapters and in the expression <code>days/7</code>, expressions are built out of variables and <strong>operators</strong>, which are standard arithmetic operations, such as addition or subtraction, found on the keys of a calculator.</p>
+
+                <p>The symbols of basic arithmetic are called the <strong>arithmetic operators</strong>. The actual symbols used for some operators may be different, depending on the programming language, so we limit ourselves here to JavaScript operators. Examples of expressions include</p>
+
+                <p><code>a * (b + c)<br/>
+                    height * width / 2<br/>
+                    pi * diameter<br/>
+                    (((days * 24) + hours) * 60 + minutes) * 60 + seconds
+                </code></p>
+
+                <section class="subsection" data-number="18" data-name="Arithmetic Operators">
+                    <h3>Arithmetic Operators</h3>
+
+                    <p><span class="first-sentence">Expressions usually follow rules similar to algebraic formulas, but not quite.</span> Multiplication must be given explicitly with the asterisk (*) multiply operator, so we write <code>a * b</code> rather than <code>ab</code> or <code>a &#8729; b</code> or <code>a x b</code>. As with algebra, multiplication and division are performed before addition and subtraction &dash; multiplication and division have <em>higher precedence</em> than addition and subtraction &dash; unless parentheses group the operations differently. Therefore, <code>a*b + a*c</code> is equivalent to <code>(a*b) + (a*c)</code> because multiplication is automatically performed before addition. Also, because expressions must be typed on a single line, superscripts, as in <em>x</em><sup>2</sup>, are prohibited. Some languages have an operator for exponents or powers, but JavaScript does not. If we want to compute the area of a circle, we must multiply R times itself because we can't square it. So</p>
+
+                    <p><code>pi * R * R</code></p>
+
+                    <p>is the expression for computing the area of a circle (&pi;<em>r</em><sup>2</sup>), assuming that the variable pi has the value 3.1415962.</p>
+
+                    <p>Operators like + and * are called <strong>binary operators</strong> because they operate on two values. The values they operate on are called <strong>operands</strong>. There are also <strong>unary operators</strong>, like negate (&dash;), which have only one operand. (Language parsers &dash; the part of a compiler that "diagrams" programs so a computer can understand them &dash; can easily figure out whether the minus means negate or subtract.)</p>
+
+                    <div class="pagebreak pageNumber">564</div>
+
+                    <p>One very useful operator in future chapters will be mod. The <strong>modulus</strong> (mod) <strong>operation</strong> (%) divides two integers and returns the remainder. So, the result of a%b for integers <code>a</code> and <code>b</code> is the remainder of the division <code>a/b</code>. In particular, the result of <code>4%2</code> is <code>0</code> because <code>2</code> evenly divides <code>4</code>, whereas <code>5%2</code> is <code>1</code> because <code>2</code> into <code>5</code> leaves a remainder of <code>1</code>.</p>
+
+                </section>
+
+                <section class="subsection" data-number="19" data-name="Relational Operators">
+                    <h3>Relational Operators</h3>
+
+                    <p><span class="first-sentence">Expressions involving addition, subtraction, and so on are similar to algebra, but programmers use other kinds of expressions.</span> <strong>Relational operators</strong> are used to make comparisons between numerical values &dash; that is, to test the relationship between two numbers. The outcome of the comparison is a Boolean value, either <code>true</code> or <code>false</code>. The operators are illustrated here with sample operands <code>a</code> and <code>b</code> that should be replaced with variables or expressions:</p>
+
+                    <p><code>a &lt; b</code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Is <code>a</code> less than <code>b</code>?<br/>
+                        <code>a &lt;= b</code> &nbsp;&nbsp;&nbsp;&nbsp; Is <code>a</code> less than or equal to <code>b</code>?<br/>
+                        <code>a == b</code> &nbsp;&nbsp;&nbsp;&nbsp; Is <code>a</code> equal to <code>b</code>?<br/>
+                        <code>a != b</code> &nbsp;&nbsp;&nbsp;&nbsp; Is <code>a</code> not equal to <code>b</code>?<br/>
+                        <code>a &gt;= b</code> &nbsp;&nbsp;&nbsp;&nbsp; Is <code>a</code> greater than or equal to <code>b</code>?<br/>
+                        <code>a &gt; b</code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Is <code>a</code> greater than <code>b</code>?
+                    </p>
+
+                    <p>Notice that the "equal to" relational operator (<code>==</code>) is a double equal sign, making it different from assignment.</p>
+
+                    <p>Examples of relational expressions include</p>
+
+                    <p><code>bondRate &gt; certificateDeposit<br/> 
+                        temperature &lt;= 212<br/>
+                        drink == "espresso"
+                    </code></p>
+
+                    <p>Notice that relational tests can apply to string variables, as in the last example, which is taken from the program in Figure 18.1. Both equal (<code>==</code>) and not equal (<code>!=</code>) can be applied to string variables.</p>
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">One Character or Two?</strong> Several operators, such as &lt;=, &gt;=, and !=, are composed of two keyboard characters. They cannot contain a space and are considered a single character. They were invented years ago to make up for the limited number of characters on a standard keyboard. If programming language research started today, compounds would not be necessary because it's now easy to introduce new symbols that are not on the keyboard, such as &le;, &ge; and &ne;.</div>
+
+                </section>
+
+                <section class="subsection" data-number="20" data-name="Logical Operators">
+                    <h3>Logical Operators</h3>
+
+                    <p><span class="first-sentence">The relational test results in a <code>true</code> or <code>false</code> outcome; that is, either the two operands are related to each other as the relational operator asks, making the test outcome <code>true</code>, or they are not, making the test outcome <code>false</code>.</span> It is common to test two or more relationships together, requiring that relational expression results be combined. For example, teenagers are older than 12 and</p>
+
+                    <div class="pagebreak pageNumber">565</div>
+
+                    <p>younger than 20. In programming, "teenagerness" is determined by establishing that the relational tests <code>age &gt; 12</code> and <code>age &lt; 20</code> are both true. In JavaScript the "teenage" expression is</p>
+
+                    <p><code>age &gt; 12 &amp;&amp; age &lt; 20</code></p>
+
+                    <p><span class="paragraph-header">Logical and.</span> The <code>&amp;&amp;</code> is the <strong>logical and</strong> operator, playing the same role AND plays in query expressions (Chapters 5 and 16). The outcome of <em>a <code>&amp;&amp;</code> b</em> is true if both <em>a</em> and <em>b</em> are true; otherwise, it is false. (The operands <em>a</em> and <em>b</em> can be variables, in which case they have Boolean values, or expressions, or a mixture.)</p>
+
+                    <p>Thus, in the teenager expression, the current value of <code>age</code> is compared to 12, which yields a <code>true</code> or a <code>false</code> outcome. Then the current value of <code>age</code> is compared to 20, yielding another <code>true</code> or <code>false</code> outcome. Finally, these two outcomes, the operands of <code>&amp;&amp;</code>, are tested, and if they are both <code>true</code>, the entire expression has a true outcome; otherwise, it is <code>false</code>. For example,</p>
+
+                    <div class="table large">
+
+                        <div class="small-table">
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Value of Age</th>
+                                        <th>age &gt; 20</th>
+                                        <th>age &lt; 20</th>
+                                        <th>age &gt; 12 &amp;&amp; age &lt; 20</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>false</td>
+                                        <td>true</td>
+                                        <td>false</td>
+                                    </tr>
+                                    <tr>
+                                        <td>16</td>
+                                        <td>true</td>
+                                        <td>true</td>
+                                        <td>true</td>
+                                    </tr>
+                                    <tr>
+                                        <td>50</td>
+                                        <td>true</td>
+                                        <td>false</td>
+                                        <td>false</td>
+                                    </tr>                           
+                                </tbody>
+                            </table>
+
+                        </div> <!-- /small-table -->
+                    </div> <!-- /table large -->
+
+                    <p>Notice that the operands for relational expressions must be numeric, but the operands for logical expressions must be Boolean (that is, <code>true</code> or <code>false</code>).</p>
+
+                    <div class="fluency-bit"><strong class="fluency-bit-title">Programming Is Still Not Algebra.</strong> In algebra, the notation <em>12 &lt; age &lt; 20</em> would be used to assert "teenagerness," the static condition of an age within the indicated limits. In programming, both tests must be specified and the two results "anded" (combined using <code>&amp;&amp;</code>) to produce the final answer. The difference, again, is that in algebra we are just stating a fact, whereas in programming we are <em>commanding</em> the computer to perform the operation of testing the two conditions.</div>
+
+                    <p><span class="paragraph-header">Logical or.</span> Not surprisingly, there is also a <strong>logical or</strong> operator, ||. The outcome of <em>a</em> || <em>b</em> is <code>true</code> if either a is true or b is <code>true</code>, and it is also true if they are both <code>true</code>; it is false only if both are <code>false</code>. A "preteen" test expression</p>
+
+                    <p><code>age == 11 || age == 12</code></p>
+
+                    <p>illustrates the use of the logical operator ||. Because <code>&amp;&amp;</code> and || have lower precedence than the relational operators, the relationals are always tested first. To include 10&dash;year&dash;olds as preteens, we write an expression that states that either the person is age 10 or their age satisfies the previous preteen definition:</p>
+
+                    <p><code>age == 10 || (age == 11 || age == 12)</code></p>
+
+                    <p>Notice that the subexpression in parentheses produces a <code>true</code> or <code>false</code> value when evaluated, just like a relational test does. It doesn't matter how the</p>
+
+                    <div class="pagebreak pageNumber">566</div>
+
+                    <p>operands of || are produced; it only matters that they are <code>true</code> or <code>false</code> values. Another way to achieve the same result is</p>
+
+                    <p><code>(age == 10 || age == 11) || age == 12</code></p>
+
+                    <p>Of course, it is also possible to test this definition of preteen with the expression</p>
+
+                    <p><code>age &gt;= 10 &amp;&amp; age &lt;= 12</code></p>
+
+                    <p>which takes a bit less typing, and is like the teenager test. All of these expressions seem equally clear to a person, and the computer doesn't care which is used.</p>
+
+                    <p><span class="paragraph-header">Logical not.</span> The <strong>logical not</strong> (<code>!</code>) is a unary operator &dash; it takes only a single operand &dash; and its outcome is the opposite of the value of its operand. To command the computer to check if the age is not that of a teenager, write</p>
+
+                    <p><code>! (age &gt; 12 &amp;&amp; age &lt; 20)</code></p>
+
+                    <p>It works as follows. The subexpression in parentheses tests whether the age qualifies as a teenager, that is, more than 12 and less than 20. The outcome of the test is either <code>true</code>, the age qualifies as a teenager, or <code>false</code>, it does not. By placing the logical not operator in front of the parenthesized expression, we have a new expression, which has the opposite outcome: The whole expression is <code>false</code> if the age is that of a teenager, and it is <code>true</code> if the age is not that of a teenager.</p>
+
+                    <div class="try-it">
+                        <p><strong>18.5 In the Tropics.</strong> The Tropic of Cancer is 23.5° North latitude and the Tropic of Capricorn is 23.5° South latitude; the Arctic Circle is 66.5° North latitude and the Antarctic Circle is 66.5° South latitude. Assume <code>lat</code> is a variable giving the latitude of a location on the globet Write a relational expression that is true if the location is hot or cold; that is, either tropical or polar.</p>
+                    </div>
+
+                    <p><span class="paragraph-header">Operator overload.</span> Finally, we've reached <strong>operator overload</strong>. That might sound like the description of someone trying to learn too many new operators at a time &dash; a state you have no doubt achieved! &dash; but it is a technical term meaning the "use of an operator with different data types." The case of interest is <code>+</code>. Operators usually apply to a single data type, like numbers. So, we expect <code>4 + 5</code> to produce the numerical result of 9. And it does when the operands are numbers. But if the operands are the strings <code>"four" + "five"</code> the result is the string <code>"fourfive"</code>.</p>
+
+                    <p><span class="paragraph-header">Concatenation.</span> When we use <code>+</code> with strings, it joins the strings together by the operation of <strong>concatenation</strong>. In everyday writing, we simply place two strings together if we want them joined, but in programming, we command the computer to do the work, so we need the operator concatenation to tell the computer to put two strings together. We have "overloaded" the meaning of <code>+</code> to mean addition when operands are numeric and concatenation when</p>
+
+                    <div class="pagebreak pageNumber">567</div>
+
+                    <p>the operands are strings. Though overloading is common in some programming languages, <code>+</code>  is the only example you'll see here with our use of JavaScript.</p>
+
+                    <div class="fluency-tip">
+                        <strong class="fluency-tip-title">Quote Note.</strong> When manipulating strings, as in the statement<br/>
+                        <code>fullName = firstName + " " + middleName + " " + lastName;</code><br/> 
+                        which creates a name from its parts using blanks as separators, it's easy to understand + as concatenation. But for a statement like<br/>
+                        <code>colt = "4" + "5";</code><br/>
+                        the variable <code>colt</code> will be assigned the string <code>"45"</code>, not <code>9</code>, because the operands are (length 1) strings. Thus, you must be alert for quotes that tell you the operand is a string rather than a numerical value.
+                    </div>
+
+                </section>
+
+            </section><!-- section6 -->
+
+            <section class="section" data-number="21" data-name="A Conditional Statement"><!-- section7 --> 
+                <h2>A Conditional Statement</h2>
+
+                <p><span class="first-sentence">The <em>Alphabetize CDs</em> program in Chapter 10 required many tests.</span> For example, there was a test to determine if the titles of two CDs were in alphabetical order. A specific statement type, called a <strong>conditional statement</strong> or a <strong>conditional</strong>, has been invented to make testing simpler. The conditional statement of JavaScript, which differs from the <code>IF( )</code> function of spreadsheets, has the form</p>
+
+                <p><code>if (&lt;<em>Boolean expression</em>&gt;)<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;<em>then&dash;statement</em>&gt;;
+                </code></p>
+
+                <p>Here the <code>&lt;<em>Boolean expression</em>&gt;</code> is any expression evaluating to a Boolean true or false outcome, such as relational expressions, and the <code>&lt;<em>then&dash;statement</em>&gt;</code> is any JavaScript statement, such as an assignment statement.</p>
+
+                <section class="subsection" data-number="22" data-name="if Statements and Their Flow of Control">
+                    <h3><code>if</code> Statements and Their Flow of Control</h3>
+
+                    <p><span class="first-sentence">For example, an if statement that checks <code>waterTemp</code> in Fahrenheit</span></p>
+
+                    <p><code>if (waterTemp &lt; 32)<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;waterState = "Frozen";
+                    </code></p>
+
+                    <p>is a typical conditional statement. In a conditional the <code>&lt;<em>Boolean expression</em>&gt;</code>, called a <strong>predicate</strong>, is evaluated, producing a <code>true</code> or <code>false</code> outcome. If the outcome is <code>true</code>, the <code>&lt;<em>then&dash;statement</em>&gt;</code> is performed. If the outcome is <code>false</code>, the <code>&lt;<em>then&dash;statement</em>&gt;</code> is skipped. Therefore, in the example the value of the variable <code>waterTemp</code> is determined and compared to 32. If it is less than 32, the value of the variable <code>waterState</code> is changed to <code>"Frozen"</code>. Otherwise, the statement is passed over, and <code>waterState</code> remains unchanged. The following conditional</p>
+
+                    <p><code>if (waterTemp &gt;= 32 &amp;&amp; waterTemp &lt;= 212)<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;waterState = "Liquid";
+                    </code></p>
+
+                    <p>tests a range of values using relational operators and the <code>and</code> operator.</p>
+
+                    <div class="pagebreak pageNumber">568</div>
+
+                    <p>Some programming languages use the word <em>then</em> to separate the predicate from the <code>&lt;<em>then&dash;statement</em>&gt;</code>, but JavaScript does not, because it is unnecessary. Writing the <code>&lt;<em>then&dash;statement</em>&gt;</code> indented on the following line is actually only common practice, not a rule; the <code>&lt;<em>then&dash;statement</em>&gt;</code> could be on the same line as the predicate,</p>
+
+                    <p><code>if (waterTempC &gt;= 0 &amp;&amp; waterTempC &lt;= 100) waterState = "Liquid";</code></p>
+
+                    <p>It has the same meaning because white space is ignored in JavaScript. But programmers write the <code>&lt;<em>then&dash;statement</em>&gt;</code> indented on the following line to set it off and emphasize its conditional nature for anyone reading the program. By the way, when you read a conditional statement you <em>say</em> "then" after the predicate.</p>
+
+                    <p>Sometimes we need to perform more than one statement on a true outcome of the predicate test. We could just repeat the test for each statement, as in</p>
+
+                    <p><code>if (waterTemp &lt; 32) waterState = "Frozen";<br/>
+                        if (waterTemp &lt; 32) description = "Ice";
+                    </code></p>
+
+                    <p>Repeating statements can become tedious, however.</p>
+
+                </section>
+
+                <section class="subsection" data-number="23" data-name="Compound Statements">
+                    <h3>Compound Statements</h3>
+
+                    <p><span class="first-sentence">Programming languages allow for a sequence of statements in the <code>&lt;<em>then&dash;statement</em>&gt;</code>.</span> The problem is that if there are several statements, how will we know how many to skip in case the predicate has a <code>false</code> outcome? The solution is easy: We group the statements by surrounding them with "curly braces," <code>{}</code>, which collects them to become a single statement known as a <strong>compound statement</strong>. Then they fulfill the requirements of the earlier definition because now the <code>&lt;<em>then&dash;statement</em>&gt;</code> refers to the single (compound) statement; it is skipped when the predicate outcome is <code>false</code>. For example,</p>
+
+                    <p><code>if (waterTempC &lt; 0) {<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;waterState = "Frozen";<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;description = "Ice";<br/>
+                        }
+                    </code></p>
+
+                    <p>Notice the location of the curly braces. One immediately follows the predicate to signal that a compound statement is next, and the other is placed conspicuously on its own line below the <em>i</em> of <code>if</code>. Programmers do this so that compound statement grouping symbols are easy to see, because they are easily overlooked if they are in an unexpected place in a program. As always, the computer doesn't care where the curly braces are placed.</p>
+
+                    <p>The "exception proving the rule" that every statement must be terminated by a semicolon is the compound statement. The closing curly brace, <code>}</code>, should not be followed by a semicolon.</p>
+
+                    <div class="fluency-tip">
+                        <strong class="fluency-tip-title">Show Your Braces.</strong> Since compound statement braces have a huge impact on program behavior, always put them in the standard place, where they will be noticed.
+                    </div>
+
+                    <div class="pagebreak pageNumber">569</div>
+
+                    <p>Another example of the use of the compound statement is from the espresso computation of Figure 18.1:</p>
+
+                    <p><code> if (drink == "lane" || drink == "cappuccino") {<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (ounce == 8)<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price = 1.95;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (ounce == 12)<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price = 2.35;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (ounce == 16)<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price = 2.75;<br/>
+                    }
+                    </code></p>
+
+                    <p>This code illustrates an if with a compound statement containing three simple if statements. If <code>drink</code> is neither a <code>"latte"</code> nor a <code>"cappuccino"</code>, the three statements will be skipped. Otherwise, if <code>drink</code> equals <code>"latte"</code> or <code>drink</code> equals <code>"cappuccino"</code>, the three statements will be performed. Notice that at most one predicate of the three statements of the compound statement can be true, because <code>ounce</code> can have only one value at a time: 8, 12, 16, or something else. So, price will be changed at most once.</p>
+
+                </section>
+
+                <section class="subsection" data-number="24" data-name="if/else Statements">
+                    <h3><code>if</code>/<code>else</code> Statements</h3>
+
+                    <p><span class="first-sentence">Of course, performing statements when a condition is true is handy, but how can statements be executed when the condition's outcome is false?</span> There is another form of the if statement known as the <Strong><code>if/else</code> statement</strong>. It has the form</p>
+
+                    <p><code>if (&lt;<em>Boolean expression</em>&gt;)<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<em>then&dash;statement</em>&gt;;<br/>
+                        else<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<em>else&dash;statement</em>&gt;;
+                    </code></p>
+
+                    <p>The <code>&lt;<em>Boolean expression</em>&gt;</code> is evaluated first. If the outcome is true, the <code>&lt;<em>then&dash;statement</em>&gt;</code> is executed and the <code>&lt;<em>else&dash;statement</em>&gt;</code> is skipped. If the <code>&lt;<em>Boolean expression</em>&gt;</code>'s outcome is false, the <code>&lt;<em>then&dash;statement</em>&gt;</code> is skipped and the <code>&lt;<em>else&dash;statement</em>&gt;</code> is executed. For example,</p>
+
+                    <p><code>if (day == 'Friday' II day == 'Saturday')<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;calendarEntry = "Party!";<br/>
+                        else<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;calendarEntry = "Study";
+                    </code></p>
+
+                    <p>The <code>&lt;<em>then&dash;statement</em>&gt;</code> and <code>&lt;<em>else&dash;statement</em>&gt;</code> are single statements, but several statements can be grouped into a compound statement with curly braces when necessary. For example,</p>
+
+                    <p><code>if ((year % 4) == 0) {<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;leapYear = true;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;febDays = febDays + 1;<br/>
+                        }<br/>
+                        else<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;leapYear = false;
+                    </code></p>
+
+                    <div class="pagebreak pageNumber">570</div>
+
+                    <p>This example uses the mod operator <code>%</code>, so the outcome of (<code>year%4</code>) is the remainder of <code>year / 4</code>; that is, the result is 0, 1, 2, or 3.</p>
+
+                    <p>A typical example sets the same variables in both parts of the conditional. Consider a coin toss at the start of a soccer game, which can be expressed as</p>
+
+                    <p><code>if (sideUp == sideCalled) {<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;coinTossWinner = visitorTeam;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;firstHalfOffensive = visitorTeam;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;secondHalfOffensive = hostTeam;<br/>
+                        }<br/>
+                        else {<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;coinTossWinner = hostTeam;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;firstHalfOffensive = hostTeam;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;secondHalfOffensive = visitorTeam;<br/>
+                        }
+                    </code></p>
+
+                    <p>Notice that the opening curly brace for the <code>&lt;<em>else&dash;statement</em>&gt;</code> is placed right after the else, and the closing curly brace is placed conspicuously on its own line directly below the <em>e</em> of <code>else</code>.</p>
+
+                    <div class="try-it">
+                        <p><strong>18.6 Even or Odd?</strong> After executing the conditional statement<br/>
+                            <code>if (monthDays &lt; 31 &amp;&amp; monthNumber &lt; 8)<br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;evenOrOdd = "even";<br/>
+                                else<br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;evenOrOdd = "odd";<br/>
+                            </code>
+                            what is the value of <code>evenOrOdd</code> for May, the fifth month, which has 31 days?
+                        </p>
+                    </div>
+
+                </section>              
+
+                <section class="subsection" data-number="25" data-name="Nested if/else Statements">
+                    <h3>Nested <code>if</code>/<code>else</code> Statements</h3>
+
+                    <p><span class="first-sentence">The <code>&lt;<em>then&dash;statement</em>&gt;</code> and the <code>&lt;<em>else&dash;statement</em>&gt;</code> can contain an <code>if/else</code>, but you have to be careful, because it can be ambiguous which if an <code>else</code> goes with.</span></p>
+
+                    <p><code>if (Pooh == "bear")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="paragraph-header"><em>Caution: This code is deceptive!</em></span><br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (Eeyore == "bear")<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;report = "Pooh and Eeyore are the same kind of animal";<br/>
+                        else<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;report = "Pooh is not a bear";
+                    </code></p>
+
+                    <p>has been <em>deceptively</em> indented so that it <em>appears</em> that the <code>else</code> associates with the first <code>if</code>. But white space is ignored. The JavaScript rule means that the <code>else</code> associates with the "inner" <code>if</code>, so that the following indentation matches the actual meaning:</p>
+
+                    <div class="pagebreak pageNumber">571</div>
+
+                    <p><code>if (Pooh == "bear")<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (Eeyore == "bear")<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;report = "Pooh and Eeyore are the same kind of animal";<br/>
+                        else<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;report = "Pooh is not a bear";&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="paragraph-header"><em>Caution: This conclusion is wrong!</em></span>
+                    </code></p>
+
+                    <p>In fact, assuming Pooh is a bear and Eeyore is a donkey or any animal other than a bear, <code>report</code> gives the wrong answer. The best policy &dash; the one success programmers follow &dash; is to enclose the <code>&lt;<em>then&dash;statement</em>&gt;</code> or <code>&lt;<em>else&dash;statement</em>&gt;</code> compound curly braces whenever they contain an <code>if/else</code>. Thus the right way to express the statement is</p>
+
+                    <p><code>if (Pooh == "bear") {<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;if (Eeyore == "bear")<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;report = "Pooh and Eeyore are the same kind of animal";<br/>
+                        }<br/>
+                        else<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;report = "Pooh is not a bear";
+                    </code></p>
+
+                    <p>The braces ensure that the <code>else</code> matches with its <code>if</code>. This policy saves a lot of grief.</p>
+
+                    <p>As one final example of <strong>nested conditionals</strong>, consider the four outcomes from flipping two coins expressed by nested conditionals:</p>
+                    
+                    <figure>
+                        <img src="/contents/fluency/images/extra18.3.png" />
+                    </figure>
+
+                    <p>This example shows clearly the logic of the true and false outcomes of the predicates.</p>
+
+                </section>
+
+            </section> <!-- /section7 -->
+
+            <section class="section" data-number="26" data-name="The Espresso Program"><!-- section8 --> 
+                <h2>The Espresso Program</h2>
+
+                <p><span class="first-sentence">We now return to the program shown in Figure 18.1. The program (shown on the next page) computes the price of four kinds of espresso drinks based on the type of drink, the size of drink, and the number of additional shots, plus tax.</span> The input variables are listed at the start of the program, as is the output.</p>
+
+                <div class="pagebreak pageNumber">572</div>
+
+                <p>The input variables are assumed to be given; see Chapter 19 for details on how this is done with a GUI. Because the program will create the output, we declare the output to be a variable in the first statement of the program.</p>
+
+                <p>Statements 3 through 5 determine the kind of drink and establish the base price. These statements have been written to show different programming techniques:</p>
+
+                <ul>
+                    <li><strong>Line 3:</strong> If the order is straight espresso, the first shot is priced at $1.40. This is an example of a basic conditional statement.</li>
+                    <li><strong>Lines 4&dash;4c:</strong> These statements establish the base prices for lattes and cappuccinos using an if statement with conditionals in the <code>&lt;<em>then&dash;statement</em>&gt;</code> compound statement.</li>
+                    <li><strong>Line 5:</strong> This line uses a basic if statement to compute the base price for Americanos.</li>
+                    <li><strong>Lines 6, 7:</strong> Finally, the total price is computed in lines 6 and 7. In Line 6 the cost of additional shots is added to the base price. In line 7 the tax is added in. This is accomplished by multiplying the total price by the <code>taxRate</code>, then adding the result to the total price.</li>
+                </ul>
+
+                <p>Notice that the if statements on lines 3, 4, and 5 will always be executed, but because they apply to different drinks, the statement(s) of their <code>&lt;<em>then&dash;statement</em>&gt;</code> will be executed in at most one of the cases.</p>
+
+                <p><span class="paragraph-header">Input:</span><br/>
+                    <code>drink</code> &dash; a character string with one of the values: <code>"espresso", "latte",<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;"cappuccino", "Americano"</code><br/>
+                    <code>ounce</code> &dash; an integer, giving the size of the drink in ounces<br/> 
+                    <code>shots</code> &dash; an integer, giving the number of shots<br/><br/>
+
+                    <span class="paragraph-header">Output:</span><br/>
+                    <code>price</code> in dollars of an order, including 8.8% sales tax<br/><br/>
+
+                    <span class="paragraph-header">Program:</span><br/>
+                    <code>1.&nbsp;&nbsp;&nbsp;&nbsp;var price;<br/>
+                    2.&nbsp;&nbsp;&nbsp;&nbsp;var taxRate = 0.088;<br/>
+                    3.&nbsp;&nbsp;&nbsp;&nbsp;if (drink == "espresso")<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price = 1.40;<br/>
+                    4.&nbsp;&nbsp;&nbsp;&nbsp;if (drink == "latte" II drink == "cappuccino") {<br/>
+                    4a&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (ounce == 8)<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price = 1.95;<br/>
+                    4b.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (ounce=12)<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price = 2.35;<br/>
+                    4c.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (ounce == 16)<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price = 2.75;<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+                    5.&nbsp;&nbsp;&nbsp;&nbsp;if (drink == "Americano")<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price = 1.20 + .30 * (ounce/8);<br/>
+                    6.&nbsp;&nbsp;&nbsp;&nbsp;price = price + (shots - 1) * .50;<br/>
+                    7.&nbsp;&nbsp;&nbsp;&nbsp;price = price + price * taxRate;</code>
+                </p>
+
+                <div class="pagebreak pageNumber">573</div>
+
+                <section class="subsection" data-number="27" data-name="Execution for a Double Tall Latte">
+                    <h3>Execution for a Double Tall Latte</h3>
+
+                    <p><span class="first-sentence">To see the espresso program in action, compute the price of a double tall latte, the second most common phrase used in Seattle after "it's still raining."</span> A "double" means a total of two shots in the drink, that is, one extra shot. Thus the input variables to the program are</p>
+
+                    <p><code>drink &hArr; "latte"<br/>
+                        ounce &hArr; 12<br/>
+                        shots &hArr; 2
+                    </code></p>
+
+                    <p>Where <code>&hArr;</code> means "has the value of" or "contains." This notation allows us to give the value of a variable without using the equal sign, which would look like an assignment statement.</p>
+
+                    <p>The first statements are declarations, which are like definitions. In particular, we should treat <code>price</code> as not yet having any value. The following lines are executed:</p>
+
+                    <ul>
+                        <li><strong>Line 3</strong> is executed first. The test <code>drink == "espresso"</code> fails, because the variable drink has the value <code>"latte"</code>. As a result its then statement is skipped.</li>
+                        <li><strong>Line 4</strong> is executed next. The test <code>drink == "latte" || drink == "cappuccino"</code> has a <code>true</code> outcome because the subexpression <code>drink == "latte"</code> is <code>true</code>; the relational test <code>drink == "cappuccino"</code> is <code>false</code>, of course, but because one of the operands of the <code>||</code> is <code>true</code>, the whole expression is <code>true</code>. This means that the then statement containing the conditionals 4a-4c will be executed.</li>
+                        <li><strong>Line 4a</strong> is executed next. The test <code>ounce == 8</code> has a <code>false</code> outcome, so its then statement is skipped.</li>
+                        <li><strong>Line 4b</strong> is nexecuted. (I made up <em>nexecuted</em> for "next executed." Isn't it a great word?) The <code>ounce == 12</code> test is <code>true</code>, so the <code>then</code> statement is executed, giving <code>price</code>. its initial value, <code>price &hArr; 2.35</code>.</li>
+                        <li><strong>Line 4c</strong> isnexecuted. The <code>ounce == 16</code> test fails, so its <code>then</code> statement is skipped.</li>
+                        <li><strong>Line 5</strong> is nexecuted. The <code>drink == "Americano"</code> test fails, so its <code>then</code> statement is skipped.</li>
+                        <li><strong>Line 6</strong> is nexecuted. This causes the value of <code>shots</code> minus <code>1</code> to be multiplied by <code>.50</code>, resulting in the value <code>.50</code>, which is added to <code>price</code>, yielding <code>price &hArr; 2.85</code>.</li>
+                        <li><strong>Line 7</strong> is nexecuted. The current value of <code>price</code> is multiplied by <code>taxRate</code>, whose value was initialized on line 2 (<code>taxRate &hArr; 0.088</code>), resulting in <code>0.25</code>, which is added to <code>price</code> to compute the final value of <code>3.10</code>, which is assigned to <code>price</code>.</li>
+                    </ul>
+
+                    <p>Thus, <code>price &hArr; 3.10</code>, so a "double tall latte" costs $3.10.</p>
+
+                    <div class="pagebreak pageNumber">574</div>
+
+                </section>
+
+            </section> <!-- /section8 -->
+
+            <section class="section" data-number="28" data-name="Summary">
+                <h2>Summary</h2>
+                <p><span class="first-sentence">In this chapter, we introduced enough programming concepts &dash; and their JavaScript syntax &dash; for you to read and understand basic programs.</span> The chapter began by introducing the idea that a name can be separated from its value. Captain is a name for a team leader, but its value, that is, the person who is the captain, can change. In fact, the name exists, though with an undefined value, as soon as a team is formed. Names&dash;with&dash;changing&dash;values is a familiar idea. File names work this way as we progressively update a file with, say, a word processor. Variables in programming languages have changing values, too. The reason is simple. A program is a fixed, finite specification for a computation written out in a few pages of code. Yet, when the computation is executed, many values may be created to produce the final answer. In the espresso computation, for example, the variable <code>price</code>, which is initially undefined, has three different values: the base price, the total price before tax, and the final price. At any point, the value of <code>price</code> is the price as computed so far, but the process of computing <code>price</code> continues until the program is finished.</p>
+
+                <p>In basic programming, you now understand that:</p>
+
+                <ul>
+                    <li>Name&dash;value separation is an important concept. It's one of the ways that programming differs from algebra.</li>
+                    <li>Letter sequences that make up a variable's name (identifiers) must be declared. Variables can be initialized when they are declared. Changing the value of a variable is possible by using assignment.</li>
+                    <li>An assignment statement has a variable on the left side of the symbol and an expression on the right side. The operation is to compute the value of the expression and make the result the new value of the variable. This makes information flow from right to left in an assignment statement. Statements like <code>x = x + 1</code>; make sense in programming, but not in algebra. This statement is a command to the computer to find the current value of the variable <code>x</code>, add 1 to it, and make the result of the addition the new value of <code>x</code>.</li>
+                    <li>There are three JavaScript data types &dash; numbers, strings, and Booleans &dash; and we can build expressions to compute values of these types.</li>
+                    <li>Standard arithmetic operators and relationals compute on numbers, and logical operations on Booleans. (See Appendix C for a full listing.) In defining concatenation, you learned about "operator overload." Expressions "do the computing" in programs and are generally a familiar idea.</li>
+                    <li>As a rule, all programming statements are executed one after another, starting at the beginning. The conditional statements are the exception. JavaScript's two conditional forms are <code>if</code> and <code>if/else</code>.</li>
+                </ul>
+
+                <div class="pagebreak pageNumber">575></div>
+
+                <p>These allow statements to be executed depending on the outcome of a Boolean expression called a predicate. Using conditionals, we can organize our computations so that operations are performed when "the conditions are right."</p>
+
+                <ul>
+                    <li>We must be careful to group statements within a compound statement to make it clear which statements are skipped or executed. We also must be careful when using <code>if/else</code> in a conditional so that the <code>if</code> and <code>else</code> associate correctly.</li>
+                    <li>The espresso program in Figure 18.1 illustrates most of the ideas in this chapter. The program uses both numeric and string data types, as well as the declaration, assignment, and conditional statement forms.</li>
+                    <li>All that keeps us from running the program and demonstrating our knowledge is setting up the input to acquire the values for <code>drink</code>, <code>ounce</code>, and <code>shots</code>, and outputting the <code>price</code>. This requires a GUI written in HTML (the topic of Chapter 19).</li>
+                </ul>
+
+            </section>    
+
+        </section> <!-- /page1 -->
+
+        <section id="conclusion" data-number="29" data-name="Try It Solutions">
+            <div class="content">
+
+                <h2>Try It Solutions</h2>
+
+                <ol id="try-it-solutions">
+                    <li class="eighteen-one"><span class="first-sentence">"Slumdog Millionaire" is a name bound to a specific movie that will always be the movie's name; "Best _Picture" is a variable that changes value each year.</span></li>
+                    <li class="eighteen-two"><code>var Alpha, Beta;</code></li>
+                    <li class="eighteen-three"><code>var real_first_name = 'Samuel', real_last_name = "Clemens";<br/>
+                        var humorist = true;<br/>
+                        var century = 19;<br/>
+                        var century = 19;<br/>
+                        var famous_quote = '"Nothing so needs reforming as other people\'s habits."'</code><br/>
+                    Notice the use of escape apostrophe (<code>\'</code>) in <code>famous_quote</code>. It is required because the entire quotation is enclosed in single quotes to allow the text to include double quotes. In the computer's memory the value of <code>famous_quote</code> is the 54&dash;character string:<br/>
+                    <code>"Nothing so needs reforming as other people's habits."</code><br/>
+                    That is, the enclosing single quotes and the backslash are gone.
+                    </li>
+                    <li class="eighteen-four"><code>ar bestPicture;<br/>
+                        bestPicture = "Slurndog Millionaire";<br/>
+                        Did you remember the semicolon terminators?
+                    </code></li>
+                    <li class="eighteen-five"><code>lat &lt;= 23.5 || lat &gt;= 66.5</code></li>
+                    <li class="eighteen-six"><code>evenOrOdd</code> has the value <code>odd</code>.</li>
+                </ol>
+
+                <h2>Review Questions</h2>
+                <section id="multiple-choice" data-number="30" data-name="Multiple Choice">
+                    <h3>Multiple Choice</h3>
+                
+                    <ol>
+                        <li><span class="first-sentence">JavaScript is mainly used for</span>
+                            <ol>
+                                <li>mainframe applications</li>
+                                <li>Web applications</li>
+                                <li>operating systems</li>
+                                <li>all of the above</li>
+                            </ol>
+                        </li>
+                        <li>On the computer, variables are
+                            <ol>
+                                <li>memory locations</li>
+                                <li>programs</li>
+                                <li>files</li>
+                                <li>all of the above</li>
+                            </ol>
+                        </li> 
+                        <li>Which of the following can be used as part of a variable name?
+                            <ol>
+                                <li>&dash; hyphen</li>
+                                <li>b (space)</li>
+                                <li>_ underscore</li>
+                                <li>() parentheses</li>
+                            </ol>
+                        </li>
+                        <li>The symbol to terminate a statement in JavaScript is
+                            <ol>
+                                <li>: colon</li>
+                                <li>Enter</li>
+                                <li>! exclamation</li>
+                                <li>; semicolon</li>
+                            </ol>
+                        </li> 
+                        <li>When declared, JavaScript variables are
+                            <ol>
+                                <li>automatically assigned a 0</li>
+                                <li>automatically assigned a blank</li>
+                                <li>undefined</li>
+                                <li>assigned a random number</li>
+                            </ol>
+                        </li>
+                        <li>Which of the following is not a term used to change the value of a variable?
+                            <ol>
+                                <li>assign</li>
+                                <li>gets</li>
+                                <li>sets</li>
+                                <li>becomes</li>
+                            </ol>
+                        </li> 
+                        <li>The right side of an assignment statement
+                            <ol>
+                                <li>must contain a formula</li>
+                                <li>must contain more than just a variable</li>
+                                <li>uses the values in the variables before the start of the execution of the statement</li>
+                                <li>all of the above</li>
+                            </ol>
+                        </li>
+                        <li><code>grade = num_right * 2.5</code> is a(n)
+                            <ol>
+                                <li>variable</li>
+                                <li>operator</li>
+                                <li>assignment statement</li>
+                                <li>relational operator</li>
+                            </ol>
+                        </li> 
+                        <li>Following the rules of precedence
+                            <ol>
+                                <li>addition is done before subtraction</li>
+                                <li>multiplication is done after division</li>
+                                <li>multiplication is done before subtraction</li>
+                                <li>everything is done left to right</li>
+                            </ol>
+                        </li>
+                        <li>In JavaScript, the relational test, <code>birth_year &gt; 1944 &amp;&amp; birth_year &lt; 1965,</code>
+                            <ol>
+                                <li>true if <code>birth_year</code> is 1952</li>
+                                <li>true if <code>birth_year</code> is less than 1965</li>
+                                <li>false if <code>birth_year</code> is greater than 1944</li>
+                                <li>none of the above</li>
+                            </ol>
+                        </li> 
+                        <li>For a logical and operator to work
+                            <ol>
+                                <li>one of the conditions must be true</li>
+                                <li>neither condition can be false</li>
+                                <li>either one but not both conditions must be true</li>
+                                <li>none of the above</li>
+                            </ol>
+                        </li>
+                        <li>A typical computer program follows the pattern of
+                            <ol>
+                                <li>output, processing, input</li>
+                                <li>input, output, processing</li>
+                                <li>input, processing, output</li>
+                                <li>processing, input, output</li>
+                            </ol>
+                        </li>
+                    </ol>
+
+                </section>
+
+                <section id="short-answer" data-number="31" data-name="Short Answer">
+                    <h3>Short Answer</h3>
+                
+                    <ol>
+                        <li class="review-question"><span class="first-sentence">A(n) ________ is a systematic way of solving a problem so that an agent can follow the instructions and get the correct result.</span></li>
+                        <li class="review-question">A(n) ________ is the letter sequence of a variable's name.</li>
+                        <li>Variables are created using a(n)________ statement.</li>
+                        <li>A(n) ________ is a programming command to do something that's given to the computer.</li>
+                        <li>To ________ a variable is to assign a value to a variable at the same time it is declared.</li>
+                        <li>A(n) ________ is a sequence of alphanumeric and special characters.</li>
+                        <li><code>+</code>, <code>*</code> , and <code>/</code> are called ________.</li>
+                        <li>________ work on two values, such as <code>a * b</code>.</li>
+                        <li>A(n) ________ operator has only one operand.</li>
+                        <li>________ are used to make comparisons.</li>
+                        <li>The not logical operator is a(n) ________.</li>
+                        <li>Joining two strings together using the <code>+</code> is called ________.</li>
+                        <li>In programming, the if statement is called a ________.</li>
+                        <li>When an if statement is false, the ________ statement(s) execute.</li>
+                        <li>________ are used to group several statements into a compound statement.</li>
+                    </ol>
+
+                </section> 
+
+                <section id="exercises" data-number="32" data-name="Exercises">
+                    <h3>Exercises</h3>
+                
+                    <ol>
+                        <li class="review-question"><span class="first-sentence">For the following, fill in the math operator and the relational operator.</span>
+                        <div class="table large">
+                            <div class="small-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Math Operator</th>
+                                            <th>Relational Operator</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>less than</td>
+                                            <td>________</td>
+                                            <td>________</td>
+                                        </tr>
+                                        <tr>
+                                            <td>less than or equal to</td>
+                                            <td>________</td>
+                                            <td>________</td>
+                                        </tr>
+                                        <tr>
+                                            <td>greater than</td>
+                                            <td>________</td>
+                                            <td>________</td>
+                                        </tr>
+                                        <tr>
+                                            <td>greater than or equal to</td>
+                                            <td>________</td>
+                                            <td>________</td>
+                                        </tr>
+                                        <tr>
+                                            <td>equal to</td>
+                                            <td>________</td>
+                                            <td>________</td>
+                                        </tr>
+                                        <tr>
+                                            <td>not equal to</td>
+                                            <td>________</td>
+                                            <td>________</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div> <!-- /small-table -->
+                        </div> <!-- /table large -->
+                        </li>
+                        <li class="review-question">Step through each line of the JavaScript program below. (This is the program from Figure 18.1.) Write down the value of each variable as you walk through it. Use an order of a 16 oz. latte.<br/>
+                            <code>var price;<br/>
+                            var taxRate = 0.088;<br/>
+                            if (drink == "espresso")<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;price = 1.40;<br/>
+                            if (drink == "latte" II drink == "cappuccino") {<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;if (ounce == 8)<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price = 1.95;<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;if (ounce == 12)<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price = 2.35;<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;if (ounce == 16)<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price = 2.75;<br/>
+                            }<br/><br/>
+                            if (drink == "Americano")<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;price = 1.20 + .30 * (ounce/8);<br/>
+                            price = price + (shots &dash; 1) * .50;<br/>
+                            price = price + price * taxRate,</code>
+                        </li>
+                        <li>Repeat the process using an 8 oz. Americano.</li>
+                        <li>Modify the espresso program to include frappuccino. It comes in a 12 oz. size only and costs $2.50 plus tax.</li>
+                        <li>Explain when you would use quotes and apostrophes for strings.</li>
+                        <li>Give the JavaScript expression for determining overtime for a worker.</li>
+                        <li>Explain why the following statements won't work.<br/>
+                            <code>wont_work = "five" * 5 + "5" &dash; '5'<br/>
+                                3 * 7 = wont_work<br/>
+                                wont_work == a / b<br/>
+                                "wont_work" = m * n
+                            </code>
+                        </li>
+                        <li>What are the answers for the following?<br/>
+                            <code>answer = (9 + 7) / 4 * 2 &dash; 5<br/>
+                                answer = 6 * 3 / 9 — (17%5)<br/>
+                                answer = (4 + 5) — (2 + 3) * 4</code>
+                        </li>
+                        <li>Explain why the following statement works in programming but not math.<br/>
+                            <code>count = count + 1</code>
+                        </li>
+                        <li>Explain how the following statement works.<br/>
+                            <code>left = right</code>
+                        </li>
+                    </ol>
+
+                </section>
+
+            </div> <!-- /content -->
+
+        </section> <!-- /conclustion -->
+
+    </div> <!-- /container -->
+
+</body>
+</html>

@@ -1,0 +1,1698 @@
+<!--
+check h3, h4 for numbers x
+check pagebreak 
+check section numbers x
+first-sentence x
+-->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h1>7</h1>
+				<h2>Safety and Liveness Properties</h2>
+				<div class="border"></div>
+
+				<p><span class="first-sentence">A property is an attribute of a program that is true for every possible execution
+				of that program.</span> Properties of interest for concurrent programs fall into two
+				categories: <em>safety</em> and <em>liveness</em>. A safety property asserts that nothing bad happens
+				during execution. A liveness property asserts that something good eventually
+				happens. Another way of putting this is that safety is concerned with a program
+				not reaching a bad state and that liveness is concerned with a program eventually
+				reaching a good state.</p>
+
+				<p class="i">In sequential programs, the most important safety property is that the final state
+				is correct. We have already seen that for concurrent programs, important safety
+				properties are mutual exclusion and the absence of deadlock. In the previous
+				chapter, we determined that deadlock is generally a bad state from which no
+				further actions can be executed. In Chapter 4, we saw that allowing more than one
+				process to access a shared variable resulted in interference and thus incorrect or
+				bad states.</p>
+
+				<p class="i">The most important liveness property for a sequential program is that it
+				eventually terminates. However, in concurrent programming, we are frequently
+				concerned with systems that do not terminate. In this chapter, we primarily deal
+				with liveness issues relating to resource access: are process requests for shared
+				resources eventually granted? We will see that liveness properties are affected by
+				the scheduling policy that determines which of a set of eligible actions are chosen
+				for execution.</p>
+
+				<p class="i">This chapter explains how we can analyze the finite state models of concurrent
+				systems for both safety and liveness problems. The example of cars crossing a
+				single-lane bridge is used to focus discussion. We then analyze a number of
+				implementations of read/write locks. Read/write locks allow many processes to
+				access a shared resource at the same time for read access, but require write access
+				to be mutually exclusive. They occur in many concurrent programs.</p>
+
+				<div class="pagebreak pageNumber">124</div>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Safety">
+
+				<h3>7.1 Safety</h3>
+
+				<p><span class="first-sentence">In the previous chapter, we saw that the <em>LTSA</em> analysis tool performs deadlock
+				analysis using a breadth-first search on the labeled transition system corresponding
+				to an <em>FSP</em> model.</span> The "bad" states that are the objective of this search are those
+				states with no outgoing transitions, i.e. deadlock states. In addition to deadlock
+				states, the search is looking for <code>ERROR</code> states. These are distinguished in the <em>LTS</em>
+				by having a unique identity (−1). So far in the book, we have used the <code>ERROR</code> state
+				explicitly denoted by the local process <code>ERROR</code>. In Chapter 4, we specified a test
+				process that explicitly caused a transition to <code>ERROR</code> when it detected erroneous
+				behavior. In Chapter 5, the <code>ERROR </code>state was used to detect when a finite range was
+				exceeded. The example given in Figure 7.1 is an actuator that must not receive a
+				second command before it has responded to the first.</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure7-1.png">
+					<figcaption><strong>Figure 7.1</strong> <code>ACTUATOR</code> LTS.</figcaption>
+				</figure>
+
+				<p>With no control system to ensure that the actuator does not receive multiple
+				unacknowledged commands, <em>safety</em> analysis performed by LTSA produces the
+				following trace:</p>
+
+				<pre>
+Trace to property violation in ACTUATOR:
+	command
+	command
+				</pre>
+
+				<p>In the test process of Chapter 4, the range excess of Chapter 5 and the actuator
+				example of Figure 7.1, we have specified the situations regarded as errors rather
+				than directly expressing the required safety property that we wish to preserve. In
+				the actuator example, the safety property is that a <code>command</code> action must always
+				be followed by a <code>respond</code> action without an intervening <code>command</code>. In complex
+				systems it is usually better to specify safety properties by stating directly what <em>is</em>
+				required rather than stating what is <em>not</em> required. In this way, we can concentrate</p>
+
+				<div class="pagebreak pageNumber">125</div>
+
+				<p>on the desired behavior of a system rather than trying to enumerate all the possible
+				undesirable behaviors.</p>
+
+				<section class="subsection" data-number="2" data-name="Safety Properties">
+
+					<h4>7.1.1 Safety Properties</h4>
+
+					<p><span class="first-sentence">Safety properties are specified in <em>FSP</em> by property processes.</span> Syntactically, these
+					are simply <em>FSP</em> processes prefixed by the keyword <strong>property</strong>. They are composed
+					with a target system to ensure that the specified property holds for that system.
+					The example of Figure 7.2 specifies the property that it is polite to knock before
+					entering a room.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure7-2.png">
+						<figcaption><strong>Figure 7.2</strong> property <code>POLITE</code>.</figcaption>
+					</figure>
+
+					<p>The <em>LTS</em> diagram of Figure 7.2 reveals that in translating a property process, the
+					compiler automatically generates the transitions to the <code>ERROR</code> state. It is easily
+					seen that an <code>enter</code> action before a <code>knock</code> action causes a transition to the <code>ERROR</code>
+					state. In addition, knocking twice is a violation of the <code>POLITE</code> property. It should
+					be noted that in every state of the property process of Figure 7.2, all the actions
+					in its alphabet (<code>enter,knock</code>) are eligible choices. Those that are not part of the
+					behavior allowed by the safety property are transitions to the <code>ERROR</code> state. This is
+					true of all property processes.</p>
+
+					<p class="i">The property to check the correct operation of the <code>ACTUATOR</code> of Figure 7.1 is
+					simply:</p>
+
+					<pre>
+<strong>property</strong> SAFE_ACTUATOR
+     =(command->respond->SAFE_ACTUATOR).
+     				</pre>
+
+     				<p>Property processes may be composed with a system without affecting the correct
+     				behavior of that system. In other words, composing a property process with a</p>
+
+     				<div class="pagebreak pageNumber">126</div>
+
+     				<p>set of processes does not affect their normal operation. However, if behavior can
+     				occur which violates the safety property, then a transition to the <code>ERROR</code> state
+     				results. To preserve this <em>transparency</em> of safety properties, property processes
+     				must be deterministic. That is they must not contain non-deterministic choices.
+     				Experience has shown that this is rarely a restriction in practice.</p>
+
+     				<div class="definition">A safety <strong>property</strong> P defines a deterministic process that asserts that any
+     				trace including actions in the alphabet of P, is accepted by P.</div>
+
+     				<p>Thus, if <code>P</code> is composed with <code>S</code>, then traces of actions that are in the alphabet of <code>S</code>
+     				and the alphabet of <code>P</code>, must also be valid traces of <code>P</code>, otherwise <code>ERROR</code> is reachable.
+     				We can specify that an action or a set of actions should never happen by using
+     				alphabet extension. The example of Figure 7.3 asserts that <code>disaster</code> should never
+     				happen.</p>
+
+     				<figure>
+     					<img src="/contents/concurrency/images/figure7-3.png">
+     					<figcaption><strong>Figure 7.3</strong> property <code>CALM</code>.</figcaption>
+     				</figure>
+
+     			</section>
+
+     			<section class="subsection" data-number="3" data-name="Safety Property for Mutual Exclusion">
+
+     				<h4>7.1.2 Safety Property for Mutual Exclusion</h4>
+
+     				<p><span class="first-sentence">Listed below is a slightly modified version of the <code>SEMADEMO</code> model used in
+     				section 5.2.1 to show how semaphores are used to ensure mutual exclusion.</span> The
+     				modification is to replace the single action <code>critical</code> with the actions <code>enter</code> and
+     				<code>exit</code> which model the entry and exit to the critical section in which mutually
+     				exclusive access to a shared resource is required.</p>
+
+     				<pre>
+LOOP =
+    (mutex.down->enter->exit->mutex.up->LOOP).
+||SEMADEMO = (p[1..3]:LOOP
+              ||{p[1..3]}::mutex:SEMAPHORE(1)).
+              		</pre>
+
+              		<p>To verify that this system does in fact ensure mutual exclusion, we can specify a
+              		mutual exclusion property and compose it with the system as follows:</p>
+
+              		<div class="pagebreak pageNumber">127</div>
+
+              		<pre>
+<strong>property</strong> MUTEX =
+      (p[i:1..3].enter->p[i].exit->MUTEX).
+
+||CHECK = (SEMADEMO || MUTEX).
+					</pre>
+
+					<p>The safety property <code>MUTEX</code> specifies that when a process enters the critical section
+					<code>(p[i].enter)</code>, the same process must exit the critical section <code>(p[i].exit)</code> before
+					another process can enter. The property is not violated in the system as it stands;
+					however, if we change the value with which the semaphore is initialized from
+					one to two (i.e. <code>SEMAPHORE(2)</code>) then safety analysis using <em>LTSA</em> produces the
+					following trace:</p>
+
+					<pre>
+Trace to property violation in MUTEX:
+	p.1.mutex.down
+	p.1.enter
+	p.2.mutex.down
+	p.2.enter
+					</pre>
+
+					<p>The trace is clearly a violation of mutual exclusion since two processes have
+					entered the critical section.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="Single-Lane Bridge Problem">
+
+				<h3>7.2 Single-Lane Bridge Problem</h3>
+
+				<p><span class="first-sentence">The problem is depicted in Figure 7.4.</span> A bridge over a river is only wide enough
+				to permit a single lane of traffic. Consequently, cars can only move concurrently
+				if they are moving in the same direction. A safety violation occurs if two cars
+				moving in different directions enter the bridge at the same time.</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure7-4.png">
+					<figcaption><strong>Figure 7.4</strong> Single-lane bridge.</figcaption>
+				</figure>
+
+				<div class="pagebreak pageNumber">128</div>
+
+				<p>To clarify the discussion, we refer to cars moving from left to right as red cars
+				and cars moving from right to left as blue cars (see demonstration applet). In
+				our concurrent-programming model, each car is a process and the problem is
+				to ensure that cars moving in different directions cannot concurrently access the
+				shared resource that is the bridge. To make the simulation more realistic, we must
+				also ensure that cars moving in the same direction cannot pass each other.</p>
+
+				<p class="i">In the following section, we develop a model of the system and a Java implementation
+				that corresponds to the model. In this section, we are concerned primarily
+				with the safety properties of the problem. Later in the chapter, we will address
+				liveness issues.</p>
+
+				<section class="subsection" data-number="5" data-name="Single-Lane Bridge Model">
+
+					<h4>7.2.1 Single-Lane Bridge Model</h4>
+
+					<p><span class="first-sentence">In modeling the single-lane bridge, we use the following constant and range
+					definitions:</span></p>
+
+					<pre>
+<strong>const</strong> N = 3    <span>// number of each type of car</span>
+<strong>range</strong> T = 0..N <span>// type of car count</span>
+<strong>range</strong> ID= 1..N <span>// car identities</span>
+					</pre>
+
+					<p>The essence of the problem is access to the bridge, so the only events of interest
+					in which a car participates are entering the bridge and leaving the bridge. Consequently,
+					a car is modeled by a process that repeatedly enters and leaves the bridge:</p>
+
+					<pre>
+CAR = (enter->exit->CAR).
+					</pre>
+
+					<p>To model the fact that cars cannot pass each other on the bridge, we require the
+					following processes which constrain the order of the <code>enter</code> and <code>exit</code> actions
+					respectively:</p>
+
+					<pre>
+NOPASS1 = C[1], <span>//preserves entry order</span>
+C[i:ID] = ([i].enter->C[i%N+1]).
+
+NOPASS2 = C[1], <span>//preserves exit order</span>
+C[i:ID] = ([i].exit->C[i%N+1]).
+
+||CONVOY = ([ID]:CAR||NOPASS1||NOPASS2).
+					</pre>
+
+					<p>The <code>CONVOY</code> process models a set of cars traveling in the same direction that enter
+					the bridge one after the other and leave the bridge one after the other. However,
+					it does not stop one car exiting the bridge before the next car enters. The behavior
+					of all cars is captured by the following composition:
+					</p>
+
+					<pre>
+||CARS = (red:CONVOY || blue:CONVOY).
+					</pre>
+
+					<div class="pagebreak pageNumber">129</div>
+
+					<p>The remaining entity that must be modeled is the bridge itself. This must constrain
+					<code>CARS</code> so that although one or more cars moving in the same direction may be on
+					the bridge concurrently, cars moving in different directions may not. To enforce
+					this, the bridge maintains a count of blue cars on the bridge and of red cars on the
+					bridge. Red cars are only allowed to enter when the blue count is zero and vice
+					versa. The <code>BRIDGE</code> process is listed below:</p>
+
+					<pre>
+BRIDGE = BRIDGE[0][0], <span>// initially empty</span>
+BRIDGE[nr:T][nb:T] =   <span>//</span>nr <span>is the red count,</span> nb <span>the blue</span>
+      (<strong>when</strong> (nb==0)
+         red[ID].enter -> BRIDGE[nr+1][nb]
+      |red[ID].exit    -> BRIDGE[nr-1][nb]
+      |<strong>when</strong> (nr==0)
+         blue[ID].enter-> BRIDGE[nr][nb+1]
+      |blue[ID].exit   -> BRIDGE[nr][nb-1]
+      ).
+					</pre>
+
+					<p>Note that the <code>exit</code> actions of the bridge permit the car counts, <code>nr</code> and <code>nb</code>, to
+					be decremented even though their value is 0. As described in Chapter 5, the <em>FSP</em>
+					compiler in the <em>LTSA</em> tool will automatically map these undefined states to the
+					<code>ERROR</code> state, indicating this by issuing warnings:</p>
+
+					<pre>
+Warning - BRIDGE.-1.0 defined to be ERROR
+Warning - BRIDGE.0.-1 defined to be ERROR
+...
+					</pre>
+
+					<p>In fact, when <code>BRIDGE</code> is composed with <code>CARS</code>, their behavior prevents cars which
+					have not entered from exiting and the <code>ERROR</code> state is unreachable.</p>
+
+					<p class="i">Before describing the overall system composition, we need to specify a safety
+					property to compose with the system that verifies that cars do not collide on the
+					bridge. The required property is listed below. It specifies that while red cars are
+					on the bridge only red cars can enter and while blue cars are on the bridge only
+					blue cars can enter. When the bridge is empty, either a red car or a blue car
+					may enter. The index <code>i</code> is used to count the red (or blue) cars currently on the
+					bridge.</p>
+
+					<pre>
+<strong>property</strong> ONEWAY =(red[ID].enter  -> RED[1]
+                 |blue[ID].enter -> BLUE[1]
+                 ),
+RED[i:ID] = (red[ID].enter -> RED[i+1]
+            |<strong>when</strong>(i==1)red[ID].exit -> ONEWAY
+            |<strong>when</strong>(i>1) red[ID].exit -> RED[i-1]
+            ),
+            		</pre>
+
+            		<div class="pagebreak pageNumber">130</div>
+
+            		<pre>
+BLUE[i:ID]= (blue[ID].enter -> BLUE[i+1]
+            |<strong>when</strong>(i==1)blue[ID].exit -> ONEWAY
+            |<strong>when</strong>(i>1) blue[ID].exit -> BLUE[i-1]
+            ).
+					</pre>
+
+					<p>The entire system can now be modeled by the composite process specified in
+					Figure 7.5.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure7-5.png">
+						<figcaption><strong>Figure 7.5</strong> <code>SingleLaneBridge</code> model.</figcaption>
+					</figure>
+
+					<p>Safety analysis using <em>LTSA</em> verifies that the <code>ONEWAY</code> safety property is not violated.</p>
+
+					<p class="i">However, without the constraints provided by the <code>BRIDGE</code>, the composition
+					<code>(CARS||ONEWAY)</code> yields the following safety violation:</p>
+
+					<pre>
+Trace to property violation in ONEWAY:
+	red.1.enter
+	blue.1.enter
+					</pre>
+
+				</section>
+
+				<section class="subsection" data-number="6" data-name="Single-Lane Bridge Implementation">
+
+					<h4>7.2.2 Single-Lane Bridge Implementation</h4>
+
+					<p><span class="first-sentence">In the single-lane bridge problem, it is reasonably clear which are the active
+					entities and which are the passive entities.</span> Cars are implemented as Java threads
+					and the bridge as a monitor. This leaves the model entities <code>NOPASS1</code> and <code>NOPASS2</code>
+					concerned with constraining overtaking. These have no explicit representation in
+					the implementation. The overtaking constraint is dealt with in the <code>BridgeCanvas</code>
+					class which displays car movement. Figure 7.6 depicts the class diagram for the
+					program.</p>
+
+					<div class="pagebreak pageNumber">131</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure7-6.png">
+						<figcaption><strong>Figure 7.6</strong> Single-lane <code>bridge</code> class diagram.</figcaption>
+					</figure>
+
+					<p>An instance of the <code>BridgeCanvas</code> class is created by the <code>SingleLaneBridge</code>
+					applet. A reference to it is passed to each newly created <code>RedCar</code> and <code>BlueCar</code> object. The methods provided by the <code>BridgeCanvas</code> class are listed in
+					Program 7.1.</p>
+
+					<pre class="program">
+<strong>class</strong> BridgeCanvas <strong>extends</strong> Canvas {
+
+  <strong>public</strong> void init(int ncars) {...} <em>//set number of cars</em>
+
+  <em>//move red car with the identity</em> i <em>a step</em>
+  <em>//returns true for the period from just before,</em>
+  <em>// until just after car on bridge</em>
+  <strong>public</strong> boolean moveRed(int i)
+      <strong>throws</strong> InterruptedException{...}
+
+  <em>//move blue car with the identity</em> i <em>a step</em>
+  <em>//returns true for the period from just before,</em>
+  <em>//until just after car on bridge</em>
+  <strong>public</strong> boolean moveBlue(int i)
+      <strong>throws</strong> InterruptedException{...}
+
+  <strong>public synchronized</strong> void freeze(){...} <em>//freeze display</em>
+  <strong>public synchronized</strong> void thaw(){...} <em>//unfreeze display</em>
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 7.1</strong> <code>BridgeCanvas</code> class.</p>
+
+					<div class="pagebreak pageNumber">132</div>
+
+					<pre class="program">
+<strong>class</strong> RedCar <strong>implements</strong> Runnable {
+
+  BridgeCanvas display; Bridge control; int id;
+
+  RedCar(Bridge b, BridgeCanvas d, int id) {
+    display = d; this.id = id; control = b;
+  }
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      <strong>while</strong>(true) {
+        <strong>while</strong> (!display.moveRed(id));    <em>// not on bridge</em>
+        control.redEnter();    <em>// request access to bridge</em>
+        <strong>while</strong> (display.moveRed(id));    <em>// move over bridge</em>
+        control.redExit();    <em>// release access to bridge</em>
+      }
+    } <strong>catch</strong> (InterruptedException e) {}
+  }
+}
+
+<strong>class</strong> BlueCar <strong>implements</strong> Runnable {
+
+  BridgeCanvas display; Bridge control; int id;
+
+  BlueCar(Bridge b, BridgeCanvas d, int id) {
+    display = d; this.id = id; control = b;
+  }
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      <strong>while</strong> (true) {
+        <strong>while</strong> (!display.moveBlue(id));    <em>// not on bridge</em>
+        control.blueEnter();    <em>// request access to bridge</em>
+        <strong>while</strong> (display.moveBlue(id));    <em>// move over bridge</em>
+        control.blueExit();   <em>// release access to bridge</em>
+      }
+    } <strong>catch</strong> (InterruptedException e) {}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 7.2</strong> <code>RedCar</code> and <code>BlueCar</code> classes.</p>
+
+					<p>The code for the two classes representing cars is listed in Program 7.2. Each car
+					moves until it is about to enter the bridge. It then requests access to the bridge by
+					invoking <code>control.redEnter()</code> if it is a red car and <code>control.blueEnter()</code> if it
+					is blue.When a car has crossed the bridge, it invokes the appropriate <code>Exit</code> method.</p>
+
+					<div class="pagebreak pageNumber">133</div>
+
+					<pre class="program">
+<strong>class</strong> Bridge {
+  <strong>synchronized</strong> void redEnter()
+    <strong>throws</strong> InterruptedException {}
+  <strong>synchronized</strong> void redExit()   {}
+  <strong>synchronized</strong> void blueEnter()
+    <strong>throws</strong> InterruptedException {}
+  <strong>synchronized</strong> void blueExit()  {}
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 7.3</strong> <code>Bridge</code> class.</p>
+
+					<p>The entry and exit bridge access methods are provided by an instance of the
+					class <code>Bridge</code> or a class derived from <code>Bridge</code>. Class <code>Bridge</code> provides a null
+					implementation as listed in Program 7.3. This enables us to view the results of an
+					unsafe bridge implementation.</p>
+
+					<p class="i">The <code>SingleLaneBridge</code> applet class creates one, two or three of each of
+					the red and blue cars depending on which button is clicked. In addition, the
+					check boxes select an implementation of the bridge monitor. Figure 7.7 depicts the
+					consequences of using the null implementation of Program 7.3.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure7-7.png">
+						<figcaption><strong>Figure 7.7</strong> Single-lane bridge display using <code>Bridge</code> class.</figcaption>
+					</figure>
+
+					<p>Clicking the <strong>Safe</strong> check box creates a system that avoids the collisions of Figure 7.7.
+					It uses the class <code>SafeBridge</code> which is a direct translation of the <code>BRIDGE</code> process
+					from the model. Each of the guarded actions from the model becomes a conditionally
+					synchronized method. Since this has been modeled and shown to preserve</p>
+
+					<div class="pagebreak pageNumber">134</div>
+
+					<pre class="program">
+<strong>class</strong> SafeBridge extends Bridge {
+
+  <strong>private</strong> int nred = 0;  <em>//number of red cars on bridge</em>
+  <strong>private</strong> int nblue = 0; <em>//number of blue cars on bridge</em>
+
+  <em>//Monitor Invariant:</em> nred>=0 <strong>and</strong> nblue>=0 and
+  <em>//</em>           <strong>not</strong> (nred>0 <strong>and</strong> nblue>0)
+
+  <strong>synchronized</strong> void redEnter()
+      <strong>throws</strong> InterruptedException {
+    <strong>while</strong> (nblue>0) wait();
+    ++nred;
+  }
+
+  <strong>synchronized</strong> void redExit(){
+      --nred; <strong>if</strong> (nred==0)notifyAll();
+  }
+
+  <strong>synchronized</strong> void blueEnter()
+      <strong>throws</strong> InterruptedException {
+    <strong>while</strong> (nred>0) wait();
+    ++nblue;
+  }
+
+  <strong>synchronized</strong> void blueExit(){
+      --nblue; <strong>if</strong> (nblue==0)notifyAll();
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 7.4</strong> <code>SafeBridge</code> class.</p>
+
+					<p>the <code>ONEWAY</code> safety property, we can be reasonably confident in the safety of the
+					<code>SafeBridge</code> implementation. The code for the class is listed in Program 7.4.</p>
+
+					<p class="i">The implementation of <code>SafeBridge</code> uses conditional notification. We only
+					wake up waiting threads when the number of cars on the bridge – either red
+					or blue – is decremented to zero. This avoids unnecessary thread switches since
+					otherwise, blue cars would be woken up every time a red car leaves the bridge
+					and vice versa. It is only the last car of a particular color to leave the bridge that
+					should wake up waiting car threads.</p>
+
+					<p class="i"><code>SafeBridge</code> ensures that cars do not collide on the bridge; however, it does
+					not ensure that cars eventually get the opportunity to cross the bridge. With three
+					cars of each color, if a red car crosses the bridge first there is always a red car on
+					the bridge and consequently, blue cars never get to cross. This situation is called
+					<em>starvation</em>: a form of liveness property discussed in the next section.</p>
+
+					<div class="pagebreak pageNumber">135</div>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="7" data-name="Liveness">
+
+				<h3>7.3 Liveness</h3>
+
+				<p><span class="first-sentence">A liveness property asserts that something good eventually happens.</span> A reasonable
+				liveness property for the single-lane bridge would be that all red and blue cars
+				eventually get to cross the bridge. As we have seen, the program developed
+				in the previous section does not satisfy this property in the situation where
+				there are three cars of each type. In this section, we see how models can be
+				analyzed for liveness. Like deadlock and other safety properties, the objective is
+				to solve liveness problems at the modeling stage so that they do not occur in the
+				implemented program.</p>
+
+				<p class="i">A completely general treatment of liveness is rather involved and requires
+				the use of a temporal logic to specify the required liveness properties. Rather
+				than burden the reader with another formalism, we deal with a restricted class
+				of liveness properties which we term <em>progress</em>. A progress property asserts that
+				whatever state a system is in, it is always the case that a specified action will
+				eventually be executed. Progress is the opposite of <em>starvation</em>, the name given to a
+				concurrent-programming situation in which an action is never executed. Progress
+				properties are simple to specify and are sufficiently powerful to capture a wide
+				range of liveness problems in concurrent programs.</p>
+
+				<section class="subsection" data-number="8" data-name="Progress Properties">
+
+					<h4>7.3.1 Progress Properties</h4>
+
+					<p><span class="first-sentence">To illustrate the notion of progress, we use a simple example, that of tossing a
+					coin.</span> The model is depicted in Figure 7.8.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure7-8.png">
+						<figcaption><strong>Figure 7.8</strong> <code>COIN</code> model.</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">136</div>
+
+					<p>If the coin were tossed an infinite number of times, we would expect that heads
+					would be chosen infinitely often and that tails would be chosen infinitely often.
+					In fact, this depends on the scheduling policy used to decide on which transition
+					from the set of eligible transitions should be executed. If the policy is not <em>fair</em> then
+					we could always choose the <code>toss</code> transition leading to <code>heads</code>. We assume that
+					the scheduling policy for choice is fair as defined in the following:</p>
+
+					<div class="definition"><strong>Fair Choice</strong>: If a choice over a set of transitions is executed infinitely often,
+					then every transition in the set will be executed infinitely often.</div>
+
+					<p>If the transition (or transitions) of an action occurs infinitely often in a system, we
+					can say that it is always the case at any stage of the execution that the action will
+					eventually occur. With the assumption of fair choice then the coin-tossing system
+					should eventually choose heads and eventually choose tails. We can assert this
+					with progress properties specified in <em>FSP</em>. A progress property is defined by:</p>
+
+					<div class="definition"><strong>progress</strong> <code>P = {a<sub>1</sub>,a<sub>2</sub>..a<sub>n</sub>}</code> defines a progress property P which asserts
+					that in an infinite execution of a target system, at least one of the actions
+					<code>a<sub>1</sub>,a<sub>2</sub>..a<sub>n</sub></code> will be executed infinitely often.</div>
+
+					<p>In other words, a progress property asserts that at any stage of execution one of
+					the actions in the progress set will eventually occur. The liveness requirement for
+					coin tossing can now be expressed as:</p>
+
+					<pre>
+<strong>progress</strong> HEADS = {heads}
+<strong>progress</strong> TAILS = {tails}
+					</pre>
+
+					<p>The <code>COIN</code> system we have defined so far satisfies these properties. We now
+					examine a system that does not. Suppose that the agent which tosses the coin first
+					picks one of two coins: a normal coin with a head and a tail as defined in Figure 7.8
+					and a trick coin which has a head on both sides. The outcome of tossing the trick
+					coin must always be heads. This system is modeled in Figure 7.9.</p>
+
+					<p class="i">Progress analysis of the <code>TWOCOIN</code> systemagainst the progress properties <code>HEADS</code>
+					and <code>TAILS</code> produces the following output:</p>
+
+					<pre>
+Progress violation: TAILS
+Path to terminal set of states:
+					</pre>
+
+					<div class="pagebreak pageNumber">137</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure7-9.png">
+						<figcaption><strong>Figure 7.9</strong> <code>TWOCOIN</code> model.</figcaption>
+					</figure>
+
+					<pre>
+	pick
+Actions in terminal set:
+{toss, heads}
+					</pre>
+
+					<p>This confirms the expected result: if the agent picks the trick coin then the action
+					<code>tails</code> will never occur. This is of course a violation of the <code>TAILS</code> progress
+					property, which asserts that in an infinite execution, tails must occur infinitely
+					often. The reader should note that the system of Figure 7.9 does not violate the
+					progress property:</p>
+
+					<pre>
+<strong>progress</strong> HEADSorTAILS = {heads,tails}
+					</pre>
+
+					<p>Property <code>HEADSorTAILS</code> is not violated since only one of the actions in the
+					progress set need be executed infinitely often to satisfy the property.</p>
+
+				</section>
+
+				<section class="subsection" data-number="9" data-name="Progress Analysis">
+
+					<h4>7.3.2 Progress Analysis</h4>
+
+					<p><span class="first-sentence">Progress analysis involves first performing a search for terminal sets of states.</span></p>
+
+					<div class="definition">A terminal set of states is one in which every state is reachable from every
+					other state in the set via one or more transitions and there is no transition
+					from within the set to any state outside the set.</div>
+
+					<div class="pagebreak pageNumber">138</div>
+
+					<p>In graph theory, this is known as a strongly connected component, which has no
+					path to any nodes outside the set of nodes in the component. For example, the
+					labeled transition system of Figure 7.9 has two terminal sets of states, {1, 2}, which
+					are the states relating to the trick coin, and {3, 4, 5}, which are the states relating to
+					the normal coin.</p>
+
+					<p class="i">An execution of a system represented by a finite set of states can only be infinite
+					if some of the states are visited infinitely often. The states that are visited infinitely
+					often in an execution must form a terminal set. Given fair choice, each terminal
+					set of states represents an execution in which each transition in the set is executed
+					infinitely often. Since there is no transition out of a terminal set, any action that
+					is not used in all terminal sets cannot occur infinitely often in all executions of
+					the system. Checking that a progress property holds is now simply checking that
+					in each terminal set, at least one of the actions in the progress set occurs as a
+					transition. Conversely, a progress property is violated if analysis finds a terminal
+					set of states in which none of the progress set actions appear. For the TAILS
+					property, this terminal set is the set of states {1, 2} in which the action tails does
+					not occur. The output gives the shortest execution path to the root of the terminal
+					set and lists the actions that do appear in the set.</p>
+
+					<p class="i">If no progress properties are specified, <em>LTSA</em> performs progress analysis using
+					a <em>default property</em>. This property asserts that for every action in the alphabet of the
+					target system, given fair choice, that action will be executed infinitely often. This
+					is equivalent to specifying a separate progress property for every action. For the
+					<code>TWOCOIN</code> system, this default analysis produces the following output:</p>
+
+					<pre>
+Progress violation for actions:
+{pick}
+Path to terminal set of states:
+	pick
+Actions in terminal set:
+{toss, heads, tails}
+
+Progress violation for actions:
+{pick, tails}
+Path to terminal set of states:
+	pick
+Actions in terminal set:
+{toss, heads}
+					</pre>
+
+					<p>The analysis produces two progress violations since the action <code>pick</code> is not executed
+					infinitely often in either terminal set. The value of this default property is
+					that if it is not violated, then no specified progress properties can be violated. In
+					other words, if the default property holds, then every other progress property,</p>
+
+					<div class="pagebreak pageNumber">139</div>
+
+					<p>specified in terms of subsets of the action alphabet of a target system, must also
+					hold. This is true since the default property asserts that every action is executed
+					infinitely often. All systems in which the states occur inside a single terminal set
+					satisfy the default progress property.</p>
+
+				</section>
+
+				<section class="subsection" data-number="10" data-name="Action Priority">
+
+					<h4>7.3.3 Action Priority</h4>
+
+					<p><span class="first-sentence">If default progress analysis is applied to the single-lane bridge model then no
+					violations are detected.</span> However, we know from the implementation that it is
+					possible for progress violations to occur. Either the blue cars or the red cars may
+					wait forever to cross the bridge. Why do we not detect these progress problems?</p>
+
+					<p class="i">The answer lies in the fair choice assumption underlying the progress test.
+					This means that every possible execution of the system will eventually happen
+					including those in which cars do not starve. To detect progress problems we must
+					superimpose some scheduling policy for actions, which models the situation in
+					which the bridge is heavily used, i.e. we need to impose adverse conditions which
+					"stress-test" the system. We use action priority expressions to describe these
+					scheduling policies. Action priority is specified in <em>FSP</em> with respect to process
+					compositions.</p>
+
+					<h5>High Priority Operator (‘‘&lt;&lt;’’)</h5>
+
+					<div class="definition"><code>||C = (P||Q)&lt;&lt;{a1,...,an}</code> specifies a composition in which the
+					actions <code>a1,...,an</code> have higher priority than any other action in the
+					alphabet of <code>P||Q</code> including the silent action <code>tau</code>. In any choice in this system which
+					has one or more of the actions <code>a1,...,an</code> labeling a transition,
+					the transitions labeled with lower priority actions are discarded.</div>
+
+					<h5>Low Priority Operator (‘‘>>’’)</h5>
+
+					<div class="definition"><code>||C = (P||Q)>>{a1,...,an}</code> specifies a composition in which the
+					actions <code>a1,...,an</code> have lower priority than any other action in the
+					alphabet of <code>P||Q</code> including the silent action <code>tau</code>. In any choice in this
+					system which has one or more transitions not labeled by <code>a1,...,an</code>, the
+					transitions labeled by <code>a1,...,an</code> are discarded.</div>
+
+					<p>Action priority operators simplify the composite processes by discarding particular
+					transitions. Figure 7.10 illustrates the effect for a simple example. When <code>work</code> is</p>
+
+					<div class="pagebreak pageNumber">140</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure7-10.png">
+						<figcaption><strong>Figure 7.10</strong> Action priority.</figcaption>
+					</figure>
+
+					<p>specified to be a high priority action in the composition <code>HIGH</code>, the <code>sleep</code> transition
+					disappears since it is lower priority and consequently in a choice between <code>sleep</code>
+					and <code>work</code>, <code>work</code> will always be chosen. When <code>work</code> is specified to be a low
+					priority action in the composition <code>LOW</code>, the work transition disappears since it is
+					lower priority and consequently in a choice between <code>sleep</code> and <code>work</code>, <code>sleep</code> will
+					always be chosen.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="11" data-name="Liveness of the Single-Lane Bridge">
+
+				<h3>7.4 Liveness of the Single-Lane Bridge</h3>
+
+				<p><span class="first-sentence">Using progress properties and action priorities, we are now in a position to
+				investigate the liveness problems of the single-lane bridge.</span> In particular, we are
+				interested in the following two progress properties when the bridge is heavily
+				loaded or congested.</p>
+
+				<div class="pagebreak pageNumber">141</div>
+
+				<pre>
+<strong>progress</strong> BLUECROSS = {blue[ID].enter}
+<strong>progress</strong> REDCROSS  = {red[ID].enter}
+				</pre>
+
+				<p><code>BLUECROSS</code> asserts that it is always the case that one of the blue cars will be
+				able to enter the bridge; <code>REDCROSS</code> asserts the same for red cars. This leaves the
+				problem of how to model congestion using action priority. If we give all the actions
+				related to red cars priority over blue cars we get the situation where <code>BLUECROSS</code> is
+				violated and similarly if we give blue cars priority <code>REDCROSS</code> is violated. Neither
+				of these scheduling policies is a good model of the program. Neither red nor blue
+				cars have priority in the implementation. Instead, we give car exit from the bridge
+				low priority. This models the situation where the bridge is congested since in any
+				choice between another car entering the bridge and a car leaving the bridge, we
+				choose to let a car enter. The congested bridge is modeled by:</p>
+
+				<pre>
+||CongestedBridge = (SingleLaneBridge)
+                     >>{red[ID].exit,blue[ID].exit}.
+				</pre>
+
+				<p>Progress analysis of this system against the properties <code>BLUECROSS</code> and <code>REDCROSS</code>
+				produces the following output:</p>
+
+				<pre>
+Progress violation: BLUECROSS
+Path to terminal set of states:
+	red.1.enter
+	red.2.enter
+Actions in terminal set:
+{red.1.enter, red1.exit, red.2.enter,
+red.2.exit, red.3.enter, red.3.exit}
+Progress violation: REDCROSS
+Path to terminal set of states:
+	blue.1.enter
+	blue.2.enter
+Actions in terminal set:
+{blue.1.enter, blue.1.exit, blue.2.enter,
+blue.2.exit, blue.3.enter, blue.3.exit}
+				</pre>
+
+				<p>The output corresponds with observations of the program. When there are three
+				cars and a red car enters first then the bridge is continuously occupied by red
+				cars and blue cars never cross. Similarly, red cars never cross if a blue car enters
+				first. However, the model abstracts from a number of program details such as the
+				length of the bridge and consequently, the number of cars needed to continuously
+				occupy it. As a result, the model detects lack of progress when there are only two
+				cars moving in each direction. The terminal sets of states for this scenario can
+				clearly be seen in the transition system depicted in Figure 7.11.</p>
+
+				<div class="pagebreak pageNumber">142</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure7-11.png">
+					<figcaption><strong>Figure 7.11</strong> <code>CongestedBridge</code> model with two cars.</figcaption>
+				</figure>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure7-12.png">
+					<figcaption><strong>Figure 7.12</strong> <code>CongestedBridge</code> model with one car.</figcaption>
+				</figure>
+
+				<p class="i">When there is only one car moving in each direction, the bridge does not become
+				congested and both red and blue cars make progress. The transition system for the
+				one car scenario is depicted in Figure 7.12.</p>
+
+				<p class="i">Will we receive the same progress results if we instead model congestion by
+				giving car <em>entry</em> to the bridge <em>high</em> priority? The interested reader should check
+				that this is indeed the case.
+				</p>
+
+				<p class="i">What we must now do is devise a model which does not exhibit progress
+				problems when there is more than one car moving in each direction.</p>
+
+				<section class="subsection" data-number="12" data-name="Revised Single-Lane Bridge Model">
+
+					<h4>7.4.1 Revised Single-Lane Bridge Model</h4>
+
+					<p><span class="first-sentence">A bridge which decides dynamically at any given point whether to admit blue cars
+					or red cars needs to have more information about the state of cars than is currently available in the model.</span></p>
+
+					<div class="pagebreak pageNumber">143</div>
+
+					<p>In particular, the bridge needs to know whether cars are
+					waiting to cross. To this end, the model for a car is modified so that it requests
+					access to the bridge before attempting to enter. The revised model for a car is:</p>
+
+					<pre>
+CAR = (request->enter->exit->CAR).
+					</pre>
+
+					<p>The bridge model can now count the number of cars waiting at each end. The
+					count is incremented when a car requests access and decremented when the car
+					enters the bridge. Our first attempt at a revised <code>BRIDGE</code> process uses this count of
+					waiting cars as follows. Red cars are only allowed to enter the bridge if there are
+					no blue cars on the bridge and there are no blue cars waiting. Blue cars are only
+					allowed to enter the bridge if there are no red cars on the bridge and no red cars
+					waiting to enter the bridge. The revised <code>BRIDGE</code> process is as follows:</p>
+
+					<pre>
+/* nr - <em>number of red cars on the bridge</em>
+   nb - <em>number of blue cars on the bridge</em>
+   wr - <em>number of red cars waiting to enter</em>
+   wb - <em>number of blue cars waiting to enter</em>
+*/<em></em>
+BRIDGE = BRIDGE[0][0][0][0],
+BRIDGE[nr:T][nb:T][wr:T][wb:T] =
+  (red[ID].request  -> BRIDGE[nr][nb][wr+1][wb]
+  |<strong>when</strong> (nb==0 &amp;&amp; wb==0)
+     red[ID].enter  -> BRIDGE[nr+1][nb][wr-1][wb]
+  |red[ID].exit     -> BRIDGE[nr-1][nb][wr][wb]
+  |blue[ID].request -> BRIDGE[nr][nb][wr][wb+1]
+  |<strong>when</strong> (nr==0 &amp;&amp; wr==0)
+     blue[ID].enter -> BRIDGE[nr][nb+1][wr][wb-1]
+  |blue[ID].exit    -> BRIDGE[nr][nb-1][wr][wb]
+  ).
+					</pre>
+
+					<p>The problem with this model is that when we check the safety properties of the
+					new <code>SingleLaneBridge</code> system, a deadlock is reported:</p>
+
+					<pre>
+Trace to DEADLOCK:
+	red.1.request
+	red.2.request
+	red.3.request
+	blue.1.request
+	blue.2.request
+	blue.3.request
+					</pre>
+
+					<p>The trace is the scenario in which there are cars waiting at both ends, and
+					consequently, the bridge does not allow either red or blue cars to enter. To solve</p>
+
+					<div class="pagebreak pageNumber">144</div>
+
+					<p>this problem, we must introduce some <em>asymmetry</em> into the problem (as was done
+					for the Dining Philosophers in Chapter 6). This takes the form of a boolean variable
+					(<code>bt</code>) which indicates whether it is the turn of blue cars or red cars to enter the
+					bridge. Initially, <code>bt</code> is set to true indicating it is blue’s turn. As soon as a blue car
+					exits the bridge, <code>bt</code> is set to false. When a red car exits, <code>bt</code> is set to true again. The
+					<code>BRIDGE</code> process becomes:</p>
+
+					<pre>
+<strong>const</strong> True = 1
+<strong>const</strong> False = 0
+range B = False..True
+/* nr - <em>number of red cars on the bridge</em>
+   nb - <em>number of blue cars on the bridge</em>
+   wr - <em>number of red cars waiting to enter</em>
+   wb - <em>number of blue cars waiting to enter</em>
+   bt - <em>true indicates blue turn,</em>
+        <em>false indicates red turn</em>
+*/
+BRIDGE = BRIDGE[0][0][0][0][True],
+BRIDGE[nr:T][nb:T][wr:T][wb:T][bt:B] =
+  (red[ID].request ->BRIDGE[nr][nb][wr+1][wb][bt]
+  |<strong>when</strong> (nb==0 &amp;&amp; (wb==0||!bt))
+    red[ID].enter  ->BRIDGE[nr+1][nb][wr-1][wb][bt]
+  |red[ID].exit    ->BRIDGE[nr-1][nb][wr][wb][True]
+  |blue[ID].request->BRIDGE[nr][nb][wr][wb+1][bt]
+  |<strong>when</strong> (nr==0 &amp;&amp; (wr==0||bt))
+    blue[ID].enter ->BRIDGE[nr][nb+1][wr][wb-1][bt]
+  |blue[ID].exit   ->BRIDGE[nr][nb-1][wr][wb][False]
+).
+					</pre>
+
+					<p>The condition under which the bridge permits a red car to enter is that there are no
+					blue cars on the bridge and either there are no blue cars waiting or it is not blue’s
+					turn: <code>nb==0 &amp;&amp;(wb==0 || !bt)</code>. The condition for a blue car to enter is that there
+					are no red cars on the bridge and either there are no red cars waiting or it is blue’s
+					turn: <code>nr==0 &amp;&amp;(wr==0 || bt)</code>.</p>
+
+					<p class="i">This corrected model no longer deadlocks. Further, a progress analysis reports
+					that <code>BLUECROSS</code> and <code>REDCROSS</code> properties are not violated.</p>
+
+				</section>
+
+				<section class="subsection" data-number="13" data-name="Revised Single-Lane Bridge Implementation">
+
+					<h4>7.4.2 Revised Single-Lane Bridge Implementation</h4>
+
+					<p><span class="first-sentence">The revision to the program involves a new version of the bridge monitor which
+					implements precisely the <code>BRIDGE</code> process from the model developed in the last
+					section.</span> In fact, we do not need to introduce a new monitor method to implement</p>
+
+					<div class="pagebreak pageNumber">145</div>
+
+					<p>the <code>request</code> action made by cars. The existing <code>enter</code> methods can be modified
+					to increment a wait count before testing whether or not the caller can access the
+					bridge. As before, the tests are simply the negation of the guards in the model
+					<code>BRIDGE</code> process. The new implementation is listed in Program 7.5.</p>
+
+					<p class="i">In the demonstration applet, this implementation of the monitor is used when
+					the <strong>Fair</strong> check box is clicked.</p>
+
+					<pre class="program">
+<strong>class</strong> FairBridge <strong>extends</strong> Bridge {
+  <strong>private</strong> int nred = 0; <em>//count of red cars on the bridge</em>
+  <strong>private</strong> int nblue = 0; <em>//count of blue cars on the bridge</em>
+  <strong>private</strong> int waitblue = 0; <em>//count of waiting blue cars</em>
+  <strong>private</strong> int waitred = 0;  <em>//count of waiting red cars</em>
+  <strong>private</strong> boolean blueturn = true;
+
+  <strong>synchronized</strong> void redEnter()
+      <strong>throws</strong> InterruptedException {
+    ++waitred;
+    <strong>while</strong> (nblue>0||(waitblue>0 &amp;&amp; blueturn)) wait();
+    --waitred;
+    ++nred;
+  }
+
+  <strong>synchronized</strong> void redExit(){
+    --nred;
+    blueturn = true;
+    <strong>if</strong> (nred==0)notifyAll();
+  }
+
+  <strong>synchronized</strong> void blueEnter(){
+      <strong>throws</strong> InterruptedException {
+    ++waitblue;
+    <strong>while</strong> (nred>0||(waitred>0 &amp;&amp; !blueturn)) wait();
+    --waitblue;
+    ++nblue;
+  }
+
+  <strong>synchronized</strong> void blueExit(){
+    --nblue;
+    blueturn = false;
+    <strong>if</strong> (nblue==0) notifyAll();
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 7.5</strong> <code>FairBridge</code> class.</p>
+
+					<div class="pagebreak pageNumber">146</div>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="14" data-name="Readers–Writers Problem">
+
+				<h3>7.5 Readers–Writers Problem</h3>
+
+				<p><span class="first-sentence">The Readers–Writers problem is concerned with access to a shared database by
+			    two kinds of processes.</span> Readers execute transactions that examine the database
+				while Writers both examine and update the database. For the database to be
+				updated correctly, Writers must have exclusive access to the database while they
+				are updating it. If no Writer is accessing the database, any number of Readers
+				may concurrently access it. In this section, we develop a solution to the problem.
+				As usual, we construct a model of the problem to examine its safety and liveness
+				properties before proceeding to an implementation.</p>
+
+				<section class="subsection" data-number="15" data-name="Readers-Writers Model">
+
+					<h4>7.5.1 Readers-Writers Model</h4>
+
+					<p><span class="first-sentence">In modeling the problem, the first step is to decide on the actions of interest.</span>
+					These are acquiring and releasing read access to the shared database and
+					acquiring and releasing write access. The actions are declared below as the set
+					<code>Actions</code>:</p>
+
+					<pre>
+<strong>set</strong> Actions = {acquireRead,releaseRead,
+               acquireWrite,releaseWrite}
+               		</pre>
+
+               		<p>As for the Ornamental Garden model in section 4.1.2, we use a set constant simply
+               		as a way of abbreviating the model description. The processes that model Readers
+               		and Writers are:</p>
+
+               		<pre>
+READER =
+  (acquireRead->examine->releaseRead->READER)
+  +Actions
+  \ {examine}.
+
+WRITER =
+  (acquireWrite->modify->releaseWrite->WRITER)
+  +Actions
+  \ {modify}.
+  					</pre>
+
+  					<p>A <code>READER</code> process must acquire read access before examining the database
+  					and a <code>WRITER</code> must acquire write access before modifying the database. The
+  					alphabets of both processes have been defined to be the full set of access actions
+  					by the alphabet extension <code>+Actions</code>. This ensures that while a <code>READER</code> only
+  					engages in the <code>acquireRead</code> and <code>releaseRead</code> actions, the <code>acquireWrite</code>
+  					and <code>releaseWrite</code> actions cannot occur freely for any prefixed instance of the
+  					process. Similarly, for <code>WRITER</code> processes, the <code>acquireRead</code> and <code>releaseRead</code></p>
+
+  					<div class="pagebreak pageNumber">147</div>
+
+  					<p>actions cannot occur freely. The <code>examine</code> and <code>modify</code> actions are hidden since
+  					they are irrelevant to the problem of synchronizing access to the shared database.</p>
+
+  					<p class="i">Access to the shared database is controlled by a read/write lock. The lock
+  					accepts <code>acquireRead</code> actions when it has not been acquired for write access by
+  					<code>acquireWrite</code>. It permits only a single write access when it has not been acquired
+  					for read access. The lock is modeled by the <code>RW_LOCK</code> process:</p>
+
+  					<pre>
+<strong>const</strong> False = 0   <strong>const</strong> True = 1
+<strong>range</strong> Bool  = False..True
+<strong>const</strong> Nread = 2         <span>// Maximum readers</span>
+<strong>const</strong> Nwrite= 2         <span>// Maximum writers</span>
+
+RW_LOCK = RW[0][False],
+RW[readers:0..Nread][writing:Bool] =
+      (<strong>when</strong> (!writing)
+         acquireRead ->RW[readers+1][writing]
+      |releaseRead   ->RW[readers-1][writing]
+      |<strong>when</strong> (readers==0 &amp;&amp; !writing)
+         acquireWrite->RW[readers][True]
+      |releaseWrite  ->RW[readers][False]
+      ).
+					</pre>
+
+					<p>The <code>RW_LOCK</code> process maintains a count of the number of concurrent read accesses
+					(<code>readers</code>) and a boolean (<code>writing</code>) which is set to true when the lock is acquired
+					for write access. The action to acquire read access is only accepted when <code>writing</code>
+					is false and the action to acquire write access is only accepted when <code>readers==0</code>
+					and <code>writing</code> is false.
+					</p>
+
+					<h5>Safety Property</h5>
+
+					<p>To check that the lock behaves as desired, we define a safety property, <code>RW_SAFE</code>,
+					as follows:</p>
+
+					<pre>
+<strong>property</strong> SAFE_RW
+  = (acquireRead->READING[1]
+    |acquireWrite->WRITING
+    ),
+READING[i:1..Nread]
+  = (acquireRead->READING[i+1]
+    |<strong>when</strong>(i>1) releaseRead ->READING[i-1]
+    |<strong>when</strong>(i==1)releaseRead ->SAFE_RW
+    ),
+WRITING = (releaseWrite->SAFE_RW).
+					</pre>
+
+					<div class="pagebreak pageNumber">148</div>
+
+					<p>The property asserts that initially either an <code>acquireRead</code> action or a
+					<code>acquireWrite</code> action can be accepted. In other words when the lock is free,
+					it can be acquired for either read or write access. When acquired for read access
+					(<code>READING</code>), further <code>acquireRead</code> actions are permitted but no <code>acquireWrite</code>
+					actions. The lock does not become free until all the <code>releaseRead</code> actions which
+					correspond to the <code>acquireRead</code> actions have happened. When the lock has been
+					acquired for write access (<code>WRITING</code>), only the <code>releaseWrite</code> action should occur.
+					To check that the lock implementation <code>RW_LOCK</code> satisfies the property, the lock is
+					composed with the property as follows:</p>
+
+					<pre>
+||READWRITELOCK = (RW_LOCK || SAFE_RW).
+					</pre>
+
+					<p>The resulting <em>LTS</em> is depicted in Figure 7.13.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure7-13.png">
+						<figcaption><strong>Figure 7.13</strong> <code>READWRITELOCK</code> <em>LTS</em>.</figcaption>
+					</figure>
+
+					<p>The transitions to the <code>ERROR</code> state in Figure 7.13 occur if a Reader or Writer is badly
+					behaved. For example, if a Reader performs a <code>releaseRead</code> without previously
+					having performed an <code>acquireRead</code> then a safety violation will occur. A violation
+					will also occur if more than two <code>acquireRead</code> requests are made.</p>
+
+					<p class="i">The composition of <code>READER</code> and <code>WRITER</code> processes with the read/write lock is
+					described in Figure 7.14. Analysis of this system reveals no deadlocks or safety
+					violations. The addition of well-behaved <code>READER</code> and <code>WRITER</code> processes ensures
+					that the error transitions of Figure 7.13 cannot occur.</p>
+
+					<div class="pagebreak pageNumber">149</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure7-14.png">
+						<figcaption><strong>Figure 7.14</strong> <code>READERS_WRITERS</code> model.</figcaption>
+					</figure>
+
+					<h5>Progress Property</h5>
+
+					<p>The progress properties that are important in the Readers–Writers system are that
+					both Readers and Writers should eventually acquire access to the shared database.
+					We can express the required progress properties as follows:</p>
+
+					<pre>
+<strong>progress</strong> WRITE = {writer[1..Nwrite].acquireWrite}
+<strong>progress</strong> READ  = {reader[1..Nread].acquireRead}
+					</pre>
+
+					<p>The <code>WRITE</code> property asserts that it should always be the case that at least one of
+					the <code>WRITER</code> processes can perform an <code>acquireWrite</code> action. Since <code>WRITER</code> s are
+					completely symmetric, we can reasonably expect that if one can <code>acquireWrite</code>
+					then so can the others. <code>READ</code> specifies the same property for <code>READER</code> processes and
+					<code>acquireRead</code>. A progress check reports no violations of these properties in the
+					system specified by <code>READERS_WRITERS</code>. Because of the fair choice assumption,
+					progress problems only occur in complete system models that are erroneous.
+					To find how the system performs when loaded or "<code></code>stressed", we must specify
+					adverse scheduling conditions using action priority. This is exactly the procedure
+					we adopted to find the progress problems in the single-lane bridge model. Indeed,
+					the adverse conditions are similar to those used in the bridge problem. To model
+					a heavily loaded system, we give lower priority to <code>release</code> actions in the same
+					way we gave lower priority to <code>exit</code> actions in the bridge problem. (Alternatively,
+					we could give higher priority to the <code>acquire</code> actions.) The system model used for
+					progress analysis is described by:</p>
+
+					<div class="pagebreak pageNumber">150</div>
+
+					<pre>
+||RW_PROGRESS = READERS_WRITERS
+                >>{reader[1..Nread].releaseRead,
+                   writer[1..Nread].releaseWrite}.
+					</pre>
+
+					<p>Analysis of this system leads to the violation:</p>
+
+					<pre>
+Progress violation: WRITE
+Path to terminal set of states:
+     reader.1.acquireRead
+Actions in terminal set:
+{reader.1.acquireRead, reader.1.releaseRead,
+ reader.2.acquireRead, reader.2.releaseRead}
+					</pre>
+
+					<p>The violation describes the scenario in which Writers cannot access the shared
+					database because a Reader always has read access. In other words, the number of
+					Readers never drops to zero and consequently, the read/write lock denies access
+					to Writers. The terminal set of states that describes this behavior can clearly be seen
+					in Figure 7.15. It contains the states numbered 3, 4 and 5. Before exploring solutions
+					to this progress problem, we translate the existing model into an implementation
+					in the next section.
+					</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure7-15.png">
+						<figcaption><strong>Figure 7.15</strong> <code>RW_PROGRESS</code> <em>LTS</em>.</figcaption>
+					</figure>
+
+				</section>
+
+				<section class="subsection" data-number="16" data-name="Readers–Writers Implementation">
+
+					<h4>7.5.2 Readers–Writers Implementation</h4>
+
+					<p><span class="first-sentence">In the interests of brevity, we describe only the monitor that synchronizes the
+					accesses of Readers and Writers to a shared database.</span> This synchronization is
+					the essence of the problem. In the same way that we defined the set of actions
+					of interest in the Readers–Writers model, we define an interface that identifies
+					the monitor methods that must be implemented. In the sections that follow, we</p>
+
+					<div class="pagebreak pageNumber">151</div>
+
+					<pre class="program">
+<strong>interface</strong> ReadWrite {
+     <strong>public</strong> void acquireRead()
+         <strong>throws</strong> InterruptedException;
+     <strong>public</strong> void releaseRead();
+     <strong>public</strong> void acquireWrite()
+         <strong>throws</strong> InterruptedException;
+     <strong>public</strong> void releaseWrite();
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 7.6</strong> <code>ReadWrite</code> interface.</p>
+
+					<p>develop a number of alternative implementations of this interface. The interface is
+					listed in Program 7.6.
+					</p>
+
+					<p class="i">Each method in the <code>ReadWrite</code> interface corresponds directly to the action of
+					the same name in the model. Our first implementation of <code>ReadWrite</code>, which corresponds
+					exactly to the <code>RW_LOCK</code> process from the model, is listed in Program 7.7.</p>
+
+					<p class="i">The guarded actions from the model become synchronized methods containing
+					waits. However, in the implementation, we must decide on notification to awake
+					threads blocked in waits. The simple solution, as discussed in Chapter 5, is to
+					include a call to <code>notifyAll()</code> in every monitor method that modifies the state
+					of the monitor. However, this can lead to unnecessary thread switches. In the
+					<code>ReadWriteSafe monitor</code>, notification is required only when the last Reader
+					has relinquished access and when a Writer releases. When the last Reader calls</p>
+
+					<pre class="program">
+<strong>class</strong> ReadWriteSafe <strong>implements</strong> ReadWrite {
+  <strong>private</strong> int readers =0;
+  <strong>private</strong> boolean writing = false;
+
+  <strong>public synchronized</strong> void acquireRead()
+        <strong>throws</strong> InterruptedException {
+    <strong>while</strong> (writing) wait();
+    ++readers;
+  }
+  public <strong>synchronized</strong> void releaseRead() {
+    --readers;
+    <strong>if</strong>(readers==0) notify();
+  }
+					</pre>
+
+					<p class="program-caption"><strong>Program 7.7</strong> <code>ReadWriteSafe</code> class.</p>
+
+					<div class="pagebreak pageNumber">152</div>
+
+					<pre class="program">
+  <strong>public synchronized</strong> void acquireWrite()
+      <strong>throws</strong> InterruptedException {
+    <strong>while</strong> (readers>0 || writing) wait();
+    writing = true;
+  }
+
+  <strong>public synchronized</strong> void releaseWrite() {
+    writing = false;
+    notifyAll();
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 7.7</strong> (<em>Continued</em>).</p>
+
+					<p><code>releaseRead()</code> (i.e. <code>readers==0</code>), <code>notify()</code> rather than <code>notifyAll()</code> can
+					be used since only Writers can be waiting and it is only necessary to unblock a
+					single Writer. When a Writer is finished it calls <code>releaseWrite()</code> which then calls
+					<code>notifyAll()</code>. This is because it may be necessary to unblock either one or more
+					Readers or a Writer.</p>
+
+					<p class="i">The implementation suffers from the progress problem detected in the model.
+					If the number of Readers accessing the shared database never drops to zero, then
+					Writers can never gain access. This behavior can be seen in the demonstration
+					applet when the two Reader threads are started such that there is always one
+					holding the lock. The applet display is depicted in Figure 7.16.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure7-16.png">
+						<figcaption><strong>Figure 7.16</strong> Readers–Writers applet display.</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">153</div>
+
+				</section>
+
+				<section class="subsection" data-number="17" data-name="Revised Readers–Writers Model and Implementation">
+
+					<h4>7.5.3 Revised Readers–Writers Model and Implementation</h4>
+
+					<p><span class="first-sentence">To address the progress problem discovered with our first model and implementation
+					of the Readers–Writers problem, we adopt an approach in which Readers
+					are denied access if there are Writers waiting to acquire access.</span> This should give
+					Writers priority in acquiring the lock and avoid the situation in which they wait
+					forever for access. To detect that a Writer is waiting for access, we must add another
+					action to its repertoire. A Writer must request access before attempting to acquire
+					it. This is exactly the same solution we adopted in the single-lane bridge solution
+					to detect whether cars were waiting. The additional action is <code>requestWrite</code> and
+					the revised <code>WRITER</code> process is shown below:
+					</p>
+
+					<pre>
+<strong>set</strong> Actions = {acquireRead,releaseRead,
+       acquireWrite,releaseWrite,requestWrite}
+WRITER =
+   (requestWrite->acquireWrite->modify
+                ->releaseWrite->WRITER
+   )+Actions\{modify}.
+					</pre>
+				
+					<p>The <code>READER</code> process remains unchanged. <code>RW_LOCK</code> is modified to maintain a count
+					of waiting Writers (<code>waitingW</code>). The count is incremented when a Writer requests
+					access and decremented when it actually acquires access. Readers are only allowed
+					to acquire the lock when the number of waiting Writers is zero. The revised lock
+					process is listed below:</p>
+
+					<pre>
+RW_LOCK = RW[0][False][0],
+RW[readers:0..Nread]
+  [writing:Bool]
+  [waitingW:0..Nwrite] =
+  (<strong>when</strong> (!writing &amp;&amp; waitingW==0)
+     acquireRead -> RW[readers+1][writing][waitingW]
+  |releaseRead   -> RW[readers-1][writing][waitingW]
+  |<strong>when</strong> (readers==0 &amp;&amp; !writing)
+     acquireWrite-> RW[readers][True][waitingW-1]
+  |releaseWrite  -> RW[readers][False][waitingW]
+  |requestWrite  -> RW[readers][writing][waitingW+1]
+  ).
+					</pre>
+
+					<p>This definition of <code>RW_LOCK</code> still satisfies the <code>RW_SAFE</code> property. Note that we
+					have not had to change the definition of the safety property. The <code>request</code> action
+					(<code>requestWrite</code>) is not relevant to the safe operation of the lock and so does not
+					appear in the alphabet of the safety property. Safety is determined only by the
+					correct sequencing of <code>acquire</code> and <code>release</code> actions.</p>
+
+					<div class="pagebreak pageNumber">154</div>
+
+					<p>A progress analysis of <code>RW_PROGRESS</code> now produces the output:</p>
+
+					<pre>
+Progress violation: READ
+Path to terminal set of states:
+     writer.1.requestWrite
+     writer.2.requestWrite
+Actions in terminal set:
+{writer.1.requestWrite, writer.1.acquireWrite,
+ writer.1.releaseWrite, writer.2.requestWrite,
+ writer.2.acquireWrite, writer.2.releaseWrite}
+					</pre>
+
+					<p>We no longer have a violation of the <code>WRITE</code> property, demonstrating that in this
+					Writers priority system, Writers can always access the shared database. However,
+					we now have a <code>READ</code> progress violation. This occurs since, if there is always a
+					Writer waiting to acquire the lock, then Readers will never gain access. However,
+					in the practical application of read/write locks, the Writers priority solution is
+					often satisfactory since there are usually many more read accesses to a database
+					than write accesses. In addition, it may be important that Readers get the most
+					up-to-date information. The implementation of a Writers priority lock is listed in
+					Program 7.8. It follows directly from the revised definition of <code>RW_LOCK</code>.</p>
+
+					<p class="i">A version of the read/write lock that satisfies both the <code>READ</code> and <code>WRITE</code>
+					properties involves the addition of a boolean which indicates whether it is the
+					Readers’ turn or the Writers’ turn. Readers only defer to waiting Writers when it
+					is not their turn to acquire the lock. This turn variable plays exactly the same role
+					in the Readers–Writers problem as the turn variable in the single-lane bridge. The
+					final version of the read/write lock model is listed below. The implementation is
+					left as an exercise.
+					</p>
+
+					<pre>
+RW_LOCK = RW[0][False][0][False],
+RW[readers:0..Nread]
+  [writing:Bool]
+  [waitingW:0..Nwrite]
+  [readersturn:Bool] =
+(<strong>when</strong> (!writing &amp;&amp; (waitingW==0||readersturn))
+      acquireRead ->RW[readers+1][writing][waitingW][readersturn]
+  |releaseRead    ->RW[readers-1][writing][waitingW][False]
+  |<strong>when</strong> (readers==0 &amp;&amp; !writing)
+     acquireWrite ->RW[readers][True][waitingW-1][readersturn]
+  |releaseWrite   ->RW[readers][False][waitingW][True]
+  |requestWrite   ->RW[readers][writing][waitingW+1][readersturn]
+).
+					</pre>
+
+					<div class="pagebreak pageNumber">155</div>
+
+					<pre class="program">
+<strong>class</strong> ReadWritePriority <strong>implements</strong> ReadWrite{
+  <strong>private</strong> int readers =0;
+  <strong>private</strong> boolean writing = false;
+  <strong>private</strong> int waitingW = 0; <em>// no of waiting Writers.</em>
+
+  <strong>public synchronized</strong> void acquireRead()
+        <strong>throws</strong> InterruptedException {
+    <strong>while</strong> (writing || waitingW>0) wait();
+    ++readers;
+  }
+
+  <strong>public synchronized</strong> void releaseRead() {
+    --readers;
+    <strong>if</strong> (readers==0) notifyAll();
+  }
+
+  <strong>public synchronized</strong> void acquireWrite()
+        <strong>throws</strong> InterruptedException {
+    ++waitingW;
+    <strong>while</strong> (readers>0 || writing) wait();
+    --waitingW;
+    writing = true;
+  }
+
+  <strong>public synchronized</strong> void releaseWrite() {
+    writing = false;
+    notifyAll();
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 7.8</strong> <code>ReadWritePriority</code> class.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="18" data-name="Summary">
+
+				<h3>Summary</h3>
+
+				<p><span class="first-sentence">A <em>safety</em> property asserts that nothing bad happens during the execution of a
+				program and a <em>liveness</em> property asserts that something good eventually happens.</span>
+				In this chapter, we described how <em>FSP</em> models can be checked for both safety and
+				liveness properties.</p>
+
+				<p class="i">A safety property is defined by a deterministic process <strong>property</strong> <code>P</code>. This asserts
+				that any trace including actions in the alphabet of <code>P</code> is accepted by <code>P</code>. When the
+				property <code>P</code> is composed with a system <code>S</code>, traces of actions that are in the alphabet
+				of <code>S</code> and the alphabet of <code>P</code> must also be valid traces of <code>P</code>, otherwise the <code>ERROR</code> state
+				is reachable. Consequently, if safety analysis does not detect an <code>ERROR</code> state, we
+				know that the property holds for the system.</p>
+
+				<div class="pagebreak pageNumber">156</div>
+
+				<p class="i">We defined a subset of liveness properties which we termed <em>progress</em> properties.
+				A progress property is defined by a progress set of action labels. It asserts
+				that in any infinite execution of a system, one of the actions in the progress
+				set must happen infinitely often. In asserting progress, it is necessary to make
+				some scheduling assumptions as to which transitions are chosen for execution.
+				We assume fair choice for a set of transitions such that if the set is executed
+				infinitely often, then every transition in the set will be executed infinitely often.
+				To investigate the liveness problems that occurred in our example programs, we
+				introduced a way of specifying action priority that let us superimpose a specific
+				scheduling policy on fair choice. This enabled us to model adverse situations in
+				which processes compete for scarce resources.</p>
+
+				<p class="i">The example programs developed in this chapter had a fixed set of threads
+				competing for a resource. In Chapter 9, we examine systems in which the size of
+				the set varies as threads are dynamically created and terminated.
+				</p>
+
+			</section>
+
+			<section class="section" data-number="19" data-name="Notes and Further Reading">
+
+				<h3>Notes and Further Reading</h3>
+
+				<p><span class="first-sentence">The terms <em>safety</em> and <em>liveness</em> applied to concurrent programs were first introduced
+				by Lamport (1977).</span> In this book, we have adopted a modeling approach to reasoning
+				about concurrent programs and consequently a model-checking approach to
+				verifying properties. As discussed at the end of Chapter 5, an alternative approach
+				is to reason about safety properties of concurrent programs using assertions and
+				invariants specified in predicate logic. The reader should consult Greg Andrews’
+				book (1991) for an extensive exposition of this approach.</p>
+
+				<p class="i">The mechanisms used in this chapter for checking safety and progress properties
+				have been developed by the authors and their colleagues. The safety property
+				technique is due to Cheung and Kramer (1999). Progress checking as described
+				here is due to Giannakopoulou, Magee and Kramer (1999) and is a simplified
+				form of a more general technique for checking that properties specified in Linear
+				Temporal Logic (LTL) hold for a system. The property that our approach checks
+				is that an action always eventually occurs. As an LTL formula, this is specified
+				as <img class="inline" src="/contents/concurrency/images/small_square.png"><img class="inline" src="/contents/concurrency/images/small_diamond.png"> <strong>a</strong>, where <img class="inline" src="/contents/concurrency/images/small_square.png"> means always and <img class="inline" src="/contents/concurrency/images/small_diamond.png"> means eventually. The general technique
+				involves translating the LTL formula into B&#252;chi automata and then composing the
+				B&#252;chi automata with the target system and performing a connected component
+				analysis of the resulting automata (Gribomont and Wolper, 1989). Technically,
+				this is a check that the system is a valid model of the formula – the origin of
+				the term model checking, which we have used in the looser sense to refer to any
+				technique for analyzingmodels. B&#252;chi automata are a form of finite state automata
+				which recognize infinite sequences of actions. The interested reader should look
+				at Holzmann’s SPIN model checker (Holzmann, 1991, 1997) which uses this
+				approach. The pioneering work on model checking is due to Clarke, Emerson and</p>
+
+				<div class="pagebreak pageNumber">157</div>
+
+				<p>Sistla (1986). Fred Schneider (1997) provides an introduction to temporal logic and
+				discusses derivation and reasoning about concurrent programs.</p>
+
+				<p class="i">Chapter 14 provides more details on the use of LTL for property checking, and
+				introduces <em>fluents</em> to <em>FSP</em> as a means of specifying state-based properties in an
+				event-based formalism such as <em>LTS</em>. Fairness and the use of B¨ uchi automata are
+				also discussed and supported by <em>LTSA</em> for property checking.</p>
+
+				<p class="i">The topic of fairness in concurrent programs has an extensive literature. We
+				have used a strong form of fair choice. For an extensive discussion on the different
+				classes of fairness, see the book by Francez (1986).</p>
+
+			</section>
+
+			<section class="section" data-number="20" data-name="Excercises">
+
+				<h3>Excercises</h3>
+
+				<ol id="seven">
+
+					<li><span class="first-sentence">What action trace violates the following safety property?</span>
+
+						<pre>
+<strong>property</strong> PS = (a->(b->PS|a->PS)|b->a->PS).
+						</pre>
+
+					</li>
+
+					<li>A lift has a maximum capacity of ten people. In the model of the lift control system,
+					passengers entering a lift are signaled by an <code>enter</code> action and passengers leaving
+					the lift are signaled by an <code>exit</code> action. Specify a safety property in <em>FSP</em> which when
+					composed with the lift will check that the system never allows the lift that it controls to
+					have more than ten occupants.</li>
+
+					<li>Specify a safety property for the car park problem of Chapter 5, which asserts that
+					the car park does not overflow. Specify a progress property which asserts that cars
+					eventually enter the car park. If car departure is lower priority than car arrival, does
+					starvation occur?</li>
+
+					<li>In an operating system, a binary semaphore is used to control access to the console.
+					The console is used by user processes and system processes. Construct a model of this
+					system and investigate the scheduling conditions under which user processes may be
+					denied access to the console.</li>
+
+					<li>Implement the system modeled in exercise 7.4 in Java using the <code>ThreadPanel</code> and
+					<code>NumberCanvas</code> classes for display. Can you induce starvation in a user thread by
+					giving it a lower scheduling priority using <code>Thread.setPriority()</code>? If not, can
+					you explain why starvation does not occur?</li>
+
+					<li>Two warring neighbors are separated by a field with wild berries. They agree to permit
+					each other to enter the field to pick berries, but also need to ensure that only one of them
+					is ever in the field at a time. After negotiation, they agree to the following protocol.
+
+						<p class="i">When one neighbor wants to enter the field, he raises a flag. If he sees his neighbor’s
+						flag, he does not enter but lowers his flag and tries again. If he does not see his
+						neighbor’s flag, he enters the field and picks berries. He lowers his flag after leaving
+						the field.</p>
+					
+						<p class="i">Model this algorithm for two neighbors, <code>n1</code> and <code>n2</code>. Specify the required <em>safety</em>
+						property for the field and check that it does indeed ensure mutually exclusive access.
+						Specify the required <em>progress</em> properties for the neighbors such that they both get to pick
+						berries given a fair scheduling strategy. Are there any adverse circumstances in which
+						neighbors would not make progress? What if the neighbors are greedy?</p>
+					
+
+					<div class="pagebreak pageNumber">158</div>
+
+
+						<p class="i">(Hint: The following FSP can be used to model the flags.)</p>
+
+						<pre>
+<strong>const</strong> True = 1 <strong>const</strong> False = 0
+<strong>range</strong> Bool = False..True
+<strong>set</strong> BoolActions =
+     {setTrue,setFalse,[False],[True]}
+
+BOOLVAR = VAL[False],
+VAL[v:Bool] = ( setTrue -> VAL[True]
+              | setFalse -> VAL[False]
+              | [v] -> VAL[v]
+              ).
+
+||FLAGS = (flag1:BOOLVAR||flag2:BOOLVAR).
+						</pre>
+
+					</li>
+
+					<li>Peterson’s Algorithm for two processes (Peterson, G.L., 1981)
+
+						<p class="i">Fortunately for the neighbors in exercise 7.6, Gary Peterson visits one day and
+						explains his algorithm to them. He explains that, in addition to the flags, the neighbors
+						must share a <em>turn</em> indicator which can take the values 1 or 2. This is used to avoid
+						potential deadlock.</p>
+
+						<p class="i">When one neighbor wants to enter the field, he raises his flag and sets the turn
+						indicator to indicate his neighbor. If he sees his neighbor’s flag and it is his neighbor’s
+						turn, he may not enter but must try again later. Otherwise, he can enter the field and
+						pick berries and must lower his flag after leaving the field.</p>
+
+						<p class="i">For instance, neighbor <code>n1</code> behaves as shown below, and neighbor <code>n2</code> behaves
+						symmetrically.</p>
+
+						<pre>
+<strong>while</strong> (true) {
+      flag1 = true; turn = 2;
+      <strong>while</strong> (flag2 and turn==2) {};
+      enterField; pickBerries;
+       flag1 = false;
+}
+						</pre>
+
+						<p>Model Peterson’s Algorithm for the two neighbors. Check that it does indeed avoid
+						deadlock and satisfy the mutual exclusion (safety) and berry-picking (progress) properties.</p>
+
+						<p>(<em>Hint</em>: The following FSP can be used to model the turn indicator.)</p>
+
+						<pre>
+<strong>set</strong> CardActions = {set1,set2,[1],[2]}
+
+CARDVAR = VAL[1],
+VAL[i:Card] = ( set1 -> VAL[1]
+              | set2 -> VAL[2]
+              | [i] -> VAL[i]
+              ).
+						</pre>
+
+					</li>
+
+					<li>Implement Peterson’s Algorithm as modeled in exercise 7.7.</li>
+
+				</ol>
+
+			</section>
+
+		</div>
+
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,538 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Introducing Regular Expressions</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="regexp">
+
+		<div class="container">
+
+			<h3>CHAPTER 3</h3>
+			<div class="border"></div>
+
+			<section class="intro" data-number="0" data-name="Chapter 3 Introduction">
+
+				<h1>Boundaries</h1>
+
+				<p><span class="first-sentence">This chapter focuses on assertions. Assertions mark boundaries, but they don’t consume
+				characters—that is, characters will not be returned in a result.</span> They are also
+				known as <em>zero-width assertions</em>. A zero-width assertion doesn’t match a character, per
+				se, but rather a location in a string. Some of these, such as <code>^</code> and $, are also called anchors.</p>
+
+				<p>The boundaries I'll talk about in this chapter are:</p>
+
+				<ul>
+					<li>The beginning and end of a line or string</li>
+					<li>Word boundaries (two kinds)</li>
+					<li>The beginning and end of a subject</li>
+					<li>Boundaries that quote string literals</li>
+				</ul>
+
+				<p>To start, I’ll use RegExr again, but this time, for variety, I’ll use the Safari browser
+				(however, you can use any browser you like). I’ll also use the same text I used last time:
+				the first 12 lines of <em>rime.txt</em>. Open the Safari browser with <span class="url">http://gskinner.com/regexr</span>
+				and copy the first 12 lines of <em>rime.txt</em> from the code archive into the lower box.</p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="The Beginning and End of a Line">
+
+				<h2>The Beginning and End of a Line</h2>
+
+				<p><span class="first-sentence">As you have seen a number of times already, to match the beginning of a line or string,
+				use the caret or circumflex (U+005E):</span></p>
+
+				<p class="indented"><code>^</code></p>
+
+				<p>Depending on the context, a <code>^</code> will match the beginning of a line or string, sometimes
+				a whole document. The context depends on your application and what options you
+				are using with that application.</p>
+
+				<p>To match the end of a line or string, as you know, use the dollar sign:</p>
+
+				<p class="indented"><code>$</code></p>
+
+				<div class="pagebreak pageNumber right">29</div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure3-1.png">
+					<figcaption>Figure 3-1. RegExr in Safari</figcaption>
+				</figure>
+
+				<p>In RegExr, make sure that <em>multiline</em> is checked. <em>global</em> is checked by default when you
+				open RegExr, but you can leave it checked or unchecked for this example. When
+				<em>multiline</em> is not checked, the entire target is considered one string.</p>
+
+				<p>In the upper text box, enter this regular expression:</p>
+
+				<p class="indented"><code>^How.*Country\.$</code></p>
+
+				<p>This will match the entire line beginning with the word <em>How</em>. Notice that the period
+				or dot at the end is preceded by a backslash. This escapes the dot so that it is interpreted
+				as a literal. If it was not escaped, what would it match? Any character. If you want to
+				match a literal dot, you have to either escape it or put it in a character class (see
+				<strong>Chapter 5</strong>).</p>
+
+				<p>If you uncheck <em>multiline</em>, then what happens? The highlighting is turned off. With it
+				unchecked and <em>dotall</em> checked, enter:</p>
+
+				<p class="indented"><code>^THE.*\?$</code></p>
+
+				<p>and you’ll see that it matches all the text.</p>
+
+				<p>The <em>dotall</em> option means that the dot will match newlines in addition to all other characters.
+				Uncheck <em>dotall</em>, and the expression matches nothing. However, the following:</p>
+
+				<p class="indented"><code>^THE.*</code></p>
+
+				<div class="pagebreak left"><span class="pageNumber">30</span> | Chapter 3: Boundaries</div>
+
+				<p>will match the first line. Click <em>dotall</em> again, and all text is matched again. The <code>\?$</code> is not
+				required to match to the end of the text.</p>
+
+			</section>
+
+			<section class="section" data-number="2" data-name="Word and Non-word Boundaries">
+
+				<h2>Word and Non-word Boundaries</h2>
+
+				<p><span class="first-sentence">You have already seen <code>\b</code> used several times.</span> It marks a word boundary. Try:</p>
+
+				<p class="indented"><code>\bTHE\b</code></p>
+
+				<p>and it will match both occurrences of <em>THE</em> in the first line (with <em>global</em> checked). Like
+				<code>^</code> or <code>$</code>, <code>\b</code> is a zero-width assertion. It may appear to match things like a space or the
+				beginning of a line, but in actuality, what it matches is a zero-width nothing. Did you
+				notice that the spaces around the second <em>THE</em> are not highlighted? That is because they
+				are not part of the match. Not the easiest thing to grasp, but you’ll get it by seeing what
+				it does and does not do.</p>
+
+				<p>You can also match non-word boundaries. A non-word boundary matches locations
+				that are not equivalent to a word boundary, like a letter or a number within a word or
+				string. To match a non-word boundary, give this a spin:</p>
+
+				<p class="indented"><code>\Be\B</code></p>
+
+				<p>and watch what it matches (see <strong>Figure 3-2</strong>). You’ll see that it matches a lowercase <em>e</em>
+				when it is surrounded by other letters or non-word characters. Being a zero-width assertion,
+				it does not match the surrounding characters, but it recognizes when the literal
+				<em>e</em> is surrounded by non-word boundaries.</p>
+
+				<p>In some applications, another way for specifying a word boundary is with:</p>
+
+				<p class="indented"><code>\&lt;</code></p>
+
+				<p>for the beginning of a word, and with:</p>
+
+				<p class="indented"><code>\&gt;</code></p>
+
+				<p>for the end of the word. This is an older syntax, not available in most recent regex
+				applications. It is useful in some instances because, unlike <code>\b</code>, which matches <em>any</em> word
+				boundary, this syntax allows you to match either the beginning or ending of a word.</p>
+
+				<p>If you have <em>vi</em> or <em>vim</em> on your system, you can try this out with that editor. Just follow
+				these steps. They’re easy even if you have never used <em>vim</em> before. In a command or shell
+				window, change directories to where the poem is located and then open it with:</p>
+
+				<p class="indented"><code>vim rime.txt</code></p>
+
+				<p>Then enter the following search command:</p>
+
+				<p class="indented"><code>/\&gt;</code></p>
+
+				<p>and press Enter or Return. The forward slash (<code>/</code>) is the way you begin a search in <em>vim</em>.
+				Watch the cursor and you’ll see that this search will find the ends of words. Press <em>n</em> to
+				repeat the search. Next enter:</p>
+
+				<div class="pagebreak right">Word and Non-word Boundaries | <span class="pageNumber">31</span></div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure3-2.png">
+					<figcaption>Figure 3-2. Matching non-word boundaries with \B</figcaption>
+				</figure>
+
+				<p class="indented"><code>/\&lt;</code></p>
+
+				<p>followed by Enter or Return. This time the search will find the beginning of words. To
+				exit <em>vim</em>, just type ZZ.</p>
+
+				<p>This syntax also works with <em>grep</em>. Since the early 1970s, <em>grep</em> like <em>sed</em> has been a Unix
+				mainstay. (In the 1980s, I had a coworker who had a vanity license plate that said
+				<em>GREP</em>.) Try this command from a shell prompt:</p>
+
+				<p class="indented"><code>grep -Eoc '\<(THE|The|the)\>' rime.txt</code></p>
+
+				<p>The <em>-E</em> option indicates that you want to use extended regular expressions (EREs) rather
+				than the basic regular expressions (BREs) which are used by <em>grep</em> by default. The <code>-o</code>
+				option means you want to show in the result only that part of the line that matches the
+				pattern, and the <code>-c</code> option means only return a count of the result. The pattern in single
+				quotes will match either <em>THE</em>, <em>The</em>, or <em>the</em> as whole words. That’s what the <code>\&lt;</code> and <code>\&gt;</code>
+				help you find.</p>
+
+				<p>This command will return:</p>
+
+				<p class="indented"><code>259</code></p>
+
+				<p>which is the count of the words found.</p>
+
+				<div class="pagebreak left"><span class="pageNumber">32</span> | Chapter 3: Boundaries</div>
+
+				<p>On the other hand, if you don’t include the <code>\&lt;</code> and <code>\&gt;</code>, you get a different result. Do it
+				this way:</p>
+
+				<p class="indented"><code>grep -Eoc '(THE|The|the)' rime.txt</code></p>
+
+				<p>and you will get a different number:</p>
+
+				<p class="indented"><code>327</code></p>
+
+				<p>Why? Because the pattern will match only whole words, plus <em>any</em> sequence of characters
+				that contain the word. So that is one reason why the <code>\&lt;</code> and <code>\>&gt;</code> can come in handy.</p>
+
+			</section>
+
+			<section class="section" data-number="3" data-name="Other Anchors">
+
+				<h2>Other Anchors</h2>
+
+				<p><span class="first-sentence">Similar to the <code>^</code> anchor is the following, a shorthand that matches the start of a subject:</span></p>
+
+				<p class="indented"><code>\A</code></p>
+
+				<p>This is not available with all regex implementations, but you can get it with Perl and
+				PCRE (Perl Compatible Regular Expressions), for example. To match the end of a
+				subject, you can use <code>\A</code>’s companion.</p>
+
+				<p class="indented"><code>\Z</code></p>
+
+				<p>Also, in some contexts:</p>
+
+				<p class="indented"><code>\z</code></p>
+
+				<p><em>pcregrep</em> is a version of <em>grep</em> for the PCRE library. (See <strong>“Technical
+				Notes” on page 38</strong> to find out where to get it.) Once installed, to try this syntax with
+				<em>pcregrep</em>, you could do something like this:</p>
+
+				<p class="indented"><code>pcregrep -c '\A\s*(THE|The|the)' rime.txt</code></p>
+
+				<p>which will return a count (<code>-c</code>) of 108 occurrences of the word <em>the</em> (in three cases) which
+				occur near the beginning of a line, preceded by whitespace (zero or more). Next enter
+				this command:</p>
+
+				<p class="indented"><code>pcregrep -n '(MARINERE|Marinere)(.)?\Z' rime.txt</code></p>
+
+				<p>This matches either <em>MARINERE</em> or <em>Marinere</em> at the end of a line (subject) and is followed
+				by any optional character, which in this case is either a punctuation mark or the
+				letter <em>S</em>. (The parentheses around the dot are not essential.)</p>
+
+				<p>You’ll see this output:</p>
+
+				<p class="indented"><code>1:THE RIME OF THE ANCYENT MARINERE,<br/>
+				10: &nbsp;&nbsp;&nbsp;&nbsp;It is an ancyent Marinere,<br/>
+				38: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The bright-eyed Marinere.<br/>
+				63: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The bright-eyed Marinere.<br/>
+				105: &nbsp;&nbsp;&nbsp;&nbsp;"God save thee, ancyent Marinere!<br/>
+				282:&nbsp;&nbsp;&nbsp;&nbsp;"I fear thee, ancyent Marinere!<br/>
+				702: &nbsp;&nbsp;&nbsp;&nbsp;He loves to talk with Marineres</code></p>
+
+				<div class="pagebreak right">Other Anchors | <span class="pageNumber">33</span></div>
+
+				<p>The <code>-n</code> option with <em>pcregrep</em> gives you the line numbers at the beginning of each line
+				of output. The command line options of <em>pcregrep</em> are very similar to those of <em>grep</em>. To
+				see them, do:</p>
+
+				<p class="indented"><code>pcre --help</code></p>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="Quoting a Group of Characters as Literals">
+
+				<h2>Quoting a Group of Characters as Literals</h2>
+
+				<p><span class="first-sentence">You can use these sequences to quote a set of characters as literals:</span></p>
+
+				<p class="indented"><code>\Q</code></p>
+
+				<p>and</p>
+
+				<p class="indented"><code>\E</code></p>
+
+				<p>To show you how this works, enter the following metacharacters in the lower box of
+				RegExr:</p>
+
+				<p class="indented"><code>.^$*+?|(){}[]\-</code></p>
+
+				<p>These 15 metacharacters are treated as special characters in regular expressions, used
+				for encoding a pattern. (The hyphen is treated specially, as signifying a range, inside of
+				the square brackets of a character class. Otherwise, it’s not special.)</p>
+
+				<p>If you try to match those characters in the upper text box of RegExr, nothing will
+				happen. Why? Because RegExr thinks (if it can think) that you are entering a regular
+				expression, not literal characters. Now try:</p>
+
+				<p class="indented"><code>\Q$\E</code></p>
+
+				<p>and it will match <code>$</code> because anything between <code>\Q</code> and <code>\E</code> is interpreted as a literal
+				character (see <strong>Figure 3-3</strong>). (Remember, you can precede a metacharacter with a \ to
+				make it literal.)</p>
+
+			</section>
+
+			<section class="section" data-number="5" data-name="Adding Tags">
+
+				<h2>Adding Tags</h2>
+
+				<p><span class="first-sentence">In RegExr, uncheck <em>global</em> and check <em>multiline</em>, click the Replace tab, and then, in the
+				first text box (marked number 1 in <strong>Figure 3-4</strong>), enter:</span></p>
+
+				<p class="indented"><code>^(.*)$</code></p>
+
+				<p>This will match and capture the first line of text. Then in the next box (marked number
+				2), enter this or something similar:</p>
+
+				<p class="indented"><code>&lt;!DOCTYPE html&gt;\n&lt;html lang="en"&gt;\n&lt;head&gt;&lt;title&gt;Rime&lt;/title&gt;&lt;/head&gt;\n&lt;body&gt;\n<br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;$1&lt;/h1&gt;</code></p>
+
+				<p>As you enter the replacement text, you’ll notice that the subject text (shown in the box
+				marked number 3) is changed in the results text box (marked number 4), to include
+				the markup you’ve added (see <strong>Figure 3-4</strong>).</p>
+
+				<div class="pagebreak left"><span class="pageNumber">34</span> | Chapter 3: Boundaries</div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure3-3.png">
+					<figcaption>Figure 3-3. Quoting metacharacters as literals</figcaption>
+				</figure>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure3-4.png">
+					<figcaption>Figure 3-4. Adding markup with RegExr</figcaption>
+				</figure>
+
+				<div class="pagebreak right">Adding Tags | <span class="pageNumber">35</span></div>
+
+				<p>RegExr does well to demonstrate one way to do this, but it is limited in what it can do.
+				For example, it can’t save any results out to a file. We have to look beyond the browser
+				for that.</p>
+
+			</section>
+
+			<section class="section" data-number="6" data-name="Adding Tags with sed">
+
+				<h2>Adding Tags with <em>sed</em></h2>
+
+				<p><span class="first-sentence">On a command line, you could also do something similar to what we just did in RegExr
+				with <em>sed</em>, which you saw in the last chapter.</span> The insert (i) command in <em>sed</em> allows you
+				to insert text above or before a location in a document or a string. By the way, the
+				opposite of <em>i</em> in <em>sed</em> is <em>a</em>, which appends text below or after a location. We’ll use the
+				append command later.</p>
+
+				<p>The following command inserts the HTML5 doctype and several other tags, beginning
+				at line 1:</p>
+
+				<p class="indented"><code>
+					sed '1 i\
+					&lt;!DOCTYPE html&gt;\<br/>
+					&lt;html lang="en"&gt;\<br/>
+					&lt;head&gt;\<br/>
+					&lt;title&gt;Rime&lt;/title&gt;\<br/>
+					&lt;/head&gt;\<br/>
+					&lt;body&gt;
+				</code></p>
+
+				<p class="indented"><code>
+					s/^/&lt;h1&gt;/<br/>
+					s/$/&lt;\/h1&gt;/<br/>
+					q' rime.txt
+				</code></p>
+
+				<p>The backslashes (<code>\</code>) at the end of the lines allow you to insert newlines into the stream
+				and not execute the command prematurely. The backslashes in front of the quotation
+				marks <em>escape</em> the quotes so that they are seen as literal characters, not part of the
+				command.</p>
+
+				<p>When you run this <em>sed</em> command correctly, this is what your output will look like:</p>
+
+				<p class="indented"><code>
+					&lt;!DOCTYPE html&gt;<br/>
+					&lt;html lang="en"&gt;<br/>
+					&lt;head&gt;<br/>
+					&lt;title&gt;The Rime of the Ancyent Mariner (1798)&lt;/title&gt;<br/>
+					&lt;/head&gt;<br/>
+					&lt;body&gt;<br/>
+					&lt;h1&gt;THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.&lt;/h1&gt;
+				</code></p>
+
+				<p>These same <em>sed</em> commands are saved in the file <em>top.sed</em> in the example archive. You can
+				run this on the file using this command:</p>
+
+				<p class="indented"><code>sed -f top.sed rime.txt</code></p>
+
+				<p>You should get the same output as you saw in the previous command. If you want to
+				save the output to a file, you can redirect the output to a file, like so:</p>
+
+				<p class="indented"><code>sed -f top.sed rime.txt > temp</code></p>
+
+				<div class="pagebreak left"><span class="pageNumber">36</span> | Chapter 3: Boundaries</div>
+
+				<p>In addition to showing the result on the screen, this redirect part of the command
+				(<code>&gt; temp</code>) will save the output to the file <em>temp</em>.</p>
+
+			</section>
+
+			<section class="section" data-number="7" data-name="Adding Tags with Perl">
+
+				<h2>Adding Tags with Perl</h2>
+
+				<p><span class="first-sentence">Let’s try to accomplish this same thing with Perl. Without explaining everything that’s
+				going on, just try this:</span></p>
+
+				<p class="indented"><code>
+					perl -ne 'print "&lt;!DOCTYPE html&gt;\<br/>
+					&lt;html lang=\"en\"&gt;\<br/>
+					&lt;head&gt;&lt;title&gt;Rime&lt;/title&gt;&lt;/head&gt;\<br/>
+					&lt;body&gt;\<br/>
+					" if $. == 1;<br/>
+					s/^/&lt;h1&gt;/;s/$/&lt;\/h1&gt;/m;print;exit;' rime.txt
+				</code></p>
+
+				<p>Compare this with the <em>sed</em> command. How is it similar? How is it different? The <em>sed</em>
+				command is a little simpler, but Perl is a lot more powerful, in my opinion.</p>
+
+				<p>Here is how it works:</p>
+
+				<ul>
+
+					<li>The <code>$.</code> variable, which is tested with the <em>if</em> statement, represents the current line.
+					The <em>if</em> statement returns <em>true</em>, meaning it passes the test that the current line is line
+					1.</li>
+
+					<li>When Perl finds line 1 with <em>if</em>, it prints the doctype and a few HTML tags. It is
+					necessary to escape the quote marks as in <em>sed</em>.</li>
+
+					<li>The first substitution inserts an <em>h1</em> start-tag at the beginning of the line, and the
+					second one inserts an <em>h1</em> end-tag at the end of the line. The <em>m</em> at the end of the
+					second substitution means that it uses a <em>multiline</em> modifier. This is done so that
+					the command recognizes the end of the first line. Without <em>m</em>, the $ would match
+					to the end of the file.</li>
+
+					<li>The <em>print</em> command prints the result of the substitutions.</li>
+
+					<li>The <em>exit</em> command exits Perl immediately. Otherwise, because of <code>-n</code> option, it
+					would loop through every line of the file, which we don’t want for this script.</li>
+
+				</ul>
+
+				<p>That was a lot of typing, so I put all that Perl code in a file and called it <em>top.pl</em>, also found in the code archive.</p>
+
+				<p class="indented"><code>
+					#!/usr/bin/perl -n
+				</code></p>
+
+				<p class="indented"><code>
+					if ($ == 1) {<br/>
+					print "&lt;!DOCTYPE html&gt;\<br/>
+					&lt;html lang=\"en\"&gt;\<br/>
+					&lt;head&gt;\<br/>
+					&lt;title&gt;The Rime of the Ancyent Mariner (1798)&lt;/title&gt;\<br/>
+					&lt;/head&gt;\<br/>
+					&lt;body&gt;\<br/>
+					";<br/>
+					s/^/&lt;h1&gt;/;<br/>
+					s/$/&lt;\/h1&gt;/m;<br/>
+					print;
+				</code></p>
+
+				<div class="pagebreak right">Adding Tags | <span class="pageNumber">37</span></div>
+
+				<p class="indented"><code>
+					exit;<br/>
+					}
+				</code></p>
+
+				<p>Run this with:</p>
+
+				<p class="indented"><code>perl top.pl rime.txt</code></p>
+
+				<p>You get a similar output as in the previous command, though it is formed a little differently.
+				(You can redirect the output with <code>
+				&gt;</code>, as with <em>sed</em>.)</p>
+
+				<p>The next chapter covers alternation, groups, and backreferences, among other things.
+				See you over there.</p>
+
+			</section>
+
+			<section class="section" data-number="8" data-name="What You Learned in Chapter 3">
+
+				<h2>What You Learned in Chapter 3</h2>
+
+				<ul>
+
+					<li><span class="first-sentence">How to use anchors at the beginning or end of a line with <code>^</code> or <code>$</code></span></li>
+
+					<li>How to use word boundaries and non-word boundaries</li>
+
+					<li>How to match the beginning or end of a subject with <code>\A</code> and <code>\Z</code> (or <code>\z</code>)</li>
+
+					<li>How to quote strings as literals with <code>\Q</code> and <code>\E</code></li>
+
+					<li>How to add tags to a document with RegExr, <em>sed</em>, and Perl</li>
+
+				</ul>
+
+			</section>
+
+			<section class="section" data-number="9" data-name="Technical Notes">
+
+				<h2>Technical Notes</h2>
+
+				<ul>
+
+					<li><span class="first-sentence"><em>vi</em> is a Unix editor developed in 1976 by Sun cofounder Bill Joy that uses regular
+					expressions.</span> The <em>vim</em> editor is a replacement for <em>vi</em>, developed primarily by Bram
+					Moolenaar (see <span class="url">http://www.vim.org</span>). An early paper on <em>vi</em> by Bill Joy and Mark
+					Horton is found here: <span class="url">http://docs.freebsd.org/44doc/usd/12.vi/paper.html</span>. The first
+					time I used <em>vi</em> was in 1983, and I use it nearly every day. It lets me to do more things
+					more quickly than with any other text editor. And it is so powerful that I am always
+					discovering new features that I never knew about, even though I’ve been acquainted
+					with it for nearly 30 years.</li>
+
+					<li><em>grep</em> is a Unix command-line utility for searching and printing strings with regular
+					expressions. Invented by Ken Thompson in 1973, <em>grep</em> is said to have grown out
+					of the <em>ed</em> editor command g/re/p (global/regular expression/print). It was superseded
+					but not retired by <em>egrep</em> (or <em>grep -E</em>), which uses extended regular expressions
+					(EREs) and has additional metacharacters such as |, +, ?, (, and ). <em>fgrep</em> (<em>grep -F</em>)
+					searches files using literal strings; metacharacters like $, *, and | don’t have special
+					meaning. <em>grep</em> is available on Linux systems as well as the Mac OS X’s Darwin.
+					You can also get it as part of the Cygwin GNU distribution (<span class="url">http://www.cygwin
+					.com</span>) or you can download it from <span class="url">http://gnuwin32.sourceforge.net/packages/grep
+
+				</ul>
+
+				<div class="pagebreak left"><span class="pageNumber">38</span> | Chapter 3: Boundaries</div>
+
+				<ul>
+
+					<li>PCRE (<span class="url">http://www.pcre.org</span>) or Perl Compatible Regular Expressions is a C library
+					of functions (8-bit and 16-bit) for regular expressions that are compatible with Perl
+					5, and include some features of other implementations. <em>pcregrep</em> is an 8-bit, <em>grep</em>-like
+					tool that enables you to use the features of the PCRE library on the command
+					line. You can get <em>pcregrep</em> for the Mac through Macports (<span class="url">http://www.macports
+					.org</span>) by running the command <code>sudo port install pcre</code>. (Xcode is a prerequisite;
+					see <span class="url">https://developer.apple.com/technologies/tools/</span>. Login required.)</li>
+
+				</ul>
+
+			</section>
+
+		</div> <!--/container-->
+
+	</div> <!--/regexp-->
+</body>
+</html>

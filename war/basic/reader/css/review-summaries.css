@@ -1,0 +1,88 @@
+@CHARSET "UTF-8";
+
+#review-summaries {
+	padding:20px;
+	overflow-y: scroll;
+	height:100%;
+}
+
+#review-summaries .row {
+	margin-left: 0;
+	border-radius: 10px;
+	border: 1px solid #EEEEEE;
+	padding: 10px;
+	margin-bottom: 20px;
+	display:table;
+	width:100%;
+	background-color: #CCC;
+
+}
+
+.name-wrapper {
+	display: table-cell;
+	vertical-align: middle;
+	width: 44%;
+	text-align: left;
+}
+#review-summaries .subsection .name-wrapper {
+	text-indent:25px;
+}
+
+#review-summaries .section-name {
+	font-size: 16px;
+	line-height: 1.5em;
+}
+
+#review-summaries .summary-wrapper {
+	float: left;
+	width:100%;
+	text-align: center;
+	
+}
+
+#review-summaries .place-filler {
+	font-style: italic;
+	font-size: 0.85em;
+}
+
+#review-summaries .instructions {
+	background-color: #FFE27F;
+	margin-bottom: 10px;
+	padding: 10px
+}
+
+#review-summaries .instructions h2 {
+	font-size: 30px;
+}
+#clearStrat{
+	float:right;
+}
+.instructions{
+	text-align: center;
+}
+.instructions li {
+	line-height: 1.5em;
+}
+.instructions ul {
+	margin-left: 40px;
+}
+
+
+#rs-sections .row.completed {
+	background-color: #0EF105;
+}
+
+#rs-sections .row.current {
+	background-color: #D9FF10;
+}
+
+.summary pre {
+	font-family: inherit;
+	border: none;
+	margin: 0;
+	padding: 0;
+	font-size: inherit;
+	line-height: inherit;
+	white-space: pre-wrap;
+	background-color: inherit;
+}

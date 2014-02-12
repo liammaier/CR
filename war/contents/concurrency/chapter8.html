@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h1>8</h1>
+				<h2>Model-Based Design</h2>
+				<div class="border"></div>
+
+				<p><span class="first-sentence">Modeling is widely used in engineering design.</span> Models are simplified representations of the real world, designed to include only those aspects relevant to the problem at hand. The reduction in scale and complexity achieved by modeling enables design engineers to analyze their designs to check the properties of interest.</p>
+
+				<p class="i">For instance, a structural engineer may build a mathematical model of a particular bridge design to investigate its strength. Using different model parameters to represent differing situations and materials, the engineer analyzes the stresses and strains on the structural components of the proposed bridge, thereby assessing its strength. The engineer uses data from past experience and knowledge and skill to design and tailor the model such that it accurately reflects the behavior of a real bridge. This is essential if the faults found in the model are to be true indications of faults that could occur in the real bridge, and conversely that the lack of faults indicates a sound design for a fault-free bridge. Thus the engineer interprets the model behavior in order to infer behavior of the real bridge. Of course, the engineer may need to modify the design and corresponding model until, satisfied with the results, he or she can continue with confidence on the path to bridge construction.</p>
+
+				<p class="i">As illustrated in the preceding chapters, this book takes a modeling approach to the design of concurrent programs. Our models represent the concurrent behavior of real concurrent programs written in Java. We abstract much of the detail of the real programs, neglecting aspects concerned with data representation, resource usage and user interaction. Instead, we focus on actions, interactions and concurrency. For instance, in our model of the bridge for the single-lane bridge problem in the previous chapter, we are only concerned with the <code>enter</code> and <code>exit</code> actions of a car. We therefore restrict our model to these actions. We model the constraints imposed on these actions by the cars and the bridge, and investigate the particular safety and progress properties of interest. Adjustments, such as action priorities, are made to the model to "stress-test" it and to ensure continuing correspondence between the model and the desired program. Safety and progress violations, and the associated trace and path information, require interpretation</p>
+
+				<div class="pagebreak pageNumber">160</div>
+
+				<p>to understand the circumstances of the violation and the implications for the program. The model provides a sound basis for proceeding towards program construction with greater confidence, insight and understanding.</p>
+
+				<p class="i">This chapter recapitulates and consolidates the concepts presented in previous chapters. It carefully and systematically describes the process of moving from system requirements through modeling to programming. No particular design method is imposed, since different designers may choose to use different techniques according to their own particular training or experience, or according to the particular system application. The intention is to emphasize the role and utility of modeling in association with any design method. Modeling and program design go hand-in-hand when designing any software, but it is particularly important when constructing concurrent programs. The example of a cruise control system for a car is used to illustrate the description. This was briefly introduced in Chapter 1; for convenience, we repeat the description and deal with it in detail in this chapter.</p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="From Requirements to Models">
+
+				<h3>8.1 From Requirements to Models</h3>
+
+				<p><span class="first-sentence">The <em>requirements specification</em> of a system states the goals that the system is expected to satisfy.</span> These are couched in application domain terms, describing the desired behavior of the proposed system in the context of its environment. It is the responsibility of the requirements engineers to elicit the requirements from the system stakeholders and to produce the requirements specification. Even at this stage, models are essential to facilitate understanding and analysis. For instance, the different scenarios that the system should support can be captured as use case models using the Unified Modeling Language (UML). These provide a description of the various actors that interact with the system and the typical interactions. Use case scenarios can also be useful later in examining traces in the design model and test cases in the implemented system. Furthermore, the requirements specification should identify the particular properties of interest. This can help to articulate the safety and progress properties which must hold for the system.</p>
+
+				<p class="i">The process of design is required to decompose the requirements into a <em>design architecture</em>. This describes the gross organization and global structure of the system in terms of its constituent components. In order to cope with complexity, hierarchical composition is employed. Quite simply, this means that the architecture is composed from components such that each component may be composite, constructed from simpler components.
+				</p>
+
+				<p class="i">The <em>components</em> of a design architecture have a state, exhibit some well-defined behavior, and have a unique identity. The identity distinguishes it from all other components; the behavior represents its outwardly visible and testable activity;</p>
+
+				<div class="pagebreak pageNumber">161</div>
+
+				<p>and the state of a component represents the cumulative results of its behavior. Design architectures and components satisfy the basic three principles underlying object-oriented approaches:</p>
+
+				<ul>
+					<li><em>Abstraction</em> - this is the removal or neglecting of unnecessary detail. Levels of abstraction are supported by moving up and down the hierarchy of composed components.</li>
+
+					<li><em>Encapsulation</em> - components encapsulate local behavior and information, and only expose activity at their interfaces. Components thereby provide information-hiding facilities.</li>
+
+					<li><em>Modularity</em> - the architecture provides an organizing structure of components which dictates the component compositions and interactions.</li>
+				</ul>
+
+				<p>Any design approach which produces a decomposition into components may be used to provide an outline design architecture. The main activities are as follows:</p>
+
+				<ul>
+					<li>Identify the main actions and interactions of the system.</li>
+					<li>Identify the main components of the system.</li>
+					<li>Structure the components into an architecture.</li>
+				</ul>
+
+				<p>The aim is to produce an outline architecture that can be used to informally check that all the required system functionality is satisfied. This would include informal checks that the use case scenarios are supported and that the properties of interest are satisfied.</p>
+
+				<p class="i">However, in order to check the adequacy and validity of a proposed design in a more rigorous manner, it is necessary to model the system behavior more precisely. A structure diagram model can be used as a precise form of design architecture for a system. Structure diagrams were introduced in Chapter 3 and have been used in subsequent chapters to describe the structure of the models in terms of processes and their interactions. Processes model components and composite processes model composite components. Action hiding, relabeling and sharing are used to model component encapsulation and interaction respectively.</p>
+
+				<section class="subsection" data-number="2" data-name="A Cruise Control System">
+
+					<h4>8.1.1 A Cruise Control System</h4>
+
+					<p><span class="first-sentence">An automobile cruise control system has the following requirements.</span> It is controlled by three buttons: <em>resume</em>, <em>on</em> and <em>off</em> (Figure 8.1). When the engine is running and <em>on</em> is pressed, the cruise control system records the current speed and maintains the car at this speed. When the accelerator, brake or <em>off</em> is pressed, the cruise control system disengages but retains the speed setting. If <em>resume</em> is pressed, the system accelerates or de-accelerates the car back to the previously-recorded speed.</p>
+
+					<div class="pagebreak pageNumber">162</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure8-1.png">
+						<figcaption><strong>Figure 8.1</strong> Cruise control system.</figcaption>
+					</figure>
+
+					<p>The hardware that supports the cruise control system is shown in Figure 8.2. It consists of a Parallel Interface Adapter (PIA) which records the actions of the buttons (<em>on</em>, <em>off</em> and <em>resume</em>), the brake (pressed), the accelerator (pressed) and the engine (on or off). The PIA is polled periodically every 100 msec to determine if any of these actions has occurred. A wheel revolution sensor generates interrupts for every wheel revolution in order to enable the system to calculate the current speed of the car. The cruise control system controls the car speed by setting the throttle of the car via a digital-to-analog converter (D/A).</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure8-2.png">
+						<figcaption><strong>Figure 8.2</strong> Hardware constraints.</figcaption>
+					</figure>
+
+				</section>
+
+				<section class="subsection" data-number="3" data-name="Structure of the Model">
+
+					<h4>8.1.2 Structure of the Model</h4>
+
+					<p><span class="first-sentence">The structure diagram and actions for the cruise control system shown in Figure 8.3 can be produced using the following design activities:</span></p>
+
+					<ul>
+						<li>Identify the main actions and interactions of the system.</li>
+						<li>Identify and define the main processes of the system.</li>
+						<li>Identify the main properties of the system.</li>
+						<li>Structure the processes into a structure diagram.</li>
+					</ul>
+
+					<p>These activities correspond to those used in previous chapters and are a refined version of those described above for producing a design architecture. The additional</p>
+
+					<div class="pagebreak pageNumber">163</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure8-3.png">
+						<figcaption><strong>Figure 8.3</strong> Structure diagram for the cruise control system.</figcaption>
+					</figure>
+
+					<p>consideration of the properties is to ensure that the model includes those actions necessary for property checking, either as shared actions or actions internal to a process. For instance, we wish to ensure that the cruise control system is disengaged when the brake, accelerator or <em>off</em> button is pressed and that the throttle is eventually set. We discuss these properties later in the chapter.</p>
+
+
+					<p class="i">The main internal control for the cruise control system is provided by two processes: the cruise controller and the speed control. The interface to the external sensors and actuators is provided by the other three processes: sensor scan, input speed and throttle. The cruise controller receives the buttons, brake, accelerator and engine events from the sensor scan. The input speed process monitors the speed when the engine is on and provides the current speed readings to the speed control. Depending on the circumstances, cruise controller triggers clear or record the speed, and enable or disable the speed control. The speed control then sets the throttle accordingly. In this way, the sensor scan encapsulates (information hiding) the periodic process of scanning the sensors, the cruise controller encapsulates the decision as to when speed maintenance is activated, and the speed control encapsulates how to record and maintain speed.</p>
+
+					<p class="i">As described in earlier chapters, it is beneficial to model and analyze the system design before embarking on implementation. Parallel composition can be used to compose the system from the model processes according to the composition hierarchy. Animation can be used for scenario checking, and automated model checking can be used for verification of safety and progress properties.
+					</p>
+
+					<div class="pagebreak pageNumber">164</div>
+
+				</section>
+
+				<section class="subsection" data-number="4" data-name="Model Elaboration">
+
+					<h4>8.1.3 Model Elaboration</h4>
+
+					<p><span class="first-sentence">Each of the processes is defined in Figure 8.4.</span> The sensors are repeatedly scanned; the input speed is repeatedly monitored when the engine is on; and, when the throttle is set, the car "zooms" off! Speed control is initially disabled. It clears and records the current speed setting, and, when it is enabled, it sets the throttle according to the current speed and the recorded speed. The behavior of the cruise controller is as follows. When the engine is switched on, <code>clearSpeed</code> is triggered and the cruise controller becomes active. When active, pressing the <em>on</em> button
+					triggers recording the current speed and enables the speed control. The system is then cruising. Pressing the <em>on</em> button again triggers recording the new current speed and the system remains cruising. Pressing the <em>off</em> button, brake or accelerator disables the speed control and sets the system to standby. Switching the engine off at any time makes the system inactive.</p>
+
+					<pre>
+<strong>set</strong> Sensors = {engineOn, engineOff, on, off,
+               resume, brake, accelerator}
+<strong>set</strong> Engine  = {engineOn, engineOff}
+<strong>set</strong> Prompts = {clearSpeed, recordSpeed,
+               enableControl, disableControl}
+
+SENSORSCAN = ({Sensors} -> SENSORSCAN).
+
+INPUTSPEED = (engineOn -> CHECKSPEED),
+CHECKSPEED = (speed -> CHECKSPEED
+             |engineOff -> INPUTSPEED
+             ).
+
+THROTTLE = (setThrottle -> zoom -> THROTTLE).
+
+SPEEDCONTROL = DISABLED,
+DISABLED = ({speed, clearSpeed, recordSpeed}->DISABLED
+           | enableControl -> ENABLED
+           ),
+ENABLED  = ( speed -> setThrottle -> ENABLED
+           |{recordSpeed, enableControl} -> ENABLED
+           | disableControl -> DISABLED
+           ).
+
+<strong>set</strong> DisableActions = {off, brake, accelerator}
+        			</pre>
+
+        			<figcaption><strong>Figure 8.4</strong> Model for the cruise control system.</figcaption>
+
+        			<div class="pagebreak pageNumber">165</div>
+
+        			<pre>
+CRUISECONTROLLER = INACTIVE,
+INACTIVE =(engineOn -> clearSpeed -> ACTIVE
+          |DisableActions -> INACTIVE
+          ),
+ACTIVE   =(engineOff -> INACTIVE
+          |on->recordSpeed ->enableControl ->CRUISING
+          |DisableActions -> ACTIVE
+          ),
+CRUISING =(engineOff -> INACTIVE
+          |DisableActions ->disableControl ->STANDBY
+          |on ->recordSpeed ->enableControl ->CRUISING
+          ),
+STANDBY  =(engineOff -> INACTIVE
+          |resume -> enableControl -> CRUISING
+          |on->recordSpeed ->enableControl ->CRUISING
+          |DisableActions -> STANDBY
+          ).
+					</pre>
+
+					<figcaption><strong>Figure 8.4</strong> (<em>Continued</em>).</figcaption>
+
+					<p>The corresponding LTS diagram for each of these processes can be inspected to check that the process does indeed model the desired, intuitive behavior. For example, the <code>INPUTSPEED</code> and <code>SPEEDCONTROL</code> LTS diagrams are shown in Figures 8.5 and 8.6 respectively. The LTS diagrams for <code>SPEEDCONTROL</code> and</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure8-5.png">
+						<figcaption><strong>Figure 8.5</strong> LTS diagram for <code>INPUTSPEED</code>.</figcaption>
+					</figure>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure8-6.png">
+						<figcaption><strong>Figure 8.6</strong> LTS diagram for <code>SPEEDCONTROL</code>.</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">166</div>
+
+					<p><code>CRUISECONTROLLER</code> are rather complex for easy inspection. At this stage it is often easier to use animation as a means of checking the general process behavior. For instance, the CONTROL subsystem (Figure 8.3) is composed as follows:</p>
+
+					<pre>
+||CONTROL =(CRUISECONTROLLER||SPEEDCONTROL).
+					</pre>
+
+					<p>It can be animated to produce answers to the following questions:</p>
+
+					<ul class="in-paragraph">
+						<li>- Is control enabled after the engine is switched on and the <em>on</em> button is pressed?</li>
+
+						<li>- Is control disabled when the brake is then pressed?</li>
+
+						<li>- Is control enabled when resume is then pressed?</li>
+					</ul>
+
+					<p>The trace depicted on Figure 8.7 confirms this behavior: Note that the trace also illustrates that, when control is enabled, the speed input causes the throttle to be set, and when disabled, it does not. Although various scenarios help to improve our confidence in the adequacy of the model and its behavior, they do not provide an exhaustive check over all possible execution paths. To this end, we need to specify the safety properties of interest.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure8-7.png">
+						<figcaption><strong>Figure 8.7</strong> <code>CONTROL</code> trace.</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">167</div>
+
+				</section>
+
+				<section class="subsection" data-number="5" data-name="Safety Properties">
+
+					<h4>8.1.4 Safety Properties</h4>
+
+					<p><span class="first-sentence">Safety checks are compositional in the sense that, if there is no violation at a subsystem level, then there cannot be a violation when the subsystem is composed with other subsystems.</span> This is because, if the <code>ERROR</code> state of a particular safety property is unreachable in the LTS of the subsystem, it remains unreachable in any subsequent parallel composition which includes the subsystem. Safety checks can therefore be conducted directly on the subsystems which exhibit the behavior to be checked. The following guidelines are used when performing safety checks:</p>
+
+					<div class="definition">Safety properties should be composed with the appropriate system or subsystem to which the property refers. In order that the property can check the actions in its alphabet, these actions must not be hidden in the system.</div>
+
+					<p>A safety property required of the <code>CONTROL</code> subsystem is as follows:</p>
+
+					<pre>
+<strong>property</strong> CRUISESAFETY =
+      ({DisableActions,disableControl}
+                   -> CRUISESAFETY
+      |{on,resume} -> SAFETYCHECK
+      ),
+SAFETYCHECK =
+      ({on,resume} -> SAFETYCHECK
+      |DisableActions -> SAFETYACTION
+      |disableControl -> CRUISESAFETY
+      ),
+SAFETYACTION =(disableControl->CRUISESAFETY).
+					</pre>
+
+					<p>This property states that, if the <code>CONTROL</code> subsystem is enabled by pressing the on or resume buttons, then pressing the off button, the brake or the accelerator should result in the control system being disabled. The LTS diagram for this property is shown in Figure 8.8. We compose <code>CRUISESAFETY</code> with the <code>CONTROL</code> subsystem processes (Figure 8.3) as follows:</p>
+
+					<pre>
+||CONTROL =
+     (CRUISECONTROLLER||SPEEDCONTROL||CRUISESAFETY).
+     				</pre>
+
+     				<div class="pagebreak pageNumber">168</div>
+
+     				<figure>
+     					<img src="/contents/concurrency/images/figure8-8.png">
+     					<figcaption><strong>Figure 8.8</strong> LTS diagram for the property <code>CRUISESAFETY</code>.</figcaption>
+     				</figure>
+
+  					<p>Safety analysis using LTSA produces the following violation:</p>
+
+  					<pre>
+Trace to property violation in CRUISESAFETY:
+	engineOn
+	clearSpeed
+	on
+	recordSpeed
+	enableControl
+	engineOff
+	off
+	off
+					</pre>
+
+					<p class="i">This indicates a violation of the safety property in rather strange circumstances. If the system is enabled by switching the engine on and pressing the <em>on</em> button, and then the engine is switched off, it appears that the control system is not disabled, and disabling actions such as pressing the <em>off</em> button can be performed without the system being disabled. What if the engine were switched on again?</p>
+
+					<div class="pagebreak pageNumber">169</div>
+
+					<p>To investigate this, we can animate the control system to produce a trace as follows:</p>
+
+					<pre>
+engineOn
+clearSpeed
+on
+recordSpeed
+enableControl
+engineOff
+engineOn
+speed
+setThrottle
+speed
+setThrottle
+...
+					</pre>
+
+					<p class="i">If the control system remains enabled, then the car will accelerate and zoom off when the engine is switched on again! This is a highly dangerous situation and one that should definitely be avoided.</p>
+
+					<p class="i">To further investigate the circumstances which lead to this violation, we can also examine a minimized LTS diagram of the control system, without the safety property and in which only the <code>Sensors</code> and <code>speed</code> actions are visible:</p>
+
+					<pre>
+||CONTROLMINIMIZED =(CRUISECONTROLLER||SPEEDCONTROL) 
+                    @ {Sensors, speed}.
+                    </pre>
+
+                    <p class="i">Action hiding and minimization help to reduce the size of the diagram and make it easier to interpret. <code>CONTROLMINIMIZED</code> produces the LTS diagram in Figure 8.9 which clearly illustrates the situation where, once the engine is switched on again, the only action which can be performed is speed.</p>
+
+                </section>
+
+                <section class="subsection" data-number="6" data-name="Revising the Model">
+
+                	<h4>8.1.5 Revising the Model</h4>
+
+                	<p><span class="first-sentence">How can this potentially catastrophic situation be avoided?</span> It is clear that control should be disabled when the engine is switched off. This would ensure that control is not enabled when the engine is switched on again. The required change to the <code>CRUISECONTROLLER</code> is as follows:</p>
+
+                	<pre>
+...
+CRUISING =(engineOff -> <strong>disableControl</strong> -> INACTIVE 
+          |DisableActions->disableControl->STANDBY 
+          |on->recordSpeed->enableControl->CRUISING
+          ),
+...
+					</pre>
+
+					<div class="pagebreak pageNumber">170</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure8-9.png">
+						<figcaption><strong>Figure 8.9</strong> Minimized LTS diagram for <code>CONTROLMINIMIZED</code>.</figcaption>
+					</figure>
+
+					<p class="i">The <code>CRUISESAFETY</code> safety property did not include a check on the engine status. This must now be included to form an improved safety property:</p>
+
+					<pre>
+<strong>property</strong> IMPROVEDSAFETY =
+      ({DisableActions,disableControl,
+           <strong>engineOff</strong>} -> IMPROVEDSAFETY 
+      |{on,resume}    -> SAFETYCHECK 
+      ),
+SAFETYCHECK =
+      ({on,resume}    -> SAFETYCHECK
+      |{DisableActions,<strong>engineOff</strong>}
+                      -> SAFETYACTION
+                    </pre>
+
+                    <div class="pagebreak pageNumber">171</div>
+
+                    <pre>
+      |disableControl -> IMPROVEDSAFETY
+      ),
+SAFETYACTION =
+      (disableControl -> IMPROVEDSAFETY).
+      				</pre>
+
+      				<p class="i">We can now repeat the analysis process as before. This time there are no safety violations. The minimized control system, as shown in Figure 8.10, is clearly reassuring. It indicates that the control system returns to the initial state when the engine is switched off.</p>
+
+      				<figure>
+      					<img src="/contents/concurrency/images/figure8-10.png">
+      					<figcaption><strong>Figure 8.10</strong> Minimized LTS diagram for the revised <code>CONTROLMINIMEZED</code>.</figcaption>
+      				</figure>
+
+      				<p class="i">We can now hide internal actions and proceed with the composition of that subsystem to form the complete cruise control system.</p>
+
+      				<pre>
+||CONTROL = 
+  (CRUISECONTROLLER||SPEEDCONTROL||IMPROVEDSAFETY) 
+     @ {Sensors,speed,setThrottle}.
+     				</pre>
+
+     				<div class="pagebreak pageNumber">172</div>
+
+     				<pre>
+||CRUISECONTROLSYSTEM = 
+     (CONTROL||SENSORSCAN||INPUTSPEED||THROTTLE).
+     				</pre>
+
+     				<p class="i">Safety analysis using LTSA verifies that the <code>CRUISECONTROLSYSTEM</code> does not deadlock nor violate the revised safety property.</p>
+
+     			</section>
+
+     			<section class="subsection" data-number="7" data-name="Progress Properties">
+
+     				<h4>8.1.6 Progress Properties</h4>
+
+     				<p><span class="first-sentence">Progress checks are <em>not</em> compositional.</span> Even if there is no violation at a subsystem level, there may still be a violation when the subsystem is composed with other subsystems. This is because an action in the subsystem may satisfy progress yet be unreachable when the subsystem is composed with other subsystems which constrain its behavior. Furthermore, action priority acts to discard lower priority action transitions in preference to higher priority ones. With parallel composition, higher priority actions may become unreachable thereby removing particular choices and requiring the restoration of the lower priority actions. We therefore conduct progress checks on the complete target system.</p>
+
+     				<div class="definition">Progress checks should be conducted on the complete target system after satisfactory completion of the safety checks.</div>
+
+     				<p>We can now subject the cruise control system to progress checks, such as that the throttle is eventually set. In fact, the cruise control system is expected to be capable of operating repeatedly whenever the engine is switched on. Hence, we would expect that <em>no</em> action suffers starvation and that it is always that case that <em>every</em> action can eventually be chosen. We therefore perform a general progress test without specifying particular sets of progress actions. If this general test produces no violations, then we can be certain that there are no violations for any specific progress property. This is the case here, and progress analysis using <em>LTSA</em> on the <code>CRUISECONTROLSYSTEM</code> produces no violations.</p>
+
+     				<p class="i">However, progress analysis on the original, unrevised <code>CRUISECONTROLSYSTEM</code>, without the safety property, produces the following interesting progress violation:</p>
+
+     				<pre>
+Progress violation for actions:
+{accelerator, brake, clearSpeed,
+disableControl, enableControl, engineOff,
+					</pre>
+
+					<div class="pagebreak pageNumber">173</div>
+
+					<pre>
+engineOn, off, on, recordSpeed, resume}
+Trace to terminal set of states:
+	engineOn
+	clearSpeed
+	on
+	recordSpeed
+	enableControl
+	engineOff
+	engineOn
+Cycle in terminal set:
+	speed
+	setThrottle
+	zoom
+Actions in terminal set:
+	{setThrottle, speed, zoom}
+					</pre>
+
+					<p>The trace confirms the interpretation that control is not disabled when the engine is switched off. Switching the engine on again leads to the terminal set in which the only actions permitted are speed input, the setting of the throttle and the resulting car <code>zoom</code> action. This can be clearly seen in Figure 8.9, except that there the actions <code>setThrottle</code> and <code>zoom</code> are hidden.</p>
+
+					<p class="i">Further analysis of the model could be conducted to investigate system behavior under particular adverse conditions. For instance, we could employ action priorities to check progress when sensors are given high priority.</p>
+
+					<pre>
+||SENSORSHIGH = CRUISECONTROLSYSTEM &lt;&lt; {Sensors}.
+					</pre>
+
+					<p>No progress violations are detected. However, if the sensors are given a low priority:</p>
+
+					<pre>
+||SENSORSLOW = CRUISECONTROLSYSTEM &gt;&gt; {Sensors}.
+					</pre>
+
+					<p>then the <code>speed</code> action dominates and, on analysis, we obtain the following violation:</p>
+
+					<pre>
+Progress violation for actions:
+{engineOn, engineOff, on, off, brake,
+accelerator, resume, setThrottle, zoom}
+Path to terminal set of states:
+	engineOn
+	tau
+Actions in terminal set:
+{speed}
+					</pre>
+
+					<div class="pagebreak pageNumber">174</div>
+
+					<p>This seems to indicate that the system may be sensitive to the priority of the action <code>speed</code>. This can be confirmed since, making <code>speed</code> a high priority is similar to making <code>Sensors</code> low, and making <code>speed</code> a low priority results in the following violation:</p>
+
+					<pre>
+Progress violation for actions:
+{speed, setThrottle, zoom}
+Path to terminal set of states:
+Actions in terminal set:
+{engineOn, engineOff, on, off, brake,
+accelerator, resume}
+					</pre>
+
+					<p>Thus, models such as this can be used to indicate system sensitivities. If it is possible that erroneous situations detected in the model may occur in the implemented system, then the model should be revised to find a design which ensures that those violations are avoided. However, if it is considered that the real system will not exhibit this behavior, then no further model revisions are necessary. In this way, model interpretation and correspondence to the implementation are important in determining the relevance and adequacy of the model design and its analysis.</p>
+
+					<p class="i">In the cruise control system, <code>speed</code> monitoring needs to be carefully controlled so that it neither dominates nor suffers from starvation.If we are confident that
+					this can indeed be achieved in our implementation, then we need perform no further modeling. We now turn our attention to an implementation of the cruise control system, based on the model.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="8" data-name="From Models to Implementations">
+
+				<h3>8.2 From Models to Implementations</h3>
+
+				<p><span class="first-sentence">As mentioned, a design architecture describes the gross organization and global structure of the system in terms of its constituent components.</span> In order to support behavior modeling and analysis, the architecture supports an elaborated <em>view</em> of its structure and the behavior of its components. We have used structure diagrams and <em>FSP</em> for this purpose. However, there are other forms of model and analysis that might be of interest (Figure 8.11). These too can be considered as views on the underlying structure, the elaboration adding those particular details of concern. For instance, another example of a view is a performance model, such as a queuing network.</p>
+
+				<p class="i">Our particular concern after modeling is implementation. Note that even the implementation of the system should be considered as an elaboration of the underlying design architecture. Here the detail is the implementation of the component processes as threads and monitors. Maintaining consistency between these views is facilitated by the fact that the architectural structure is common to the different model views and the implementation.</p>
+
+				<div class="pagebreak pageNumber">175</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure8-11.png">
+					<figcaption><strong>Figure 8.11</strong> Design architecture, behavior model and other models.</figcaption>
+				</figure>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure8-12.png">
+					<figcaption><strong>Figure 8.12</strong> Cruise control applet display.</figcaption>
+				</figure>
+
+				<p class="i">The program described in this section provides a simulation for the environment in which the cruise control implementation executes. Our simulation is a Java applet that provides buttons to simulate the actions of accelerating, braking and turning on and off both the engine and the cruise control system. Car speed is displayed on a simulated speedometer, which includes an odometer that registers the distance the car has progressed. A screen shot of the cruise control applet is depicted in Figure 8.12. The display shows the situation in which cruise control</p>
+
+				<div class="pagebreak pageNumber">176</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure8-13.png">
+					<figcaption><strong>Figure 8.13</strong> Cruise control class diagram.</figcaption>
+				</figure>
+
+				<p>has been enabled to maintain the car at a steady speed of 65 miles per hour. The car has moved 1.18 miles since it was started.</p>
+
+				<p class="i">The class diagram for the cruise control program is shown in Figure 8.13. The classes <code>Controller</code> and <code>SpeedControl</code> implement the model processes <code>CRUISECONTROLLER</code> and <code>SPEEDCONTROL</code>. <code>SpeedControl</code> interacts with the car simulation provided by the class <code>CarSimulator</code> via the interface <code>CarSpeed</code>. This interface provides methods to set the throttle and to get the current speed at which the car is traveling. We have introduced this interface so that the classes implementing control are insulated from all the details of the simulation. The interface is listed in Program 8.1.</p>
+
+				<pre class="program">
+<strong>public interface</strong> CarSpeed {
+
+  <strong>public</strong> int getSpeed();
+
+  <strong>public</strong> void setThrottle(double val);
+
+}
+				</pre>
+
+				<p class="program-caption"><strong>Program 8.1</strong> <code>CarSpeed</code> interface.</p>
+
+				<p>When a button is pressed, this event is passed by the <code>Applet</code> class to both the car simulator and the cruise controller using a method call. Thus, the <code>Controller</code> class provides a method corresponding to each button.</p>
+
+				<div class="pagebreak pageNumber">177</div>
+
+				<p class="i">The implementation of <code>Controller</code> follows directly from the model process <code>CRUISECONTROLLER</code>. Each method modifies the control state and invokes speed control actions. The implementation is listed in Program 8.2. <code>Controller</code> is a passive entity; it always reacts to events and does not instigate them. It is implemented as a monitor with each model action becoming a synchronized method.</p>
+
+				<p class="i">In contrast, <code>SpeedControl</code>, listed in Program 8.3, is an active entity. When it is enabled, a thread is created which periodically obtains the current car speed from the car simulator and sets the throttle so that the target cruising speed is maintained. The thread terminates when speed control is disabled. The <code>run()</code> method is also <code><strong>synchronized</strong></code> to prevent interference with the other methods of the class, and uses a wait with timeout to provide periodic execution. The <code>wait(long)</code> method of Java can be used to put the current thread to sleep until it is notified or the specified timeout period (in milliseconds) elapses.</p>
+
+				<pre class="program">
+<strong>class</strong> Controller {
+  <strong>final static</strong> int INACTIVE = 0; <em>// cruise controller states</em>
+  <strong>final static</strong> int ACTIVE = 1;
+  <strong>final static</strong> int CRUISING = 2;
+  <strong>final static</strong> int STANDBY = 3;
+  <strong>private</strong> int controlState = INACTIVE; <em>// initial state</em>
+  <strong>private</strong> SpeedControl sc;
+  Controller(CarSpeed cs, CruiseDisplay disp)
+    {sc=<strong>new</strong> SpeedControl(cs, disp);}
+
+  <strong>synchronized</strong> void brake(){
+    <strong>if</strong> (controlState==CRUISING )
+      {sc.disableControl(); controlState=STANDBY; }
+  }
+
+  <strong>synchronized</strong> void accelerator(){
+    <strong>if</strong> (controlState==CRUISING )
+      {sc.disableControl(); controlState=STANDBY; }
+  }
+
+  <strong>synchronized</strong> void engineOff(){
+    <strong>if</strong>(controlState!=INACTIVE) {
+      if (controlState==CRUISING) sc.disableControl();
+      controlState=INACTIVE;
+    }
+  }
+				</pre>
+
+				<p class="program-caption"><strong>Program 8.2</strong> <code>Controller</code> class.</p>
+
+				<div class="pagebreak pageNumber">178</div>
+
+				<pre class="program">
+  <strong>synchronized</strong> void engineOn(){
+    <strong>if</strong>(controlState==INACTIVE)
+      {sc.clearSpeed(); controlState=ACTIVE;}
+  }
+
+  <strong>synchronized</strong> void on(){
+    <strong>if</strong>(controlState!=INACTIVE)
+      sc.recordSpeed(); sc.enableControl();
+      controlState=CRUISING;
+    }
+  }
+
+  <strong>synchronized</strong> void off(){
+    <strong>if</strong>(controlState==CRUISING )
+      {sc.disableControl(); controlState=STANDBY;}
+  }
+
+  <strong>synchronized</strong> void resume(){
+    <strong>if</strong>(controlState==STANDBY)
+      {sc.enableControl(); controlState=CRUISING;}
+  }
+}
+				</pre>
+
+				<p class="program-caption"><strong>Program 8.2</strong> (<em>Continued</em>).</p>
+
+				<p><code>SpeedControl</code> is the first example we have met of a class that combines both synchronized access methods and a thread. We could have implemented it as two classes, a purely passive entity which encapsulated the <code>state</code> and <code>setSpeed</code> variables and an active entity with only a <code>run()</code> method. However, this would have been unnecessarily complex and would lead to additional methods to set and get the variables. As implemented, the class satisfactorily encapsulates the thread and the methods that control its execution.</p>
+
+			</section>
+
+			<section class="section" data-number="9" data-name="Summary">
+
+				<h3>Summary</h3>
+
+				<p><span class="first-sentence">This chapter has consolidated the model-based approach used in previous chapters.</span> It has described the process of progressing from system requirements through modeling to programming. The main activities were identified, including system decomposition into a model structure and model elaboration, analysis and revision, if necessary. The stage at which properties are checked was also discussed. Safety properties can be checked on system or subsystem models as</p>
+
+				<div class="pagebreak pageNumber">179</div>
+
+				<pre class="program">
+<strong>class</strong> SpeedControl <strong>implements</strong> Runnable {
+  <strong>final static</strong> int DISABLED = 0;
+  <strong>final static</strong> int ENABLED  = 1;
+  <strong>private</strong> int state = DISABLED;
+  <strong>private</strong> int setSpeed = 0;
+  <strong>private</strong> Thread speedController;
+  <strong>private</strong> CarSpeed cs;
+  <strong>private</strong> CruiseDisplay disp;
+
+  SpeedControl(CarSpeed cs, CruiseDisplay disp){
+    <strong>this</strong>.cs=cs; <strong>this</strong>.disp=disp;
+    disp.disable(); disp.record(0);
+  }
+
+  <strong>synchronized</strong> void recordSpeed(){
+    setSpeed=cs.getSpeed(); disp.record(setSpeed);
+  }
+
+  <strong>synchronized</strong> void clearSpeed(){
+    <strong>if</strong> (state==DISABLED) {setSpeed=0; disp.record(setSpeed);}
+  }
+
+  <strong>synchronized</strong> void enableControl(){
+    <strong>if</strong> (state==DISABLED) {
+      disp.enable(); speedController= <strong>new</strong> Thread(this);
+      speedController.start(); state=ENABLED;
+    }
+  }
+
+  <strong>synchronized</strong> void disableControl(){
+    <strong>if</strong> (state==ENABLED) {disp.diable(); state=DISABLED;}
+  }
+
+  <strong>synchronized public</strong> void run() { <em>//the speed controller thread</em>
+    <strong>try</strong> {
+      <strong>while</strong> (state==ENABLED) {
+        double error = (float)(setSpeed-cs.getSpeed())/6.0;
+        double steady = (double)setSpeed/12.0;
+        cs.setThrottle(steady+error); <em>//simplified feed back control</em>
+        wait(500);
+      }
+    } <strong>catch</strong> (InterruptedException e) {}
+    speedController=null;
+}
+				</pre>
+
+				<p class="program-caption"><strong>Program 8.3</strong> <code>SpeedControl</code> class.</p>
+
+				<div class="pagebreak pageNumber">180</div>
+
+				<p>appropriate. Progress checks need to be performed on the overall system model. The mapping of a model structure into an implementation was also described. No particular design method is imposed. We advocate modeling in association with every design method. Modeling complements program design and is particularly useful when constructing concurrent programs.</p>
+
+				<p class="i">A cruise control system for a car was used to illustrate the model-based design approach. This system was briefly introduced in Chapter 1 to motivate modelbased design; it was dealt with in detail in this chapter, giving both the model details and an implementation in Java.</p>
+
+			</section>
+
+			<section class="section" data-number="10" data-name="Notes and Further Reading">
+
+				<h3>Notes and Further Reading</h3>
+
+				<p><span class="first-sentence">There are numerous books that describe software design methods and techniques, most of which include some form of informal modeling and reasoning to help in the design process.</span> However, few use modeling in a rigorous fashion. One of the exceptions is Giorgio Bruno's book, <em>Model-Based Software Engineering</em> (1995), which uses Petri Net models. Another technique of interest is ROOM (Real-Time ObjectOriented Modeling) which combines a language for system structure with state machine models and is supported by the ObjecTime toolset for model execution (Selic, Gullekson and Ward, 1994). Statecharts (Harel, 1987) are supported by the STATEMATE (Harel, Lachover, Naamad, <em>et al</em>., 1990) software tool and are used for the design of reactive systems. A form of statecharts is also incorporated in the UML approach (Fowler and Scott, 1997; Booch, Rumbaugh and Jacobson, 1998), which recognizes the importance of modeling and provides a basketful of modeling notations and techniques. See <span class="url">http://www.uml.org/</span>.</p>
+
+				<p class="i">The car cruise control system used in this chapter is a simplified version of a real system. Actual systems do not disengage when the accelerator is pressed, but retain the speed setting and return the car to that speed when the accelerator is released.</p>
+
+				<p class="i">The example of the car cruise control system is originally due to Grady Booch (1986) who adapted it from an exercise provided by P. Ward at the Rocky Mountain Institute for Software Engineering. Since then, it has been widely used as an example for the design of concurrent and real-time systems. For instance, Hassan Gomaa uses it as a case study in his book, <em>Software Design Methods for Concurrent and Real-Time Systems</em> (1993). Mary Shaw uses it as a common example for <em>Comparing architectural design styles</em> (1995).</p>
+
+				<p class="i">The process of moving from requirements to models is recognized as far from easy. One approach to facilitate early model construction is to synthesize the behavior model using scenarios, such as Message Sequence Charts (MSCs; ITU, 1996). Each scenario is a partial story, describing how system components, the environment and users work concurrently and interact in order to provide system-level functionality. Synthesis is required to combine these so as to</p>
+
+				<div class="pagebreak pageNumber">181</div>
+
+				<p>provide meaningful behavior. There are a number of approaches that generate state chart models from MSCs such as that of Koskimies, Mannisto, Systa, <em>et al</em>. (1998) and Whittle and Schumann (2000). Harel and Kugler (2000) generate state-based behavior models using Live Sequence Charts, an extension to MSCs. Uchitel, Kramer and Magee (2003) have provided an approach to synthesize FSP models from MSCs and an approach to help perform model elaboration (Uchitel, Kramer and Magee, 2004). Extensions to the LTSA support this work.</p>
+
+				<p class="i">The constructed models (whether by design or by synthesis) are intended to provide behavior that represents reality and the user requirements. In much the same way as the simulations are used to demonstrate the behavior of the Java implementations, so graphic animation of model behavior can be useful to help users understand and check model behavior before implementation. Magee, Pryce, Giannakopoulou, <em>et al</em>. (2000) have provided a technique in which LTS behavior models can drive graphical animations. An XML document maps between the model and the animation, implemented as a set of JavaBeans. An extension to LTSA supports this work. Another interesting approach is proposed by Harel and Marelly who propose the use of a mock user as a means for playing in scenarios into an LSC interpreter called the Play-Engine (Harel and Marelly, 2003).</p>
+
+			</section>
+
+			<section class="section" data-number="11" data-name="Exercises">
+
+				<h4>Exercises</h4>
+
+				<ol id="eight">
+
+					<li>
+						<span class="first-sentence">Each of the rooms in a building has a control station for monitoring and controlling the environment.</span> Each control station measures and displays the current temperature and humidity. For each room, the desired temperature and humidity is set by a pair of dials. If the current readings are outside the desired setting by more than 1 %, then the station can control the heating or ventilation accordingly. A central operator station is able to request the current readings from any control station.
+
+						<p class="i">Outline the design structure of a room control station given that it is decomposed into the following processes: sensors, dials, heater -ventilator, display and controller. Provide a model for each process and check that the control station satisfies appropriate safety and progress properties.</p>
+
+						<p class="i">Provide an implementation for the room control station.</p>
+					</li>
+
+					<li>
+						A self-service gas station has a number of pumps for delivering gas to customers for their vehicles. Customers are expected to prepay a cashier for their gas. The cashier activates the pump to deliver gas.
+
+						<p class="i">Provide a model for a simple system with two customers and a gas station with one pump and a cashier. Include in the model a range for the different amounts of payment and that a customer is not satisfied (<code>ERROR</code>) if the incorrect amount of gas is delivered:</p>
+					
+
+					<div class="pagebreak pageNumber">182</div>
+
+						<pre>
+<strong>range</strong> A = 1..3 
+CUSTOMER = (prepay[a:A]->gas[x:A]-> 
+                if (x==a) <strong>then</strong> CUSTOMER 
+                          <strong>else</strong> ERROR
+           ).
+           				</pre>
+
+           				<p class="i">Check the safety and progress properties for this system.</p>
+						<p class="i">Provide a simple Java implementation for the gas station system.</p>
+					</li>
+
+					<li>Extend the gas station model in exercise 8.2 to cater for <em>N</em> customers and <em>M</em> pumps. Specify and check a safety property, FIFO, which ensures that customers are served in the order in which they pay.</li>
+
+				</ol>
+
+			</section>
+
+		</div>
+
+	</div>
+
+</body>
+</html>
+

@@ -1,0 +1,155 @@
+* {
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+#logoutBtn {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+}
+
+.inline {
+	display: inline-block;
+}
+
+#backBtn {
+	position: absolute;
+}
+
+hr {
+	
+	margin-bottom: 1px;
+}
+
+h1.title {
+	font-size: 44px;
+	letter-spacing: -1px;
+}
+
+#CaretBtn {
+	height: 28px;
+}
+
+
+
+
+
+#mainContainer {
+	position: relative;
+}
+
+.vertical-box {
+	display: inline-block;
+	position: absolute;
+	top: 0px;
+	width: 33%;
+	background-color: #CCC;
+}
+
+#userbox {
+	left: 33.5%;
+}
+
+#progbox {
+	left: 67%;
+}
+
+.superpadding {
+	padding: 25px;
+	font-size: 16px;
+}
+
+
+
+
+/* All columns */
+
+	.lib hr, .user hr, .userprogress hr {
+		position: absolute;
+		bottom: 0px;
+		left: 0px;
+		width: 100%;
+		border-top: 1px solid #AAA;
+		border-bottom: 1px solid #EEE;
+		margin-bottom: 1px;
+	}
+
+
+
+
+/* Libraries */
+
+	.lib {
+		position: relative;
+		padding: 10px;
+		cursor: pointer;
+	}
+	
+	.lib:hover {
+		background-color: #C1D6DE;
+	}
+	
+	.lib.active {
+		background-color: #d6e9c6;
+	}
+
+	.libpic {
+		width: 64px;
+		height: 64px;
+		display: inline-block;
+	}
+	
+	.libname {
+		font-size: 24px;
+		position: absolute;
+		top: 22px;
+		left: 80px;
+		display: inline-block;
+		font-weight: bold;
+	}
+	
+	.libdesc {
+		display: inline-block;
+		position: absolute;
+		top: 42px;
+		left: 80px;
+	}
+	
+	
+	
+	
+/* Users */	
+
+	.user {
+		padding: 10px;
+		font-size: 15px;
+		cursor: pointer;
+	}
+	
+	.user:hover {
+		background-color: #C1D6DE;
+	}
+	
+	.user.active {
+		background-color: #d6e9c6;
+	}
+	
+	.dropdown{
+		padding: 5px;
+		text-align: right;
+	}
+	
+	#userDropDown{
+		width: 135px;
+	}
+	
+/* User Progress */
+
+	.userprogress {
+		position: relative;
+		padding: 10px;
+	}
+	
+	

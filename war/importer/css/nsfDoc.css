@@ -1,0 +1,44 @@
+.docHTML #content h3{
+	width: 600;
+	border: #999999;
+	font-weight: 900;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	border-style: solid;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 2px;
+	border-left-width: 0px;
+	margin: 40 0 1 0;
+	color: #CC9900;
+	font-size: 80%;
+}
+.docHTML #content h4 {
+	width: 600;
+	border: #B7B7B7;
+	border-style: solid;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 1px;
+	border-left-width: 0px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-weight: 600;
+	color: #CC9900;
+	font-size: 80%;
+}
+.docHTML #content h1{
+	margin: 0px;
+	font-family: Verdana;
+	font-size: large;
+	font-weight: bold;
+}
+.docHTML{
+	font-family: Arial, Helvetica, sans-serif;
+	min-width: 500px;
+	padding: 0;
+	word-wrap:break-word;
+	padding-right:2px;
+}
+.docHTML p{
+	font-size: small;
+	font-family: Arial, Helvetica, sans-serif;
+}

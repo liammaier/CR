@@ -1,0 +1,2804 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<head>
+
+	<title>Chapter 8 Modeling System Objectives with Goal Diagrams</title>
+	
+</head>
+
+<body>
+
+	<div class="goalmodeling container">
+
+		<section class="section" data-number="0" data-name="Chapter 8 Modeling System Objectives with Goal Diagrams">
+
+			<h1>
+				Chapter 8 Modeling System Objectives with Goal Diagrams
+			</h1>
+
+			<p>
+				This chapter is dedicated to the intentional view of the system we want to model. This view covers the
+				<em>WHY</em>-dimension of requirements engineering. It is provided by a goal model.
+			</p>
+
+			<p>
+				A <em>goal</em> was defined in Chapter 7 as a prescriptive statement of intent the system should satisfy through
+				cooperation of its agents. Such statement is formulated in terms of environment phenomena. The
+				formulation is declarative – unlike operational procedures to “implement” it. We may need to
+				evaluate, negotiate, weaken, or find alternatives to goals – unlike domain properties or hypotheses that
+				are descriptive statements holding regardless of how system agents behave. Goals may refer to
+				highlevel, strategic, coarse-grained objectives the system should fulfill or to lower-level,
+				technical, finergrained prescriptions. The finer-grained a goal is, the fewer agents are required to satisfy it. A
+				<em>requirement</em> was defined in Chapter 7 as a goal under responsibility of a single software agent; an
+				<em>expectation</em> is a goal under responsibility of a single environment agent. The instances of the
+				responsible agent are then the only ones required to restrict their behavior to satisfy the goal.
+			</p>
+
+			<p>
+				The <em>goal model</em> basically shows how the system’s functional and non-functional goals contribute to
+				each other through refinement links down to software requirements and environment assumptions. It
+				may capture alternative ways of refining goals and potential conflicts among them. At its interface
+				with other views of the system, the goal model captures inter-model relationships such as
+				responsibility links between goals and system agents, obstruction links between goals and obstacles,
+				reference links from goals to conceptual objects, or operationalization links between goals and system
+				operations. The model also specifies individual features of each goal such as its name and precise
+				specification, its type, category, priority, the elicitation source it comes from, and so forth. A formal
+				specification of some goals may be optionally provided for further analysis.
+			</p>
+
+			<p>
+				Graphically, a goal model is represented by an AND/OR graph called <em>goal diagram</em>. As we will see,
+				goal nodes in such diagrams are annotated by their features and connected through various types of
+				edges. <em><strong><span class="arial">Refinement</span></strong></em> links indicate how a goal is
+				AND-decomposed into conjoined subgoals. The same
+				goal node can be the target of multiple such links; each of them indicates an alternative way of
+				refining the goal into subgoals. Leaf goals along refinement branches represent software requirements
+				or environment assumptions needed to enforce their parent goals. In a goal diagram,
+				<em><strong><span class="arial">conflict</span></strong></em> links may
+				interconnect goal nodes to capture potential conflicts among them. At the interface with other system
+				views, a goal diagram may show alternative <em><strong><span class="arial">responsibility</span></strong></em>
+				<em>assignments</em> connecting goal nodes to agents,
+				<em><strong><span class="arial">concern</span></strong></em> links connecting goal nodes to the objects
+				they refer to, <em><strong><span class="arial">operationalization</span></strong></em> links connecting goal
+				nodes to the system operations ensuring them, and so forth.
+			</p>
+
+			<p>
+				Goal modeling makes it possible to capture the system <em>as-is</em> and <em>to-be</em> within the same model. In
+				general, both system versions share high-level goals and differ along refinement branches of common
+				parent goals.
+			</p>
+
+			<p>
+				The importance of the goal model derives from the central role played by goals in the RE process (see
+				Section 7.4). In particular, we can derive other models in a systematic way from the goal model such
+				as the object and operation models. Moreover, the goal model enables early forms of RE-specific
+				analysis such as risk analysis, conflict analysis, threat analysis, or evaluation of alternative options (as
+				Part 3 of the book will show).
+			</p>
+
+			<p>
+				Section 8.1 describes how goals are individually characterized within a goal model through various
+				kinds of features annotating them. Section 8.2 discusses goal refinement as a basic mechanism for
+				capturing goal contributions and for interrelating goals, domain properties, and hypotheses. Section
+				8.3 briefly introduces how conflicts among goals may be documented on the goal model for later
+			</p>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					5
+				</span>
+			</div>
+
+<!-- Page 6 -->
+
+			<p>
+				resolution. Section 8.4 introduces other link types to connect goal model items to corresponding items
+				in the object, agent, operation, behavior, and obstacle models. Section 8.5 explains how alternative
+				options can be captured in a goal model through alternative goal refinements and assignments. Section
+				8.6 puts all pieces together by showing how an entire goal model amounts to a special kind of
+				AND/OR graph. Section 8.7 explains how a goal model can be further documented through features
+				attached to goal refinements and assignments. Section 8.8 concludes this chapter by presenting a
+				number of heuristics, tips, and patterns for guiding modelers in the difficult task of building goal
+				models.
+			</p>
+
+		</section> <!-- Section 0 -->
+
+		<section class="section" data-number="1" data-name="8.1 Goal features as model annotations">
+
+			<h2>
+				8.1 Goal features as model annotations
+			</h2>
+
+			<p>
+				In a goal model, each goal is annotated by a number of features to characterize the goal individually.
+				Some of these correspond to slots of the statement templates discussed in Section 4.2.1. To help
+				visualize such annotations, Fig. 8.1 shows possible features of a variety of goals from our running case
+				studies.
+			</p>
+
+			<img src="/contents/goalmodeling/images/ch08img02.png">
+
+			<p>
+				Each goal in a goal model is graphically represented by a parallelogram labelled by the goal’s name,
+				possibly prefixed by its type. The <em><strong><span class="arial">Achieve</span></strong></em>
+				prefix on the first goal in Fig. 8.1 indicates that this goal is a
+				behavioral goal having the specification pattern:
+				<em><span class="arial"><strong>[if</strong> CurrentCondition <strong>then] sooner-or-later</strong>
+				TargetCondition</span></em> (see Section 7.3.1). Similarly, the <em><span class="arial">Maintain</span></em>
+				prefix on the second goal in Fig. 8.1 indicates that the goal is a
+				behavioral one as well, but its specification pattern is:
+				<em><span class="arial"><strong>[if</strong> CurrentCondition <strong>then] always</strong>
+				<span class="normal">GoodCondition</span></em>. The
+				third goal is annotated as a soft goal, to be used for evaluating alternatives.
+				The <strong><span class="arial">Type</span></strong> feature thus
+			</p>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					6
+				</span>
+			</div>
+
+<!-- Page 7 -->
+
+			<p>
+				indicates which class of prescribed or preferred behavior the goal refers to. Its range is
+				<em><span class="arial">{Achieve, Maintain, SogtGoal}</span></em>.
+			</p>
+
+			<p>
+				Only two features are mandatory for any goal in a model: the goal’s name and its specification. All
+				others are optional.
+			</p>
+
+			<ul>
+				<li>
+					The <strong><span class="arial">Name</span></strong>
+					feature must uniquely identify the goal throughout all views of the entire system model.
+				</li>
+				
+				<li>
+					The <strong><span class="arial">Def</span></strong>
+					feature must precisely define, in natural language, what the goal prescribes in terms of
+					phenomena that are monitorable and controllable in the system.
+				</li>
+			</ul>
+
+			<p>				
+				Goal names appearing in the goal model should be as suggestive as possible to enable their use as
+				shortcuts for their complete definition. Names are just strings, however. For precise understanding,
+				documentation, and analysis of goals, they may never replace a complete, adequate, and unambigous
+				goal specification in the <strong><span class="arial">Def</span></strong>
+				feature. Moreover, goal specifications are used as input for the
+				modelbased generation of the requirements document (see Section 16.4).
+			</p>
+
+			<p>
+				In addition to the <strong><span class="arial">Type</span></strong>
+				feature discussed before, the optional features of a goal include the following.
+			</p>
+
+			<ul>
+				<li>
+					<strong><span class="arial">Category</span>:</strong>
+					This feature indicates which taxonomic categories the goal belongs to. For example, the
+					first goal in Fig. 8.1 is concerned with satisfying agent requests whereas the second goal is
+					concerned with keeping the system in safe states. The use of such information for heuristic analyses
+					was discussed in Section 7.3.2.
+				</li>
+
+				<li>
+					<strong><span class="arial">Source</span>:</strong>
+					This feature indicates where the goal is coming from – a stakeholder who brought it up
+					during elicitation, a specific section in some preliminary documentl used during background
+					studies, a standard regulation in the domain, and so forth. For example, the goal
+					<em><span class="arial">Maintain[WorstCaseStoppingDistance]</span></em>
+					in Fig. 8.1 appeared at some place in a study report issued at a
+					preliminary stage of the project. The use of such information for traceability management was
+					discussed in Section 6.3.
+				</li>
+
+				<li>
+					<strong><span class="arial">Priority</span>:</strong>
+					This feature indicates a qualitative level of goal priority for comparison with competing
+					goals. The use of such information for conflict resolution and prioritization was discussed in
+					Section 3.1.3 and Section 3.4, repectively. For example, the goal
+					<em><span class="arial">Maintain[WorstCaseStoppingDistance]</span></em>
+					in Fig. 8.1 is of highest priority, like most safety goals. It should
+					never be weakened in case of conflict with performance goals regarding train speed or frequency,
+					for example.
+				</li>
+
+				<li>
+					<strong><span class="arial">Stability</span>:</strong>
+					This feature indicates a qualitative level of estimated stability with respect to other
+					comparable goals. The use of such information for change anticipation was discussed in Section
+					6.2. Lower-level goals are expected to be less stable than the higher-level goals they contribute to,
+					as alternatives to the former might be considered to satisfy the latter.
+				</li>
+
+				<li>
+					<strong><span class="arial">FitCriterion</span>:</strong>
+					This feature may annotate a <em>soft</em> goal to quantify the extent to which the goal should be
+					met. It can be used for evaluating alternative options against it and for checking whether the goal is
+					satisfactorily met by subgoals. Fit criteria were discussed and illustrated in Section 4.2.1. The aim
+					of this feature is to make soft goal specifications measurable (see also Section 1.1.7). For example,
+					the fit criterion annotating the soft goal <span class="arial"><em>MinimumInteractionWithParticipants</em></span>
+					in Fig. 8.1 provides a measurable threshold for what is meant by “as small as possible” in the goal specification.
+				</li>
+
+				<li>
+					<strong><span class="arial">FormalSpec</span>:</strong>
+					This feature may annotate a behavioral goal to formalize its informal
+					<span class="arial"><strong>Def</strong></span> specification
+					and thereby enable a variety of formal analyses. The use of this feature will be deferred until
+					Chapters 17 and 18. A real-time temporal logic, similar to the one introduced in Section 4.4.2, will
+					be used there to formalize <em><span class="arial">Achieve</span></em> and
+					<em><span class="arial">Maintain/Avoid</span></em> goals. The
+					<span class="arial"><strong>FormalSpec</strong></span> feature allows
+					goalbased models to be analyzed formally for adequacy, consistency, and completeness – in alignment
+				</li>
+			</ul>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					7
+				</span>
+			</div>
+
+<!-- Page 7 -->
+
+			<ul class="invisibleNumber">
+				<li>
+					with the benefits of formal methods discussed in Section 4.4.7. Early formal analysis is especially
+					relevant in the case of safety-critical or security-critical systems as suggested by the train system’s
+					goal <em><span class="arial">Maintain[WorstCaseStoppingDistance]</span></em> in Fig. 8.1.
+				</li>
+			</ul>
+
+			<ul>
+				<li>
+					<strong><span class="arial">Issue:</span></strong>
+					This process-level feature proves very useful in practice. It serves as a placeholder for
+					recording questions raised about the goal during model elaboration. Such questions are to be
+					addressed subsequently in the RE process. For example, the issue annotating the goal
+					<em><span class="arial">Achieve[CopyDueSoonForCheckOut<strong>IfNot</strong>Available]</span></em>
+					in Fig. 8.1 records a modeller’s question that should
+					still be addressed as different types of library users might deserve different service policies.
+				</li>
+			</ul>
+
+		</section> <!-- Section 1 -->
+
+		<section class="section" data-number="2" data-name="8.2 Goal refinement">
+
+			<h2>
+				8.2 Goal refinement
+			</h2>
+
+			<p>
+				The core of the goal model consists of a refinement graph showing how higher-level goals are refined
+				into lower-level ones and, conversely, how lower-level goals contribute to higher-level ones.
+				Refinement graphs were briefly suggested in Section 7.4. We look at them in full detail now.
+			</p>
+
+			<p>
+				In a refinement graph, an <em>AND-refinement</em> link relates a goal to a set of subgoals. This set is called
+				<em>refinement</em> of the parent goal. Each subgoal in the refinement is said to <em>contribute</em>
+				to the parent goal.
+				The meaning of an <em>AND-refinement</em> is that <em>the parent goal can be satisfied by satisfying all subgoals
+				in the refinement.</em>
+			</p>
+
+			<p>
+				For example, Fig. 8.2 shows a possible AND-refinement of the goal
+				<span class="arial"><strong>BookRequestSatisfied</strong></span> in our library
+				system. Graphically, a refinement is represented by a small circle connecting the contributing subgoals
+				to the refined goal; the latter is the target of the directed link. Semantically, this AND-refinement link
+				expresses that the goal <span class="arial">BookRequestSatisfied</span> can be satisfied by satisfying the goal
+				<span class="arial">CopyBorrowed<strong>If</strong>Available</span>
+				and the goal
+				<span class="arial">CopyDueSoonForCheckOut<strong>If</strong>NotAvailable</span>. (The latter subgoal was
+				characterized by an annotation in Fig. 8.1.)
+			</p>
+
+			<img src="/contents/goalmodeling/images/ch08img03.png">
+
+			<p>
+				An AND-refinement of a goal <em>G</em> into subgoals <em>G1, G2, …, Gn</em> should ideally be complete, consistent,
+				and minimal.
+			</p>
+
+			<ul>
+				<li>
+					<em>Complete refinement:</em> The satisfaction of all subgoals <em>G1, G2, …, Gn</em> should
+					be sufficient for the
+					satisfaction of the parent goal <em>G</em> in view of all known domain properties and hypotheses in Dom. In
+					short:<br />
+
+					<p class="center"><em>{G1, G2, …, Gn,Dom} |= G</em></p><br />
+
+					where <span class="arial">S  |= A</span>
+					means: “the statement <span class="arial">A</span>
+					is always satisfied in any circumstance where all statements in
+					<span class="arial">S</span>
+					are satisfied”. In other words, no subgoal is missing for the parent goal to be satisfied. The
+					refinement is then called a <em>complete refinement</em>.<br />
+					A refinement which is arguably complete is graphically represented by a black circle. In Fig. 8.2,
+					the refinement circle should be blackened as it can be argued to be complete – either a copy is
+					available, and letting the requesting patron borrow it ensures that the book request is satisfied, or
+					no copy is available, and making sure that a copy becomes available within two weeks for loan by
+					the requesting patron ensures that the book request is satisfied. All possible cases are thus covered.
+				</li>
+			</ul>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					8
+				</span>
+			</div>
+
+<!-- Page 9 -->
+
+			<ul class="invisibleNumber">
+				<li>
+					To provide such completeness arguments, properties and hypotheses about the domain may be
+					needed as contextual information. We come back to this below, see the example in Fig. 8.4. Getting
+					complete AND-refinements of behavioral goals is obviously essential for requirements
+					completeness. A missing subgoal will result in missing requirements or assumptions to satisfy it.
+					This is the most harmful type of RE error, as we saw it in Chapter 1. Completeness arguments
+					should therefore be provided for mission-critical goals. Refinement patterns may be used
+					informally to achieve this, see Section 8.8 below. Formal techniques for checking refinement
+					completeness can be used as well, see Chapter 18.
+				</li>
+			</ul>
+
+			<ul>
+				<li>
+					<em>Consistent refinement:</em> The subgoals, domain properties, and hypotheses may not contradict each
+					other:<br />
+					
+					<p class="center"><em>{G1, G2, …, Gn, Dom}</em> <span class="arial">|≠  <strong>false</strong></span></p><br />
+					
+					We clearly do not want the parent goal Gto be trivially satisfied – as anything can be argued to
+					hold in inconsistent situations.
+				</li>
+
+				<li>
+					<em>Minimal refinement:</em> If one of the subgoals in the refinement is missing, <em>Gj</em> say, the satisfaction of
+					the parent goal is no longer always guaranteed:<br />
+					
+					<p class="center"><em>{G1, …, Gj-1, Gj+1, …, Gn, Dom}</em> |≠ <em>G</em></p><br />
+
+					In a minimal refinement, the contribution of each subgoal in the refinement is needed for the parent
+					goal to be satisfied. We are not interested in imposing additional restrictions in the refinement that
+					are not strictly required for the satisfaction of the parent goal. (Such additional restrictions might be
+					needed for other reasons; they would then appear in refinements of parent goals capturing such
+					other reasons.)
+				</li>
+			</ul>
+
+			<p>
+				In an AND-refinement of a goal <em>G</em>, a subgoal may itself be AND-refined, and recursively. The parent
+				goal <em>G</em> may thus be the root of an AND-refinement tree. Fig. 8.3 illustrates this for the ANDrefinement in Fig. 8.2.
+			</p>
+
+			<img src="/contents/goalmodeling/images/ch08img04.png">
+
+			<p>
+				The leaf nodes in refinement trees are nodes that need not be refined further. These include goals
+				whose responsibility can be assigned to single software agents (as requirements) or to single
+				environment agents (as expectations), or else descriptive statements used in the refinement. The latter
+				might be domain properties or hypotheses. (Those different types of statements were defined in
+				Section 7.2, see Fig. 7.1.)
+			</p>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					9
+				</span>
+			</div>
+
+<!-- Page 10 -->
+
+			<p>
+				Fig. 8.4 shows leaf nodes in a refinement tree. Graphically, they may be differentiated by a bold
+				border. The “home” shape is used for representing domain properties or hypotheses. Responsibility
+				links are also shown; they are interface links with the agent model, see Section 8.4 below. Hexagons
+				are used for representing system agents, with an inside “fellow” icon if the agent is an environment
+				one.
+			</p>
+
+			<img src="/contents/goalmodeling/images/ch08img05.png">
+
+			<p>
+				Note that one single subgoal may sometimes be sufficient in a complete refinement (see the top
+				refinement in Fig. 8.4).
+			</p>
+
+			<p>
+				Also note that the portion of the goal model showing AND-refinement links will in general be a
+				directed acyclic graphrather than a tree. There might be multiple root goals, and a single goal node
+				may contribute to multiple parent nodes. For example, the goal
+				<span class="arial"><em>HighFrequencyOfTrains</em></span> contributes to
+				the goal
+				<span class="arial"><em>RapidTransportationOfPassengers</em></span> but also to the goal
+				<span class="arial"><em>TransportationCapacityIncreased</em></span> (see Fig.
+				8.5 below). Similarly, the goal
+				<span class="arial"><em>AccurateBookClassificationByTopic</em></span> in the library system contributes to
+				multiple parent goals such as
+				<span class="arial"><em>AccurateAnswerToBiblioQuery</em></span> and
+				<span class="arial"><em>EasyCopyLocalizationInShelves</em></span>.
+			</p>
+
+			<p>
+				It is important to emphasize that refinement links are two-way links – one way showing goal
+				decomposition and the other way showing goal contribution. We may thus identify refinement links
+				<em>top-down</em>, asking ourselves how to satisfy a given goal by some AND-combination of subgoals;
+				<em>bottom-up</em>, asking ourselves which parent goals a given goal contributes to; or in a hybrid way,
+				proceeding bottom-up and then asking ourselves what other refinement links are required for the
+				refinement of the identified parent goal to be a complete one. Goal modeling thus does not entail
+				topdown decomposition, as mistakenly suggested sometimes in the literature on the subject. We come
+				back to this important point in Section 8.8 while discussing heuristics for model building.
+			</p>
+
+			<p>
+				<em><strong>Goal refinement and satisfaction arguments</strong></em>. As suggested in Section 7.4, AND-refinement links in
+				goal models support a rich structure of satisfaction arguments, each taking the form:
+			</p>
+
+			<p class="center">
+				<em>{REFINEMENT, DOM}</em> |= <em>ParentGoal</em>
+			</p>
+
+			<p>
+				where <em>REFINEMENT</em> denotes a set of conjoined subgoals refining a goal
+				<span class="arial"><em>ParentGoal</em></span> possibly in
+				conjunction with domain properties and hypotheses in
+				<span class="arial"><em>DOM</em></span>. By chaining such arguments bottom-up,
+				we may show that a set of requirements and expectations ensure some parent goal, the latter ensuring
+				its own parent goal together with others, and recursively, until some high-level goal of interest is
+				thereby shown to be satisfied.
+			</p>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					10
+				</span>
+			</div>
+
+<!-- Page 11 -->
+
+			<p>
+				For example, consider the goal model fragment in Fig. 8.5 for our train control system. We might
+				argue that the goals
+				<span class="arial"><em>SignalSafelyKeptToStop</em></span> and
+				<span class="arial"><em>TrainStoppedAtBlockEntry<strong>If</strong>StopSignal</em></span> together ensure the
+				goal
+				<span class="arial"><em>Avoid[TrainsOnSameBlock]</em></span>; the latter ensures the goal
+				<span class="arial"><em>Avoid[TrainCollisions]</em></span>; the latter ensures the
+				goal
+				<span class="arial"><em>SafeTransportation</em></span> together with others.
+				At each step in such argumentation tree we should ask
+				ourselves whether some subgoal, domain property, or hypothesis is missing for the refinement of the
+				parent goal to be a complete one.
+			</p>
+
+			<img src="/contents/goalmodeling/images/ch08img06.png">
+
+			<p>
+				When domain properties or hypotheses are used in satisfaction arguments, it is very important to check
+				also whether these are <em>adequate</em>. Fatal RE errors may originate from wrong properties or unrealistic
+				hypotheses. For example, Fig. 8.6 shows a correct goal refinement that involves an inadequate
+				property about the domain (for better precision, we use simple propositions connected by
+				implication/equivalence symbols instead of goal names). The wrong domain property there resulted in
+				a major accident during landing on a rainy day at Warsaw airport, see Section 1.2.1. Chapter 18 will
+				show how this error could have been detected using formal obstacle analysis.
+			</p>
+
+			<img src="/contents/goalmodeling/images/ch08img07.png">
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					11
+				</span>
+			</div>
+
+		</section> <!-- Section 2 -->
+
+		<section class="section" data-number="3" data-name="Representing conflicts among goals">
+
+<!-- Page 12 -->
+
+			<h2>
+				8.3	Representing conflicts among goals
+			</h2>				
+
+			<p>
+				Beside positive contributions among goals, there might be negative ones. Section 3.1.1 introduced the
+				notion of divergence among statements emerging from the RE process. A divergence captures a
+				<em>potential</em> conflict, where some statements become logically inconsistent if a boundary condition
+				becomes true. Goals in a refinement graph might be potentially conflicting in that sense.
+			</p>
+
+			<p>
+				Roughly, the goals <em>G1, G2, …, Gn</em> are <em>divergent</em> in a domain <em>Dom</em> if we can find a feasible boundary
+				condition Bunder which the goals cannot be satisfied together:
+			</p>
+
+			<p class="center">
+				<em>{G1, G2, …, Gn, B,Dom}</em> |= <strong><span class="arial">false</span></strong>
+			</p>
+
+			<p>
+				(Section 16.2.1 will be provide a more complete definition of divergence.)
+			</p>
+
+			<p>
+				Such potential conflicts among goals in a model often occur when the goals originate from multiple
+				sources or viewpoints. For example, the goal
+				<span class="arial"><em>LimitedLoanPeriods</em></span> in Fig. 8.3 may have been formulated
+				by library staff stakeholders whereas somewhere else in the model we might find the goal
+				<span class="arial"><em>CopiesBorrowedAsLongAsNeeded</em></span>
+				that comes from patron interviews.
+			</p>
+
+			<p>
+				We must of course detect such situations and resolve them in some appropriate way. As discussed in
+				Section 3.1.3, resolution should not take place too early in the RE process; conflicting statements
+				might be a source for further elicitation of useful information. It may however be worth capturing
+				potential conflicts in the goal model, when they are suspected, in order to get back to them
+				subsequently for deeper analysis (such analysis will be discussed in Chapters 16 and 18).
+			</p>
+
+			<img src="/contents/goalmodeling/images/ch08img08.png">
+
+			<p>
+				Graphically, a potential conflict among goals is represented by a “flash” icon on a link connecting
+				them. Fig. 8.7 illustrates some possible conflicts in a goal model for the train control system. The goals
+				<span class="arial"><em>DoorsClosedBetweenStations</em></span> and
+				<span class="arial"><em>DoorsOpenWhenAlarm&Stopped</em></span> are potentially conflicting there; the
+				former prescribes train doors to remain always closed between two successive stations whereas the
+				latter prescribes doors to be open in case an alarm is raised and the train is stopped. A feasible
+				boundary condition for conflict consists of a train being stopped between two stations with an alarm
+				raised; under this condition the two goals cannot be satisfied together. (In Chapter 18 we will see how
+				such boundary condition can be derived formally from the goal specifications.) Similarly, the goals
+				<span class="arial"><em>SignalPromptlySetToGo</em></span> and
+				<span class="arial"><em>SignalSafelyKeptToStop</em></span> are potentially conflicting; a too prompt “go” signal
+			</p>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					12
+				</span>
+			</div>
+
+<!-- Page 13 -->
+
+			<p>
+				guarding the block a train is waiting to enter might result in an unsafe situation where two trains are on
+				that block (as the previous train did not have enough time to leave it); this would violate the goal
+				<span class="arial"><em>SignalSafelyKeptToStop</em></span>.
+			</p>
+
+			<p>
+				Soft goals often prescribe some target quantity to be increased or reduced. A frequent situation of
+				potential conflict arises when one soft goal prescribes some quantity to be increased whereas another
+				soft goal prescribes a related quantity to be reduced. For example, the quantity to be increased may
+				refer to some functionality or quality whereas the related quantity to be reduced refers to cost –e.g.,
+				<span class="arial"><em>JournalCoverageIncreased</em></span> vs.
+				<span class="arial"><em>OperationalCostsReducedin</em></span> the library system, or
+				<span class="arial"><em>MoreControllersHired</em></span> vs.
+				<span class="arial"><em>RunningCostsDecreased</em></span> in an air traffic control system.
+				In such situations, it is important to annotate
+				the soft goal with a
+				<span class="arial"><strong>FitCriterion</strong></span> feature so that feasible boundary conditions for conflict can be
+				determined and acceptable thresholds can be found for conflict resolution.
+			</p>
+
+		</section> <!-- Section 3 -->
+
+		<section class="section" data-number="4" data-name="Connecting the goal model with other system views">
+
+			<h2>
+				8.4 Connecting the goal model with other system views
+			</h2>
+
+			<p>
+				The core of a goal model consists of an annotated refinement graph where potential conflicts may be
+				indicated. In addition to refinement and conflict links, the goal diagram representing the goal model
+				generally shows interface links between the goal model and the other submodels of the system model.
+			</p>
+
+			<ul>	
+				<li>
+					The <strong><em>responsibility</em></strong> link type is defined at the interface between the goal model
+					and the agent model.
+					A responsibility assignment of a goal to an agent means that the agent is the only one required to
+					restrict its/her behavior in the system so as to satisfy the goal.<br />
+					
+					Responsibility links were already illustrated in Fig. 8.4 and Fig. 8.6. They will be further discussed
+					when the agent model will be described, see Chapter 11.
+				</li>
+
+				<li>
+					The <strong><em>obstruction</em></strong> link type is defined at the interface between the goal model and the obstacle model
+					introduced for risk analysis. A goal is obstructed by an obstacle if the satisfaction of the obstacle
+					prevents the goal from being satisfied.<br />
+					
+					For example, the goal
+					<span class="arial"><em>TrainStoppedAtBlockSignalIfStopSignal</em></span> in Fig. 8.5 is obstructed by the obstacle
+					<span class="arial"><em>SignalNotVisible</em></span> or the obstacle
+					<span class="arial"><em>TrainDriverUnresponsive</em></span>; the condition of an unresponsive driver
+					failing to react to the “stop” command issued by the train controller does indeed prevent that goal
+					from being satisfied.<br />
+					
+					Obstruction links will be detailed Chapter 9 when the obstacle model will be described.
+				</li>
+
+				<li>
+					The <strong><em>concern</em></strong> link type is defined at the interface between the goal model and the object model. A
+					goal concerns a conceptual object if its specification refers to this object.<br />
+					
+					For example, the goal
+					<span class="arial"><em>Avoid[TrainsOnSameBlock]</em></span> concerns the conceptual entities
+					<span class="arial"><em>Train</em></span> and
+					<span class="arial"><em>Block</em></span>,
+					and the conceptual association
+					<span class="arial"><em>On</em></span> between
+					<span class="arial"><em>Train</em></span> and
+					<span class="arial"><em>Block</em></span>.<br />
+					
+					Concern links will be detailed in Chapter 10 when the object model will be described.
+				</li>
+
+				<li>
+					The <strong><em>operationalization</em></strong> link type is defined at the interface between the goal model and the
+					operation model. A leaf goal is operationalized by a set of operations if the specification of these
+					operations ensures that the goal is satisfied.<br />
+					
+					For example, consider the leaf goal
+					<span class="arial"><em>DoorsStateClosedIfNonZeroMeasuredSpeed</em></span>, defined by<br />
+					
+					<p class="center">
+						<span class="arial"><em>MeasuredSpeed ≠ 0 → DoorsState = ’closed’.</em></span>
+					</p>
+					
+					This goal is operationalized by operations such as
+					<span class="arial"><em>StartTrain</em></span> and
+					<span class="arial"><em>OpenDoors</em></span> through preconditions
+					that restrict their applicability so as to satisfy the goal – e.g.,
+					<span class="arial"><em>“MeasuredSpeed ≠ 0”</em></span> is a precondition
+					on the operation
+					<span class="arial"><em>OpenDoors</em></span>for the satisfaction of that goal.<br />
+					
+					Operationalization links will be detailed in Chapter 12 when the operation model will be described.
+				</li>
+			</ul>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					13
+				</span>
+			</div>
+
+<!-- Page 14 -->
+
+			<ul>
+				<li>
+					The <em><strong>coverage</strong></em> link type is defined at the interface between the goal model and the behavior model.
+					A behavioral goal <em>covers</em> a scenario or a state machine if the sequences of state transitions
+					expressed by the scenario or state machine capture some of the behaviors prescribed by the goal.<br />
+					
+					Section 7.6.1 already introduced this link type and illustrated it for the goal
+					<span class="arial"><em>Maintain[DoorsClosedWhileMoving]</em></span>,
+					see Fig. 7.8. Coverage links will be further discussed in Chapter 13 when the behavior model will be described.
+				</li>
+			</ul>
+
+		</section> <!-- Section 4 -->
+
+		<section class="section" data-number="5" data-name="Modeling alternative options">
+
+			<h2>
+				8.5 Modeling alternative options
+			</h2>
+
+			<p>
+				As mentioned in the introduction to Part 2, it is important for a RE model to capture multiple options
+				that should be considered while engineering the requirements. When they are made explicit in the
+				model, such options can be discussed with stakeholders to assess their pros and cons; they can be
+				evaluated against soft goals; they can be negotiated with decision makers to reach agreement on most
+				satisfactory ones. Multiple alternatives in a model may also capture multiple versions of the modeled
+				system (variants or revisions, see Chapter 6).
+			</p>
+
+			<p>
+				A goal model makes it possible to capture two kinds of alternative options.
+			</p>
+
+			<ul>
+				<li>
+					A goal might be refinable in different ways; each will result in a different system, satisfying a
+					different set of subgoals. Alternative goal refinements are discussed in Section 8.5.1.
+				</li>
+
+				<li>
+					A leaf goal might be assignable to different agents in the system; each alternative assignment will
+					result in a different system, with a different distribution of responsibilities. Alternative
+					responsibility assignments are discussed in Section 8.5.2.
+				</li>
+			</ul>
+
+			<section class="subsection" data-number="6" data-name="Alternative goal refinements">
+
+				<h3>
+					8.5.1 Alternative goal refinements
+				</h3>
+
+				<p>
+					In a refinement graph, a goal node can be the target of multiple AND-refinements. Each refinement is
+					then called <em>alternative</em> for achieving the parent goal. An alternative refinement is thus one set of
+					subgoals, among others, that AND-refines the parent goal (see the definition of refinement in Section
+					8.2). The meaning of multiple alternative refinements is that <em>the parent goal can be satisfied by
+					satisfying all subgoals from any of the alternative refinements</em>.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img09.png">
+				
+				<p>	
+					For example, Fig. 8.8 shows two alternative refinements of the goal
+					<span class="arial"><em>ConstraintsKnownFromRequest</em></span> in
+					the meeting scheduling system. This goal states that
+					<span class="arial"><em>“the time/location constraints of the invited participants
+					listed in the meeting request shall be known to the meeting scheduler”</em></span>.
+					The two refinements connected to the goal
+					<span class="arial"><em>ConstraintsKnownFromRequest</em></span> in Fig. 8.8 express that
+					this goal can be satisfied by satisfying the
+					subgoals
+					<span class="arial"><em>ConstraintsRequested</em></span>,
+					<span class="arial"><em>ConstraintsTransmitted</em></span>, and
+					<span class="arial"><em>CommunicationWorking</em></span>, or, alternatively, by satisfying the subgoals
+					<span class="arial"><em>ConstraintsObtainedFromE-agenda</em></span>,
+					<span class="arial"><em>E-agendaUpToDate</em></span>, and
+					<span class="arial"><em>E-agendaAccessible</em></span>.
+					(In the second alternative, the goal
+					<span class="arial"><em>E-agendaUpToDate</em></span> is an expectation on participants, in the category
+					of accuracy goals.)
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						14
+					</span>
+				</div>
+
+<!-- Page 15 -->
+
+				<p>
+					Fig. 8.9 illustrates alternative goal refinements in our other case studies. In the train control system,
+					the goal
+					<span class="arial"><em>Avoid[TrainCollisions]</em></span> can be satisfied by making sure
+					that a block will always contain one train
+					at most (left alternative in Fig. 8.9) or, alternatively, by allowing multiple trains to be on the same
+					block provided a safe stopping distance is maintained between successive trains (right alternative in
+					Fig. 8.9, see the characterization of this goal in Fig. 8.1). In the library system, the goal
+					<span class="arial"><em>ComprehensiveLibraryCoverage</em></span> can be satisfied by satisfying
+					the goal EffectiveBookSupply(left alternative
+					in Fig. 8.9) or, alternatively, by satisfying the goal
+					<span class="arial"><em>AccessToForeignDigitalLibrary</em></span> (right alternative in
+					Fig. 8.9).
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img10.png">
+
+				<p>
+					Alternative goal refinements generally result in different system designs that will produce different
+					versions of the system. For example, the left alternative in Fig. 8.8 will result in a meeting scheduler
+					with interaction through email whereas the right, e-agenda alternative will result in a meeting
+					scheduler with no interaction with participants for getting their constraints. Similarly, the left
+					alternative for the train system in Fig. 8.9 corresponds to a system design incorporating signal
+					management at every block whereas the right alternative corresponds to a system design without block
+					signals but with dedicated management of acceleration commands to trains. Likewise, purchasing
+					books or subscribing to digital libraries correspond to fairly different system designs for achieving
+					comprehensive coverage.
+				</p>
+
+				<p>
+					A system might of course combine multiple alternatives to be considered under different conditions
+					within the same version. In our meeting scheduling example, a hybrid of the two previous designs,
+					with e-mail or e-agenda interaction depending on the type of participant, should certainly be worth
+					considering. This would however correpond to a third alternative refinement in Fig. 8.8, producing a
+					third possible version of the system.
+				</p>
+
+				<p>
+					Each alternative goal refinement may have its pros and cons, to be evaluated and compared for
+					selection of a best option (see Section 3.3). The pros should correspond to soft goals in the model. If
+					this is not the case, they should be added to the model as new soft goals, possibly to be refined.
+					Similarly, the cons should be conflicting with soft goals; the latter should be added and refined if they
+					are not found in the model. Alternative options are thus a source of further goal elicitation. We come
+					back to this in Section 8.8. Section 16.3 will present techniques for evaluating alternative options
+					based on their contribution to soft goals.
+				</p>
+
+			</section> <!-- Section 6 -->
+
+			<section class="subsection" data-number="7" data-name="Alternative responsibility assignments">
+
+				<h3>
+					8.5.2 Alternative responsibility assignments
+				</h3>
+
+				<p>
+					As introduced in Chapter 1, the WHO-dimension of requirements engineering concerns the distribution
+					of responsibilities among system agents. We need to carefully analyze who is going to be responsible
+					for what.
+				</p>
+
+				<p>
+					At the interface between the goal model and the agent model, <em>responsibility</em> links connect software
+					requirements and environment expectations to corresponding agents. The meaning of assigning a leaf
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						15
+					</span>
+				</div>
+
+<!-- Page 16 -->
+
+				<p>
+					goal to an agent is that the instances of this agent will be the ones (and the only ones) required to
+					restrict their behavior so as to satisfy the leaf goal.
+				</p>
+
+				<p>
+					In general, multiple agents might be candidate for restricting their behavior to ensure some leaf goal.
+					The responsibility for that goal is then assignable to any of them. We capture this in the model through
+					multiple alternative responsibility links between the leaf goal and the candidate agents. Each
+					alternative link is called an <em>assignment</em>.
+				</p>
+
+				<p>
+					Alternative goal assignments result in different system versions. Such versions differ by the
+					distribution of responsibilities among the agents forming the system. From one version to the other,
+					more or less functionality might be automated.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img11.png">
+
+				<p>
+					For example, two alternative assignments might be considered for the goal
+					<span class="arial"><em>FastRunToNextBlockIfGoSignal</em></span> in our train system
+					(see Fig. 8.10). This goal might be under the
+					responsibility of the TrainDriver agent or under the responsibility the TrainController agent in a driverless
+					alternative with increased automation. In the library system, the goal
+					<span class="arial"><em>AccurateBookClassificationByTopic</em></span>
+					is assignable to the
+					<span class="arial"><em>LibraryStaff</em></span> agent or, alternatively, to a software component that would retrieve
+					relevant keywords from electronic abstracts supplied by publishers and classify books accordingly
+					(this component is named
+					<span class="arial"><em>AutoClassifier</em></span> in Fig. 8.10).
+				</p>
+
+				<p>
+					Like for alternative goal refinements, alternative assignments have their respective pros and cons that
+					should be made explicit as soft goals in the goal model. For example, the assignment of the goal
+					<span class="arial"><em>AccurateBookClassificationbyTopic</em></span> to the 
+					<span class="arial"><em>AutoClassifier</em></span> agent might increase development costs and
+					sometimes produce bizarre classifications; the alternative assignment of this goal to the
+					<span class="arial"><em>LibraryStaff</em></span>
+					agent might result in increased load of library staff and in delayed accessibility of books waiting for
+					classification. In the train system, the goal
+					<span class="arial"><em>DoorsClosedWhileNonZeroMeasuredSpeed</em></span> was assigned to the
+					<span class="arial"><em>TrainController</em></span> agent in Fig. 8.4. Alternative assignments might connect this goal to the
+					<span class="arial"><em>TrainDriver</em></span> agent
+					or to the
+					<span class="arial"><em>Passenger</em></span> agent. The responsibility assignment to the
+					<span class="arial"><em>TrainDriver</em></span> agent results in
+					transportation delays and in driver overload; those cons are conflicting with the soft goals of rapid
+					transportation and reduced driver load, respectively. The responsibility assignment to the
+					<span class="arial"><em>Passenger</em></span>
+					agent results in passengers getting control on door opening; this cons is conflicting with safe
+					transportation goals.
+				</p>
+
+				<p>
+					The pros and cons of alternative assignments need to be evaluated and compared for selection of best
+					options. (Section 16.3 will present techniques for evaluating alternatives based on their contribution to
+					soft goals.) As seen from the preceding examples, the goal assignments that will be selected among the
+					considered alternatives determine what will be automated in the system-to-be and what will not – and,
+					correspondingly, what are going to be the requirements on the sofware-to-be and the expectations on
+					the environment. As a result, the <em>boundary</em> between the software-to-be and its environment will be
+					established.
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						16
+					</span>
+				</div>
+
+<!-- Page 17 -->
+
+				<p>
+					Note that alternative goal refinements generally entail different distributions of responsibilities, as
+					illustrated at the bottom of Fig. 8.11 for the meeting scheduling system.
+				</p>
+
+			</section> <!-- Section 7 -->
+
+		</section> <!-- Section 5 -->
+
+		<section class="section" data-number="8" data-name="Goal diagrams as AND/OR graphs">
+
+			<h2>
+				8.6 Goal diagrams as AND/OR graphs
+			</h2>
+
+			<p>
+				The previous sections showed piecewise what goal diagrams look like. Roughly, we have seen graphs
+				where goal nodes are connected together through refinement and conflict links, and connected to items
+				from other models through interface links such as <em>responsibility</em> or <em>operationalization</em> links. Looking
+				more closely at such graphs, we have seen other types of nodes, namely, refinement nodes, “home”
+				nodes capturing domain properties or hypotheses, and nodes from other models that are connected to
+				goals through such interface links. We have also seen that multiple refinements or assignments of the
+				same goal node capture alternative options.
+			</p>
+
+			<p>
+				Fig. 8.11 shows a larger fragment of a goal diagram for our meeting scheduling system. It contains
+				high-level goals, requirements, expectations, refinement/contribution links, and some possible
+				responsibility assignments.
+			</p>
+
+			<img src="/contents/goalmodeling/images/ch08img12.png">
+
+			<p>
+				The core of a goal diagram shows alternative AND-refinements of the system’s goals. It amounts to a
+				special kind of graph known as <em>AND/OR graph</em>. Non-leaf <em>goal</em> nodes are OR-nodes whereas
+				<em>refinement</em> nodes are AND-nodes (see Fig. 8.11).
+			</p>
+
+			<ul>
+				<li>
+					An <em>OR-node</em> is satisfied provided one of its successor nodes is satisfied.
+				</li>
+
+				<li>
+					An <em>AND-node</em> is satisfied provided all its successor nodes are satisfied.
+				</li>
+			</ul>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					17
+				</span>
+			</div>
+
+<!-- Page 18 -->
+
+			<p>
+				(Note that some nodes might have one successor node only.) This semantics of <em>AND</em> and <em>OR</em> nodes is
+				to be taken in a strict, clear-cut sense for behavioral goals. For soft goals, the wording “satisfied” is to
+				be understood as “satisficed” or “more or less satisfied” (see Section 7.3.1).
+			</p>
+
+		</section> <!-- Section 8 -->
+
+		<section class="section" data-number="9" data-name="Documenting goal refinements and assignments with annotations">
+
+			<h2>
+				8.7 Documenting goal refinements and assignments with annotations
+			</h2>
+
+			<p>
+				The same way as we further characterize goals through annotations, we can attach useful features to
+				refinements and assignments for better documentation of the goal model. These features are all
+				optional.
+			</p>
+
+			<ul>
+				<li>	
+					<strong><span class="arial">Name</span></strong>:
+					This feature can be attached to a refinement or to an assignment for unambiguous reference
+					when dealing with alternatives, e.g., “the
+					<span class="arial">ConstraintsThroughE-agenda</span> alternative” for the alternative
+					goal refinement on the right in Fig. 8.8 or “the
+					<span class="arial">DriverlessStart</span> alternative” for the alternative
+					assignment to the
+					<span class="arial">TrainController</span> agent in Fig. 8.12.
+				</li>
+
+				<li>
+					<strong><span class="arial">SysRef</span></strong>:
+					The <em>system reference</em> feature can be attached to a refinement or to an assignment in order
+					to indicate which alternative is taken in which version of the system. For example, the alternative
+					assignment
+					<span class="arial">DriverlessStart</span> and the alternative refinement
+					<span class="arial">AccelerationControl</span> in Fig. 8.12 are <em>both</em>
+					taken in the system version named
+					<span class="arial">SystemToBe</span>.
+				</li>
+
+				<li>
+					<strong><span class="arial">Status</span></strong>:
+					This graphical feature can be attached to a refinement to indicate whether the refinement is
+					arguably complete for satisfying the parent goal. The value “complete” is represented by
+					blackening the refinement circle as introduced before (see Figs. 8.4 or 8.12).
+				</li>
+
+				<li>
+					<strong><span class="arial">Tactic</span></strong>:
+					This feature can be attached to a refinement to document the tactic used for producing it.
+					For example, “
+					<span class="arial">Goal decomposition by cases</span>” is a tactic that was used for refining the goal
+					<span class="arial">BookRequestSatisfied</span> in Fig. 8.2. The tactic “
+					Guard introduction” is attached to the refinement of the
+					goal
+					<span class="arial">FastJourney</span> in Fig. 8.12 to explain how this refinement was found.<br />
+
+					A number of tactics are available as refinement patterns to help modelers refine goals. Section 8.8
+					hereafter will discuss them in detail. Documenting a model with the tactics used for building it
+					makes it much easier to understand.
+				</li>
+			</ul>
+
+			<img src="/contents/goalmodeling/images/ch08img13.png">
+
+			<p>
+				The annotation mechanism can be applied to other link types used for modeling the system. In
+				particular, the <em>conflict</em> links introduced in Section 8.3 may be annotated with the boundary condition
+				making the corresponding goals conflicting.
+			</p>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					18
+				</span>
+			</div>
+
+		</section> <!-- Section 9 -->
+
+		<section class="section" data-number="10" data-name="Building goal models: heuristic rules and reusable patterns">
+
+<!-- Page 18 -->
+
+			<h2>
+				8.8 Building goal models: heuristic rules and reusable patterns
+			</h2>
+
+			<p>
+				Building a complete, consistent, minimal, and adequate goal model for a complex system turns to be
+				surprisingly difficult in practice. This task is especially critical in view of the central role of goals in
+				the RE process (see Section 7.4).
+			</p>
+
+			<p>
+				This section describes a variety of heuristic rules, tips, bad smells, and common refinement patterns to
+				support the model building process. These may guide us in the elaboration of a first draft of the goal
+				model. Such draft will subsequently be enriched from the building of the obstacle, object, agent,
+				operation, and behavior models, as the next chapters will show. The resulting model needs to be
+				consolidated through various forms of analysis, discussed in Chapters 16-18.
+			</p>
+
+			<p>
+				We first consider the elicitation of preliminary goals to start with (Section 8.8.1). Rules for enriching
+				the resulting sketches and for scoping them are provided next (Sections 8.8.2 and 8.8.3). Some
+				common pitfalls are then reviewed (Section 8.8.4). Finally, Section 8.8.5 describes a number of
+				reusable refinement patterns that encode common tactics for goal refinement.
+			</p>
+
+			<section class="subsection" data-number="11" data-name="Eliciting preliminary goals">
+
+				<h3>
+					8.8.1 Eliciting preliminary goals
+				</h3>
+
+				<p>
+					The building of a preliminary draft of the goal model should proceed from the early stages of domain
+					analysis and requirements elicitation. Several heuristics are available for eliciting individual goals to
+					start with. We can analyze the current objectives and problems in the system-as-is, search for
+					intentional keywords in elicitation material, and browse goal taxonomies to explore relevant
+					instantiations.
+				</p>
+
+				<p>
+					<strong><em>(H1) Analyze the current objectives and problems in the system-as-is</em></strong>.
+					As we saw it in Section 1.1.6, the early phases of the RE process are partly concerned with the
+					identification of various types of objectives.
+				</p>
+
+				<ul>
+					<li>
+						There are strategic objectives of the organization, business goals, and policies that are pervasive
+						through any version of the system. When they appear during elicitation, they should be considered
+						as candidate <em>high-level goals</em> for our goal model, to be connected later on to finer-grained
+						contributing goals. In some cases policies might already be connected to underlying business goals
+						through contribution links.<br />
+						
+						For example,
+						“<em><span class="arial">Effective access to state-of-the-art knowledge</span></em>”
+						is a strategic objective of a university that
+						should be found in any version of a library system. Privacy policies regarding staff and students
+						might be relevant as well. In our train system, we might elicit strategic objectives such as
+						“<span class="arial"><em>Serve more passengers”</em></span> or
+						“<span class="arial"><em>Reduce operational costs</em></span>”.
+					</li>
+
+					<li>
+						There are domain-specific objectives that should be preserved from the system-as-is to the systemto-be.
+						Each of these should be found in our goal model.<br />
+
+						For example,
+						“<span class="arial"><em>Satisfy book requests</em></span>” or
+						“<span class="arial"><em>Accurate classification of books</em></span>” are domain-specific concerns
+						that might emerge from domain analysis and are likely to be found in any version of a library
+						system.
+					</li>
+
+					<li>
+						Requirements elicitation is partly concerned with the analysis of problems with the system-as-is in
+						the light of opportunities to be exploited. Each such problem might raise the candidate goal of
+						addressing it in the system-to-be. Multiple candidates might be considered as alternatives in the
+						goal model, namely, to
+						<span class="arial"><em>avoid</em></span>,
+						<span class="arial"><em>reduce</em></span>, or
+						<span class="arial"><em>mitigate</em></span> the problem or its causes by exploiting technology
+						opportunities.<br />
+						
+						For example, one of the problems with the library system-as-is is that
+						“<span class="arial"><em>bibliographical search is restricted to library opening hours</em></span>”
+						(see the list of stakeholder complaints in Section 1.1.2). The goal
+					</li>
+				</ul>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						19
+					</span>
+				</div>
+
+<!-- Page 20 -->
+
+				<ul class="invisibleNumber">
+					<li>
+						“<span class="arial"><em>bibliographical search accessible from anywhere at anytime</em></span>”
+						might be introduced in the goal model to
+						counter this complaint. For the meeting scheduling system, one of the problems emerging from
+						domain analysis is that
+						“<span class="arial"><em>people are unnecessarily inconvenienced by scheduling messages they are not
+						concerned with</em></span>”. The soft goal “avoid unnecessary interactions with invited participants” might be
+						identified as a result – to be subsequently refined so as to make it precise what
+						“<span class="arial"><em>unnecessary interactions</em></span>” means.
+					</li>
+				</ul>
+				
+				<p>
+					<strong><em>(H2) Search for goal-related keywords in elicitation material</em></strong>. Another simple, cheap, and quite
+					effective technique for identifying preliminary goals for the system-to-be consists of applying some
+					standard text search engine to find prescriptive, intentional, or amelioration keywords in interview
+					transcripts and other preliminary documents involved in the elicitation process. The keywords are
+					predefined in a table driving the search. The returned phrases containing such keywords are
+					considered for goal formulations. The underlying justification is that a goal by definition is a
+					prescriptive statement of intent. Many goals moreover prescribe some amelioration with respect to the
+					system-as-is. Table 8.1 shows a table of goal-related keywords that might drive goal search in
+					elicitation material.
+				</p>
+
+				<table>
+					<tbody>
+						<tr>
+							<td>
+								Prescriptive
+							</td>
+
+							<td>
+								<em>shall, should, must, has to, to be, may never, may not, should
+								never, should not, …</em>
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								Intentional
+							</td>
+
+							<td>
+								<em>in order to, so as to, so that, objective, aim, purpose, achieve,
+								maintain, avoid, ensure, guarantee, want, wish, motivate, expected to, …</em>
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								Amelioration
+							</td>
+
+							<td>
+								<em>improve, increase, decrease, reduce, enhance, enable, support, provide, make, …</em>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p class="center">
+					<span class="arial"><strong>Table 8.1 - Keywords for goal search in elicitation material</strong></span>
+				</p>
+
+				<p>
+					For example, a returned phrase such as
+					“<span class="arial"><em>passengers at a station should be informed in time about train arrivals</em></span>”
+					may call for the introduction of a corresponding goal in the goal model.
+				</p>
+
+				<p>
+					Although simple and useful, such blind search has of course limitations. False positives may be
+					obtained. The technique is applied to raw material that may contain many of the defects discussed in
+					Section 1.1.7. It is also sensitive to specific formulations. Each returned phrase must therefore be
+					analyzed in its context for adequacy and precision.
+				</p>
+
+				<p>
+					The intentional keywords listed first in Table 8.1 are however fairly accurate in capturing intents. In
+					particular, keywords such as
+					“<span class="arial"><em>in order to</em></span>”,
+					“<span class="arial"><em>so as to</em></span>”, or
+					“<span class="arial"><em>so that</em></span>” are especially useful. When they are
+					found, phrases like:
+				</p>
+
+				<p class="center">
+					<span class="arial">"In order to <em>X</em>, ... has to <em>Y</em>", "... shall <em>Y</em> to
+					<em>X</em>", "<em>Y</em> so as to <em>X</em>", "<em>Y</em> so that <em>X</em>"</span>
+				</p>
+
+				<p>
+					yield both a goal <em>X</em> and a refinement link from <em>X</em> to a contributing subgoal <em>Y</em>. For example, consider
+					the following phrase from the case study description in Section 1.1.2:
+				</p>
+
+				<p class="center">
+					<span class="arial"><em>The distance between two trains following each other shall always be sufficient to prevent the back
+					train from hitting the front train in case the latter stops suddenly.</em></span>
+				</p>
+
+				<p>
+					This phrase suggests a goal
+					<span class="arial"><em>Avoid [TrainCollision]</em></span> and a subgoal
+					<span class="arial"><em>Maintain [WorstCaseStoppingDistance]</em></span>
+					contributing to it.
+				</p>
+
+				<p>
+					<em><strong>(H3) Instantiate goal categories</strong></em>.
+					Section 7.3.2 described a taxonomy of functional and non-functional
+					goal categories. We can browse such taxonomy and, for each leaf node in the classification tree, look
+					for system-specific instantiations of it.
+				</p>
+
+				<p>
+					For example, we might ask questions about the train system such as: “is there any <em>information</em> goal
+					concerning passengers?”. As a result, we might elicit the goal “
+					<span class="arial"><em>passengers at a station should be informed</em></span>
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						20
+					</span>
+				</div>
+
+<!-- Page 21 -->
+
+				<p>
+					<span class="arial"><em>about train arrivals</em></span>” mentioned previously.
+					For the meeting scheduling system, we might look for
+					instantiations of <em>interoperability</em> goals in view of foreign services the meeting scheduler will have to
+					interact with. We might also look for <em>confidentiality</em> goals concerning participant information. In the
+					library system, we might look for instantiation of <em>accuracy</em> goals relating physical books (and book
+					copies) to their software “image”.
+				</p>
+
+			</section> <!-- Section 11 -->
+
+			<section class="subsection" data-number="12" data-name="Identifying goals along refinement branches">
+
+				<h3>
+					8.8.2 Identifying goals along refinement branches
+				</h3>
+
+				<p>
+					When a goal is found and its features are made precise, we should look for subgoals contributing to it
+					and for parent goals the goal contributes to. Several heuristics are available to support this task.
+				</p>
+
+				<p>
+					<strong><em>(H4) Ask HOW and WHY questions.</em></strong> Let <em>G</em> be a goal already identified. We can systematically
+					identify subgoals and parent goals of Gby asking two kinds of questions about this goal.
+				</p>
+
+				<ul>
+					<li>
+						<em>Goal refinement through HOW questions</em>. Subgoals of <em>G</em> are found by asking questions such as:
+						
+						<ul>
+							<li>						
+								“how can <em>G</em> be satisfied?”,
+							</li>
+
+							<li>
+								“is this subgoal sufficient or is there any other subgoal needed for satisfying <em>G</em>?”
+							</li>
+						</ul>
+					</li>
+
+					<li>
+						<em>Goal abstraction through WHY questions</em>. Parent goals of Gare found by asking questions such as:
+						
+						<ul>
+							<li>							
+								“why should <em>G</em> be satisfied by the system?”,
+							</li>
+
+							<li>
+								“is there any other parent goal that <em>G</em> contributes to?”
+							</li>
+						</ul>
+					</li>
+				</ul>
+
+				<p>
+					A frequent goal acquisition pattern consists of asking a <em>WHY</em> question about goal <em>G</em>, directly followed
+					by a <em>HOW</em> question about the parent goal just found, in order to find “brothers” of <em>G</em> that might be
+					missing for the parent goal to be satisfied.
+				</ul>
+
+				<p>
+					For example, a <em>WHY</em> question about the goal
+					<span class="arial"><em>TrainStoppedAtBlockSignall<strong>If</strong>StopSignal</em></span> in Fig. 8.5 would
+					result in the identification of the goal
+					<span class="arial"><em>Avoid[TrainsOnSameBlock]</em></span>. A <em>HOW</em> question about the latter
+					would then lead to the goal
+					<span class="arial"><em>SignalSafelyKeptToStop</em></span> that might have been overlooked.
+				</p>
+
+				<p>
+					Fig. 8.13 illustrates such HOW/WHY acquisition process on the library system. During interviews,
+					library staff might have expressed the concern of limiting loan periods in time – hence the goal
+					<span class="arial">Maintain[LimitedLoanPeriods]</span> at the bottom of Fig. 8.13. By asking a <em>WHY</em>
+					question about this goal we
+					might identify the upper goal
+					<span class="arial">Maintain[AvailabilityEnforced]</span>. A new <em>WHY</em> question about the latter goal
+					might lead to the identification of the upper goal
+					<span class="arial">Achieve[CopyDueSoonForCheckOutIf<strong>Not</strong>Available]</span>. Back
+					to the previous goal
+					<span class="arial">Maintain[AvailabilityEnforced]</span>, we might ask a HOWquestion about it to find the
+					missing subgoal
+					<span class="arial">Maintain[LimitedLoanAmount]</span>that contributes to it as well.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img14.png">
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						21
+					</span>
+				</div>
+
+<!-- Page 22 -->
+
+				<p>
+					Every time we ask a <em>HOW</em> question about a goal we can ask a <em>HOW ELSE</em> question next, in order to
+					explore alternative options for refining that goal – see Figs. 8.8 and 8.9 for examples.
+				</p>
+
+				<p>
+					<em>WHY</em> questions can also be asked about more operational material in order to identify the underlying
+					goals. This applies particularly to <em>scenarios</em> that frequently arise in elicitation sessions (see Section
+					2.2.5).
+				</p>
+
+				<p>
+					Fig. 8.14 illustrates this point for the meeting scheduling system. The goals
+					<span class="arial">ConstraintsKnownFromRequest</span> and
+					<span class="arial">ParticipantsInformed</span>, appearing in Fig. 8.11, might have been elicited
+					that way from episodes illustrating them in the scenario shown in Fig. 8.14.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img15.png">
+
+				<p>
+					<strong><em>(H5) Split responsibilities</em></strong>. We may constrain <em>HOW</em> questions by requiring the resulting subgoals to
+					involve fewer potential agents in their satisfaction, when such agents are easily identifiable. The set of
+					potential agents that need to cooperate for the satisfaction of the parent goal is thereby decomposed in
+					subsets associated with corresponding subgoals. The use of this heuristic is important for ensuring that
+					the refinement process makes progress towards a stage where all finer-grained goals are assignable as
+					requirements on software agents or expectations on environment agents.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img16.png">
+
+				<p>
+					Fig. 8.15 shows how this heuristic was applied in two refinement examples that appeared previously in
+					this chapter. For example, the goal
+					<span class="arial">ConstraintsKnownFromRequestshould</span> involve the agents Scheduler,
+					which must know the constraints of participants;
+					<span class="arial">Participant</span>, who needs to provide such constraints;
+					and <span class="arial">CommunicationInfrastructure</span>, which must communicate the constraints. The goal refinement was
+					driven by a <em>HOW</em> question constrained by the splitting of responsibilities among those agents.
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						22
+					</span>
+				</div>
+
+<!-- Page 23 -->
+
+				<p>
+					<strong><em>(H6) Identify soft goals by analyzing the pros and cons of alternative refinements</em></strong>.
+					As already noted in Section 8.5, a pros may suggest a soft goal that might not have been identified yet. If so, the
+					corresponding refinement should be connected to this soft goal through a contribution link. In a dual
+					way, a cons may suggest a negated soft goal that might not have been identified yet. If so, the
+					corresponding refinement should be connected to this soft goal via a conflict link.
+				</p>
+
+				<p>
+					For example, the two alternative refinements for the meeting scheduler to know the constraints of
+					invited participants have respective merits (see Fig. 8.16). The
+					<span class="arial">ConstraintsThroughEmail</span> alternative is
+					likely to yield accurate constraints, as people know exactly what their actual constraints are. This
+					alternative also results in invited people being pre-informed that the meeting will take place in the
+					specified date range. On the other hand, the
+					<span class="arial">ConstraintsThroughE-agenda</span>
+					alternative contributes to
+					ensuring minimum interaction and inconvenience with invited participants. For each such merit, we
+					may question whether it should be considered as a soft goal for the system. On the other hand, the
+					downside of the
+					<span class="arial">ConstraintsThroughE-agenda</span>
+					alternative is that it puts extra requirements on the
+					participant’s side, namely, to be equipped with an e-agenda and to make it accessible from outside.
+					Such simple analysis may bring the goal
+					<span class="arial">MinimalRequirementsOnParticipants</span> to light, which the
+					<span class="arial">ConstraintsThroughE-agenda</span> alternative is conflicting with.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img17.png">
+
+				<p>
+					<em><strong>(H7) Identify agent wishes</strong></em>. Another heuristics for further identification of goals consists of reviewing
+					the list of system agents already identified in the current stage of the elicitation process. For each of
+					them, we may ask stakeholders playing the corresponding role at the process level what goals this
+					agent might wish the new system to satisfy.
+				</p>
+
+				<p>
+					In the meeting scheduling system, for example, goals such as 
+					<span class="arial">MinimumInteraction</span> or
+					<span class="arial">MinimalRequirementsOnParticipants</span> are wished by
+					<span class="arial">Participant</span> agents and might be identified that way as
+					well. The goal
+					<span class="arial">SchedulingLoadReduced</span> might appear as a goal wished by the Initiatoragent. In the library
+					system, the goal
+					<span class="arial">BorrowedCopyReturnedOnTime</span> might appear as being wished by
+					<span class="arial">LibraryStaff</span> agents
+					wheras the conflicting goal
+					<span class="arial">CopyBorrowedAsLongAsNeeded</span> might appear as being wished by
+					<span class="arial">Patron</span>
+					agents.
+				</p>
+
+				<p>
+					<em><strong>(H8) Analyze obstacles, threats, and conflicts</strong></em>. Various forms of analysis of the goal model provide
+					another important source for identifying further goals in a consolidated model. In particular, the
+					identification of obstacles to goal satisfaction raises the exploration of new goals to overcome them.
+					The analysis of threats to security goals results in the introduction of countermeasures as new security
+					goals in the goal model. The detection of conflicts among goals may result in new goals to resolve
+					them. These analyses will be detailed in Chapters 9, 16, and 18.
+				</p>
+
+				<p>
+					<strong><em>(H9) Check the converse of Achieve goals</em></strong>. It is often the case that an <em>Achieve</em> goal of form:
+				</p>
+
+				<p class="center">
+					<span class="arial"><strong>if</strong> preCondition <strong>then sooner-or-later</strong> TargetCondition</span>
+				</p>
+
+				<p>
+					has a converse <em>Maintain</em> goal associated with it taking the form:
+				</p>
+
+				<p class="center">
+					<span class="arial"><strong>always (if</strong> Target Condition <strong>then</strong> preCondition)</span>.
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						23
+					</span>
+				</div>
+
+<!-- Page 24 -->
+
+				<p>
+					The latter goal is typically a safety or security goal that may have been overlooked if we were
+					primarily concerned by functional goals so far. If so, we need to integrate this new goal, possibly
+					together with its parents and children, at some appropriate place in the goal model.
+				</p>
+
+				<p>
+					For example, let us suppose that we have found the functional <em>Achieve</em> goal for the A320 braking
+					logic:
+				</p>
+
+				<p class="center">
+					<span class="arial"><strong>if</strong> WheelsPulseOn <strong>then sooner-or-later</strong> ReverseThrustEnabled</span>
+				</p>
+
+				<p>
+					Once this goal has been identified we should question whether the converse prescription makes sense,
+					that is,
+				</p>
+
+				<p class="center">
+					<span class="arial"><strong>always (if</strong> ReverseThrustEnabled <strong>then</strong> WheelsPulseOn).</span>
+				</p>
+
+				<p>
+					This converse is indeed an essential safety goal in this case as enabling reverse thrust before the plane
+					is on ground would result in a disaster. As another example, consider the following standard <em>Achieve</em>
+					goal in an e-shopping system:
+				</p>
+
+				<p class="center">
+					<span class="arial"><strong>if</strong> ItemPaid <strong>then sooner-or-later</strong> ItemSent.</span>
+				</p>
+
+				<p>
+					Using our heuristic, we should question whether the converse prescription makes sense, that is,
+				</p>
+
+				<p class="center">
+					<span class="arial"><strong>always (if</strong> ItemSent <strong>then</strong> ItemPaid),</span>
+				</p>
+
+				<p>
+					which indeed is an essential security goal in any e-shopping system.
+				</p>
+
+				<p>
+					<strong><em>(H10) Check the complementary case of conditional Achieve goals</em></strong>. Logically speaking, this heuristic
+					is a variant of the previous one. Once we have identified an <em>Achieve</em> goal of form:
+				</p>
+
+				<p class="center">
+					<span class="arial"><strong>if</strong> preConditionthen <strong>sooner-or-later</strong> TargetCondition,</span>
+				</p>
+
+				<p>
+					we should ask a <em>WHAT IF</em> question about it to check whether a complementary goal should be
+					prescribed, taking the form:
+				</p>
+
+				<p class="center">
+					<span class="arial"><strong>if not</strong> preCondition <strong>then ??</strong></span>
+				</p>
+
+				<p>
+					For example, we might have identified the functional <em>Achieve</em> goal for our train control system:
+				</p>
+
+				<p class="center">
+					<span class="arial"><strong>if</strong> block signal set to 'go' <strong>then sooner-or-later</strong>
+					the approaching train is on this block.</span>
+				</p>
+
+				<p>
+					The <em>WHAT IF</em> question prompted by this heuristic would then lead us to elicit a companion goal of
+					form:
+				</p>
+
+				<p class="center">
+					<span class="arial"><strong>if</strong> block signal set to 'stop' <strong>then</strong> ??</span>
+				</p>
+
+				<p>
+					which in this case is an essential prescription to be made precise and integrated in the goal model (see
+					Fig. 8.5).
+				</p>
+
+			</section> <!-- Section 12 -->
+
+			<section class="subsection" data-number="13" data-name="Delimiting the scope of the goal model">
+
+				<h3>
+					8.8.3 Delimiting the scope of the goal model
+				</h3>
+
+				<p>
+					While expanding the goal model top-down and bottom-up along refinement branches, we need to
+					know when the goal refinement/abstraction process should stop. The answer is quite simple; it derives
+					from the definition of the concepts of goal, requirement, and expectation (see Chapter 7).
+				</p>
+
+				<p>
+					<strong><em>(H11) Refine goals until they are assignable to single agents</em></strong>.
+					The process of asking <em>HOW</em> questions
+					along a refinement path in the goal model terminates when we reach a fine-grained goal assignable as
+					a requirement on some software agent or as an expectation on some environment agent. The
+					corresponding leaf goal will be operationalized into software operations or environment tasks
+					depending on the type of responsible agent (see Chapter 12).
+				</p>
+
+				<p>
+					For example, the goal
+					<span class="arial">ConstraintRequested</span> in Fig. 8.15 should not be refined futher as it can be
+					assigned to the
+					<span class="arial">Scheduler</span> agent. Similarly, the goal
+					<span class="arial">DoorsStateClosedIfNonZeroMeasuredSpeed</span> is a leaf
+					goal in the goal model as it is assignable as a requirement on the
+					<span class="arial">TrainController</span> agent.
+				</p>
+
+				<p>
+					As we will see it in Chapter 11, agents may have varying granulatities during model elaboration. An
+					agent can be modelled as an aggregation of finer-grained agents. For example, an organizational
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						24
+					</span>
+				</div>
+
+<!-- Page 25 -->
+
+				<p>
+					department with specific goal responsibilities, e.g.,
+					LibraryDepartment, might be decomposed at some
+					stage of the environment modeling process into several operational units with corresponding finergrained
+					roles and responsibilities, e.g.,
+					<span class="arial">LibraryStaff</span>,
+					<span class="arial">SubscriptionService</span>,
+					<span class="arial">BookAcquisitionService</span>, etc.
+					Likewise, a software agent with associated requirements, e.g.,
+					<span class="arial">ConstraintHandler</span> in the meeting
+					scheduling system, might be decomposed during architectural design into finer-grained components
+					with corresponding requirements, e.g.,
+					<span class="arial">constraintRequestor</span> and
+					<span class="arial">constraintCollector</span>. In such cases, the
+					goals under responsibility of the coarser-grained agent must be refined accordingly, with the finergrained
+					subgoals being assigned to the finer-grained subagents (see Section 11.4).
+				</p>
+
+				<p>
+					<strong><em>(H12) Abstract goals until the system’s boundary is reached</em></strong>. The process of asking <em>WHY</em>
+					questions along a refinement path in the goal model terminates when we reach a high-level goal whose parent
+					goals cannot be satisfied through cooperation of the system’s agents only. Such goals fall ouside the
+					scope of the system.
+				</p>
+
+				<p>
+					For example, the goal
+					“<span class="arial"><em>eliminate greenhouse effect</em></span>” is not within the scope of the train control system as
+					it requires the cooperation of additional parties that are not part of the system. The subgoal of meeting
+					transport regulations contributing to it might lie in the system’s scope though. Likewise, goals such as
+					“<span class="arial"><em>make library users cultivated</em></span>” or
+					“<span class="arial"><em>make meeting participants happy</em></span>” require the cooperation of additional
+					parties and therefore fall outside the scope of the system. They are not specifically relevant to the
+					problem world of managing a library or scheduling meetings.
+				</p>
+
+			</section> <!-- Section 13 -->
+
+			<section class="subsection" data-number="14" data-name="Avoiding common pitfalls">
+
+				<h3>
+					8.8.4 Avoiding common pitfalls
+				</h3>
+
+				<p>
+					There are a number of problems, confusions, and bad smells frequently made by novice modellers that
+					we should be aware of and avoid.
+				</p>
+
+				<p>
+					<strong><em>(H13) Do not confuse goals with operations</em></strong>. A goal is conceptually different from a particular action
+					taken to satisfy that goal. For example, the goal of keeping doors closed while a train is moving is
+					different from the action of opening doors under safe conditions to meet that goal.
+				</p>
+
+				<p>
+					A goal captures an objective the system should satisfy; it is specified declaratively. An operation
+					captures a functional service the system should provide to satisfy such objective;. it is specified by
+					conditions characterizing its applicability and effect (see Chapter 12).
+				</p>
+
+				<p>
+					Semantically speaking, a behavioral goal constrains entire sequences of system state transitions; an
+					operation constrains single state transitions within such sequences. For example, the goal
+					<span class="arial">Achieve[CopyBorrowedIfAvailable]</span>
+					in Figs. 8.3 and 8.17 constrains sequences of system state transitions
+					so that a requested book copy if available is eventually borrowed within some acceptable amount of
+					time. On the other hand, the operation
+					<span class="arial">BorrowCopy</span> constrains transitions from a state where the book
+					copy is not borrowed to a state where it is borrowed; in the input state the book must be requested and
+					the copy must be available.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img18.png">
+
+				<p>
+					As we will see it in Chapter 12, operations from the operation model <em>operationalize</em> leaf goals from
+					the goal model – somewhat the same way as programs implement their specification. A goal is in
+					general operationalized through multiple operations ensuring it. On the other hand, an operation may
+					operationalize multiple goals underpinning it. For example, the goal  <span class="arial"><em>DoorsStateClosedIf</em></span>
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						25
+					</span>
+				</div>
+
+<!-- Page 26 -->
+
+				<p>
+					<span class="arial"><em>NonZeroMeasuredSpeed</em></span> will be operationalized through operations such
+					as <span class="arial">OpenDoors</span>, to be applied
+					only when the train is stopped, and <span class="arial">StartTrain</span>, to be applied only when the train has its doors closed.
+					On the other hand, the operation <span class="arial">OpenDoors</span> might itself operationalize other goals, such as
+					<span class="arial">Avoid[PassengersDelayed]</span>, through other restrictions – in this case, the additional restriction of being
+					applied as soon as the train is stopped at a platform.
+				</p>
+
+				<p>
+					Furthermore, some goals may not have an operation counterpart. This is in particular the case of soft
+					goals used for evaluating alternative options (see Section 16.3).
+				</p>
+
+				<p>
+					<em>Terminology tip</em>. To avoid possible confusions between a goal and an operation, use the past
+					participle of some suggestive verb for the goal’s name (e.g., “<span class="arial">CopyBorrowed</span>”), to refer to the target
+					condition the goal prescribes, and the infinitive tense for the name of a corresponding operation (e.g.,
+					“<span class="arial">BorrowCopy</span>”), to refer to single transitions to output states satisfying that target condition.
+				</p>
+
+				<p>
+					<em><strong>(H14) Do not confuse AND-refinements into multiple cases with OR-refinements into multiple
+					alternatives.</strong></em> Through case analysis, we may refine a goal into multiple subgoals where each subgoal
+					specializes the parent goal to some distinct case. This must be captured by an AND-refinement into
+					such subgoals; the refinement is complete if all possible cases that can occur in the target system are
+					covered. The left diagram in Fig. 8.18 illustrates such AND-refinement into multiple cases –here, the
+					case where a copy of the requested book is available and the case where such copy is not available.
+				</p>
+
+				<p>
+					On the other hand, we may refine a goal in different, alternative ways. In such OR-refinement, each
+					alternative entails the parent goal according to some distinct option. Different options result in
+					different system proposals; one single option is taken in the target system. The right diagram in Fig.
+					8.18 illustrates such OR-refinement into multiple alternatives.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img19.png">
+
+				<p>
+					Those two mechanisms for goal refinement are different and should not be confused with each other.
+					An AND-refinement into cases introduces complementary subgoals within the same system. An
+					OR refinement into alternatives introduces subgoals for different systems. In Fig. 18, it would be a
+					modeling error to replace the AND-refinement in the left diagram by alternative refinements like in the
+					right diagram – one for the case <span class="arial"><em>Available</em></span>, another for the case
+					<span class="arial"><strong>Not</strong>Available</span>. It would make no sense to
+					consider one system proposal where requested books always have a copy available and another
+					alternative system proposal where requested books never have a copy available.
+				</p>
+
+				<p>
+					Such error corresponds to the frequent confusion between the <em>“and”</em> and <em>“or”</em> connectives in case
+					analysis. As pointed out in Section 4.1, the correct decomposition of the statement:
+				</p>
+
+				<p class="center">
+					<span class="arial"><strong>If</strong> (Case1 <strong>OR</strong> Case2) <strong>then</strong> &lt;Statement&gt;</span>
+				</p>
+
+				<p>
+					is the statement:
+				</p>
+
+				<p class="center">
+					<span class="arial"><strong>If</strong> Case1 <strong>then</strong> &lt;Statement&gt;
+					<strong>AND if</strong> Case2 <strong>then</strong> &lt;Statement&gt;.</span>
+				</p>
+
+				<p>
+					<strong><em>(H15) Avoid ambiguities in goal specifications</em></strong>. The same goal might be understood in different ways
+					by different people. To avoid this, the goal name should be chosen as a suggestive shortcut for what it
+					prescribes. More importantly, what such name exactly designates must be made fully precise in the
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						26
+					</span>
+				</div>
+
+<!-- Page 27 -->
+
+				<p>
+					goal specification provided in the goal’s <span class="arial"><strong><em>Def</em></strong></span>
+					annotation (see Section 8.1). This specification must be
+					adequate, complete, formulated precisely in terms of measurable system phenomena, and agreed upon
+					by all parties involved in the RE process.
+				</p>
+
+				<p>
+					Consider the goal named <span class="arial"><em>DoorClosedWhileMoving</em></span>,
+					for example. What is it really meant to prescribe? Do
+					we mean that train doors should remain closed in any state where the train is moving? Or do we mean
+					“between stations” instead? What if a train is not moving, e.g., between two successive stations? The
+					answer to all such questions should be crystal clear and unambiguous from the
+					<span class="arial"><strong><em>Def</em></strong></span> annotation. For
+					example, the specification
+					“<span class="arial"><em>train doors shall be closed in any state where the train is moving</em></span>” imposes no
+					restriction on states where the train is not moving; doors may be either open or closed then. Another
+					goal should be introduced then to prescribe some appropriate behavior in case of emergency stop
+					between stations – this goal can be derived from further analysis, as Part 3 of the book will show.
+				</p>
+
+			</section> <!-- Section 14 -->
+
+			<section class="subsection" data-number="15" data-name="Reusing refinement patterns">
+
+				<h3>
+					8.8.5 Reusing refinement patterns
+				</h3>
+
+				<p>
+					The reuse of “pre-canned” patterns provides quite effective guidance in the model elaboration process.
+					Such patterns suggest generic refinements/abstractions for instantiation to the specifics of the
+					modelled system. The technique works as follows.
+				</p>
+
+				<p>
+					<strong>1. Establishing a catalogue of refinement patterns.</strong> Common patterns for refining a goal into
+					subgoals are predefined in a pattern catalogue. Each pattern encodes a specific tactic for goal
+					decomposition.
+				</p>
+
+				<p>
+					A pattern is characterized by a <em>name</em>, an <em>applicability condition</em>, a two-level <em>AND-refinement tree</em>
+					showing how a generic behavioral goal can be refined into generic subgoals, a number of possible
+					<em>variants</em>, and <em>examples</em> of use. The goal specifications refer to parameters representing conditions. For
+					example, the refinement pattern shown as left diagram in Fig. 8.19 hereafter has three parameters:
+					<span class="arial">TargetCondition</span>, <span class="arial">MilestoneCondition</span>,
+					and <span class="arial">CurrentCondition</span>.
+				</p>
+
+				<p>
+					The completeness of each generic AND-refinement in the catalogue is established once for all –
+					through a formal proof, but the user of the pattern has no need to see any formal specification or proof.
+				</p>
+
+				<p>
+					<strong>2. Retrieving reusable refinement patterns.</strong> At system modeling time, we may browse the catalogue
+					to retrieve applicable patterns.
+				</p>
+
+				<ul>				
+					<li>
+						A generic parent goal in some pattern might match the goal currently considered. An AND refinement
+						is then obtained by instantiating the parameters in the generic subgoals to corresponding
+						system-specific conditions, including the parameter instantiations from the matching parent goal.
+						For example, the AND-refinement shown as right diagram in Fig. 8.19 is obtained by instantiating
+						the pattern on the left; the parameters
+						<span class="arial">TargetCondition</span>,
+						<span class="arial">MilestoneCondition</span>, and
+						<span class="arial">CurrentConditionare</span>
+						replaced by
+						<span class="arial">ConvenientMeetingScheduled</span>,
+						<span class="arial">ConstraintsKnown</span>, and
+						<span class="arial">Request</span>, respectively.
+					</li>
+
+					<li>
+						Conversely, a set of generic subgoals in some pattern might match the goals currently considered.
+						The root of a corresponding AND-refinement is then obtained by instantiating the parameters in the
+						generic parent goal to the system-specific parameter instantiations in the matching subgoals. The
+						pattern is thereby used as an  <em>abstraction pattern</em>. For example, the parent goal
+						<span class="arial">Achieve[ConvenientMeetingScheduledFromRequest]</span>
+						in the right diagram in Fig. 8.19 might have been
+						obtained by such reverse application of the pattern in the left diagram.
+					</li>
+
+					<li>
+						More frequently, a generic parent goal together with some subgoals in a pattern might match the
+						partial AND-refinement tree we are currently building. The refinement is then <em>completed</em> by adding
+						the pattern subgoals that were missing in our current AND-refinement, and instantiating their
+						parameters according to the match.
+					</li>
+				</ul>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						27
+					</span>
+				</div>
+
+<!-- Page 28 -->
+
+				<ul>
+					<li>
+						Several candidate patterns might match a current modeling situation. This produces
+						<em>alternative refinements</em> to be considered for inclusion in the goal model and for evaluation against soft goals
+						from the model.
+					</li>
+				</ul>
+
+				<p>
+					<strong>3. Adapting the reused patterns.</strong> The produced refinement, abstraction, or completion may need to
+					be adapted for adequacy with the specifics of the modeled system. To document the refinement and
+					help model users understand it, the resulting refinement/abstraction may be annotated with the name of
+					the pattern that was used (see the “<span class="arial"><strong>Tactic</strong></span>” annotation in Section 8.7).
+				</p>
+
+				<p>
+					<strong>A catalogue of common goal refinement patterns</strong>
+				</p>
+
+				<p>
+					The following patterns encode frequently used refinement tactics. As mentioned before, each pattern is
+					described by a name, an applicability condition, a generic AND-refinement tree, variants, and
+					examples of use from our running case studies.
+				</p>
+
+				<p>
+					<strong><em>The milestone-driven refinement pattern.</em></strong> This pattern is <em>applicable</em> to behavioral
+					<span class="arial"><em>Achieve</em></span> goals where
+					an intermediate condition can be identified as a necessary milestone for reaching the target condition
+					prescribed by the goal. More precisely, any behavior prescribed by the goal must necessarily reach a
+					state satisfying the milestone condition before reaching a state satisfying the target condition.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img20.png">
+
+				<p>
+					<em>Refinement tree</em>. The left diagram in Fig. 8.19 shows the generic AND-refinement tree for this pattern.
+					Remember that the specification of Achievegoals has the following form (see Section 7.3.1):
+				</p>
+
+				<p class="center">
+					<span class="arial"><em>Achieve [TargetCondition]:</em>
+					<strong>[if</strong> CurrentCondition <strong>then] sooner-or-later</strong> TargetCondition</span> ,
+				</p>
+
+				<p>
+					The first subgoal in the left diagram in Fig. 8.19 is an <span class="arial"><em>Achieve</em></span>
+					goal with the milestone condition as
+					target condition; it states that sooner or later the milestone condition must hold if the condition
+					<span class="arial"><em>CurrentCondition</em></span> from the parent goal holds in the current state.
+					The second subgoal is an Achievegoal
+					as well; it states that sooner or later the target condition of the parent goal must hold if the milestone
+					condition holds in the current state. The completeness of the AND-refinement can be established from
+					the definition of what a milestone condition is about.
+				</p>
+
+				<p>
+					<em>Example of use.</em> The right diagram in Fig. 8.19 shows an application of the milestone-driven
+					refinement pattern for building the model fragment in Fig. 8.11. The milestone condition expresses
+					that the constraints of invited participants are known to the scheduler. This condition is indeed a
+					prerequisite for determining a convenient date and location for the meeting. The first
+					<span class="arial"><em>Achieve</em></span> subgoal
+					in the instantiated refinement states that those constraints should be known to the scheduler within
+					some reasonable time; the second subgoal states that a convenient meeting date and location should be
+					determined within some reasonable time once all participant constraints are known.
+				</p>
+
+				<p>
+					<em>Variants</em>. A first variant consists of considering several successive milestones to be reached on any
+					path to a target state. For  <em>n</em> milestones we obtain  <em>n+1</em> subgoals
+					<span class="arial"><em>Achieve[NextMilestoneConditionFromPreviousMilestoneCondition]</em></span>, where 
+					<span class="arial">NextMilestoneCondition</span>  is
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						28
+					</span>
+				</div>
+
+<!-- Page 29 -->
+
+				<p>
+					TargetConditionfor the last subgoal, and <span class="arial">PreviousMilestoneCondition</span> is
+					<span class="arial">CurrentCondition</span> for the first subgoal (<em>n</em> ≥ 1).
+				</p>
+
+				<p>
+					Another variant consists of taking a <em><span class="arial">Maintain</span></em>
+					goal as parent goal in the pattern. The
+					<span class="arial">GoodConditionto</span> be
+					maintained acts as <span class="arial">TargetCondition</span>.
+					The <span class="arial"><em>Achieve</em></span> subgoals, if any, must guarantee that the milestone
+					conditions are established sufficiently fast for the <span class="arial">GoodCondition</span>
+					to be preserved. Fig. 8.20 shows the
+					use of both variants in our train control system. The past participles in subgoal names are written there
+					in bold to suggest corresponding milestone conditions.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img21.png">
+
+				<p>
+					<em>Milestone-driven refinements and scenarios</em>. A milestone-driven goal refinement can often be mapped
+					to a scenario illustrating it. Conversely, an elicited scenario can often be mapped to a milestone-driven
+					goal refinement generalizing it. Each milestone condition then corresponds to a state assertion holding
+					after some interaction along the scenario timeline. For example, the meeting scheduling scenario in
+					Fig. 8.14 corresponds to a milestone-driven refinement of the goal
+					<span class="arial">Achieve[MaximumAttendance]</span> into
+					subgoals 
+					<span class="arial">Achieve[ConstraintsKnownFromRequest]</span>,
+					<span class="arial">Achieve[ConvenientMeetingScheduledFromConstraints]</span>,
+					and
+					<span class="arial">Achieve[ParticipantsInformedOfScheduledmeeting]</span> (see Fig. 8.11).
+				</p>
+
+				<p>
+					<strong><em>Case-driven refinement patterns</em></strong>.
+					These patterns introduce case conditions that guide the refinement
+					of the parent goal. Two frequently used such patterns are the decomposition-by-cases pattern and the
+					guard-introduction pattern.
+				</p>
+
+				<p>
+					<strong><em>The decomposition-by-case pattern</em></strong>. This pattern is
+					<em>applicable</em> to behavioral
+					<span class="arial"><em>Achieve</em></span> goals where
+					different cases can be identified for reaching the target condition. The cases must be disjoint and
+					cover the entire state space.
+				</p>
+
+				<p>
+					<em>Refinement tree</em>. Fig. 8.21 shows the generic AND-refinement tree for this pattern. In each case a
+					specific target condition must be reached. The refinement requires two domain properties, one stating
+					the disjointness and coverage property of the case conditions, the other stating that the disjunction of
+					the specific target conditions must imply the target condition of the parent goal. The completeness of
+					the AND-refinement is derivable by use of those two domain properties.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img22.png">
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						29
+					</span>
+				</div>
+
+<!-- Page 30 -->
+
+				<p>
+					<em>Examples of use</em>. The decomposition-by-case pattern was applied in Fig. 8.2 for refining the goal
+					Achieve[BookRequestSatisfied]
+					into subgoals 
+					<span class="arial">Achieve[CopyBorrowed<strong>If</strong></em>Available]</span>  and
+					<span class="arial">Achieve[CopyCopyDueSoonForCheckOut<strong>IfNot</strong></em>Available]</span>.
+					The domain properties were left implicit there;
+					the first states that if a copy of the requested book is borrowed or due soon for check out by the
+					requesting patron, then the book request is satisfied. The second domain property tautologically states
+					that a book either has an available copy or it has not. Note that the decomposition-by-case pattern
+					could be used for refining the same goal according to different partitions into cases. For example, the
+					goal
+					<span class="arial">Achieve[BookRequestSatisfied]</span> could also be refined into subgoals
+					<span class="arial">Achieve[BookRequest<strong>ByStaff</strong></em>Satisfied]</span>
+					and
+					<span class="arial">Achieve[BookRequest<strong>ByOrdinaryPatron</strong></em>Satisfied]</span>.
+				</p>
+
+				<p>
+					<em>Variants</em>. The pattern in Fig. 8.21 can be trivially generalized to <em>n</em>
+					disjoint cases covering the entire
+					state space, with specific target conditions associated with each of them (<em>n</em>  ≥  2). It can also be
+					particularized to the situation where the target conditions in the various cases all amount to the target
+					condition of the parent goal. Fig. 8.22 illustrates the use of the latter variant for refining the goal
+					<span class="arial">ConvenientMeetingScheduledFromConstraints</span> that appeared in Fig. 8.11.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img23.png">
+
+				<p>
+					Another variant concerns the decomposition of <span class="arial"><em>Maintain/Avoid</em></span>
+					goals by cases. The corresponding
+					pattern is defined by replacing
+					“<span class="arial"><em>Achieve</em></span>” by
+					“<span class="arial"><em>Maintain</em></span>” and
+					“<span class="arial"><em>TargetCondition</em></span>” by
+					“<span class="arial"><em>GoodCondition</em></span>” in Fig.
+					8.21.
+				</p>
+
+				<p>
+					<em><strong>The guard-introduction pattern</strong></em>. This pattern is a case-driven refinement pattern
+					<em>applicable</em> to
+					behavioral <span class="arial"><em>Achieve</em></span>
+					goals where a guard condition must necessarily be set for reaching the target
+					condition.
+				</p>
+
+				<p>
+					<em>Refinement tree</em>. Fig. 8.23 shows the generic AND-refinement tree for this pattern. The first subgoal of
+					the <span class="arial"><em>Achieve</em></span>
+					goal states that the target condition must be reached from a current condition where in
+					addition the guard condition must hold. The second subgoal states that the guard condition must be
+					reached as a target from that current condition. The third subgoal states that the current condition must
+					always remain true unless the target condition of the parent goal is reached.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img24.png">
+
+				<p>
+					<em>Example of use</em>. The guard-introduction pattern was applied for refining the train system goal
+					<span class="arial">Achieve[FastJourney]</span>
+					in Fig. 8.12. In this example, the guard for reaching the next block is the
+					condition  GoSignal. The subgoals obtained by pattern instantiation are
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						30
+					</span>
+				</div>
+
+<!-- Page 31 -->
+
+				<p>
+					<span class="arial">Achieve[FastRunToNextBlock<strong>If</strong>GoSignal]</span>,
+					<span class="arial">Achieve[SignalPromptlySetToGo]</span>, and
+					<span class="arial">Maintain[TrainWaiting] <strong>Unless</strong> OnNextBlock</span>.
+				</p>
+
+				<p>
+					Matching this pattern with the refinement of the same parent goal in Fig. 8.7, we conclude that the
+					refinement there is incomplete due to the missing subgoal
+					<span class="arial">Maintain[TrainWaiting] <strong>Unless</strong> OnNextBlock</span>.
+					The completeness of the guard-introduction pattern can be established formally in temporal logic, and
+					such completeness check can be automated, as we will see it Chapter 18.
+				</p>
+
+				<p>
+					<em><strong>The divide-and-conquer pattern</strong></em>.
+					This pattern is <em>applicable</em>
+					to
+					<em><span class="arial">Maintain</span></em> goals where the
+					<span class="arial">GoodCondition</span>
+					to be preserved is composed of two conjoined conditions.
+				</p>
+
+				<p>
+					<em>Refinement tree</em>. Fig. 8.24 shows the generic AND-refinement tree for this pattern. The parent goal
+					states that the conjoined good conditions must always be preserved unless some
+					<span class="arial">EndCondition</span> becomes
+					true. The refinement consists of splitting the parent goal according to the splitting of its good
+					conditions.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img24.png">
+
+				<p>
+					<em>Example of use</em>.
+					Fig. 8.24 also shows an application in the goal model for the library system. The goal
+					of periodically sending reminders while increasing fines, unless the corresponding book copy is
+					returned, is thereby split in two subgoals.
+				</p>
+
+				<p>
+					A systematic use of the divide-and-conquer pattern improves the cohesion of goal models as
+					finergrained goal specifications refer to single concerns only.
+				</p>
+
+				<p>
+					<em>Variants</em>. The
+					<span class="arial">GoodCondition</span>
+					to be preserved may be composed of <em>n</em> conjoined conditions (<em>n</em> ≥ 2).
+					Another variant is the particular case where the <span class="arial">EndCondition</span>
+					reduces to <strong><span class="arial">true</span></strong>, which results in dropping
+					the “<span class="arial"><strong>unless</strong></span>” part in the goal/subgoal specifications.
+				</p>
+
+				<p>
+					<strong><em>Unrealizability-driven refinement patterns</em></strong>.
+					These patterns support the heuristic of splitting
+					responsibilities among agents (see (<em>H5</em>) above). They are applicable to
+					<span class="arial"><em>Achieve</em></span> or <span class="arial"><em>Maintain/Avoid</em></span> goals
+					refering to conditions that cannot be monitored or controlled by the agents expected to take
+					responsibility over them.
+				</p>
+
+				<p>
+					The general idea is to introduce monitorable or controllable counterparts of such conditions together
+					with additional assertions mapping the original conditions to their monitorable/controllable
+					counterpart. These assertions are accuracy goals or domain properties dependent on whether they are
+					prescriptive or descriptive. (The notion of monitorable/controllable phenomena was introduced in
+					Section 1.1.4. Accuracy goals were defined Section 7.3.2. The notion of goal realizability by an agent
+					will be detailed in Chapter 11.)
+				</p>
+
+				<p>
+					<strong><em>The unmonitorability-driven refinement pattern</em></strong>.
+					This pattern is <em>applicable</em> when some condition in a
+					goal formulation, to be monitored by the agent expected to be in charge of the goal, cannot be
+					monitored by the agent. The pattern is aimed at resolving such unmonitorability.
+				</p>
+
+				<p>
+					<em>Refinement tree</em>. The left diagram in Fig. 8.25 shows the AND-refinement tree for this pattern.
+				</p>
+
+				<p>
+					<em>Examples of use</em>. In the right diagram in Fig. 8.25, the agent expected to be responsible for the goal
+					<span class="arial">Maintain[DoorsClosedWhileNonZeroSpeed]</span>
+					is the software train controller. This agent cannot monitor the
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						31
+					</span>
+				</div>
+
+<!-- Page 32 -->
+
+				<p>
+					condition <span class="arial">NonZeroSpeed</span>
+					though; there is no way the software controller could evaluate the train’s
+					physical speed. The pattern is therefore instantiated by introduction of a condition
+					<span class="arial">NonZero<em>MeasuredSpeed</em></span>,
+					monitorable by the train controller, and a corresponding accuracy goal to be
+					assigned as expectation to a speed sensor agent. Fig. 8.6 provides another example where the
+					unmonitorability-driven refinement pattern was used twice. The first application to the top goal
+					resulted in the introduction of a domain property rather than a goal (like the first application to the top
+					goal in Fig. 8.4).
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img25.png">
+
+				<p>
+					<strong><em>The uncontrollability-driven refinement pattern</em></strong>.
+					This pattern is <em>applicable</em> when some condition in a
+					goal formulation, to be controlled by the agent expected to be in charge of the goal, cannot be
+					controlled by the agent. The pattern is aimed at resolving such uncontrollability.
+				</p>
+
+				<p>
+					<em>Refinement tree</em>. The left diagram in Fig. 8.26 shows the AND-refinement tree for this pattern.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img26.png">
+
+				<p>
+					<em>Example of use</em>. In the right diagram in Fig. 8.26, the train controller cannot control the condition
+					<span class="arial">DoorsClosed</span>
+					as it cannot physically close train doors. The pattern is therefore instantiated by
+					introduction of a condition <span class="arial">DoorsStateClosed</span>,
+					controllable by the train controller, and a corresponding
+					accuracy goal to be assigned as expectation to the doors actuator agent.
+				</p>
+
+			</section> <!-- Section 15 -->
+
+			<section class="subsection" data-number="16" data-name="Reusing refinement trees associated with goal categories">
+
+				<h3>
+					8.8.6 Reusing refinement trees associated with goal categories
+				</h3>
+
+				<p>
+					The preceding refinement patterns encode general tactics commonly used for problem decomposition.
+					They make no assumption on the goal category or on the domain in which they will be reused. (Goal
+					categories were discussed in Section 7.3.2.)
+				</p>
+
+				<p>
+					As a complement, we may encode typical ways of refining goals within a specific goal category. Such
+					encoding yields larger refinement trees on category-specific concepts and conditions.
+				</p>
+
+				<p>
+					Model reuse may help us in the goal elicitation process, as discussed in Section 2.2.7. When a goal is
+					introduced in the goal model, instead of starting a refinement from scratch, we may check refinement
+					trees in the corresponding category, instantiate reusable ones in system-specific terms, adapt them as
+					necessary, or simply reject them if they are felt inadequate. We may also compare them with the
+					refinements we are elaborating to check for missing subgoals or alternative refinements.
+				</p>
+
+				<p>
+					Fig. 8.27 shows a reusable refinement tree in the category of <em>satisfaction</em> goals (see Fig. 7.5). The goal
+					<span class="arial">RequestIssued</span>
+					is under the responsibility of the agent requesting the service. The service request is
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						32
+					</span>
+				</div>
+
+<!-- Page 33 -->
+
+				<p>
+					satisfied if there is a response to the request by some appointed server that meets the request. The
+					server must remain appointed until the service is fully delivered.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img27.png">
+
+				<p>
+					The comparison between the reusable refinement tree in Fig. 8.27 and the partial goal model for the
+					meeting scheduling system in Fig. 8.11 might raise questions for further goal elicitation, such as the
+					absence of goals related to the issuing of requests by meeting initiators or the absence of goals related
+					to scheduler appointment – e.g., do we want multiple schedulers specialized to different types of
+					meetings or distributed among multiple sites?
+				</p>
+
+				<p>
+					Fig. 8.28 shows a reusable refinement tree in the category of <em>safety</em> or
+					<em>security</em> goals. Forbidden states
+					are avoided there by anticipating dangerous states that might lead to them. Such dangerous states raise
+					alarms or warnings to which responses must be provided by some appointed guard so as to clear the
+					potentially dangerous situation. The goal
+					<span class="arial">ResponseByGuard</span> is not necessarily a leaf goal as it may
+					require multiple agents to cooperate. For instance, a response can itself be a stimulus sent to other
+					agents; stimuli can be chained, forwarded, broadcasted, acknowledged, and so on.
+				</p>
+
+				<img src="/contents/goalmodeling/images/ch08img28.png">
+
+			</section> <!-- Section 16 -->
+
+		</section> <!-- Section 10 -->
+
+		<section class="section" data-number="17" data-name="Summary">
+
+			<h2>
+				Summary
+			</h2>
+
+			<ul>
+				<li>
+					A model-based approach to RE provides focus on and structure for what needs to be elicited,
+					evaluated, specified, consolidated, explained, and modified during the RE process. A model
+				</li>
+			</ul>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					33
+				</span>
+			</div>
+
+<!-- Page 34 -->
+
+			<ul class="invisibleNumber">
+				<li>
+					abstracts from multiple details to capture the essence of the system <em>as-is</em> and <em>to-be</em>. A good model
+					should be adequate, complete, pertinent, traceable, and comprehensible. It should support multiple
+					levels of precision and highlight alternative options. To be complete, a model should cover the
+					multiple facets of the system. These include the intentional facet (goals), the structural facet
+					(objects), the responsibility facet (agents), the functional facet (operations), and the behavioral
+					facet (scenarios and state machines).
+				</li>
+			</ul>
+
+			<ul>
+				<li>
+					A goal model basically shows how the system’s functional and non-functional goals contribute to
+					each other through refinement links down to software requirements and environment assumptions.
+					It may also capture potential conflicts among goals and alternative ways of refining goals. At its
+					interface with other views of the system, the goal model captures responsibility links between
+					goals and system agents, obstruction links between goals and obstacles, reference links from goals
+					to conceptual objects, operationalization links between goals and system operations, and coverage
+					links between goals and scenarios or state machines.
+				</li>
+
+				<li>
+					A goal model is graphically represented by a goal diagram. Its core is an AND/OR graph showing
+					AND-refinements of goals into conjoined subgoals and OR-refinements of goals into alternative
+					AND-refinements. A goal AND-refinement means that the goal can be satisfied by satisfying all
+					its subgoals. A goal diagram can be built and browsed top-down, bottom-up, or, most frequently,
+					in both directions. Leaf goals correspond to requirements on the software-to-be or expectations on
+					environment agents.
+				</li>
+
+				<li>
+					Every goal in a goal diagram must be individually characterized through annotations. These
+					include a precise goal specification and optional features such as the goal’s type, category,
+					priority, elicitation source, or issue still to be addressed. Soft goals may be annotated with a fit
+					criterion. Behavioral goals may optionally be annotated with a formal specification for more
+					sophisticated forms of analysis.
+				</li>
+
+				<li>
+					Goal refinements should be consistent with known domain properties and hypotheses. They should
+					be complete, to avoid missing requirements, and minimal, to avoid unnecessary requirements.
+					Those properties should be established, at least informally, through chains of satisfaction
+					arguments along refinement paths in the goal model. Domain properties and hypotheses are often
+					involved in such arguments. They must be checked for adequacy with respect to real-world
+					phenomena.
+				</li>
+
+				<li>
+					In addtion to alternative goal refinements, a goal diagram may capture alternative responsibility
+					assignments. Both kinds of alternative options result in different system proposals, distributions of
+					responsibilities, and boundaries between the software-to-be and its environment. These define
+					system versions. Multiple options can be annotated by the system version they refer to.
+				</li>
+
+				<li>
+					To start building a goal model, we may obtain preliminary goals by analyzing the strategic
+					business objectives of the system-as-is, by identifying the domain-specific objectives to be
+					preserved across system versions, and by addressing the reported problems and complaints about
+					the system-as-is in the light of new opportunities. We may also search for prescriptive, intentional,
+					or amelioration keywords in interview transcripts and other preliminary documents involved in the
+					elicitation process. In addition, we may browse the various goal categories to look for systemspecific
+					instantiations in each category.
+				</li>
+
+				<li>
+					Once preliminary goals are obtained, we may build refinement and abstraction paths in a goal
+					diagram by recursively asking HOW and WHY questions about available goals, respectively.
+					HOW ELSE questions may help identifying alternative refinements. A simple qualitative analysis
+					of the pros and cons of alternatives may help identify corresponding soft goals that might be
+				</li>
+			</ul>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					34
+				</span>
+			</div>
+
+<!-- Page 35 -->
+
+			<ul class="invisibleNumber">
+				<li>
+					missing. <em>HOW</em> questions may be constrained by requiring the resulting subgoals to involve fewer
+					potential agents. Goals are to be refined until they are assignable to single agents. They should be
+					abstracted until high-level goals are reached whose parent goals cannot be satisfied through
+					cooperation of the system’s agents only.
+				</li>
+			</ul>
+
+			<ul>
+				<li>
+					Goals should not be confused with functional services that operationalize them. AND-refinements
+					into multiple cases are different from OR-refinements into multiple alternatives. Annotating each
+					goal in a model with an adequate, complete, precise, and agreed definition of the goal in terms of
+					measurable system phenomena is essential for avoiding ambiguities and misunderstandings.
+				</li>
+
+				<li>
+					Refinement patterns provide effective guidance in the model elaboration process by encoding
+					common tactics for goal decomposition. By instantiating a pattern in matching situations, we may
+					produce a complete refinement, find some underlying parent goal, or complete a partial
+					refinement. Pattern instantiations must be checked for adequacy and adapted if necessary.
+					Multiple matching patterns produce alternative refinements. The most commonly used patterns
+					include the milestone-driven, decomposition-by-cases, guard-introduction, divide-and-conquer,
+					unmonitorability-driven, and uncontrollability-driven refinement patterns.
+				</li>
+			</ul>
+
+		</section> <!-- Section 17 -->
+
+		<section class="section" data-number="18" data-name="Notes and Further Reading">
+
+			<h2>
+				Notes and Further Reading
+			</h2>
+
+			<p>
+				The integration of multiple views for model completeness is discussed in (Nuseibeh et al, 1994).
+				Earlier modeling frameworks were built on this principle. For requirements modeling, SADT and
+				RML combine structural and functional views (Ross & Schoman, 1977; Greenspan et al, 1986); SA
+				combines functional and contextual views (DeMarco, 1978); KAOS adds the intentional dimension to
+				such views (Dardenne et al, 1993). For modeling software designs, OMT and UML integrate
+				structural, functional, and behavioral views (Rumbaugh et al, 1991; Rumbaugh et al, 1999; Jacobson
+				et al, 1999). A comparative evaluation of modeling frameworks can be found in (Mylopoulos, 1998).
+			</p>
+
+			<p>
+				Goal AND/OR graphs for RE were introduced in (Dardenne et al, 1991; Mylopoulos et al, 1992). Such
+				graphs are commonly used for problem reduction in artificial intelligence (Nilsson, 1971). The NFR
+				modeling framework is more focussed on capturing positive/negative contributions among soft goals
+				(Mylopoulos et al, 1992). The KAOS framework was originally more oriented towards behavioral
+				goals and their refinement/conflict links (Dardenne et al, 1991; Dardenne et al, 1993). It also covered
+				alternative responsibility assignments and operationalization links. The latter were inspired from the
+				concept of operationalization in (Mostow, 1983). The completeness, minimality, and domain
+				consistency of refinements is discussed in (Darimont & van Lamsweerde, 1996).
+			</p>
+
+			<p>
+				Many modeling frameworks integrate goals, scenarios, and goal-scenario coverage links (Anton et al,
+				1994; van Lamsweerde et al, 1995; Leite et al, 1997; Anton et al, 1998; Haumer et al, 1998; Rolland et
+				al, 1998; Sutcliffe, 1998; Kaindl, 2000). Links between goals and failure scenarios were introduced in
+				(Fickas & Helm, 1992).
+			</p>
+
+			<p>
+				The characterization of a goal by features such as its priority or feasibility was suggested first in
+				(Robinson, 1989). Fit criteria as soft goal features are borrowed from (Robertson & Robertson, 1999).
+				More sophisticated frameworks for capturing issues in models can be found in (Potts & Bruns, 1988;
+				Jintae Lee, 1991). Formal specifications are introduced as goal features in (Dardenne et al, 1993).
+			</p>
+
+			<p>
+				Heuristics for goal identification are discussed in (Dardenne et al, 1993), including the elicitation of
+				agent wishes and the splitting of responsibilities among agents. <em>HOW</em> and <em>WHY</em> questions for
+				identifying goals along refinement links were introduced in (van Lamsweerde et al, 1995). They are
+				used in (Anton & Potts, 1998) as well. The effectiveness of keyword-based identification of goals in
+				documents is discussed in (Anton & Potts, 1998; van Lamsweerde, 2000c; Anton et al, 2001).
+			</p>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					35
+				</span>
+			</div>
+
+<!-- Page 36 -->
+
+			<p>
+				The problem of scoping goals within the system’s subject matter is addressed in (Zave & Jackson,
+				1997). This paper also emphasizes the need for precise definition of modelled concepts for
+				unambiguous interpretation in terms of domain phenomena.
+			</p>
+
+			<p>
+				Refinement patterns can be seen as a RE counterpart of design patterns (Gamma et al, 1995;
+				Buschmann et al, 1996). They were introduced in (Darimont & van Lamsweerde, 1996). A more
+				comprehensive sample of patterns can be found in Darimont’s thesis together with larger refinement
+				trees for certain goal categories and domains (Darimont, 1995). The milestone-driven pattern is
+				inspired from a widely used heuristics in AI problem reduction (Nilson, 1971). The reverse use of
+				refinement patterns for abstraction from scenarios is discussed in (van Lamsweerde & Willemet,
+				1998). The unmonitorability-driven and uncontrollability-driven patterns were introduced in (Letier &
+				van Lamsweerde, 2002a). They are discussed in greater detail in Letier’s thesis (Letier, 2001).
+			</p>
+
+			<p>
+				Numerous efforts were made to encode domain expertise in reusable models (Reubenstein & Waters,
+				1991; Sutcliffe & Maiden, 1998). These include structural models (Ryan & Mathews, 1993; Fowler,
+				1997b; Konrad et al, 2004), behavioral models (Konrad et al, 2004), and contextual models showing
+				agent interfaces (Jackson, 2001). Patterns also emerged in workflow modeling (van der Aalst et al,
+				2003).
+			</p>
+
+			<p>
+				Experience with goal models in industrial projects is reported in (van Lamsweerde, 2004b; Fairbanks
+				et al, 2006; Darimont & Lemoine, 2007).
+			</p>
+
+		</section> <!-- Section 18 -->
+
+		<section class="section" data-number="19" data-name="Exercises">
+
+			<h2>
+				Exercises
+			</h2>
+
+			<ul>
+				<li>
+					Consider the following integrity goal in the library system:
+				</li>
+			</ul>
+				
+			<p class="center">
+				<span class="arial"><em>Book copy return shall be encoded correctly and by library staff only.</em></span>
+			</p>
+
+			<ul class="invisibleNumber">
+				<li>						
+					Elicit parent goals of this goal through WHY questions.
+				</li>
+			</ul>
+
+			<ul>
+				<li>
+					In a simple patient monitoring system, the goal
+					<span class="arial">NurseIntervention<strong>If</strong>PulseThresholdExceeded</span> states that
+					a nurse shall promptly assist a patient whose pulse rate is beyond some critical threshold.
+
+					<ul>
+						<li>
+							Consider the following subtree found somewhere in the refinement of this goal by a novice
+							modeller (goal names there are sufficiently suggestive for what this modeller had in mind):<br />
+
+							<img src="/contents/goalmodeling/images/ch08img29.png"><br />
+
+							In view of what goals and goal refinement refer to, explain why this proposal makes no sense.
+						</li>
+
+						<li>		
+							A <span class="arial">MonitoringSoftware</span> agent is expected to help in the satisfaction of the goal
+							<span class="arial">NurseInterventionIfPulseThresholdExceeded</span>. Since this agent cannot monitor the condition
+							<span class="arial">PulseThresholdExceeded</span>nor control
+							the condition <span class="arial">NurseIntervention</span>, apply the monitorabilitydriven
+							and controllability-driven refinement patterns to split responsibilities and derive
+							requirements on the software and expectations on environment agents. Your goal diagram
+							should show individual responsibility assignments.
+						</li>
+					</ul>
+				</li>
+
+				<li>	
+					Consider the following portion of a goal diagram for a light contol system proposed by a novice
+					modeller:
+				</li>
+			</ul>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					36
+				</span>
+			</div>
+
+<!-- Page 37 -->
+
+			<img src="/contents/goalmodeling/images/ch08img30.png">
+
+			<ul class="invisibleNumber">
+				<li>
+					Explain what is wrong with this diagram and fix the error.
+				</li>
+			</ul>
+
+			<ul>
+				<li>
+					Consider an ambulance dispatching system with the following goal specifications:
+				</li>
+
+					<span class="arial"><strong>Goal</strong> AmbulanceIntervention</span><br />
+
+					<span class="arial"><strong>Def</strong>:</span>
+					<em>For every urgent call reporting an incident, a first ambulance shall arrive
+					at the incident scene within 11 minutes.</em><br />
+
+					<span class="arial"><strong>Goal</strong> NearestAvailableAmbulanceMobilized</span><br />
+
+					<span class="arial"><strong>Def</strong>:</span>
+					<em>For every encoded incident, the nearest available ambulance shall be
+					mobilized within 3 minutes.</em><br />
+					
+					<ul>
+						<li>
+							Complete the following goal diagram based on those specifications and using applicable
+							refinement patterns. For each “question mark” goal, provide a suggestive name and a precise
+							specification.
+						</li>
+
+						<li>
+							In your completed diagram, list the goals needing further refinement and explain why.
+						</li>
+
+						<li>
+							Identify possible responsibility assignments in your diagram.<br />
+
+							<img src="/contents/goalmodeling/images/ch08img31.png">
+						</li>
+					</ul>
+				</li>
+
+				<li>
+					Consider the leaf goals in the refinement tree in Fig. 8.20. Can these be assigned to agents or do
+					they need further refinement? In the former case, suggest possible responsibility assignments.
+				</li>
+
+				<li>
+					Investigate alternative refinements and responsibility assignments for the goal
+					<span class="arial">Avoid[BookCopiesStolen]</span>
+					in the library system. Identify soft goals from the pros and cons of each alternative assignment.
+				</li>
+
+				<li>
+					Consider the following goal model fragment for an air traffic control system. The parent goal
+					roughly states that aircraft routes should be sufficiently separated. The refinement is intended to
+				</li>
+			</ul>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					37
+				</span>
+			</div>
+
+<!-- Page 38 -->
+
+			<ul class="invisibleNumber">
+				<li>
+					produce subgoals for continually separating routes based on different kinds of conflicts among
+					routes.<br />
+					
+					(a) Identify the parent goal of the goal <span class="arial">Maintain [SufficientRouteSeparation]</span>.<br />
+					
+					(b) Restructure this model fragment by use of the decomposition-by-case and milestone-driven
+					patterns so as to make the use of those two patterns explicit and separated.<br />
+					
+					(c) Doing so, find an incompleteness in this model fragment and fix the anomaly.<br />
+				</li>
+			</ul>
+
+			<img src="/contents/goalmodeling/images/ch08img32.png">
+
+			<ul>
+				<li>
+					Extend the diagram in Fig. 8.9 so as to capture a meeting scheduling system version where
+					participant constraints are obtained, for important participants, from their e-agenda, and for
+					ordinary participants, through e-mail communication.
+				</li>
+
+				<li>
+					Consider the case study description for the library management system in Section 1.1.2.
+				
+					<ul>
+						<li>
+							Based on the list of stakeholder complaints about the library system-<em>as-is</em>, reported in this case
+							study description, apply the heuristics in Section 8.8.1 to identify some preliminary goals for a
+							goal model of the library system-<em>to-be</em>.
+						</li>
+
+						<li>
+							Apply the keyword-based search heuristics to the case study description in order to complete
+							this preliminary list.
+						</li>
+
+						<li>
+							From this list and the full case study description, use <em>WHY/HOW</em> questions, refinement patterns,
+							and other heuristics in Section 8.8 to build a goal model for the entire system-to-be. You may
+							want to integrate some of the model fragments shown in this chapter.
+						</li>
+					</ul>
+				</li>
+
+				<li>
+					Consider the case study description for the meeting scheduling system. in Section 1.1.2.
+				
+					<ul>
+						<li>
+							Based on the reported list of usual problems and difficulties in scheduling meetings, apply the
+							heuristics in Section 8.8.1 to identify some preliminary goals for a goal model of the system-tobe.
+						</li>
+
+						<li>
+							Apply the keyword-based search heuristics to the case study description to complete this
+							preliminary list.
+						</li>
+
+						<li>
+							From this list and the full case study description, use <em>WHY/HOW</em> questions, refinement patterns,
+							and other heuristics from Section 8.8 to build a goal model for the entire system-to-be. You may
+							want to integrate some of the model fragments shown in this chapter. The model should
+							explicitly capture the<em> system variants</em> suggested in Section 1.1.2.
+						</li>
+					</ul>
+				</li>
+			</ul>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					38
+				</span>
+			</div>
+
+		</section> <!-- Section 19 -->
+
+	</div> <!-- /container -->
+
+</body>
+
+</html>
+

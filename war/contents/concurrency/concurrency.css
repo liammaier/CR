@@ -1,0 +1,361 @@
+/*
+TO DO
+- edit this css file
+- check section vs subsection tags
+- gamification changes
+- check table not in ch. 14, see if OK
+*/
+.concurrency .container {
+	width:720px;
+	margin:auto;
+	font-family:Times New Roman, serif;
+	font-size:18px;
+	
+}
+
+.concurrency h1 {
+	font-size:37px;
+	font-family:Arial Black, sans-serif;
+	text-indent:-50px;
+	margin-bottom:10px;
+	margin-top: 10px;
+}
+
+.concurrency h2 {
+	font-size: 37px;
+	font-family: Arial Black, sans-serif;
+	/*text-indent: -50px;*/
+	margin-left:-50px;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+
+.concurrency h3 {
+	font-size: 25px;
+	font-family: Arial Black, sans-serif;
+	text-indent: -50px;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+.concurrency h4 {
+	font-size:20px;
+	font-family: Arial Black, sans-serif;
+	text-indent: -50px;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+.concurrency h5 {
+	font-size:20px;
+	font-family: Arial Black, sans-serif;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+
+.concurrency .border {
+	border: 5px solid black;
+	width: 770px;
+	margin-left:-50px;
+	margin-bottom: 50px;
+}
+
+.concurrency .pagebreak {
+	border-bottom: 1px solid black;
+	width:770px;
+	margin-left:-50px;
+	margin-top:50px;
+	margin-bottom: 50px;
+	padding-top:5px;
+	padding-bottom:5px;
+	font-size:15px;
+	text-align:right;
+	font-weight:bold;
+}
+
+.concurrency .pagebreak span {
+	font-style:italic;
+	font-weight:normal;
+}
+
+.concurrency p {
+	margin:0;
+}
+
+.concurrency .i {
+	text-indent:40px;
+}
+
+.concurrency .url {
+	text-decoration:underline;
+}
+
+.concurrency code {
+	font-size:16px;
+	padding: none;
+	color: inherit;
+	background-color: inherit;
+	border: none;
+}
+
+.concurrency ul, ol {
+	padding-left:15px;
+}
+
+.concurrency .in-paragraph {
+	list-style:none;
+	padding-left: 40px;
+}
+
+.concurrency img {
+	display:block;
+	margin:30px auto 10px auto;
+	/*width:100%;*/
+}
+
+/* for images of special characters */
+.concurrency .inline {
+	display:inline;
+	margin-bottom:-2px;
+	margin-top:0;
+}
+.concurrency figcaption, .program-caption, .table-caption {
+	font-size:15px;
+	text-align:center;
+	padding-bottom: 20px;
+
+}
+
+.concurrency figcaption code, .program-caption code, .footnote code{
+	font-size:13px;
+}
+
+.concurrency ol {
+	counter-reset:x;
+	margin-left:20px;
+}
+
+.concurrency ol ul {
+	list-style-type:disc;
+}
+
+.concurrency .regular {
+	list-style-type:decimal;
+	margin-left:47px;
+}
+
+.concurrency .regular li {
+	display:list-item;
+	padding-left: 0;
+	padding-bottom: 0;
+}
+/*
+.concurrency #weird li:before {
+	content:"2'.";
+	color:red;
+}*/
+/*
+.concurrency #weird li {
+	color:green;
+	list-style-type:none;
+	margin-left:-30px;
+}
+*/
+
+.concurrency #weird {
+	margin-left:25px;
+}
+.concurrency ol li, #weird li {
+	display:block;
+	padding-left: 20px;
+	padding-bottom:10px;
+}
+
+.concurrency #weird li:before {
+	content:"2'. ";
+	margin-left:-23px;
+}
+
+.concurrency #two li:before {
+	counter-increment:x;
+	content:"2." counter(x) " ";
+	margin-left:-30px;
+}
+
+.concurrency #three li:before {
+	counter-increment:x;
+	content:"3." counter(x) " ";
+	margin-left:-30px;
+}
+
+.concurrency #four li:before {
+	counter-increment:x;
+	content:"4." counter(x) " ";
+	margin-left:-30px;
+}
+
+.concurrency #five li:before {
+	counter-increment:x;
+	content:"5." counter(x) " ";
+	margin-left:-30px;
+}
+
+.concurrency #six li:before {
+	counter-increment:x;
+	content:"6." counter(x) " ";
+	margin-left:-30px;
+}
+
+.concurrency #seven li:before {
+	counter-increment:x;
+	content:"7." counter(x) " ";
+	margin-left:-30px;
+}
+.concurrency #eight li:before {
+	counter-increment:x;
+	content:"8." counter(x) " ";
+	margin-left:-30px;
+}
+
+.concurrency #nine li:before {
+	counter-increment:x;
+	content:"9." counter(x) " ";
+	margin-left:-30px;
+}
+
+.concurrency #ten li:before {
+	counter-increment:x;
+	content:"10." counter(x) " ";
+	margin-left:-38px;
+}
+
+.concurrency #eleven li:before {
+	counter-increment:x;
+	content:"11." counter(x) " ";
+	margin-left:-38px;
+}
+
+.concurrency #twelve li:before {
+	counter-increment:x;
+	content:"12." counter(x) " ";
+	margin-left:-38px;
+}
+
+.concurrency #thirteen li:before {
+	counter-increment:x;
+	content:"13." counter(x) " ";
+	margin-left:-38px;
+}
+
+.concurrency #fourteen li:before {
+	counter-increment:x;
+	content:"14." counter(x) " ";
+	margin-left:-38px;
+}
+
+.concurrency .definition {
+	border:1px solid #000;
+	width:610px;
+	margin:20px auto 20px auto;
+	padding:15px;
+	box-shadow:5px 5px #000;
+	-moz-box-shadow:5px 5px #000;
+	-webkit-box-shadow:5px 5px #000;
+
+}
+
+.concurrency .indented {
+	text-indent:0;
+	margin-left:25px;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+.concurrency .program {
+	margin-bottom:5px;
+	margin-top:25px;
+	margin-left:0;
+	background-color: #DDD;
+	padding:25px;
+}
+
+.concurrency pre {
+	margin: 20px 0 0 40px;
+	font-size: 16px;
+	font-family: Courier;
+	line-height: 20px;
+	padding: none;
+	background-color: inherit;
+	border: none;
+	font-style: normal;
+}
+
+/*
+.concurrency .program em, .concurrency pre span {
+	font-family: Times New Roman, serif;
+	font-size: 18px;
+	font-style:italic;
+}
+*/
+
+.concurrency .footnote {
+	margin-top:20px;
+	border-top:1px solid black;
+	font-size:15px;
+}
+
+.concurrency .times {
+	font-family: Times New Roman, serif;
+	font-size:18px;
+}
+
+.concurrency table {
+	margin:20px auto 20px auto;
+	/*width:360px;*/
+}
+
+.concurrency .has-border {
+	/*width:450px;*/
+	border-spacing:0;
+}
+
+.concurrency .appendix {
+	width:640px;
+}
+
+.concurrency .has-border td {
+	border: 1px solid black;
+	padding-top:5px;
+	padding-bottom:5px;
+}
+
+.concurrency th {
+	text-decoration:underline;
+	font-weight:bold;
+}
+
+.concurrency th, td {
+	padding-left:15px;
+	padding-right:15px;
+}
+
+.concurrency sup {
+	vertical-align:top;
+	/*line-height:0;*/
+	font-size:11px;
+}
+
+.concurrency sub {
+	vertical-align:bottom;
+	/*line-height:0;*/
+	font-size:11px;
+}
+
+.concurrency .bibliography {
+	width:670px;
+	text-indent:-25px;
+	/*margin-left:auto;
+	margin-right:auto;*/
+}

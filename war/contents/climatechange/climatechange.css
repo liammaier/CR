@@ -1,0 +1,344 @@
+.climatechange.container {
+	font-family: Garamond;
+	max-width: 1000px;
+	width: 900px;
+	background-color: white;
+	font-size: 20px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+/* COMMON */
+
+.climatechange p {
+	margin-bottom: 1em;
+	margin-left: 10%;
+	margin-right: 10%;
+	margin-top: 0em;
+}
+
+.climatechange h1 {
+	margin-left: 10%;
+	margin-right: 10%;
+	margin-top: 1em;
+	margin-bottom: 0;
+	font-size: 125%;
+	font-weight: bold;
+}
+
+.climatechange h2 {
+	margin-left: 10%;
+	margin-right: 10%;
+	margin-bottom: 0;
+	margin-top: 0;
+	font-size: 125%;
+	font-style: italic;
+}
+
+.climatechange h3 {
+	margin-left: 38px;
+	margin-top: 1em;
+	margin-bottom: 0;
+	margin-right: 0;
+	font-size: 105%;
+	font-weight: bold;	
+}
+
+.climatechange ul {
+	margin-left: 7em;
+	margin-right: 5em;
+}
+
+.climatechange .clear {
+	clear: both;
+}
+
+.climatechange .subscript {
+	vertical-align: sub;
+	font-size: 75%;
+}
+
+.climatechange .referenceNumber {
+	vertical-align: super;
+	font-size: 75%;
+}
+
+.climatechange div.reference {
+	font-size: 80%;
+	position: relative;
+}
+
+.climatechange .reference:before {
+	content:'';
+	width: 150px;
+	height: 3px;
+	background-color: black;
+	position: absolute;
+	margin-left: 10%;
+	top: -5px;
+}
+
+.climatechange .pagebreak:before {
+	content:'';
+	background: linear-gradient(to right, black 60%, white);
+	height: 5px;
+	width: 1000px;
+	position: absolute;	
+}
+
+.climatechange .pagebreak .pageNumber {
+	font-family: Calibri;
+	text-align: center;
+	padding-top: 4px;
+}
+
+.climatechange .pagebreak .firstPageBreak.pageNumber {
+	position: relative;
+	left: 7.5em;
+}
+
+.climatechange .pagebreak .firstPageBreak.pageNumber:after {
+	content: 'Top image credit: © University Corporation for Atmospheric Research';
+	color: grey;
+	font-size: 75%;
+	margin-right: -7em;
+	padding-top: 5px;
+	float: right;
+	position: relative;
+	left: -5em;
+}
+
+
+/* HIGHLIGHTS */
+
+.climatechange .highlightsHeader {
+	width: 1000px;
+}
+
+.climatechange .highlightsHeader.sky {
+	background-color: #00248F;
+}
+
+.climatechange .highlightsHeader.sea {
+	background-color: #33CCCC;
+}
+
+.climatechange .highlightsHeader.ice {
+	background-color: #5C007A;
+}
+
+.climatechange .highlightsHeader.land {
+	background-color: #1F7A1F;
+}
+
+.climatechange .highlightsHeader.life {
+	background-color: #FFA319;
+}
+
+.climatechange .highlightsHeader.people {
+	background-color: #B82E00;
+}
+
+.climatechange .highlightsHeader h1 {
+	color: white;
+	font-size: 200%;
+	text-align: center;
+	padding: .5em;
+}
+
+.climatechange .greyText {
+	color: grey;
+	size: 110%;
+}
+
+/* IMAGES */
+
+.climatechange img.introImage {
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 936px;
+}
+
+
+/* FIGURES */
+
+.climatechange figure.centerFigure {
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 75%;
+}
+
+.climatechange figure.centerFigure img {
+	width: 935px;
+}
+
+.climatechange figure.rightFigure {
+	float: right;
+	font-size: 75%;
+	margin-left: 1em;
+	margin-bottom: 1em;
+}
+
+.climatechange figure.leftFigure {
+	float: left;
+	font-size: 75%;
+	margin-right: 1em;
+}
+
+.climatechange figure.rightFigure img, .climatechange figure.leftFigure img {
+	max-width: 525px;
+}
+
+.climagechange figure.centerFigure figcaption {
+	color: grey;
+	margin: 0;
+	font-family: Calibri;
+}
+
+.climatechange figure.rightFigure figcaption, .climatechange figure.leftFigure figcaption {
+	color: grey;
+	width: 524px;
+	margin: 0;
+	font-family: Calibri;
+}
+
+.climatechange figcaption.largeImage {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.climatechange figcaption.smallerImage {
+	width:370px;
+}
+
+.climatechange figcaption.smallestImage {
+	width:300px;
+}
+
+.climatechange figcaption.microImage {
+	width: 210px;
+}
+
+.climatechange figure.rightFigure figcaption.smallerImage, .climatechange figure.leftFigure figcaption.smallerImage, .climatechange figure.centerFigure figcaption.smallerImage {
+	width:370px;
+}
+
+.climatechange figure.rightFigure figcaption.smallestImage, .climatechange figure.leftFigure figcaption.smallestImage, .climatechange figure.centerFigure figcaption.smallestImage {
+	width:300px;
+}
+
+.climatechange figure.rightFigure figcaption.microImage, .climatechange figure.leftFigure figcaption.microImage, .climatechange figure.centerFigure figcaption.microImage {
+	width: 210px;
+}
+
+.climatechange figure.rightFigure figcaption.largeImage, .climatechange figure.leftFigure figcaption.largeImage, .climatechange figure.centerFigure figcaption.largeImage {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.climatechange figure.rightFigure.leftText {
+	float: none;
+}
+
+.climatechange figure.rightFigure.leftText img {
+	float: right;
+	padding-left: 2em;
+	margin-bottom: 1em;
+}
+
+.climatechange figure.rightFigure.leftText figcaption {
+	width: inherit;
+	float: right;
+	width: 190px;
+}
+
+.climatechange figure.leftFigure.rightText img {
+	float: left;
+	padding-right: 2em;
+	margin-bottom: 1em;
+}
+
+.climatechange figure.leftFigure.rightText figcaption.smallerImage {
+	width: 420px;
+}
+
+.climatechange figure.leftFigure.rightText figcaption {
+	width: inherit;
+}
+
+
+/* BLUE BOX */
+
+.climatechange .colorBox {
+	margin-right: 8%;
+	margin-left: 8%;
+	margin-bottom: .5em;
+}
+
+.climatechange .colorBox.sky {
+	background-color: #C0E0FF;
+}
+
+.climatechange .colorBox.sea {
+	background-color: #8DE2E2;
+}
+
+.climatechange .colorBox.ice {
+	background-color: #CEB5FF;
+}
+
+.climatechange .colorBox.land {
+	background-color: #B5DAB5;
+}
+
+.climatechange .colorBox.life {
+	background-color: #C0E0FF;
+}
+
+.climatechange .colorBox.people {
+	background-color: #EFB296;
+}
+
+.climatechange .colorBox h1 {
+	margin-left: 1.5em;
+	margin-bottom: 0;
+	padding-top: .5em;
+}
+
+.climatechange .colorBox p {
+	margin-left: 2em;
+	padding-bottom: 1em;
+}
+
+.climatechange .colorBox .rightFigure figcaption {
+	max-width: 275px;
+	color: #595959;
+	margin-left: 0;
+}
+
+.climatechange .colorBox .leftFigure figcaption {
+	max-width: 275px;
+	color: #595959;
+	margin-left: 2em;
+	margin-right: 0;
+}
+
+.climatechange .colorBox img {
+	margin-top: 1em;
+}
+
+.climatechange .colorBox .centerFigure img {
+	width: 720px;
+	margin-left: 1em;
+	margin-right: 1em;
+}
+
+.climatechange .colorBox .rightFigure img {
+	padding-right: 2em;
+}
+
+.climatechange .colorBox .leftFigure img {
+	padding-left: 2em;
+}
+

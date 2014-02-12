@@ -1,0 +1,955 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+
+	<!--________________________________________________________________________-->
+	<!--________________________________________________________________________-->
+	<!--_____________________________servlet declarations_______________________-->
+	<!--________________________________________________________________________-->
+	<!--________________________________________________________________________-->
+	
+	<!-- servlet for TTS -->
+	<servlet>
+		<servlet-name>TTSServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.TTSServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TTSServlet</servlet-name>
+		<url-pattern>/TTS</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>ImportBookServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.ImportBookServlet
+	</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ImportBookServlet</servlet-name>
+		<url-pattern>/importBook/*</url-pattern>
+	</servlet-mapping>
+	<!-- get image by image id and if you have access to that image return it--> 	
+	<servlet>
+		<servlet-name>GetImageServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.GetImageServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetImageServlet</servlet-name>
+		<url-pattern>/getImage/*</url-pattern>
+	</servlet-mapping>
+	<!-- get image by image id and if you have access to that image return it--> 	
+	<servlet>
+		<servlet-name>GetCaretHTML</servlet-name>
+		<servlet-class>edu.uoregon.servlets.GetCaretHTML</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetCaretHTML</servlet-name>
+		<url-pattern>/getCaretHTML/*</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>GetCaretHTML</servlet-name>
+		<servlet-class>edu.uoregon.servlets.GetCaretHTML</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetCaretHTML</servlet-name>
+		<url-pattern>/getCaretHTML/*</url-pattern>
+	</servlet-mapping>
+	<!-- import image given a new image or and old one and a content to link it to -->
+	<servlet>
+		<servlet-name>ImportImageServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.ImportImageServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ImportImageServlet</servlet-name>
+		<url-pattern>/importImage</url-pattern>
+	</servlet-mapping>
+	
+	<!-- get all of the content for a user. returns json -->
+	<servlet>
+		<servlet-name>GetCaretContent</servlet-name>
+		<servlet-class>edu.uoregon.servlets.importer.GetCaretContent</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetCaretContent</servlet-name>
+		<url-pattern>/getCaretContent</url-pattern>
+	</servlet-mapping>
+	<!-- get all of the content for a user. returns json -->
+	<servlet>
+		<servlet-name>GetCaretBook</servlet-name>
+		<servlet-class>edu.uoregon.servlets.importer.GetCaretBook</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetCaretBook</servlet-name>
+		<url-pattern>/getCaretBook</url-pattern>
+	</servlet-mapping>
+	<!--add/remove/update/get caret content . returns json -->
+	<servlet>
+		<servlet-name>UpdateCaretBook</servlet-name>
+		<servlet-class>edu.uoregon.servlets.importer.UpdateCaretBook</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UpdateCaretBook</servlet-name>
+		<url-pattern>/updateCaretBook/*</url-pattern>
+	</servlet-mapping>
+	<!--add/remove/update/get caret content . returns json -->
+	<servlet>
+		<servlet-name>UpdateCaretContent</servlet-name>
+		<servlet-class>edu.uoregon.servlets.importer.UpdateCaretContent</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UpdateCaretContent</servlet-name>
+		<url-pattern>/updateCaretContent/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- gets the hmtl of a site give a url. returns html -->
+	<servlet>
+		<servlet-name>GetUrlContents</servlet-name>
+		<servlet-class>edu.uoregon.servlets.importer.GetUrlContents</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetUrlContents</servlet-name>
+		<url-pattern>/getHTML</url-pattern>
+	</servlet-mapping>
+	
+	<!-- gets test questions for a given contentId. returns json -->
+	<servlet>
+		<servlet-name>GetTestQuestions</servlet-name>
+		<servlet-class>edu.uoregon.servlets.GetTestQuestionsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetTestQuestions</servlet-name>
+		<url-pattern>/getTestQuestions</url-pattern>
+	</servlet-mapping>
+	
+	<!-- gets content and sections given a content id. returns json -->
+	<servlet>
+		<servlet-name>GetContentDataServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.reader.GetContentServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetContentDataServlet</servlet-name>
+		<url-pattern>/getContentData</url-pattern>
+	</servlet-mapping>
+	
+	<!-- delete selected tables-->
+	<servlet>
+		<servlet-name>ClearSelected</servlet-name>
+		<servlet-class>edu.uoregon.servlets.clear.ClearSelectedServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ClearSelected</servlet-name>
+		<url-pattern>/admin/clearselected</url-pattern>
+	</servlet-mapping>
+	
+	<!-- remove a resource and dependences-->
+	<servlet>
+		<servlet-name>DeleteResource</servlet-name>
+		<servlet-class>edu.uoregon.servlets.clear.DeleteResourceServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DeleteResource</servlet-name>
+		<url-pattern>/admin/deleteresource</url-pattern>
+	</servlet-mapping>
+	
+	<!-- remove a library and dependences-->
+	<servlet>
+		<servlet-name>DeleteLibrary</servlet-name>
+		<servlet-class>edu.uoregon.servlets.clear.DeleteLibraryServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DeleteLibrary</servlet-name>
+		<url-pattern>/admin/deletelibrary</url-pattern>
+	</servlet-mapping>
+	
+	<!-- remove a user and dependences-->
+	<servlet>
+		<servlet-name>DeleteUser</servlet-name>
+		<servlet-class>edu.uoregon.servlets.clear.DeleteUserServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DeleteUser</servlet-name>
+		<url-pattern>/admin/deleteuser</url-pattern>
+	</servlet-mapping>
+	
+	<!-- clears all the logs for all users-->
+	<servlet>
+		<servlet-name>ClearLogs</servlet-name>
+		<servlet-class>edu.uoregon.servlets.clear.ClearLogsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ClearLogs</servlet-name>
+		<url-pattern>/admin/clearlogs</url-pattern>
+	</servlet-mapping>
+	
+	<!-- clears lot of th db for all users-->
+	<servlet>
+		<servlet-name>ClearUserData</servlet-name>
+		<servlet-class>edu.uoregon.servlets.clear.ClearUserDataServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ClearUserData</servlet-name>
+		<url-pattern>/admin/clearuserdata</url-pattern>
+	</servlet-mapping>
+	
+	<!-- clears lot of th db for all users-->
+	<servlet>
+		<servlet-name>ClearEverything</servlet-name>
+		<servlet-class>edu.uoregon.servlets.clear.ClearEverythingServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ClearEverything</servlet-name>
+		<url-pattern>/admin/cleareverything</url-pattern>
+	</servlet-mapping>
+		
+	<!-- add emails for any user even if they havent logged in before-->
+	<servlet>
+		<servlet-name>AuthorizeStudentEmailsServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.AuthorizeStudentEmailsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AuthorizeStudentEmailsServlet</servlet-name>
+		<url-pattern>/admin/authorize_student_emails</url-pattern>
+	</servlet-mapping>
+	
+	<!-- clears users and library stuff-->
+	<servlet>
+		<servlet-name>ClearUsers</servlet-name>
+		<servlet-class>edu.uoregon.servlets.clear.ClearUsersServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ClearUsers</servlet-name>
+		<url-pattern>/admin/clearusers</url-pattern>
+	</servlet-mapping>
+	
+	<!-- clears the resources, content, sections, and glossary for all users-->
+	<servlet>
+		<servlet-name>ClearResources</servlet-name>
+		<servlet-class>edu.uoregon.servlets.clear.ClearResourcesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ClearResources</servlet-name>
+		<url-pattern>/admin/clearresources</url-pattern>
+	</servlet-mapping>
+	
+	<!--save answer to test question given the question, answer, and timestamp-->
+	<servlet>
+		<servlet-name>SaveAnswerServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.SaveAnswerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SaveAnswerServlet</servlet-name>
+		<url-pattern>/saveAnswer</url-pattern>
+	</servlet-mapping>
+		
+	<!-- Adds test questions for a content. for admins only-->
+	<servlet>
+		<servlet-name>AddTestQuestions</servlet-name>
+		<servlet-class>edu.uoregon.servlets.AddTestQuestionsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddTestQuestions</servlet-name>
+		<url-pattern>/admin/add_question</url-pattern>
+	</servlet-mapping>
+	
+	<!-- adds a resource -->
+	<servlet>
+		<servlet-name>AddResourceServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.AddResourceServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddResourceServlet</servlet-name>
+		<url-pattern>/addresource</url-pattern>
+	</servlet-mapping>
+	
+	<!-- log from client -->
+	<servlet>
+		<servlet-name>LogServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.LogServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LogServlet</servlet-name>
+		<url-pattern>/log</url-pattern>
+	</servlet-mapping>
+	
+	<!-- batch log from client -->
+	<servlet>
+		<servlet-name>BatchLogServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.BatchLogServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>BatchLogServlet</servlet-name>
+		<url-pattern>/batchlog</url-pattern>
+	</servlet-mapping>
+	
+	
+	<!-- gets groups that user belongs to. returns json -->
+	<servlet>
+		<servlet-name>GetMyGroupsServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.groups.GetMyGroupsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetMyGroupsServlet</servlet-name>
+		<url-pattern>/getMyGroups</url-pattern>
+	</servlet-mapping>
+	
+		<!-- adds a section given a document id and an json array of section name and sectionNumber-->
+	<servlet>
+		<servlet-name>GetSectionsServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.reader.GetSectionsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetSectionsServlet</servlet-name>
+		<url-pattern>/getSections</url-pattern>
+	</servlet-mapping>
+	
+	<!-- gets highlights given a section id -->
+	<servlet>
+		<servlet-name>GetHighlightServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.reader.GetHighlightServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetHighlightServlet</servlet-name>
+		<url-pattern>/getHighlights</url-pattern>
+	</servlet-mapping>
+	
+	<!-- gets highlights in the same content -->
+	<servlet>
+		<servlet-name>GetContentHighlightServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.reader.GetContentHighlightServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetContentHighlightServlet</servlet-name>
+		<url-pattern>/getContentHighlights</url-pattern>
+	</servlet-mapping>
+	
+	<!-- get chapter summary === -->
+	<servlet>
+		<servlet-name>GetSectionSummaryByChapter</servlet-name>
+		<servlet-class>edu.uoregon.servlets.reader.GetSectionSummaryByChapter</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetSectionSummaryByChapter</servlet-name>
+		<url-pattern>/getSectionSummaryByChapter</url-pattern>
+	</servlet-mapping>
+	
+	<!-- gets notes given a section id -->
+	<servlet>
+		<servlet-name>GetNotesServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.reader.GetNotesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetNotesServlet</servlet-name>
+		<url-pattern>/getNotes</url-pattern>
+	</servlet-mapping>
+	
+	<!-- gets resources given a library id -->
+	<servlet>
+		<servlet-name>GetResourcesServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.libraries.GetResourcesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetResourcesServlet</servlet-name>
+		<url-pattern>/getResources</url-pattern>
+	</servlet-mapping>
+	
+	<!-- gets user progress given a library id and user id -->
+	<servlet>
+		<servlet-name>GetUserLibProgressServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.libraries.GetUserLibProgressServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetUserLibProgressServlet</servlet-name>
+		<url-pattern>/getUserLibProgress</url-pattern>
+	</servlet-mapping>
+	
+	<!-- gets all resources for a user -->
+	<servlet>
+		<servlet-name>GetAllResourcesForUserServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.libraries.GetAllResourcesForUserServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetAllResourcesForUserServlet</servlet-name>
+		<url-pattern>/getallresources</url-pattern>
+	</servlet-mapping>
+	
+	
+	 <!-- gets articles given a library id -->
+	 <servlet>
+		<servlet-name>GetArticlesServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.libraries.GetArticlesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetArticlesServlet</servlet-name>
+		<url-pattern>/getArticles</url-pattern>
+	</servlet-mapping>  
+	
+	<!-- gets glossary items -->
+	 <servlet>
+		<servlet-name>GetGlossaryItemsServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.reader.GetGlossaryItemsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetGlossaryItemsServlet</servlet-name>
+		<url-pattern>/getGlossaryItems</url-pattern>
+	</servlet-mapping>
+	
+	<!-- lets admin put a user in a lib -->
+	<servlet>
+		<servlet-name>AddUserLibraryRoleServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.libraries.AddUserLibraryRoleServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddUserLibraryRoleServlet</servlet-name>
+		<url-pattern>/admin/addUserToLib</url-pattern>
+	</servlet-mapping>
+	
+	<!-- prints out logs for given user -->
+	<servlet>
+		<servlet-name>GetLogsForUserServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.GetLogsForUserServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetLogsForUserServlet</servlet-name>
+		<url-pattern>/admin/getLogsForUser</url-pattern>
+	</servlet-mapping>
+	
+	<!-- prints out logs for all users and parses it -->
+	<servlet>
+		<servlet-name>GetParsedLogsServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.GetParsedLogsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetParsedLogsServlet</servlet-name>
+		<url-pattern>/admin/parselogs</url-pattern>
+	</servlet-mapping>
+	
+	<!-- prints out notebook for given user and content -->
+	<servlet>
+		<servlet-name>GetNotebookDataForUserServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.GetNotebookDataForUserServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetNotebookDataForUserServlet</servlet-name>
+		<url-pattern>/getNotebookDataForUser</url-pattern>
+	</servlet-mapping>
+	
+	<!-- gets contents given a resource id-->
+	<servlet>
+		<servlet-name>GetContentServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.libraries.GetContentServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetContentServlet</servlet-name>
+		<url-pattern>/getContent</url-pattern>
+	</servlet-mapping>
+	
+	
+	<!-- updates a library given an id-->
+	<servlet>
+		<servlet-name>UpdateLibraryServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.libraries.UpdateLibraryServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UpdateLibraryServlet</servlet-name>
+		<url-pattern>/updateLibrary/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- updates a highlight given a highlight id-->
+	<servlet>
+		<servlet-name>UpdateHighlightServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.reader.UpdateHighlightServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UpdateHighlightServlet</servlet-name>
+		<url-pattern>/updateHighlight/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- updates a note given a note id-->
+	<servlet>
+		<servlet-name>UpdateNoteServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.reader.UpdateNoteServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UpdateNoteServlet</servlet-name>
+		<url-pattern>/updateNote/*</url-pattern>
+	</servlet-mapping>
+	
+	
+	<!-- logs in and gives back the user -->
+	<servlet>
+		<servlet-name>LoginServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.LoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LoginServlet</servlet-name>
+		<url-pattern>/login</url-pattern>
+	</servlet-mapping>
+	
+	<!-- invalidates the user's session and sends them to the home page -->
+	<servlet>
+		<servlet-name>LogoutServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.LogoutServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LogoutServlet</servlet-name>
+		<url-pattern>/logout</url-pattern>
+	</servlet-mapping>
+	
+	<!-- registers current user in the database -->
+	<servlet>
+		<servlet-name>RegistrationServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.RegistrationServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RegistrationServlet</servlet-name>
+		<url-pattern>/createUser</url-pattern>
+	</servlet-mapping>
+
+	<!-- create group in given lib with the current user as leader. -->
+	<servlet>
+		<servlet-name>CreateGroupServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.groups.CreateGroupServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CreateGroupServlet</servlet-name>
+		<url-pattern>/create_group</url-pattern>
+	</servlet-mapping>
+	
+	<!-- create lib with the given user as leader. -->
+	<servlet>
+		<servlet-name>CreateLibraryServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.libraries.CreateLibraryServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CreateLibraryServlet</servlet-name>
+		<url-pattern>/admin/createLibrary</url-pattern>
+	</servlet-mapping>
+
+	
+	<!-- gets libs that user belongs to. returns json -->
+	<servlet>
+		<servlet-name>GetLibrariesServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.libraries.GetLibrariesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetLibrariesServlet</servlet-name>
+		<url-pattern>/getLibraries</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Adds a resource to a library -->
+	<servlet>
+		<servlet-name>ToggleResourceInLibraryServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.libraries.ToggleResourceInLibraryServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ToggleResourceInLibraryServlet</servlet-name>
+		<url-pattern>/toggleResourceInLibrary</url-pattern>
+	</servlet-mapping>
+	
+		<!-- gets all assignments that user belongs to ,unless passed an id then give that lib's assignment. returns json -->
+	<servlet>
+		<servlet-name>GetAssignmentsServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.libraries.GetAssignmentsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetAssignmentsServlet</servlet-name>
+		<url-pattern>/getAssignments</url-pattern>
+	</servlet-mapping>
+	
+
+	<!-- gets current user. returns json -->
+	<servlet>
+		<servlet-name>UserServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.UserServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UserServlet</servlet-name>
+		<url-pattern>/getUser</url-pattern>
+	</servlet-mapping>
+	
+	<!-- edits current user. returns nothing -->
+	<servlet>
+		<servlet-name>EditUserServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.EditUserServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EditUserServlet</servlet-name>
+		<url-pattern>/editUser</url-pattern>
+	</servlet-mapping>
+
+	<!-- updates the strat data -->
+	<servlet>
+		<servlet-name>UpdateStrategiesServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.strategies.UpdateStrategiesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UpdateStrategiesServlet</servlet-name>
+		<url-pattern>/updateStrategies/*</url-pattern>
+	</servlet-mapping>	
+	
+	<!-- gets the strat data -->
+	<servlet>
+		<servlet-name>GetStratDataServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.strategies.GetUserStratDataServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetStratDataServlet</servlet-name>
+		<url-pattern>/getstratdata</url-pattern>
+	</servlet-mapping>
+	
+	<!-- initializes some basic data -->
+	<servlet>
+		<servlet-name>AddBasicDataServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.AddBasicDataServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddBasicDataServlet</servlet-name>
+		<url-pattern>/admin/addbasicdata</url-pattern>
+	</servlet-mapping>
+	
+	<!-- get reminders for a user-->
+	<servlet>
+		<servlet-name>GetUserRemindersServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.options.GetUserRemindersServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetUserRemindersServlet</servlet-name>
+		<url-pattern>/getreminders</url-pattern>
+	</servlet-mapping>
+	
+	<!-- add/edit reminders for a user-->
+	<servlet>
+		<servlet-name>SubmitRemindersServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.options.SubmitRemindersServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SubmitRemindersServlet</servlet-name>
+		<url-pattern>/submitreminders</url-pattern>
+	</servlet-mapping>
+	
+	<!-- get options for a user-->
+	<servlet>
+		<servlet-name>GetUserOptionsServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.options.GetUserOptionsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetUserOptionsServlet</servlet-name>
+		<url-pattern>/getoptions</url-pattern>
+	</servlet-mapping>
+	
+	<!-- add/edit options for a user-->
+	<servlet>
+		<servlet-name>SubmitOptionsServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.options.SubmitOptionsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SubmitOptionsServlet</servlet-name>
+		<url-pattern>/submitoptions</url-pattern>
+	</servlet-mapping>
+	
+	<!-- update a users progress -->
+	<servlet>
+		<servlet-name>UpdateUserProgress</servlet-name>
+		<servlet-class>edu.uoregon.servlets.reader.UpdateUserProgressServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UpdateUserProgress</servlet-name>
+		<url-pattern>/updateuserprogress</url-pattern>
+	</servlet-mapping>
+	
+	<!-- get a users progress for a content -->
+	<servlet>
+		<servlet-name>GetUserContentProgress</servlet-name>
+		<servlet-class>edu.uoregon.servlets.GetUserContentProgressServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetUserContentProgress</servlet-name>
+		<url-pattern>/getuserprogress</url-pattern>
+	</servlet-mapping>
+	
+	<!-- get a users progress a resource -->
+	<servlet>
+		<servlet-name>GetUserResourceProgress</servlet-name>
+		<servlet-class>edu.uoregon.servlets.GetUserResourceProgressServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetUserResourceProgress</servlet-name>
+		<url-pattern>/getuserresourceprogress</url-pattern>
+	</servlet-mapping>
+	
+	<!-- gets super notebook data -->
+	<servlet>
+		<servlet-name>GetSuperNotebookData</servlet-name>
+		<servlet-class>edu.uoregon.servlets.reader.GetSuperNotebookDataServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetSuperNotebookData</servlet-name>
+		<url-pattern>/getSNdata</url-pattern>
+	</servlet-mapping>
+	<!-- import user edited content into CR -->
+	<servlet>
+		<servlet-name>ImportContentServlet</servlet-name>
+		<servlet-class>edu.uoregon.servlets.ImportContentServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ImportContentServlet</servlet-name>
+		<url-pattern>/importcontent</url-pattern>
+	</servlet-mapping>
+	
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	<!--~~~~~ API - For outside requests ~~~~~-->
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
+	<!-- prints out notebook for given user and content -->
+	<servlet>
+		<servlet-name>GetNotebookDataAPI</servlet-name>
+		<servlet-class>edu.uoregon.servlets.api.GetNotebookDataAPI</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetNotebookDataAPI</servlet-name>
+		<url-pattern>/getNotebookDataAPI</url-pattern>
+	</servlet-mapping>
+	
+	<!-- given library ID, finds all content user has access to -->
+	<servlet>
+		<servlet-name>GetLibraryContentAPI</servlet-name>
+		<servlet-class>edu.uoregon.servlets.api.GetLibraryContentAPI</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetLibraryContentAPI</servlet-name>
+		<url-pattern>/getLibraryContentAPI</url-pattern>
+	</servlet-mapping>
+	
+	<!-- given user email, finds all libraries user is in -->
+	<servlet>
+		<servlet-name>GetUserLibrariesAPI</servlet-name>
+		<servlet-class>edu.uoregon.servlets.api.GetUserLibrariesAPI</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetUserLibrariesAPI</servlet-name>
+		<url-pattern>/getUserLibrariesAPI</url-pattern>
+	</servlet-mapping>
+	
+	<!-- given library ID, finds all users in the library -->
+	<servlet>
+		<servlet-name>GetUsersInLibraryAPI</servlet-name>
+		<servlet-class>edu.uoregon.servlets.api.GetUsersInLibraryAPI</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetUsersInLibraryAPI</servlet-name>
+		<url-pattern>/getUsersInLibraryAPI</url-pattern>
+	</servlet-mapping>
+	
+	<!-- gets and sets the user note -->
+	<servlet>
+		<servlet-name>EditUserNote</servlet-name>
+		<servlet-class>edu.uoregon.servlets.EditUserNoteServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EditUserNote</servlet-name>
+		<url-pattern>/usernote</url-pattern>
+	</servlet-mapping>
+	
+	<!--________________________________________________________________________-->
+	<!--________________________________________________________________________-->
+	<!--_____________________________URL mappings_______________________________-->
+	<!--________________________________________________________________________-->
+	<!--________________________________________________________________________-->
+	<servlet>
+        <servlet-name>import</servlet-name>
+        <jsp-file>/importer/import.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>import</servlet-name>
+        <url-pattern>caret</url-pattern>
+    </servlet-mapping>
+	<servlet>
+        <servlet-name>basicmenu</servlet-name>
+        <jsp-file>/basic/menu/menu.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>basicmenu</servlet-name>
+        <url-pattern>menu</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>supernotebook</servlet-name>
+        <jsp-file>/basic/supernotebook/supernotebook.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>supernotebook</servlet-name>
+        <url-pattern>supernotebook</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>notFound</servlet-name>
+        <jsp-file>/basic/shared/html/error/notFound.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>notFound</servlet-name>
+        <url-pattern>/notFound</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>managelibrary</servlet-name>
+        <jsp-file>/basic/library/managelibrary.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>managelibrary</servlet-name>
+        <url-pattern>/admin/library</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>selectlibrary</servlet-name>
+        <jsp-file>/basic/library/selectlibrary.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>selectlibrary</servlet-name>
+        <url-pattern>/libraries</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>singlelibrary</servlet-name>
+        <jsp-file>/basic/library/library.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>singlelibrary</servlet-name>
+        <url-pattern>/library</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>reminders</servlet-name>
+        <jsp-file>/basic/options/reminders.jsp</jsp-file>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>reminders</servlet-name>
+        <url-pattern>/reminders</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>basicresource</servlet-name>
+        <jsp-file>/basic/resource/resource.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>basicresource</servlet-name>
+        <url-pattern>/resource</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>basicarticles</servlet-name>
+        <jsp-file>/basic/articles/articles.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>basicarticles</servlet-name>
+        <url-pattern>/articles</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>registration</servlet-name>
+        <jsp-file>/basic/shared/html/error/registration.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>registration</servlet-name>
+        <url-pattern>/registration</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>basicreader</servlet-name>
+        <jsp-file>/basic/reader/html/reader.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>basicreader</servlet-name>
+        <url-pattern>/reader</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>notAdmin</servlet-name>
+        <jsp-file>/basic/shared/html/error/notAdmin.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>notAdmin</servlet-name>
+        <url-pattern>/notAdmin</url-pattern>
+    </servlet-mapping>
+    
+    
+    <!--  FOR STUDY ONLY -->    
+    <servlet>
+        <servlet-name>questions</servlet-name>
+        <jsp-file>/basic/html/questions.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>questions</servlet-name>
+        <url-pattern>/b/questions</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>basicglossary</servlet-name>
+        <jsp-file>/basic/reader/html/glossary.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>basicglossary</servlet-name>
+        <url-pattern>/b/glossary</url-pattern>
+    </servlet-mapping>
+    <!-- END FOR STUDY ONLY -->   
+    
+	 
+	<!--________________________________________________________________________-->
+	<!--________________________________________________________________________-->
+	<!--_____________________________error handling_____________________________-->
+	<!--________________________________________________________________________-->
+	<!--________________________________________________________________________-->
+	<error-page>
+		<error-code>500</error-code>
+		<location>/welcome</location>
+	</error-page>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/notAdmin</location>
+	</error-page>
+	
+	<error-page>
+		<error-code>404</error-code>
+		<location>/notFound</location>
+	</error-page>
+	
+
+	<!--________________________________________________________________________-->
+	<!--________________________________________________________________________-->
+	<!--_____________________________security constraints_______________________-->
+	<!--________________________________________________________________________-->
+	<!--________________________________________________________________________-->
+	
+	<security-constraint>
+        <web-resource-collection>
+            <url-pattern>/admin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>*</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+		    <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+ 		</user-data-constraint>
+    </security-constraint>
+
+	<welcome-file-list>
+		<welcome-file>basic/welcome/welcome.html</welcome-file>
+	</welcome-file-list>
+
+<!--  <servlet>
+  <servlet-name>SystemServiceServlet</servlet-name>
+  <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
+  <init-param>
+   <param-name>services</param-name>
+   <param-value/>
+  </init-param>
+ </servlet>
+ <servlet-mapping>
+  <servlet-name>SystemServiceServlet</servlet-name>
+  <url-pattern>/_ah/spi/*</url-pattern>
+ </servlet-mapping> -->
+</web-app>

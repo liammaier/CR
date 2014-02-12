@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+	<head>
+	  	<title> App Inventor Chapter 6 </title>
+	</head>
+
+  <body>
+  	<div id="appinventor6" class="appinventor container"> 
+  		<div class="page">
+
+	  		<div class="chapter_head">
+				CHAPTER 6
+			</div>
+
+			<section class="section" data-number="0" data-name="Paris Map Tour">
+
+				<h2>Paris Map Tour</h2>
+			
+			
+				<div class="chapter_description">
+					<p>In this chapter, you’ll build an app that lets you create your own custom guide for a 
+						dream trip to Paris. And since a few of your friends can’t join you, we’ll create a compan-
+						ion app that lets them take a virtual tour of Paris as well. Creating a fully functioning map 
+						app might seem really complicated, but App Inventor lets you use the ActivityStarter
+						component to launch Google Maps for each virtual location. First, you’ll build an app 
+						that launches maps for the Eiffel Tower, the Louvre, and Notre Dame Cathedral with a 
+						single click. Then you’ll modify the app to create a virtual tour of satellite maps that are also
+						available from Google Maps.</p>
+				</div>
+				
+				<div class="centeredImage">
+					<img src="/contents/appinventor/images/ch06img01.png">
+				</div>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="What You'll Learn">
+
+				<h3>What You'll Learn</h3>
+				
+				<p>This chapter introduces the following App Inventor components and concepts:</p>
+	
+				<ul>
+					<li>The <span class="python">Activity Starter</span> component for launching other Android apps from 
+						your app. You’ll use this component here to launch Google Maps with various 
+						parameters.
+					</li>
+					<li>The <span class="python">ListPicker</span> component for allowing the user to choose from a list of 
+						locations.
+					</li>
+				</ul>
+			
+			</section>
+
+<!-- Page 90 -->
+						
+			<div class="pagebreak">
+			  	<span class="pageNumber"> 90 </span> Chapter 6: Paris Map Tour
+			</div>
+
+			<section class="section" data-number="2" data-name="Designing the Components">
+
+				<h3>Designing the Components</h3>
+				
+				<figure class="rightfig">
+					<img src="/contents/appinventor/images/ch06img02.png">
+					<figcaption>Figure 6-1. TheParis Map Tour app running in the emulator</figcaption>
+				</figure>
+				
+				<div class="text_next_to_rightfig">
+					<p>Create a new project in App Inventor and call it 
+						“ParisMapTour”. The user interface for the app has 
+						an Imagecomponent with a picture of Paris, a <span class="python">Label</span>
+						component with some text, a <span class="python">ListPicker</span> component that
+						comes with an associated button, and an 
+						<span class="python">ActivityStarter</span>(non-visible) component. You can 
+						design the components using the snapshot in 
+						Figure 6-1.</p>
+					
+					<p id="chp6margins">The components listed in Table 6-1 were used to 
+						create this Designer window. Drag each component 
+						from the Palette into the Viewer and name it as 
+						specified.</p>
+				</div>
+
+				<div class="clear"></div>
+
+				<p class="caption">Table 6-1. Components for the Paris Map Tour</p>
+				
+				<table>
+					<thead>
+					<tr>
+						<th>Component type</th>
+						<th>Palette group</th>
+						<th>What you'll name it</th>
+						<th>Purpose</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td><span class="python">Image</span></td>
+						<td>Basic</td>
+						<td><span class="python">Image1</span></td>
+						<td>Show a static image of a Paris map on screen.</td>
+					</tr>
+					<tr>
+						<td><span class="python">Label</span></td>
+						<td>Basic</td>
+						<td><span class="python">Label1</span></td>
+						<td>Display the text “Discover Paris with your
+							Android!”</td>
+					</tr>
+					<tr>
+						<td><span class="python">ListPicker</span></td>
+						<td>Basic</td>
+						<td><span class="python">ListPicker1</span></td>
+						<td>Display the list of destination choices.</td>
+					</tr>
+					<tr>
+						<td><span class="python">Activity Starter</span></td>
+						<td>Other stuff</td>
+						<td><span class="python">ActivityStarter1</span></td>
+						<td>Launch the Maps app when a destination is chosen.</td>
+					</tr>
+					</tbody>
+				</table>
+			
+			</section>
+
+			<section class="section" data-number="3" data-name="Setting the Properties of ActivityStarter">
+
+				<h3>Setting the Properties of ActivityStarter</h3>
+				
+				<p><span class="python">ActivityStarteris</span> a component that lets you launch any Android app—a browser, 
+					Google Maps, or even another one of your own apps. When a user launches another 
+					app from your app, he can click the back button to return to your app. You’ll build 
+					ParisMapTour so that the Maps application is launched to show particular maps 
+					based on the user’s choice. The user can then hit the back button to return to your 
+					app and choose a different destination.</p>
+				
+				<p><span class="python">ActivityStarter</span> is a relatively low-level component in that you’ll need to set some 
+					properties with information familiar to a Java Android SDK programmer, but foreign 
+					to the other 99.999% of the world. For this app, enter the properties as specified in 
+					Table 6-2, and be <em>careful</em>—even the upper-/lowercase letters are important.</p>
+				
+<!-- Page 91 -->
+				
+				<div class="pagebreak">
+				  	<span class="pageNumber"> 91 </span> Adding Behaviors to the Components
+				</div>
+
+				<p class="caption">Table 6-2. ActivityStarter properties for launching Google Maps</p>
+				
+				<table>
+					<thead>
+					<tr>
+						<th>Property</th>
+						<th>Value</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td><span class="python">Action</span></td>
+						<td>android.intent.action.VIEW</td>
+					</tr>
+					<tr>
+						<td><span class="python">ActivityClass</span></td>
+						<td>com.google.android.maps.MapsActivity</td>
+					</tr>
+					<tr>
+						<td><span class="python">ActivityPackage</span></td>
+						<td>com.google.android.apps.maps</td>
+					</tr>
+					</tbody>
+				</table>
+				
+				<p>In the Blocks Editor, you’ll set one more property, <span class="python">DataUri</span>, which lets you launch a 
+					specific map in Google Maps. This property must be set in the Blocks Editor instead 
+					of the Component Designer because it needs to be dynamic; it will change based 
+					on whether the user chooses to visit the Eiffel Tower, the Louvre, or the Notre Dame 
+					Cathedral.</p>
+				
+				<p>We’ll get to the Blocks Editor in just a moment, but there are a couple more details 
+					to take care of before you can move on to programming the behavior for your 
+					components:<p>
+				
+				<ol>
+					<li>Download the file <em>metro.jpg</em> from the book site (<em>http://examples.oreilly.com/
+						0636920016632/</em>) onto your computer, and then choose Add in the Media 
+						to load it into your project. You’ll then need to set it as the Pictureproperty 
+						of Image1.</li>
+					<li>The <span class="python">ListPicker</span> component comes with a button; when the user clicks it, the 
+						choices are listed. Set the text of that button by changing the <span class="python">Text</span> property of 
+						<span class="python">ListPicker1</span> to “Choose Paris Destination”.</li>
+				</ol>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="Adding Behaviors to the Components">
+
+				<h3>Adding Behaviors to the Components</h3>
+				
+				<p>In the Blocks Editor, you’ll need to define a list of destinations, and two behaviors:</p>
+				
+				<ul>
+					<li>When the app begins, the app loads the destinations into the <span class="python">ListPicker</span> component
+						so the user can choose one.</li>
+					<li>When the user chooses a destination from the <span class="python">ListPicker</span>, the Maps application 
+						is launched and shows a map of that destination. In this first version of the app, 
+						you’ll just open Maps and tell it to run a search for the chosen destination.</li>
+				</ul>
+
+				<section class="subsection" data-number="5" data-name="Creating a List of Destinations">
+
+					<h4>Creating a List of Destinations</h4>
+					
+					<p>Open the Blocks Editor and create a variable with the list of Paris destinations using 
+						the blocks listed in Table 6-3.</p>
+
+<!-- Page 92 -->
+					
+					<div class="pagebreak">
+					  	<span class="pageNumber"> 92 </span> Chapter 6: Paris Map Tour
+					</div>
+					
+					<p class="caption">Table 6-3.Blocks for creating a destinations variable</p>
+					
+					<table>
+						<thead>
+							<tr>
+								<th class="colExpand">Block Type</th>
+								<th>Drawer</th>
+								<th>Purpose</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><span class="program_block">def variable</span> ("Destina-tions"</td>
+								<td>Definitions </td>
+								<td>Create a list of the destinations.</td>
+							</tr>
+							<tr>
+								<td><span class="program_block">make a list</span></td>
+								<td>Lists</td>
+								<td>Add the items to the list</td>
+							</tr>
+							<tr>
+								<td><span class="program_block">text</span> ("tour Eiffel")</td>
+								<td>Text</td>
+								<td>The first destiniation.</td>
+							</tr>
+							<tr>
+								<td><span class="program_block">text</span> ("Musée du Louvre")</td>
+								<td>Text</td>
+								<td>The second destination.</td>
+							</tr>
+							<tr>
+								<td><span class="program_block">text</span> ("Cathédrale Notre Dame")</td>
+								<td>Text</td>
+								<td>The third destination.</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<p>The destinations variable will call the make a <span class="python">list</span> function, into which you can 
+						plug the text values for the three destinations in your tour, as shown in Figure 6-2.</p>
+					
+					<figure>
+						<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch06img03.png">
+						</div>
+						<figcaption>Figure 6-2. Creating a list is easy in App Inventor</figcaption>
+					</figure>
+	
+				</section>
+	
+				<section class="subsection" data-number="6" data-name="Letting the User Choose a Destination">
+
+					<h3>Letting the User Choose a Destination</h3>
+					
+					<p>The purpose of the <span class="python">ListPicker</span> component is to display a list of items for the user to 
+						choose from. You preload the choices into the <span class="python">ListPicker</span> by setting the property 
+						Elementsto a list. For this app, you want to set the <span class="python">ListPicker</span>’s Elementsproperty to 
+						the destinationslist you just created. Because you want to display the list when the 
+						app launches, you’ll define this behavior in the <span class="program_block">Screen1.Initialize</span> event. You’ll need 
+						the blocks listed in Table 6-4.</p>
+					
+					<p class="caption">Table 6-4.Blocks for launching the ListPicker when the app starts</p>
+					
+					<table>
+						<thead>
+							<tr>
+								<th>Block type</th>
+								<th>Drawer</th>
+								<th>Purpose</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><span class="pBlock">Screen1.Initialize</span></td>
+								<td>Screen1</td>
+								<td>This event is triggered when the app starts.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">set ListPicker1.Elements to</span></td>
+								<td>ListPicker1</td>
+								<td>Set this property to the list you want to appear.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">global destinations</span></td>
+								<td>My Definitions</td>
+								<td>The list of destinations.</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<section class="subsection" data-number="7" data-name="How the blocks work">
+
+						<h5>How the blocks work</h5>
+						
+						<p><span class="program_block">Screen1.Initializeis</span> triggered when the app begins. As shown in Figure 6-3, the 
+							event handler sets the <span class="python">Elements</span> property of <span class="python">ListPickerso</span> that the three destina-tions
+							will appear.</p>
+
+<!-- Page 93 -->
+						
+						<div class="pagebreak">
+						  	<span class="pageNumber"> 93 </span> Adding Behaviors to the Components
+						</div>
+
+						<figure>
+							<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch06img04.png">
+							</div>
+							<figcaption>Figure 6-3. Put anything you want to happen when the app starts
+								in a Screen1.Initialize event handler</figcaption>
+						</figure>
+						
+						<div class="test_your_app">
+							<img src="/contents/appinventor/images/test_phone.jpg">
+						
+							<p><span class="apptest_header">Test your app.</span> First, you’ll need to restart the app by clicking 
+								“Connect to Device. . .” in the Blocks Editor. Then, on the phone, click 
+								the button labeled “Choose Paris Destination.” The list picker should 
+								appear with the three items.</p>
+						</div>
+
+					</section>
+
+				</section>
+
+				<section class="subsection" data-number="8" data-name="Opening Maps with a Search">
+
+					<h3>Opening Maps with a Search</h3>
+					
+					<p>Next, you’ll program the app so that when the user chooses one of the destinations, 
+						the <span class="python">ActivityStarter</span> launches Google Maps and searches
+						for the selected location.</p>
+					
+					<p>When the user chooses an item from the <span class="python">ListPicker</span> component, the
+						<span class="program_block">ListPicker.AfterPickingevent</span> is triggered. In the event handler
+						for <span class="python">AfterPicking</span>, you need to set the <span class="python">DataUri</span>of
+						the <span class="python">ActivityStarter</span> component so it knows which map to open, and then you
+						need to launch Google Maps using <span class="program_block">ActivityStarter.StartActivity</span>.
+						The blocks for this functionality are listed in Table 6-5.</p>
+
+					<p class="caption">Table 6-5. Blocks to launch Google Maps with the Activity Starter</p>
+					
+					<table>
+						<thead>
+						<tr>
+							<th>Block type</th>
+							<th>Drawer</th>
+							<th>Purpose</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td><span class="program_block">ListPicker1.AfterPicking</span></td>
+							<td>ListPicker1</td>
+							<td>This event is triggered when the user chooses from <span class="python">ListPicker.</span></td>
+						</tr>
+						<tr>
+							<td><span class="program_block">set ActivityStarter1.DataUri to</span></td>
+							<td>ActivityStarter1</td>
+							<td>The <span class="python">DataUri</span> tells Maps which map to open on launch.</td>
+						</tr>
+						<tr>
+							<td><span class="program_block">make text</span></td>
+							<td>Text</td>
+							<td>Build the <span class="python">DataUri</span> from two pieces of text.</td>
+						</tr>
+						<tr>
+							<td><span class="program_block">text</span> ("geo:0,0?q=")</td>
+							<td>Text</td>
+							<td>The first part of the <span class="python">DataUri</span> expected by Maps.</td>
+						</tr>
+						<tr>
+							<td><span class="program_block">ListPicker1.Selection</span></td>
+							<td>ListPicker1</td>
+							<td>The item the user chose.</td>
+						</tr>
+						<tr>
+							<td><span class="program_block">ActivityStarter1.StartActivity</span></td>
+							<td>ActivityStarter1</td>
+							<td>Launch Maps</td>
+						</tr>
+						</tbody>
+					</table>
+
+
+					<section class="subsection" data-number="9" data-name="How the blocks work">
+
+						<h5>How the blocks work</h5>
+						
+						<p>When the user chooses from the <span class="python">ListPicker</span>, the chosen item is stored in
+							<span class="program_block">ListPicker.Selection</span> and the <span class="python">AfterPickingevent</span>
+							is triggered. As shown in Figure 6-4, the <span class="python">DataUri</span> property is set to a text object
+							that combines “http://maps.google.com/?q=” with the chosen item. So, if the user chose the first item, “Tour Eiffel,”
+							the	<span class="python">DataUri</span>	would be set to “http://maps.google.com/?q=Tour Eiffel."</p>
+						
+<!-- Page 94 -->			
+						
+						<div class="pagebreak">
+						  	<span class="pageNumber"> 94 </span> Chapter 6: Paris Map Tour
+						</div>
+
+						<figure>
+							<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch06img05.png">
+							</div>
+							<figcaption>Figure 6-4. Setting the DataURI to launch the selected map</figcaption>
+						</figure>
+						
+						<p>Since you already set the other properties of the <span class="python">ActivityStarter</span>
+							so that it knows to open Maps, the <span class="program_block">ActivityStarter1.StartActivity</span>
+							block launches the Maps app and invokes the search proscribed by the <span class="python">DataUri.</span></p>
+						
+						<div class="test_your_app">
+							<img src="/contents/appinventor/images/test_phone.jpg">
+
+							<p><span class="apptest_header">Test your app.</span>Test your app.</span> Restart the app and click the “Choose Paris 
+								Destination” button again. When you choose one of the destina-tions, does a map of that destination appear? Google Maps should 
+								also provide a back button to return you to your app to choose 
+								again—does that work? (You may have to click the back button a 
+								couple of times.)</p>
+						</div>
+	
+					</section>
+	
+				</section>
+
+			</section>
+
+			<section class="section" data-number="10" data-name="Setting Up a Virtual Tour">
+
+				<h3>Setting Up a Virtual Tour</h3>
+				
+				<p>Now let’s spice up the app and have it open some great zoomed-in and street views 
+					of the Paris monuments so your friends at home can follow along while you’re away. 
+					To do this, you’ll first explore Google Maps to obtain the URLs of some specific maps. 
+					You’ll still use the same Parisian landmarks for the destinations, but when the user 
+					chooses one, you’ll use the <em>index</em>(the position in the list) of her choice to select and 
+					open a specific zoomed-in or street-view map.</p>
+				
+				<p>Before going on, you may want to save your project (using Save As) so you have a 
+					copy of the simple map tour you’ve created so far. That way, if you do anything that 
+					causes issues in your app, you can always go back to this working version and try 
+					again.</p>
+				
+				<section class="subsection" data-number="11" data-name="Finding the DataUri for Specific Maps">
+
+					<h4>Finding the DataUri for Specific Maps</h4>
+					
+					<p>The first step is to open Google Maps on your computer to find the specific maps you 
+						want to launch for each destination:</p>
+					
+					<ol>
+						<li>On your computer, browse to <em>http://maps.google.com</em></li>
+						<li>Search for a landmark (e.g., the Eiffel Tower)</li>
+					</ol>
+					
+<!-- Page 95 -->			
+					
+					<div class="pagebreak">
+					  	<span class="pageNumber"> 95 </span> Setting Up a Virtual Tour
+					</div>
+
+					<div class="clear">
+						<ol start="3">
+							<li>Zoom in to the level you desire.</li>
+							<li>Choose the type of view you want (e.g., Address, Satellite, or Street View).</li>
+							<li>Click the Link button near the top right of the Maps window and copy the URL 
+								for the map. You’ll use this URL (or parts of it) to launch the map from your app.</li>
+						</ol>
+					</div>
+
+					<p>Using this scheme, Table 6-6 shows the URLs you’ll use</p>
+					
+					<p class="caption">Table 6-6. Virtual tour URLs for Google Maps</p>
+					
+					<table>
+						<thead>
+							<tr>
+								<th id="colExpand66">Landmark</th>
+								<th>Maps URL</th>
+							</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td>Tour Eiffel</td>
+							<td><em>http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=eiffel+tow
+								er&sll=37.0625,-95.677068&sspn=48.909425,72.333984&ie=UTF8&hq=Tour+Eiffel
+								&hnear=Tour+Eiffel,+Quai+Branly,+75007+Paris,+Ile-de-France,+France&ll=48.85
+								7942,2.294748&spn=0.001249,0.002207&t=h&z=19</em></td>
+						</tr>
+						<tr>
+							<td>Musée du Louvre</td>
+							<td><em>http://maps.google.com/maps?f=q&source=s_q&hl=en&q=louvre&sll=48.86096,
+								2.335421&sspn=0.002499,0.004415&ie=UTF8&t=h&split=1&filter=0&rq=1&ev=zi
+								&radius=0.12&hq=louvre&hnear=&ll=48.86096,2.335421&spn=0.002499,0.00441
+								5&z=18</em></td>
+						</tr>
+						<tr>
+							<td>Cathédrale Notre Dame(Street View)</td>
+							<td><em>http://maps.google.com/maps?f=q&source=s_q&hl=en&q=french+landmarks&sll
+								=48.853252,2.349111&sspn=0.002411,0.004415&ie=UTF8&t=h&radius=0.12&split
+								=1&filter=0&rq=1&ev=zi&hq=french+landmarks&hnear=&ll=48.853252,2.349111
+								&spn=0,0.004415&z=18&layer=c&cbll=48.853046,2.348861&panoid=74fLTqeYdgk
+								PYj6KKLlqgQ&cbp=12,63.75,,0,-35.58</em></td>
+						</tr>
+						</tbody>
+					</table>
+
+					<p>To view any of these maps, paste the URLs from Table 6-6 into a browser. The first two 
+						are zoomed-in satellite views, while the third is a street view.</p>
+					
+					<p>You can use these URLs directly to launch the maps you want, or you can define 
+						cleaner URLs using the Google Maps protocols outlined at <em>http://mapki.com</em>. For 
+						example, you can show the Eiffel Tower map using only the GPS coordinates found in 
+						the long URL in Table 6-6 and the Maps geo:protocol:</p>
+					
+					<p><span class="python">geo:48.857942,2.294748?t=h&z=19</span></p>
+					
+					<p>Using such a DataUri, you’ll get essentially the same map as the map based on the 
+						full URL from which the GPS coordinates were extracted. The <span class="python">t=h</span>
+						specifies that Maps should show a hybrid map with both satellite and address views, and the
+						<span class="python">z=19</span> specifies the zoom level. If you’re interested in the details
+						of setting parameters for various types of maps, check out the documentation at
+						<em>http://mapki.com.</em></p>
+					
+					<p>To get comfortable using both types of URLs, we’ll use the geo:format for the first 
+						two <span class="python">DataUri</span> settings in our list, and the full URL for the third.</p>
+
+				</section>
+
+				<section class="subsection" data-number="12" data-name="Defining the dataURIs List">
+
+					<h3>Defining the dataURIs List</h3>
+					
+					<p>You’ll need a list named dataURIs, containing one DataURIfor each map you want to 
+						show. Create this list as shown in Figure 6-5 so that the items correspond to the items 
+						in the destinations list (i.e., the first dataURIshould correspond to the first destination, 
+						the Eiffel Tower).</p>
+					
+<!-- Page 96 -->			
+					
+					<div class="pagebreak">
+					  	<span class="pageNumber"> 96 </span> Chapter 6: Paris Map Tour
+					</div>
+
+					<figure>
+						<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch06img06.png">
+						</div>
+						<figcaption>Figure 6-5. The list of maps for your virtual tour</figcaption>
+					</figure>
+
+					<p>The first two items shown are <span class="python">DataURIs</span> for the Eiffel Tower and the Louvre. They both 
+						use the <span class="python">geo:</span> protocol. The third <span class="python">DataURI</span> is not shown completely because the block 
+						is too long for this page; you should copy this URL from the entry for “Notre Dame, 
+						Street View” in Table 6-6 and place it in a <span class="program_block">text</span> block.<p>
+				
+				</section>
+
+				<section class="subsection" data-number="13" data-name="Modifying the ListPicker.AfterPicker Behavior">
+
+					<h3>Modifying the ListPicker.AfterPicking Behavior</h3>
+					
+					<p>In the first version of this app, the <span class="program_block">ListPicker.AfterPicking</span>
+						behavior set the <span class="python">DataUri</span> to the <em>concatenation</em> (or combination)
+						of “http://maps.google.com/?q=” and the destination the user chose from the list (e.g., Tour Eiffel).
+						In this second version, the <span class="python">AfterPicking</span> behavior must be more sophisticated,
+						because the user is choosing from one list (<span class="python">destinations</span>), but the
+						<span class="python">DataUri</span> must
+						be selected from another list (<span class="python">dataURIs</span>). Specifically, when the user chooses
+						an item from the <span class="python">ListPicker</span>, you need to know the <em>index</em> of his choice so you
+						can use it to select the correct <span class="python">DataUri</span> from the <span class="python">dataURIs</span>
+						list. We’ll explain more about what an index is in a moment, but it helps to set up the blocks first to better
+						illustrate the concept. There are quite a few blocks required for this functionality, all of which are listed in
+						Table 6-7.</p>
+					
+					<p class="caption">Table 6-7. Blocks for choosing a list item based on the user’s selection</p>
+					
+					<table>
+						<thead>
+						<tr>
+							<th>Block Type</th>
+							<th>Drawer</th>
+							<th>Purpose</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td><span class="program_block">def variable</span> ("index") </td>
+							<td>Definitions</td>
+							<td>This variable will hold the index of the user’s choice.</td>
+						</tr>
+						<tr>
+							<td><span class="program_block">number</span> (1)</td>
+							<td>Math</td>
+							<td>Initialize the index variable to 1.</td>
+						</tr>
+						<tr>
+							<td><span class="program_block">ListPicker1.AfterPicking</span></td>
+							<td>ListPicker1</td>
+							<td>This event is triggered when the user chooses an item.</td>
+						</tr>
+						<tr>
+							<td><span class="program_block">set global index to</span></td>
+							<td>My Definitions</td>
+							<td>Set this variable to the position of the selected item.</td>
+						</tr>
+						<tr>
+							<td><span class="program_block">position in list</span></td>
+							<td>Lists</td>
+							<td>Get the position (index) of a selected item.</td>
+						</tr>
+						<tr>
+							<td><span class="program_block">ListPicker1.Selection</span></td>
+							<td>ListPicker1</td>
+							<td>The selected item—for example, “Tour Eiffel.” Plug this into the “thing”
+								slot of <span class="program_block">position in list</span>.</td>
+						</tr>
+						<tr>
+							<td><span class="program_block">global destinations</span></td>
+							<td>My Definitions</td>
+							<td>Plug this into the “list” slot of <span class="program_block">position in list</span>.</td>
+						</tr>
+						<tr>
+							<td><span class="program_block">set ActivityStarter.DataUri</span></td>
+							<td>ActivityStarter</td>
+							<td>Set this before starting the activity to open the map.</td>
+						</tr>
+						<tr>
+							<td><span class="program_block">select list item</span></td>
+							<td>Lists</td>
+							<td>Select an item from the <span class="program_block">dataURIs</span> list.</td>
+						</tr>
+						<tr>
+							<td><span class="program_block">global DataURIs</span></td>
+							<td>My Definitions</td>
+							<td>The list of <span class="python">DataURIs</span>.</td>
+						</tr>
+						</tbody>
+					</table>
+					
+<!-- Page 97 -->			
+					
+					<div class="pagebreak">
+					  	<span class="pageNumber"> 97 </span> Setting Up a Virtual Tour
+					</div>
+			
+					<p class="caption">Table 6-7. Blocks for choosing a list item based on the user’s selection (continued)</p>
+					
+					<table>
+						<thead>
+						<tr>
+							<th>Block type</th>
+							<th>Drawer</th>
+							<th>Purpose</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td><span class="program_block">global index</span></td>
+							<td>My Definitions</td>
+							<td>Hold the position of the chosen item.</td>
+						</tr>
+						<tr>
+							<td><span class="program_block">ActivityStarter.StartActivity</span></td>
+							<td>ActivityStarter</td>
+							<td>Launch the Maps app.</td>
+						</tr>
+						</tbody>
+					</table>
+						
+					<section class="subsection" data-number="14" data-name="How the blocks work">
+
+						<h4>How the blocks work</h4>
+						
+						<p>When the user chooses an item from the <span class="python">ListPicker</span>, the <span class="python">AfterPicking</span> event 
+							is triggered, as shown in Figure 6-6. The chosen item—e.g., “Tour Eiffel”—is in 
+							<span class="program_block">ListPicker.Selection</span>. The event handler uses this to find the position of the selected 
+							item, or the <em>index</em> value, in the destinationslist. The index corresponds to the posi-tion of the chosen destination in the list. So if “Tour Eiffel” is chosen, the index will be 
+							1; if “Musée du Louvre” is chosen, it will be 2; and if “Cathédrale Notre Dame de Paris” 
+							is chosen, the index will be 3.</p>
+						
+						
+						<figure>
+							<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch06img07.png">
+							</div>
+							<figcaption>Figure 6-6. Choosing a list item based on the user’s selection</figcaption>
+						</figure>
+
+						<p>The index can then be used to select an item from another list—in this case, data
+							URIs—and to set that entry as the <span class="python">ActivityStarter’s DataUri</span>. Once this is set, the 
+							map can be launched with <span class="program_block">ActivityStarter.StartActivity.</span></p>
+						
+						
+						<div class="test_your_app">
+							<img src="/contents/appinventor/images/test_phone.jpg">
+							
+							<p><span class="apptest_header">Test your app.</span> On the phone, click the button labeled “Choose Paris 
+								Destination.” The list should appear with the three items. Choose 
+								one of the items and see which map appears.</p>
+
+							<div class="clear"></div>
+						</div>
+						
+						
+<!-- Page 98 -->			
+						
+						<div class="pagebreak">
+						  	<span class="pageNumber"> 98 </span> Chapter 6: Paris Map Tour
+						</div>
+	
+					</section>
+	
+				</section>
+
+			</section>
+
+			<section class="section" data-number="15" data-name="Variations">
+
+				<h3>Variations</h3>
+				
+				<p>Here are some suggested variations to try:</p>
+				
+				<ul>
+					<li>Create a virtual tour of some other exotic destination, or of your workplace or 
+						school.</li>
+					<li>Create a customizable Virtual Tour app that lets a user create a guide for a location 
+						of her choice by entering the name of each destination along with the URL of a 
+						corresponding map. You’ll need to store the data in a <span class="python">TinyWebDB</span>
+						database and create a Virtual Tour app that works with the entered data. For an example of how 
+						to create a <span class="python">TinyWebDB</span> database, see the MakeQuiz/TakeQuiz app in Chapter 10.</li>
+				</ul>
+
+			</section>
+
+			<section class="section" data-number="16" data-name="Summary">
+
+				<h3>Summary</h3>
+				
+				<p>Here are some of the ideas we've covered in this chapter:</p>
+				
+				<ul>
+					<li>List variables can be used to hold data like map destinations and URLs.</li>
+					<li>The <span class="python">ListPicker</span> component lets the user choose from a list of items. The 
+						<span class="python">ListPicker’s Elements</span> property holds the list, the
+						<span class="python">Selection</span> property holds 
+						the selected item, and the <span class="python">AfterPicking</span> event is triggered when the user 
+						chooses an item from the list.</li>
+					<li>The <span class="python">ActivityStarter</span> component allows your app to launch other apps. This 
+						chapter demonstrated its use with the Maps application, but you can launch a 
+						browser or any other Android app as well, even another one you created yourself. 
+						See <em>http://appinventor.googlelabs.com/learn/reference/other/activitystarter.html</em> for 
+						more information.</li>
+					<li>You can launch a particular map in Google Maps by setting the <span class="python">DataUri</span>
+						property. You can find URIs by configuring a particular map in the browser and then 
+						choosing the Link button to find the URI. You can either place such a URI directly 
+						into the <span class="python">DataUri</span> of your <span class="python">ActivityStarter</span>, or build your own URI using the 
+						protocols defined at <em>http://mapki.com</em>.</li>
+					<li>You can identify the <em>index</em> of a list item using the <span class="program_block">position in list</span> block. With 
+						<span class="python">ListPicker</span>, you can use list position to find the index of the item the user 
+						chooses. This is important when, as in this chapter, you need the index to choose 
+						an item from a second, related list. For more information on Listvariables and 
+						the <span class="python">ListPicker</span> component, see Chapter 19.</li>
+				</ul>
+
+			</section>
+			
+		</div>
+	</body>
+</html>

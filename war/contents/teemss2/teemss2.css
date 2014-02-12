@@ -1,0 +1,218 @@
+.teemss2 .container {
+	margin: auto;
+	width:800px;
+	font-family: Times New Roman, serif;
+	font-size: 18px;
+}
+
+/* Unit titles and section titles */
+.teemss2 h2 {
+	font-family: Arial, sans-serif;
+	font-size: 30px;
+	font-weight: bold;
+}
+/* Technical hints */
+.teemss2 h3 {
+	font-family: Arial, sans-serif;
+	font-size: 25px;
+	text-align: center;
+	font-weight: bold;
+}
+
+.teemss2 .bold {
+	font-weight:bold;
+}
+
+.teemss2 .red {
+	color: red;
+	font-weight: bold;
+}
+
+.teemss2 strong {
+	color: blue;
+}
+
+.teemss2 .bold {
+	font-weight:bold;
+}
+
+.teemss2 .url {
+	color: blue;
+	text-decoration: underline;
+}
+
+.teemss2 .essay-answer {
+	width:550px;
+	border:2px solid black;
+	padding:5px 10px 5px 10px;
+	margin:30px auto 20px auto;
+	height:250px;
+	font-family: Arial, sans-serif;
+	font-size:14px;
+	background-color:white;
+}
+
+.teemss2 .short-answer {
+	margin:15px auto 10px auto;
+	width:100px;
+	border:1px solid #000;
+	height:70px;
+	box-shadow:1px 1px 0 1px #000;
+	-moz-box-shadow:1px 1px 0 1px #000;
+	-webkit-box-shadow:1px 1px 0 1px #000;
+	background-color:white;
+}
+
+.teemss2 img {
+	margin:auto auto auto -41px;
+}
+.teemss2 .center {
+	display: block;
+	margin: 50px auto 50px auto;
+}
+
+.teemss2 .center-wide {
+	display:block;
+	margin:50px auto 50px -38px;
+	width:800px;
+}
+
+.teemss2 .left {
+	display:block;
+	margin:50px auto 50px -40px;
+}
+
+.teemss2 .pagebreak {
+	border-bottom: 3px solid #AAAAAA;
+	width:800px;
+	margin-top:75px;
+	margin-bottom:75px;
+	text-align:right;
+	padding:15px;
+	color:#222222;
+	font-family:Arial, sans-serif;
+	font-size:14px;
+}
+
+.teemss2 li {
+	margin-top:15px;
+	margin-bottom:15px;
+}
+
+.teemss2 li ol li {
+	list-style-type:lower-alpha;
+	margin-left:5px;
+}
+
+.teemss2 li ol li ul li {
+	list-style-type:circle;
+}
+
+.teemss2 li .numbered li {
+	list-style-type:decimal;
+}
+
+.teemss2 li .pagebreak {
+	margin-left:-40px;
+}
+
+.teemss2 li ol li .pagebreak {
+	margin-left:-80px;
+}
+
+.teemss2 .indented {
+	margin-left:40px;
+}
+
+.teemss2 .small-white {
+	margin-bottom: 350px;
+}
+
+.teemss2 .big-white {
+	margin-bottom: 700px;
+}
+
+.teemss2 .very-small-white {
+	margin-bottom: 100px;
+}
+
+.teemss2 .journal {
+	border: 2px solid black;
+	padding: 5px 10px 5px 10px;
+	margin: 30px auto 20px auto;
+	background-color: #FFFF99;
+}
+
+.teemss2 .journal-title {
+	font-family: "Comic Sans MS", cursive, sans-serif;
+	color:blue;
+	font-size:25px;
+}
+
+.teemss2 table {
+	background-color:#FFFF99;
+	border-spacing: 0;
+}
+
+.teemss2 table.noBackgroundColor {
+	background-color: white;
+}
+
+.teemss2 th, .teemss2 td {
+	border: 2px solid black;
+	padding: 4px;
+}
+
+.teemss2 .center-table {
+	margin: 50px auto 50px auto;
+}
+
+.teemss2 .checkbox td:nth-of-type(odd) {
+	background-color:white;
+	border:2px solid black;
+	height:20px;
+	min-width:74px;
+}
+
+.teemss2 .bordered td:nth-of-type(even) {
+	border: 1px solid black;
+	min-width: 74px;
+	text-align: right;
+	padding:7px;
+}
+
+.teemss2 .bordered td:nth-of-type(odd) {
+	min-width: 74px;
+	border: 1px solid black;
+}
+
+.teemss2 .bordered {
+	border: 1px solid black;
+}
+
+.teemss2 .bordered .table-answer {
+	background-color:white;
+	border: 2px solid black;
+}
+
+.teemss2 sub {
+	vertical-align:bottom;
+	font-size:11px;
+}
+
+.teemss2 sup {
+	vertical-align:top;
+	font-size:11px;
+}
+
+.teemss2 .unbordered {
+	background-color: white;
+	border: none;
+}
+
+.teemss2 .unbordered td, .teemss2 .unbordered th {
+	border:none;
+}
+
+
+

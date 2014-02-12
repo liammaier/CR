@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+
+<head>
+
+    <title>Chapter 17</title>
+
+</head>
+
+<body>
+
+    <div id="FLU" class="container fit">
+
+        <section class="intro" data-number="0" data-name="Chapter 17 Introduction">
+            <img src="/contents/fluency/images/sidepic.png"/>
+
+            <div class="content">
+                <h1><span class="first-sentence">A Case Study in Database Organization</span></h1>
+                <h2>The iDiary Database</h2>
+
+                <h3>learning objectives</h3>
+                <ul class="learning-objectives">
+                    <li>Explain the relationship between XML and XSL</li>
+                    <li>Describe how to express metadata using XML</li>
+                    <li>Demonstrate the incremental creation of a database</li>
+                    <li>Explain the relationship between tags and templates</li>
+                    <li>Show how to use tag attributes to display images</li> 
+                    <li>State how information is hidden in XML databases</li>
+                </ul>
+            </div> <!-- /content -->
+        </section> <!-- /intro1 -->
+
+        <div class="pagebreak pageNumber"></div>
+
+        <section class="intro"> <!-- intro2 -->
+
+            <div class="content">
+
+                <blockquote>
+                    For a list of all the ways technology has Piled to improve the quality of life please press three.
+                    <p class="citation">&dash;Alice Kahn</p>
+                </blockquote>
+
+                <div class="intro-text">
+                    <p><strong>Many People</strong> keep a diary, and in the Information Age it is natural to it in digital form. It's not a blog &dash; that's for information to be shared with others. A diary is for one's own personal use, and it is not for public entertainment. Traditionally, diaries have been text only, handwritten, and organized linearly. But in the world of online information, a digital diary can contain a wide variety of electronic information, including links to Web photos, animations, as well as the daily record of one's private thoughts. this new form, a diary is not a linear chain of text, but a personal database. And that fact makes it an ideal topic for a case study in creating database: opportunity to learn database principles in a personally useful way.</p>
+
+                    <p>In this chapter we build a diary database by applying the XML approach (see Chapter 16) to structure our data. That's our physical database. To display the iDiary, we convert the XML to HTML so it can be viewed with browser. The conversion uses a language based on XML, called the Extensible Stylesheet Language, or XSL. Since the idea is that each of us personalize a diary to our own needs, the database of this chapter only illustrates the <em>principles</em>. We create a fictional diary built around someone's re of the most interesting thing learned each day.</p>
+
+                    <p>After illustrating an example of the database we will be creating, we review XML by constructing a small database recording the foreign countries we have visited. We then introduce XSL to display the Travels database. Prepared with the right knowledge, we incrementally build the iDiary database with its companion display information. We include text, titles, captions, images, videos, and poetry to illustrate how irregular data can be organized in a coherent, rational way. Finally, we consider how our database facilities will be used each day.</p>
+                </div>
+            </div> <!-- /content -->
+
+            <img src="/contents/fluency/images/sidepic.png">
+        </section> <!-- /intro2 -->
+
+        <div class="pagebreak pageNumber">513</div>
+
+        <section class="page"> <!-- page1 -->
+
+            <section class="section" data-number="1" data-name="Thinking About a Personal Database"> <!-- section1 -->
+                <h2>Thinking About a Personal Database</h2>
+
+                <p><span class="first-sentence">To start, we analyze the problem of making a personal database that can store any information that catches our interest.</span> Though we will be thinking about how to solve the technical problems of database design, the discussion will guide us in the organization of the chapter as well.</p>
+
+                <section class="subsection" data-number="2" data-name="Regular Versus Irregular Data">
+                    <h3>Regular Versus Irregular Data</h3>
+
+                    <p><span class ="first-sentence">Relational databases, as discussed in the last chapter, can be expressed in neat tables with regular rows, attributes, keys, relationships, and so on.</span> This regularity and the science of databases enable us to create queries in which computers do all of the difficult work of organizing and displaying the information we want to see. The key is the regularity of the data and the rigid structure imposed on it. Relational databases may be powerful, but very often the information we want to record isn't so regular. We need a more flexible approach. The iDiary database is an example of an irregular data collection.</p>
+
+                    <div class="fluency-alert">
+                        <strong class="fluency-alert-title">All the Right Attributes.</strong> Despite being a chapter about databases, the heavy use of XML and XHTML implies that the word "attribute" will generally mean <em>tag</em> attribute in this context.
+                    </div>
+
+                    <p>We record things in the iDiary that we find interesting in our daily lives, which can be almost anything: text, photos, URLs to interesting sites, animations, poems, videos, and so forth. Because we don't want to limit the kinds of information we can store, we will use XM L to specify the metadata, implying the database will be an XML tree. In tagging the items stored in the database, we will use the Identity, Affinity, and Collection rules described in Chapter 16. In this way the computer can know what kinds of data it is storing.</p>
+
+                    <p>Collecting information into a heap, however, is not enough organization. We need to impose some structure on the data. Organizing it helps us keep track of what we have, and it also helps the computer to display it. Since it is natural to think of the iDiary being added to each day, we will organize the database in time sequence, that is, by date. That's not much structure compared to a relational database, but it will be enough to make our irregular data orderly enough to be useful.</p>
+
+                </section>
+
+                <section class="subsection" data-number="3" data-name="Physical Versus Logical">
+                    <h3>Physical Versus Logical</h3>
+
+                    <p><span class ="first-sentence">The XML tree will be our physical database.</span> It is the structure into which we store the data. Because our database is mostly an archive rather than a "working database," we do not expect continuous revisions and updates, but only additions. That means we do not worry about the sorts of things that concern database administrators, like redundancy and access speed. All we want is con- venience, which will still take some preparation.</p>
+
+                    <p>The logical database is, of course, our view of the iDiary. If it were a relational database, we could specify queries to show the information of interest</p>
+
+                    <div class="pagebreak pageNumber">514</div>
+
+                    <p>to us, merging tables to have just the information of importance. But the XML tree is not a relational database. Instead of using queries, we create a short description using XSL that picks out of the XML tree the data we want and says how to display it. <strong>XSL</strong> stands for <strong>Extensible Stylesheet Language</strong>, and it is a key part of the XML effort to standardize Web databases. The XSL description converts the data into HTML so that it can be displayed on the screen using a browser. As with all database views, the XSL approach gives us flexibility. We can decide to display everything in the XML tree, or we can choose instead only to display part of it &dash; for example, the movie reviews &dash; and leave everything else hidden. Therefore, the XSL description will be like our queries, plucking data from the physical database and showing us exactly what we want to see.</p>
+
+                </section>
+
+                <section class="subsection" data-number="4" data-name="The iDiary">
+                    <h3>The iDiary</h3>
+
+                    <p><span class ="first-sentence">Our strategy will be to build the iDiary database and its stylesheet display together and incrementally.</span> By beginning small and adding as we go, we will not be intimidated by a huge task. Also, if our small database is working and we then add some new feature to it, causing it not to work, we know that the error is in the part that was just added. This is a reliable way to limit the problems of debugging a complicated system. Finally, the step&dash;by&dash;step approach mirrors the way in which databases and other systems are enhanced over time. The plan will ensure success and be a good example for independent database projects.</p>
+
+                    <p>Figure 17.1 shows a sample from the database we are creating. To familiarize yourself with the database, notice that the image of the database is a long list of daily entries. The entries are quite diverse &dash; science news, poetry, book reviews, and other topics. Not only are these few entries interesting, but we expect that over time this will be a rich archive of factoids that we want to remember.</p>
+
+                    <p>We build the iDiary after the next section. First, we need to explore the ideas with a practice database.</p>
+
+                </section>  
+
+            </section> <!-- /section1 -->
+
+            <section class="section" data-number="5" data-name="A Perliminary Exercise"> <!-- section1 -->
+                <h2>A Perliminary Exercise</h2>
+
+                <p><span class="first-sentece">To become familiar with the techniques of creating and displaying XML databases, let's take a moment to construct a separate application, which is a database of countries visited.</span> This database will have a similar organization to the iDiary, but is much simpler, allowing us to focus on how it's done.</p>
+
+                <div class="fluency-tip">
+                    <strong class="fluency-tip-title">Use a Text Editor for XML.</strong> Like XHTML, XML and XSL files should be written using a text editor like Notepad++ or TextWrangler rather than a word processor like Word or WordPerfect. Text editiors give you only text you see.
+                </div>
+
+                <div class="pagebreak pageNumber">515</div>
+
+                <figure>
+                    <img src="/contents/fluency/images/figure17.1-1.png" />
+                </figure>
+                <figcaption>
+                    <span class="figureId">Figure 17.1</span> Part 1: An example of the planned iDiary. 
+                </figcaption>
+
+                <div class="pagebreak pageNumber">516</div>
+
+                <figure>
+                    <img src="/contents/fluency/images/figure17.1-2.png" />
+                </figure>
+                <figcaption>
+                    <span class="figureId">Figure 17.1</span> Part 2: An example of the planned iDiary. 
+                </figcaption>
+
+                <div class="pagebreak pageNumber">517</div>
+
+                <section class="subsection" data-number="6" data-name="Travels Database">
+                    <h3>Travels Database</h3>
+                    
+                    <p><span class="first-sentece">Imagine that in our travels we have visited Italy, Switzerland, France, and Japan.</span> Our database will list the countries, and for each country list a few places &dash; usually cities &dash; that we visited. We will use nontextual data by displaying the country's flag.</p>
+
+                    <p><span class="paragraph-header">The XML definition.</span> Our entries in the database will be a list of countries, and each will have a name and a tour that contains a list of sights. The name of the file containing the country's flag will be given as a tag attribute for the <code>&lt;name&gt;</code> tag. Therefore, the database will be a sequence of country instances with the structure</p>
+
+                    <p><code>&lt;country&gt;</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;name flag="<em>file</em>.gif"&gt; <em>Country Name</em> &lt;/name&gt;</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;tour&gt;</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;sight&gt; <em>Sight name</em> &lt;/sight&gt;</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>...</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;sight&gt; <em>Sight name</em> &lt;/sight&gt;</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;/tour&gt;</code></p>
+                    <p><code>&lt;/country&gt;</code></p>
+
+                    <p>We use a standard text editor to enter the data into a file, tagging as we go. Recall that to identify the file as XML, we must give it the .xml file extension and include as the first line of the file this exact text:</p>
+
+                    <p><code>&lt;?xml version ="1.0" encoding="ISO- 8859-1"?&gt;</code></p>
+
+                    <p>Recalling that the root element is the Collective tag enclosing all items in an XML file, we make <code>&lt;travels&gt;</code> the root element of our tree, and within that we list countries using the structure just shown. Finally, we save the file as travels.xml.</p>
+
+                    <p><span class="paragraph-header">Direct check of XML.</span> We can have a browser display our XML as written by just opening the file with a browser, as shown in Figure 17.2. The browser looks for stylesheet information &dash; we explain that momentarily &dash; and finding none, because we have commented out the second line, it shows the XML tree. The color coding helps us to check that we have the structure right, and we verify that our intended organization is what the file contains. Notice that the display is active in that we can close and open tags used in the Affinity or Collective manner. For example, the inset in Figure 17.2 shows the result of closing the <code>&lt;tour&gt;</code> tags by clicking on the minus (&dash;) signs. Closing parts of the database allows us to see the <code>&lt;country&gt;</code> tags without the clutter of the <code>&lt;tour&gt;</code> tags.</p>
+
+
+                    <div class="fluency-tip">
+                        <strong class="fluency-tip-title">Error Console.</strong>Recall that Firefox tells you what it doesn't like about your Web pages on the Error Console (<strong>Tools &gt; Error Console</strong>). Consult it when, for example, it displays your XML completely unformatted. 
+                    </div>
+
+                    <div class="pagebreak pageNumber">518</div>
+
+                    <figure>
+                        <img src="/contents/fluency/images/figure17.2.png" />
+                    </figure>
+                    <figcaption>
+                        <span class="figureId">Figure 17.2</span> The display of the <code>travels.xml</code> file using the <strong>Page Source</strong> view of the Firefox browser.
+                    </figcaption>
+
+                </section>
+
+                <section class="subsection" data-number="7" data-name="Displaying the Travels with XSL">
+                    <h3>Displaying the Travels with XSL</h3>
+                    
+                    <p><span class="first-sentece">The message from the browser (in the Error Console) for the file in figure 17.2 said that no style information was found.</span> Style information tells the browser how to display a markup language like XML. Using the style information, the tags are eliminated and the information is displayed according to the style description. For example, the travels.xml file can be displayed as shown in Figure 17.3 using XSL, which is designed to provide the style information. In this section we discuss how to do this.</p>
+
+                    <p><span class="paragraph-header">Connecting XML with style.</span> Recall from Chapter 4 that the Cascading Style Sheet approach allows an XH TML page to have its style information included in an external file with a <code>.css</code> extension; the browser merges the two. XML uses the same idea, with the style information in an external file with an <code>.xsl</code> extension. So, we will put our style information in a file named <code>traveISS.xsl</code>. These two files get associated because we put in the XML file, as the second line, the text</p>
+                    
+                    <p><code>&lt;?xml-stylesheet type="text/xsl" href="traveISS.xsl"?&gt;</code></p> 
+
+                    <p>which tells the browser, when it starts to process the XM L file, where to find the style information. This is the line the browser didn't find in Figure 17.2. The line must be exactly as shown, except, of course, for the file name.</p>
+                    
+                    <div class="pagebreak pageNumber">519</div>
+
+                    <figure>
+                        <img src="/contents/fluency/images/figure17.3.png" />
+                    </figure>
+                    <figcaption>
+                        <span class="figureId">Figure 17.3</span> The display of the <code>travels.xml</code> file using the <code>travelISS.xsl</code> style information.
+                    </figcaption>
+
+                    <p><span class="paragraph-header">The idea of XSL.</span> The <code>.xsl</code> file contains a series of rules on how to format the information enclosed in XML tags. Expect one rule per tag. The rules are called <strong>templates</strong> in XSL, because they describe how the information is to look without actually having the information. (The information, of course, is in the XML file.) How does the template describe how the information is to be displayed? It uses XHTML. And this is what makes XSL easy to learn: It is basically describing a page with the famil iar XHTML.</p>
+
+                    <p>Figure 17.4 shows this approach schematically. The database (DB) and stylesheet (SS) are input to a <em>transformer</em> &dash; a part of the browser software &dash; which "walks" the XML tree, converting all of the tags to HTML according to the template's specification. When an XML tag is found, the transformer looks up the template for that tag in the stylesheet file, and does what the template says, producing HTML, which is accumulated to be displayed at the end. Usually, each template gives a bit of HTML and the transformer "stuffs</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/figure17.4.png" />
+                    </figure>
+                    <figcaption>
+                        <span class="figureId">Figure 17.4</span> Schematic diagram showing how the XML database tree and the XSL style information are merged to produce HTML; the final HTML result is displayed by the browser.
+                    </figcaption>
+
+                    <div class="pagebreak pageNumber">520</div>
+
+                    <p>in" the data from the XML file in the right places. Finally, when the "walk" of the XML tree is over, the HTML page is displayed.</p>
+
+                    <p><span class="paragraph-header">XSL templates.</span> It's time to look at some XSL templates. Figure 17.5 shows the XSL file used to display the image in Figure 17.3. Notice that there are tags everywhere. This is because XSL is really just XM L! You will recognize the first line as the required first line of any XML file. The second line, also required, is a <code>&lt;xsl:stylesheet . . .&gt;</code> tag with tag attributes specifying the details of the stylesheet; these make it an XSL file. After that come the templates, one for each tag. Notice that because the <code>&lt;xsl:stylesheet . . .&gt;</code> tag is the root element of this XML file, it must be closed with <code>&lt;/xsl:stylesheet&gt;</code> at the end.</p>
+
+                    <div class="fluency-tip">
+                        <strong class="fluency-tip-title">Plain <code>&lt;html&gt;</code>.</strong> Notice that the XSL template in Figure 17.5 uses (in the template for <strong>travels</strong>) an <strong><code>&lt;html&gt;</code></strong> tag with no attributes, unlike Chapter 4. This plain <strong><code>&lt;html&gt;</code></strong> is correct when used in XSL templates.
+                    </div>    
+
+                    <figure>
+                        <img src="/contents/fluency/images/figure17.5.png" />
+                    </figure>
+                    <figcaption>
+                        <span class="figureId">Figure 17.5</span> The contents of the <code>travelss.xsl</code> file that produced figure 17.3.
+                    </figcaption>
+
+                    <div class="pagebreak pageNumber">521</div>
+
+                    <p>There are five different tags used in the XML tree, and five templates in the XSL file, one for each. Notice that the templates have a standard form, which specifies how to display the tags in XHTML.</p>   
+
+                    <p><code>&lt;xsl:template match= "<em>tag name</em>"&gt;</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;<code>...</code></p>
+                    <p><code>&lt;/xsl:template&gt;</code></p>
+
+                    <p>This match tag attribute tells which XML tag the template is for. Between the start and end tags is the specification in XHTML (and possibly other XSL tags) for how to display the XML.</p>                                 
+
+                    <div class="fluency-tip">
+                        <strong class="fluency-tip-title">Use the Right Style for XSL.</strong> XSL files must be identified as such, and so they are required to begin with the standard XML tag on the first line <br/>
+                        <code>&lt;?xml version = "1.0" encoding="ISO-8859-1"?&gt;</code><br/>
+                        followed by the required XSL tag <br/>
+                        <code>&lt;xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;</code><br/>
+                        on the second line.The file should be ASCII text, and the extension should be <code>.xsl</code>.
+                    </div>    
+
+                    <p>Because there are tags everywhere, it is important to understand how the computer tells them all apart—it's a good way for us to tell them apart! The tag at the start <code>&lt;?xml . . .?&gt;</code> is the standard XM L tag. The tags beginning with <code>&lt;xsl: . . .&gt;</code> are XSL tags. The rest of the tags are XH TML tags. So, when the transformer is using this file to look up how to display the XML, it can keep everything straight.</p>
+
+                    <p>Next, we explain how each of the templates works.</p>
+
+                    <p><span class="paragraph-header">Creating the travelogue display.</span> Consider the templates of <code>traveISS.xsl</code>. The first template, which matches the <code>&lt;travels&gt;</code> XML tag, has the form</p>  
+
+                    <figure>
+                        <img src="/contents/fluency/images/extra17.1.png" />
+                    </figure> 
+
+                    <div class="pagebreak pageNumber">522</div>
+
+                    <p>Notice that between the <code>&lt;xsl:template . .&gt;</code> tags are XHTML tags, which you might recognize as the start of a Web page and the end of that same Web page. (We explain the <code>&lt;xsl:apply . . .&gt;</code> momentarily.) This template says that whenever the transformer encounters a <code>&lt;travels&gt;</code> tag in the XML file, it should include this XHTML text as a description of how to display the <code>&lt;travels&gt;</code> tag. Of course, there is only one <code>&lt;travels&gt;</code> tag in the XML file, because it is the root element tag of the XML tree. So, the way to display this one tag is to set up the Web page for the display. Then, as the other tags are processed, they will fill in other parts of the page.</p>
+
+                    <p>You can see that the template includes the necessary heading and body tags to make the image shown in Figure 17.3. At the "deepest point" in these tags are <code>&lt;table&gt;</code> tags, because the content of the travels.xml file is going to be displayed as a table. Each <code>&lt;country&gt;</code> will be a row in this table, with the general structure</p>             
+
+                    <figure>
+                        <img src="/contents/fluency/images/extra17.2.png" />
+                    </figure>  
+
+                    <p>This structure calls for two items in the first cell of the table &dash; the name and the flag image &dash; and a list of items in the second cell, depending on how many sights there are in a tour.</p>
+
+                    <p>We know that a row of the table will correspond to each <code>&lt;country&gt;</code> tag, because the template matching "country" places the <code>&lt;tr&gt;</code> tags for the table rows. Also, the <code>&lt;name&gt;</code> tag and the <code>&lt;tour&gt;</code> tags place the table data tags <code>&lt;td&gt;</code>. The following table summarizes the style roles of the XML tags we have.</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/extra17.3.png" />
+                    </figure>
+
+                    <p>Each XML tag has a stylistic role to play in the overall creation of the Web page.</p>
+
+                    <p>How does the data get inside the table data tags? As the transformer is processing the XML file, it is always looking for tags and trying to match them to the templates of the XSL file. Anything it finds that is not a tag &dash; that is, the</p>
+
+                    <div class="pagebreak pageNumber">523</div>
+
+                    <p>actual data &dash; it puts directly into the XHTML definition. So, to get the content of the file displayed requires no effort at all.</p>
+
+                    <p><span class="paragraph-header">The <strong>apply</strong> operation</span> A curious aspect of the XSL specification in Figure 17.5 is the</p>
+                    
+                    <p><code>&lt;xsl:apply&dash;templates/&gt;</code></p>
+                    
+                    <p>tag. We know from the <code>/&gt;</code> that this is a stand&dash;alone tag, like <code>&lt;br/&gt;</code>, with no mate. Also, notice that the tag is included once in each of the templates. The <code>&lt;xsl:apply&dash;templates/&gt;</code> tag means, "now process whatever is inside this tag." So, for example, the template matching <code>&lt;tour&gt;</code>:</p>
+                    
+                    <p><code>&lt;xsl:template match="tour"&gt;</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;td&gt;</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;xsl:apply&dash;templates/&gt;</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;/td&gt;</code></p>
+                    <p><code>&lt;/xsl:template&gt;</code></p>
+
+                    <p>can be expressed in English as: "When encountering a <code>&lt;tour&gt;</code> tag, place a <code>&lt;td&gt;</code> tag in the accumulating XHTML definition; then process the items found within the <code>&lt;tour&gt;</code> tag, which as we know will be a bunch of <code>&lt;sight&gt;</code> tags; finally, when that processing is over, place the <code>&lt;/td&gt;</code> tag to complete thc table data specification."</p>
+
+                    <p>Notice that although the tag is called apply&dash;templates, it really means, "now process whatever is inside this tag," even though it may not have any more tagged items, but only data. As you now know, when actual data is encountered, the transformer simply puts the data into the accumulating XHTML definition, which is what we want.</p>
+
+                    <div class="try-it">
+                        <p><strong>17.1 Emphasize Paragraphs.</strong> Write an XSL template that styles text enclosed in the XML tag <code>&lt;emph&gt;</code> as a paragraph in which all text is both bold and italic.</p>
+                    </div>
+
+                    <p><span class="paragraph-header">Tag attributes.</span> Of special interest is the template matching the <code>&lt;name&gt;</code> tag, whose definition is</p>
+
+                    <p><code>&lt;xsl:template match="name"&gt;</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;td style="text&dash;align : center&gt;</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;xsl:apply&dash;templates/&gt; &lt;br /&gt;</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;img src="{@flag}" alt="Country Flag"/&gt;</code></p>                        
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;/td&gt;</code></p>
+                    <p><code>&lt;/xsl:template&gt;</code></p>
+
+                    <p>The template obviously places <code>&lt;td&gt;</code> tags for the left cell of the table row, but it is also responsible for including in its cell the image of the flag. To display an image requires the <code>&lt;img src . . ./&gt;</code> tag, of course, as can be seen on the fourth line. It has the usual form except for <code>{@flag}</code>. The <code>@flag</code> refers to the value of the tag attribute of the <code>&lt;name&gt;</code> tag, which gives the file name of the <code><em>flag</em>.gif</code>; see the XML in Figure 17.2. By placing a tag attribute reference in braces in</p>
+
+                    <div class="pagebreak pageNumber">524</div>
+
+                    <p>the XSL, we cause the tag attribute's value from the XML to be placed inside the quotes specifying the file source name as shown next</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/extra17.4.png" />
+                    </figure>
+
+                    <p>This is a standard technique for placing information in matched quotes, and we will have several opportunities to use it.</p>
+
+                    <p><span class="paragraph-header">Summary of XSL.</span> When we open our travels.xml file with a browser, it looks to see what style information is provided. It finds that we specifed the <code>traveISS.xsl</code> file. After opening the style file, the browser's transformer begins to process the XML tree. Finding the <code>&lt;travels&gt;</code> tag first, it checks for a template in the <code>.xsl</code> file. Finding one, it does what the template says: Place the starting XHTML commands in the XHTML definition up to a <code>&lt;table&gt;</code> tag, then process the other information within the <code>&lt;travels&gt;</code> tag. When that's done, it appends the remaining XH TML tags to the XHTML definition, and, when finished, displays the resulting Web page.</p>
+
+                    <p>While processing "the other information within the <code>&lt;travels&gt;</code> tag," the transformer encounters more tags, which it matches with templates and follows their style specifications. Somewhere within each of those templates, there is a <code>&lt;xsl:apply&dash;templates/&gt;</code> tag, which requests processing of the information that the tag encloses. The process continues: match a template, do what needs to be done before processing the enclosed information, process the enclosed information, do what needs to be done after processing the enclosed information, and consider that tag processed. It's a very elegant scheme.</p>
+
+                    <p>That's all you need to know about XSL, although it is a rich, complex language that gives much more power than we need to manage our iDiary.</p>
+
+                </section>
+
+            </section> <!-- /section2 -->            
+
+            <section class="section" data-number="8" data-name="The iDiary Database">
+                <h2>The iDiary Database</h2>
+
+                <p>We are now ready to create the iDiary displayed in Figure 17.1. As explained earlier, we solve the problem incrementally, beginning small and adding more information and greater ability to process it as a Web page. It's a good strategy when creating anything significant.</p>
+
+                <div class="fluency-tip">
+                    <strong class="fluency-tip-title">Computer Tutor.</strong>Read the following sections at a computer, and build the data- base along with the text; this is an extremely effective way to learn these concepts. Moreover, when finished you will have a database into which you can place your own curious information. Find all the necessary files at <code>www.aw.com/snyder/</code>.
+                </div>
+
+                <p>The incremental approach will naturally lead us to follow these steps:</p>
+
+                <ol>
+                    <li>Getting Started</li>
+                    <li>Creating a first entry (April 26)</li>
+                    <div class="pagebreak pageNumber">525</div>
+                    <li>Thinking about the nature of things</li>
+                    <li>Developing tags and templates</li>
+                    <li>Critiquing and evaluating the results</li>
+                </ol>
+
+                <p>These five steps will be the section headings for the following explanations.</p>
+
+                <section class="subsection" data-number="9" data-name="Getting Started">
+                    <h3>Getting Started</h3>
+
+                    <p><span class="first-sentence">Our first concern is building the XML database that will be the physical repository of our iDiary.</span> Because XML allows us to think up the tags, and therefore lets us have any structure we want, we have a design task: We must figure out our needs and design a structure that meets those needs. In the present case, we need an XNIL tree in which we can store information about the interesting and curious things that we encounter in our daily lives. This naturally suggests a <em>sequence</em> of entries, perhaps one per day, which have a date entry and then the information that we are storing.</p>
+
+                    <p>Creating the XML database. With only this small amount of thinking, we can make two decisions about our XML database: First, we can decide on <code>&lt;entry&gt;</code> tags as the Affinity tags to enclose the information we add each day, and sec ond, because we need a root element to enclose the <code>&lt;entry&gt;</code> tags, we can choose <code>&lt;idiary&gt;</code> as our Collection tag. So, with these two tags decided upon, we can already create a database that contains no data. We create a file with our text editor called <code>iDiary.xml</code> and enter into it</p>
+
+                    <p><code>&lt;?xml version = "1.0"</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;<code>encoding="ISO-8859-1"?&gt;</code></p>
+                    <p><code>&lt;!&dash;&dash;&lt;?xml&dash;stylesheet</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;<code>type="text/xsl"</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;<code>href="iDiarySS.xsl"?&gt; &dash;&dash;&gt;</code></p>
+                    <p><code>&lt;idiary&gt;</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;entry&gt; This is the first entry &lt;/entry&gt;</code></p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;entry&gt; This is the second entry &lt;/entry&gt;</code></p>
+                    <p><code>&lt;/idiary&gt;</code></p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/extra17.5.png" align="left"/><br/>which has the form displayed at left. Notice that the stylesheet specification has been commented out (see the green text in the browser window), because we do not have a style file defined. We know we will need it, and have decided to call it <code>iDiarySS.xsl</code>. We can begin building it, now, too.<br/><br/>
+
+                        <span class="paragraph-header">Creating the XSL stylesheet.</span> The XSL stylesheet will need to recognize the two kinds of tags. Using our earlier Travels data- base as a guideline, we decide to set up the page with the root element <code>&lt;idiary&gt;</code>, and have the <code>&lt;entry&gt;</code> tags produce successive rows of a table. (Of course, the table has only one column at the moment.) Using a text editor we enter the following lines in the <code>iDiarySS.xs1</code> file.
+                    </figure>                    
+
+                    <div class="pagebreak pageNumber">526</div>
+
+                    <p><code>&lt;?xml version="1.0" encoding="UTF&dash;8"?&gt;<br/>
+                        &lt;xsl:stylesheet version="1.0"<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;xmlns:xsl="http://www.w3.org/1999/XSL/Transform"<br/> 
+                        &lt;xsl:template match="idiary"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;html&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;head&gt;&lt;title&gt;iDiary&lt;/title&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;style type="text/css"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;body {background&dash;color : black; color : white;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;font-family : helvetica}<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h2 {text&dash;align : center }<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;table {margin&dash;left : auto; margin&dash;right : auto}<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/style&gt;<br/> 
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/head&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;body&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;h2 style="color:gold"&gt;iDiary: Journal of Interesting<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stuff&lt;/h2&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;table style="max&dash;width:425px"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;&lt;td&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;i&gt;This is a record of the most interesting thing<br/> 
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I found out each day that's worth remembering.<br/> 
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There's personal stuff in this database, too, but<br/> 
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;it's not gonna be displayed!&lt;/i&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/td&gt;&lt;/tr&gt;<br/> 
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/table>&lt;br/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;table&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/table&gt;<br/> 
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/body&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/html&gt;<br/>
+                        &lt;/xsl:template&gt;<br/><br/>
+                        &lt;xsl:template match="entry"&gt;<br/> 
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;&lt;td&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsLapply&dash;templates/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/td&gt;&lt;/tr&gt;<br/>
+                        &lt;/xsl:template&gt;<br/><br/>
+                        &lt;/xsl:stylesheet&gt;
+                    </code></p>
+
+                    <p>This contains the setup for the Web page, with the title, heading, and itali cized comment at the start of the page. (A separate table was used for the itali cized comment to keep it compact and narrower than the main table of entries.) The table containing the entries is also specified as part of the <code>&lt;idiary&gt;</code> template. The template for <code>&lt;entry&gt;</code> tags places the <code>&lt;tr&gt;</code> and <code>&lt;td&gt;</code> tags, and then processes the entry itself. This stylesheet produces</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/extra17.6.png">
+                    </figure>
+
+                    <div class="pagebreak pageNumber">527</div>
+
+                    <p>when we uncomment the stylesheet tag (the second line) of the XML file and open the XML file with Firefox.</p>
+
+                    <p>With the XML and the XSL files started, the iDiary project is well underway.</p>
+
+                </section>
+
+                <section class="subsection" data-number"10" data-name="Creating a First Entry (April 26)">
+                    <h3>Creating a First Entry (April 26)</h3>
+
+                    <p><span class="first-sentence">Continuing our design planning, we consider what goes inside of each <code>&lt;entry&gt;</code> tag.</span> We start with the April 26th entry because it is very simple. Since the entry is the entity that we're putting in the database, the items enclosed are the attributes (using the database terminology introduced in the previous chapter). Obviously, the date is one attribute and, of course, there must be some actual content. This motivates two more tags, <code>&lt;date&gt;</code> and <code>&lt;mit&gt;</code>, which is an abbreviation for "most interesting thing." (Tags don't have to make sense to anyone but you, though it is often helpful to put in a comment saying what the tag means since you will almost certainly forget.)</p>
+
+                    <p><span class="paragraph-header">Date tagging.</span> This sounds like a party game, but it refers to the decisions surrounding the metadata for calendar dates. As noted in Chapter 16, data in databases is atomic. If we write</p>
+
+                    <p><code>&lt;date&gt;April 26, 2007&lt;/date&gt;</code></p>
+
+                    <p>we cannot refer to the day, month, and year separately, though, as we mentioned, some commercial database systems let us cheat. In the XML&dash;XSL approach, if we want to control the formatting specially for dates, we need tags surrounding each of the components.</p>
+
+                    <p>That might motivate us to put tags around the parts now, even if we don't have immediate plans to do something fancy, because we could add fancy formatting in the future.</p>
+
+                    <p>On the other hand,</p>
+
+                    <p><code>&lt;date&gt;&lt;month&gt;April&lt;/month&gt;&lt;day&gt;26&lt;/day&gt; &lt;year&gt;2007&lt;/year&gt; &lt;/date&gt;</code></p>
+
+                    <p>is a lot to type just to enter the date, and there are many ways to change the date structure later if we decide we need the whole date tagged. So, being lazy, we decide to let it be atomic, and pick a date format we like and simply surround it with tags.</p>
+
+                    <div class="try-it">
+                        <p><strong>17.2 It's a date.</strong> Assuming the fully tagged form of the date just shown, write the XSL templates to produce <em>November</em> <big>22</big>, <small>2009</small>, that is, the month is italic, the day is large, and the year is small.</p>
+                    </div>
+
+                    <p><span class="paragraph-header">Revising an <strong>&lt;entry&gt;</strong></span> With the two new tags decided upon, we can revise the two temporary &lt;entry&gt; tags used earlier and replace them in the <code>iDiary.xml</code> file with the following single structure:</p>
+
+                    <div class="pagebreak pageNumber">528</div>
+
+                    <p><code>&lt;entry&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;date&gt;April.26.2007&lt;/date&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;mit&gt;The planet discovered yesterday is called Gliese 581.<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It was not named by the Romans!<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/mit&gt;<br/>
+                        &lt;/entry&gt;
+                    </code></p>
+
+                    <p>Having added tags, we need to add templates to the iDiary.xsl file. The <code>&lt;entry&gt;</code> tag places the <code>&lt;tr&gt;</code> tags as before, but no longer places <code>&lt;td&gt;</code> tags. Its structure is</p>
+
+                    <p><code>&lt;xsl:template match="entry"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;tr&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:apply&dash;templates/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/tr&gt;<br/>
+                        &lt;/xsl:template&gt;
+                    </code></p>
+
+                    <p>To handle the two new tags, we make a two&dash;column table. The first column is assigned to the date, and the second column is assigned to the most interesting thing. The appropriate templates are</p>
+
+                    <p><code>&lt;xsl:template match="date"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:apply&dash;templates/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/td&gt;<br/>
+                        &lt;/xsl:template&gt;
+                    </code></p>
+
+                    <p><code>&lt;xsl:template match="mit"&gt; &lt;!&dash;&dash; Most Interesting Thing &dash;&dash;&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:apply&dash;templates/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/td&gt;<br/>
+                        &lt;/xsl:template&gt;
+                    </code></p>
+
+                    <p>which results in the following page, displaying the data for the April 26th entry in two columns.</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/extra17.7.png">
+                    </figure>
+
+                    <p>Critiquing the design. In any design, it is wise to critique the result to determine if it meets our needs. The new page has two columns &dash; one for the date and one for the entry &dash; which is a rational way to present the information. The style could use some work, however.</p>
+
+                    <div class="pagebreak pageNumber">529</div>
+
+                    <p>One aspect that could be improved is the position of the date. The table row is two lines wide, causing the date to be centered vertically in its cell. We prefer to have the date at the top of the cell, so we revise its table data styling to include vertical alignment to the top. Another feature we'd like to modify is the color of the date; we prefer red, thinking it might enhance the page. So, we revise the template to</p>
+
+                    <p><code>&lt;xsl:template match="date"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;td class="day"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:apply&dash;templates/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/td&gt;<br/>
+                        &lt;/xsl:template&gt;
+                    </code></p>
+
+                    <p>and add</p>
+
+                    <p><code>td.day {vertical&dash;allign : top; color : red}</code></p>
+
+                    <p>to the global style section, which produces the right result.</p>
+
+                    <figure>
+                        <img src="/contents/fluency/images/extra17.8.png">
+                    </figure>                    
+
+                </section>
+
+                <section class="subsection" data-number"11" data-name="Thinking About the Nature of Things">
+                    <h3>Thinking About the Nature of Things</h3>
+
+                    <p><span class="first-sentence">The second column is for the "most interesting thing" we learn each day, but as Figure 17.1 shows, this entity can take many forms.</span> The different kinds of data &dash; the most interesting thing's attributes &dash; affect both the XML and the XSL definitions.</p>
+
+                    <p><span class="paragraph-header">Recognizing the need for specific tags.</span> When considering the design of the XML, notice that we must specify different data for each type of content that we attribute to an entity. The following list includes some examples.</p>
+
+                    <div class="table large">
+
+                        <div class="small-table">
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Specification</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>Link</td>
+                                        <td>URL</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Image</td>
+                                        <td>Source file, and possibly width and height</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Text</td>
+                                        <td>Written directly into the file, possible with a special font</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Video</td>
+                                        <td>URL, player dimensions, other parameters</td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div> <!-- /small-table -->
+
+                    </div> <!-- /table large -->
+
+                    <div class="pagebreak pageNumber">530</div>
+
+                    <p>Each of these requires that we specify different information. They also require different formatting. Additionally, the text can take several different forms, including:</p>
+
+                    <div class="table large">
+
+                        <div class="small-table">
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Style</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>Titles</td>
+                                        <td>Centered with enlarged size</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Captions</td>
+                                        <td>Labeled caption, left justified</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Poems</td>
+                                        <td>Title, author, and line breaks at specific points</td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div> <!-- /small-table -->
+
+                    </div> <!-- /table large -->
+
+                    <p>We cannot use a single type of tag if we intend to recognize these differences.</p>
+
+                    <p><span class="paragraph-header">Choosing specific tags.</span> Knowing that different kinds of data need different tags &dash; or, stating it in database terms, each attribute requires its own tag &dash; we assign a new tag to each kind of data we store in the iDiary database. Accordingly, we propose to use the following tags for the iDiary.</p>
+
+                    <div class="table large">
+
+                        <div class="small-table">
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Tag</th>
+                                        <th>Encloses</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td><code>&lt;fact&gt;</code></td>
+                                        <td>Normal text &dash; the most interesting thing</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>&lt;title&gt;</code></td>
+                                        <td>Text to be centered; font is enlarged</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>&lt;link&gt;</code></td>
+                                        <td>Anchor text; the URL is a tag attribute</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>&lt;pic&gt;</code></td>
+                                        <td>Stand&dash;alone tag with file name, width, and height as tag attributes</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>&lt;remark&gt;</code></td>
+                                        <td>Text to be left justified; for caption, include the word Caption, etc.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>&lt;poem&gt;</code></td>
+                                        <td>Groups <code>&lt;p_title&gt;</code>, <code>&lt;poet&gt;</code>, and <code>&lt;lines&gt;</code> tags</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>&lt;ytvideo&gt;</code></td>
+                                        <td>URL of video</td>
+                                    </tr>
+                                </tbody>
+                                
+                            </table>
+
+                        </div> <!-- /small-table -->
+
+                    </div> <!-- /table large -->
+
+                    <p>The <code>&lt;poem&gt;</code> tag is an Affinity tag grouping three other tags that give the title of the poem, the author, and the lines. Notice that in addition to <code>&lt;title&gt;</code> we include a <code>&lt;p&dash;title&gt;</code> for the poems. The difference is that <code>&lt;title&gt;</code> will be centered and larger than the normal text, abstracting the idea of a heading; the <code>&lt;p&dash;title&gt;</code> captures the idea of the title for a literary work, which will be italicized and not centered. Such distinctions are small, but if we recognize differences among the properties of an object or we are fussy about how we want our iDiary to look, we add tags to recognize such differences. And why not? Tags are free, and templates take half a minute to write.</p>
+
+                    <p>The tags just listed are sufficient to handle the kinds of data displayed in Figure 17.1, but as new kinds of information present themselves, we can introduce more tags. Our database system can evolve to meet our needs.</p>
+
+                    <p>Notice that because we recognized the need for different tags for different kinds of information that describe the most interesting thing, the role of the <code>&lt;mit&gt;</code> tag changes slightly. Previously it was an Identification tag, and it enclosed the most interesting thing, as if it were just a single thing, such as</p>
+
+                    <div class="pagebreak pageNumber">531</div>
+
+                    <p>text. But because we now understand that the most interesting things can have many properties as identified by the foregoing tags, the role of the <code>&lt;mit&gt;</code> tag becomes that of an Affinity tag. It groups together all of the different forms of information that we associate with the most interesting thing for one day.</p>
+
+                    <p>The change in the way we think of the <code>&lt;mit&gt;</code> tag is only a change in our thinking: The <code>&lt;mit&gt;</code> tag is still a sister to the <code>&lt;date&gt;</code> tag in the XML tree, it still identifies the most interesting thing, and its style role continues to be to place <code>&lt;td&gt;</code> tags.</p>
+
+
+                </section>
+
+                <section class="subsection" data-number"12" data-name="Developing Tags and Templates">
+                    <h3>Developing Tags and Templates</h3>
+
+                    <p><span class="first-sentence">Having worked out that we need several new tags, we take a moment to think about each of them, because some have characteristics that need discussing. With each, we give its companion stylesheet template.</span></p>
+
+                    <p><span class="paragraph-header">The fact tag.</span> The simplest is the <code>&lt;fact&gt;</code> tag. It encloses text</p>
+
+                    <p><code>&lt;fact&gt;The planet discovered yesterday is called<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Gliese 581. It was not named by the Romans!<br/>
+                        &lt;/fact&gt;
+                    </code></p>
+
+                    <p>that is displayed with a line break at the end, as in</p>
+
+                    <p><code>&lt;xsl:template match="fact"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:apply&dash;templates/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;br/&gt;<br/>
+                        &lt;/xsl:template&gt;
+                    </code></p>
+
+                    <p>Keep in mind that the <code>&lt;fact&gt;</code> is enclosed by the <code>&lt;mit&gt;</code> tag.</p>
+
+                    <p><span class="paragraph-header">The title tag.</span> The <code>&lt;title&gt;</code> tag announces the most interesting thing entry, when appropriate.</p>
+
+                    <p><code>&lt;title&gt;Earth&dash;Like Planet Discovered&lt;/title&gt;</code></p>
+
+                    <p>The text should be centered and can use the XHTML heading tags to enlarge the font.</p>
+                    
+                    <p><code>&lt;xsl:template match="title"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;h2&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:apply&dash;templates/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/h2&gt;<br/>
+                        &lt;/xsl:template&gt;
+                    </code></p>
+
+                    <p><span class="paragraph-header">The link tag.</span> The &lt;link&gt; tag specifies a Web link. As usual, the Web link has two parts: The tag encloses the anchor text &dash; the highlighted text of the link &dash; and the URL is specified using the tag attribute of that name. For example,</p>
+
+                    <p><code>&lt;link<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;url="http://wwvv.npr.org/templates/story/story.php?<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;storyld=9796321"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Earth&dash;Like Planet<br/>
+                        &lt;/link&gt;
+                    </code></p>
+
+                    <div class="pagebreak pageNumber">532</div>
+
+                    <p>illustrates the structure. The stylesheet must place an <code>&lt;a href...&gt;</code> tag and enclose the tag attribute value in quotes. A template to do that is</p>
+
+                    <p><code>&lt;xsl:template match="link"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;a href="{@url}"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:apply&dash;templates/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/a&gt;<br/>
+                        &lt;/xsl:template&gt;
+                    </code></p>
+
+                    <p>As explained earlier in this chapter, the @ symbol is the XSL reference to the tag attribute of the XML tag. By enclosing the reference in curly braces, we can place the tag attribute's value in the XHTML text.</p>
+
+                    <p><span class="paragraph-header">The picture tag.</span> The <code>&lt;pic&gt;</code> tag is a stand&dash;alone tag because all of its information is expressed as tag attributes. The tag encodes the file name of the image and its desired display width and display height, as shown in this next example.</p>   
+
+                    <p><code>&lt;pic file="planet.jpg" width="500" height="360"/&gt;</code></p>
+
+                    <p>Note that as a stand-alone tag, <code>&lt;pic . . ./&gt;</code> is terminated by the /&gt;</code>.</p> 
+
+                    <p><code>&lt;xsl:template match="pic"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;img src="{@file}" width="{@width}" height="{@height}"<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alt="Picture of Interesting Thing"/&gt;<br/>
+                        &lt;/xsl:template&gt;
+                    </code></p>                                    
+
+                    <p>Of course, being a stand&dash;alone tag, it does not enclose anything. Accordingly, there is no need for the <code>&lt;xsl:apply&dash;templates/&gt;</code> tag that would normally request continued processing of the enclosed tags or content. This makes the <code>&lt;pic&gt;</code> tag slightly different from those we've seen. To have the pictures centered we add appropriate styling to the global styling section: <code>img {text-align : center}.</code></p>
+
+                    <p><span class="paragraph-header">The remark tag.</span> Content such as captions and other small pieces of text that serve in a labeling role will use the <code>&lt;remark&gt;</code> tag. In addition to having a different role than the title, they differ in style: The text is the same size as the <code>&lt;fact&gt;</code> text and it is left justified rather than centered. For example:</p>
+
+                    <p><code>&lt;remark&gt;Location: Constellation Libra&lt;/remark&gt;</code></p>
+
+                    <p>Because <code>&lt;remark&gt;</code> text may follow facts, pictures, and other items, it is necessary to include a break to ensure that they appear on their own line. Thus, the template is</p>
+
+                    <p><code>&lt;xsl:template match="remark"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;br/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:apply&dash;templates/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;br/&gt;<br/>                        
+                        &lt;/xsl:template&gt;
+                    </code></p>
+
+                    <p>By classifying different types of text, we keep tight control on the format of the page.</p>
+
+                    <div class="pagebreak pageNumber">533</div>
+
+                    <p><span class="paragraph-header">The poetry tags.</span> We identify several attributes of poetry—title, author, and lines—and assign tags to each. These will all be enclosed in the Affinity tag <code>&lt;poem&gt;</code>. As noted earlier, we do not use the <code>&lt;title&gt;</code> tag to title a poem. Rather, we invent another, <code>&lt;p_title&gt;</code> tag, which will also allow for different formatting. So, an example is</p>
+
+                    <p><code>&lt;poem&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;p_title&gt;Trees, Excerpt&lt;p_title&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;poet&gt;Joyce Kilmer&lt;/poet&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;line&gt;...&lt;/line&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;line&gt;Poems are made by fools like me,&lt;/line&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;line&gt;But only God can make a tree.&lt;/line&gt;<br/>
+                        &lt;/poem&gt;
+                    </code></p>
+
+                    <p>The templates for these new tags are, by now, straightforward. They are</p>
+
+                    <p><code>&lt;xsl:template match="poem"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;span style="font&dash;family: optima"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:apply&dash;templates/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/span&gt;<br/>                        
+                        &lt;/xsl:template&gt;
+                    </code></p>
+
+                    <p>which only encloses other tags, and styles them with a more attractive font. These are also:</p>
+
+                    <p><code>&lt;xsl:template match="p_title"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;h3&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:apply&dash;templates/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/h3&gt;<br/>                        
+                        &lt;/xsl:template&gt;
+                    </code></p>
+
+                    <p><code>&lt;xsl:template match="poet"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;h4&gt;&lt;i&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:apply&dash;templates/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/i&gt;&lt;/h4&gt;<br/>                        
+                        &lt;/xsl:template&gt;
+                    </code></p>
+
+                    <p><code>&lt;xsl:template match="line"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:apply&dash;templates/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;br/&gt;<br/>                        
+                        &lt;/xsl:template&gt;
+                    </code></p>
+
+                    <p>The poetry formatting will not be sufficient for poets like e. e. cummings, but we put that problem off for another day.</p>
+
+                    <p><span class="paragraph-header">The video tag.</span> The video tag. The best way to include videos in the iDiary is to display a player as an embedded object. The <code>&lt;object&gt;</code> tag is part of XHTML for incorporating multimedia, and the YouTube site, like many others, expecting us to use the <code>&lt;object&gt;</code> tag to run their videos, provides all of the necessary XHTML in a window pane labeled Embed, shown just below the URL in Figure 17.6.</p>
+
+                    <div class="pagebreak pageNumber">534</div>
+
+                    <figure>
+                        <img src="/contents/fluency/images/figure17.6.png" />
+                    </figure>
+                    <figcaption>
+                        <span class="figureId">Figure 17.6</span> YouTube display marking the embedding information. 
+                    </figcaption>
+
+                    <p>The embedding information, which we can copy and paste, has the following form.</p>
+
+                    <p><code>&lt;object width="425" height="344"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;paramname="movie"<br/> 
+                        &nbsp;&nbsp;&nbsp;&nbsp;value="http://www.youtube.com/v/QjA5faZF1A8&hken&fs=1"&gt;&lt;/param&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;param name="allowFullScreen" value="true"&gt;&lt;/param&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;param name="allowscriptaccess" value="always"&gt;&lt;/param&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;embed src="http://www.youtube.com/v/QjA5faZF1A8&hl=en&fs=1"<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type="application/x-shockwave-flash"<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;allowscriptaccess="always"<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;allowfullscreen="true" width="425" height="344"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/embed&gt;<br/>
+                        &lt;/object&gt;
+                    </code></p>
+
+                    <p>This is obviously XHTML, but mysterious XHTML to us. However, we can avoid learning all of the details of this XHTML by recognizing that the only part that changes from video to video is the URL; all of the rest of it is the same each time we want to embed a YouTube video. So, our new XM L video tag needs only to capture the URL in a tag attribute; the rest of the <code>&lt;object&gt;</code> information can go into the template. Using the tag attribute for the URL makes it very similar to the <code>&lt;pic . . /&gt;</code> tag Thus, our stand&dash;alone video tag has this form:</p>
+
+                    <p><code>&lt;ytvideo utube="http://www.youtube.com/v/QjA5faZF1A8 "/&gt;</code></p>
+
+                    <p>Notice that we name the tag <code>&lt;ytvideo . . ./&gt;</code> rather than, say, <code>&lt;video . . .&gt;</code>, because we are placing all of the display information in the template, which is special to YouTube. Other video sources might use different embedding tags</p>
+
+                    <div class="pagebreak pageNumber">535</div>
+
+                    <p>with different values; if so, we can make a tag for videos from those sources. Also, unlike the <code>&lt;pic . . /&gt;</code> tag, we do not specify the width and height for each video, because the player is the same dimensions every time.</p>
+
+                    <p>The <code>&lt;ytvideo . . ./&gt;</code> template contains all of the information from the YouTube <em>Embed</em> pane, except for the two URLs. We notice that they are the same, so we simply reference them, using the familiar <code>{@ . . .}</code> structure to reference the tag attribute. The template is</p>
+
+                    <p><code>&lt;xsl:template match="ytvideo"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;object width="425" height="344"&gt;<br/> 
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;paramname="movie" value="{@utube}"&gt;&lt;/param&gt;&lt;/param&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;param name="allowFullScreen" value="true"&gt;&lt;/param&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;param name="allowscriptaccess" value="always"&gt;&lt;/param&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;embed src="{@utube}" type="application/x&dash;shockwave&dash;flash"<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;allowscriptaccess="always" llowfullscreen="true"<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;width="425" height="344"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/embed&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/object&gt;<br/>
+                        &lt;/xsl:template&gt;
+                    </code></p>
+
+                    <p>Notice that because <code>&lt;ytvideo . . ./&gt;</code> is a stand&dash;alone tag like <code>&lt;pic . . /&gt;</code>, we do not need to process any enclosed information, so we do not need an <code>&lt;xsl:apply&dash;templates/&gt;</code> tag.</p>
+
+                    <p>Finally, we might expect to specify the tag as</p>
+
+                    <p><code>&lt;ytvideo utube="http://www.youtube.com/v/QjA5faZF1A8&hl=en&fs=1"/&gt;</code></p>
+
+                    <p>because that is the URL from YouTube's embed information. But, the last 11 characters contain two ampersands. These are parameters (see Chapter 20) specifying that the browser should use English (<code>&hl=en</code>) and it should display with a full screen (<code>&fs=1</code>), which we don't even want. However, the main problem is that we cannot use ampersands literally in XML or XHTML. They have to be escaped: <code>&amp;amp;</code>. So, if we want to include these last 11 characters, we must replace the <code>&</code> with <code>&amp;amp;</code>, but the better thing to do is just to delete them.</p>
+
+                    <p><span class="paragraph-header">A check of design.</span> We have added a variety of tags and templates. Normally, we check each new tag and each associated template as we create them. To summarize what we have done, we created the small page shown in Figure 17.7, and display it using a browser as shown in Figure 17.8.</p>
+
+                </section>
+
+                <section class="subsection" data-number"13" data-name="Critiquing and Evaluating the Results">
+                    <h3>Critiquing and Evaluating the Results</h3>
+
+                    <p><span class="first-sentence">As always, once a design is finished, it must be evaluated to see that it meets our needs.</span> In Figure 17.8, we see several features worth reconsidering.</p>
+
+                    <p>Form of entries. The two sample entries seem to run together. Because this is a digital diary, we are not wasting paper if we space out the entries. So, we decide to add some breaks and a horizontal line at the end of the <code>&lt;mit&gt;</code></p>
+
+                    <div class="pagebreak pageNumber">536</div>
+
+                    <figure>
+                        <img src="/contents/fluency/images/figure17.7.png" />
+                    </figure>
+                    <figcaption>
+                        <span class="figureId">Figure 17.7</span> Sample database entries for checking the iDiary tags and templates. 
+                    </figcaption>
+
+                    <p>template to separate it from the entry that follows. This change is straight forward.</p>
+
+                    <p>Also, we notice that the entry tends to spread out horizontally, as the browser expands the table to fill the available screen real estate. (The image has been purposely shown tiny to emphasize this point.) It might be more attractive if the entries are more compact, so that the text and pictures are more in scale. How do we make the entry compact? We limit the size of the table by adding a width specification to the template. Adopt a size of, say, 700 pixels, as in <code>&lt;table style="max&dash;width:700px"&gt;</code>.</p>
+
+                    <p>Our <code>&lt;pic . . ./&gt;</code> tag gives the ability to control the size of the images using the width and height tag attributes. Having adopted 700 pixels as the width of our <code>&lt;mit&gt;</code> entry, we should scale our images so their width is no more than 700.</p>
+
+                    <div class="fluency-tip">
+                        <strong class="fluency-tip-title">Scaling Images.</strong> Recall that images have a width and height given in pixels.This can be adjusted using graphics software, but it is not necessaryt Simply scale (divide) both sizes by the same amount (rounding down to give a whole number), and use those values as the <stong>width</strong> and <strong>height</strong>.
+                    </div>
+
+                    <p><span class="paragraph-header">Remarks or <code>&lt;remark&gt;</code>.</span> The <code>&lt;remark&gt;</code> tag &dash; the tag used for the Location information in Figure 17.8 &dash; should have the word Location emphasized in bold. This change has nothing to do with the type of data; we just prefer a</p>
+
+                    <div class="pagebreak pageNumber">537</div>
+
+                    <figure>
+                        <img src="/contents/fluency/images/figure17.8.png" />
+                    </figure>
+                    <figcaption>
+                        <span class="figureId">Figure 17.8</span> Firefox display of the sample diary in Figure 17.7.
+                    </figcaption>                    
+
+                    <p>different style. If we place <code>&lt;b&gt;</code> and <code>&lt;/b&gt;</code> tags in the )(NIL entry, they are treated as (meaningless) XML tags. Rather, we need to add a new tag, say, <code>&lt;label&gt;</code>, that labels the kind of remark we have in the database. For example, we could write</p>
+
+                    <p><code>&lt;remark&gt;&lt;label&gt;Location :&lt;/label&gt;Constellation Libra&lt;/remark&gt;</code></p>
+
+                    <p>The &lt;label&gt; tag will have a template that simply places <code>&lt;b&gt;</code> and <code>&lt;/b&gt;</code> tags around the information that it encloses.</p>
+
+                    <p>Those are the only changes that we want now. The XML and XSL files are "living documents" in that we will be adding to the XML file daily, and if we add a new kind of content that we've never included before &dash; say audio &dash; then we will make changes to the XSL templates.</p>
+
+                    <div class="pagebreak pageNumber">538</div>
+
+                </section>
+
+            </section> <!-- /section3 -->
+
+            <section class="section" data-number"14" data-name="Using the iDiary Daily">
+                <h2>Using the iDiary Daily</h2>
+
+                <p><span class="first-sentence">The database we created has the flexibility to record any digital data and to display it in an attractive way.</span> We do not have to be constrained when we consider what was the most interesting thing that we learned. So we assume that adding to the iDiary is an activity that we will perform frequently.</p>
+
+                <section class="subsection" data-number"15" data-name="Archiving Photos">
+                    <h3>Archiving Photos</h3>
+
+                    <p><span class="first-sentence">As we've built the page, the iDiary.xml and iDiarySS.xsl files and the photos have all been on the desktop.</span> They need to be placed in a permanent location. Because the page will likely include many photos, we should store them in a separate folder within the folder containing the two database files. Call the folder imFiles, and notice that we seem to have two choices for specifying the path to these pictures. We can put the path in the XML file as part of the <code>&lt;pic . . ./&gt;</code> tag, as in</p>         
+
+                    <p><code>&lt;pic file="imFiles/planet.jpg" . . . /&gt;</code></p>
+
+                    <p>or maybe we could put it in the XSL file as part of the <code>&lt;pic . . ./&gt;</code> tag template, as in</p>
+
+                    <p><code>&lt;img src="imFiles/{@file}" . . .&gt;</code></p>
+
+                    <p>The first solution is the more flexible. By placing the full path in the XML file, image references can be in different places; if the path is specified by the template in the XSL file, then all files referenced by the <code>&lt;pic . . ./&gt;</code> tag must be in the same place. In fact, putting the path in the XML file allows us to make references to images stored elsewhere on the Internet.</p>
+
+                </section>
+
+                <section class="subsection" data-number"16" data-name="Hiding Information">
+                    <h3>Hiding Information</h3>
+
+                    <p><span class="first-sentence">So far, we have displayed all of the information in the database, but we don't have to.</span> We <em>do</em> have to tag everything, and we <em>must</em> provide a template to process each tag. But, we don't have to display it.</p>
+
+                    <p>Suppose we have a tag, <code>&lt;personal&gt;</code>, that encloses our personal thoughts. Though the information can go anywhere in the database, we should consider where we want it placed when we do display it. Assume the <code>&lt;personal&gt;</code> tag is included inside of the <code>&lt;mit&gt;</code> tag, as part of the most interesting thing. Then, the template to display the <code>&lt;personal&gt;</code> content is</p>
+
+                    <p><code>&lt;xsl:template match="personal"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:apply&dash;templates/&gt; &lt;!&dash;&dash; Display personal information&dash;&dash;&gt;<br/>
+                        &lt;/xsl:template&gt;
+                    </code></p>
+
+                    <p>as we expect; it's wise to include a comment to remind ourselves that we're displaying personal information.</p>
+
+                    <p>Because the <code>&lt;xsl:apply&dash;templates/&gt;</code> tag tells the transformer to "process the information enclosed in the matched tag," all we need to do is leave that tag</p>
+
+                    <div class="pagebreak pageNumber">539</div>
+
+                    <p>out of the template. That is, we write</p>
+
+                    <p><code>&lt;xsl:template match="personal"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;!&dash;&dash; Don't display personal information&dash;&dash;&gt;<br/>
+                        &lt;/xsl:template&gt;
+                    </code></p>
+
+                    <p>When the transformer gets to a <code>&lt;personal&gt;</code>  tag, it will check to see what to do, and with no instructions to apply templates to the enclosed information, it will just skip the information inside the tags, as if it were not there. The result is that our personal content is not displayed, though it is part of the database.</p>
+
+                    <p>Note that including personal information in the file without enclosing it in tags, or tagging it but not providing a template for the tag, both result in the information being displayed. In both cases the transformer doesn't know what to do with the information, so the transformer just adds the information to the XHTML file, causing it to display on the page. Hiding information requires that we treat it properly, including saying how to display it. Not.</p>
+
+                </section>                       
+
+                <section class="subsection" data-number"17" data-name="Entering Data into the Database">
+                    <h3>Entering Data into the Database</h3>
+
+                    <p><span class="first-sentence">Because we have built our own database system without using commercial database software, we will be adding in new data using our trusty text editor, and we'll be tagging everything ourselves.</span> But we can simplify the task so that it is not an annoyance by setting up our own template in the comments.</p>
+
+                    <p>In the XML database we include a comment in the form</p>
+
+                    <p><code>&lt;!&dash;&dash;The following tags are available for adding a new entry.<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Change the places containing x's<br/><br/>
+
+                        &lt;entry&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;date&gt;xx.xxmonthxx.20xx&lt;/date&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;mit&gt;<br/>  
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;link url="http://www.xxx/xxx"&gt; xx anchor of link xx<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/link&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;xx title of entry xx&lt;/title&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;fact&gt;xx facts are entered here xx &lt;/fact&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;pic file="xxx.jpg" width="xx" height="xx"/&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;remark&gt;&lt;Iabel&gt;xxLabelxx&lt;/label&gt; xx remark text xx&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/remark&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;poem&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p_title&gt;xx Poem title xx&lt;/p_title&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;poet&gt;xx author xx&lt;/poet&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;line&gt;xx line of poem xx&lt;/line&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/poem&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ytvideo utube="xx YouTube URL xx"/&gt;<br/>  
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;/mit&gt;<br/>                        
+                        &lt;/entry&gt;<br/><br/>
+
+                        Edit all places with xx &dash;&dash;&gt;
+                    </code></p>
+
+                    <div class="pagebreak pageNumber">540</div>
+
+                    <p>Then, by copying and pasting the interior portion of the comment &dash; the <code>&lt;entry&gt;</code> tags and the lines they contain &dash; we have all of the tags we need. We delete tags we don't need and edit those we do. This ensures that we match tags and don't make typing errors in the tags.</p>
+
+                </section>
+
+            </section> <!-- /section4 -->
+
+            <section class="section" data-number="18" data-name="Summary">
+                <h2>Summary</h2>
+                <p><span class="first-sentence">In this chapter we have applied the database ideas from Chapter 16 to a personally relevant task of making a digital diary capable of recording and displaying the many types of media we encounter online.</span> From this case study you now understand:</p>
+
+                <ul>
+                    <li>XML databases can record irregular data that relational databases cannot.</li>
+                    <li>An XML database can be directly displayed by opening it in a browser.</li>
+                    <li>Adding a stylesheet line to XML and building templates in XSL allows the XML file to be displayed formatted using a browser.</li>
+                    <li>A complex database can be set up incrementally, adding tags and templates one at a time, and checking that they work as planned.</li>
+                    <li>An XML database can optionally hide some of its information, allowing for the selective display of its contents.</li>
+                </ul>
+
+            </section>            
+
+        </section> <!-- /page1 -->
+        
+        <section id="conclusion" data-number="19" data-name="Try It Solutions">
+            <div class="content">
+
+                <h2>Try It Solutions</h2>
+
+                <ol id="try-it-solutions">
+                    <li class="seventeen-one"><span class="first-sentence"><code>&lt;xsl:template match="emph"&gt;</span><br/>
+                        &lt;b&gt;&lt;i&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:apply&dash;templates/&gt;<br/>
+                        &lt;/b&gt;&lt;/i&gt;<br/>
+                        &lt;/xsl:template&gt;<br/>
+                    </code>Enclosing bold tags with italic tags is also correct.</li>
+
+                    <li class="seventeen-two"><code>&lt;xsl:template match="date"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;xsl:apply&dash;templates/&gt;<br/>
+                        &lt;/xsl:template&gt;<br/>
+                        &lt;xsl:template match="month"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;i&gt;&lt;xsl:apply&dash;templates/&gt;&lt;/i&gt;<br/>
+                        &lt;/xsl:template&gt;<br/>
+                        &lt;xsl:template match="day"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;big&gt;&lt;xsl:apply&dash;templates/&gt;&lt;/big&gt;,<br/>
+                        &lt;/xsl:template&gt;<br/>
+                        &lt;xsl:template match="year"&gt;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;small&gt;&lt;xsl:apply&dash;templates/&gt;&lt;/small&gt;<br/>
+                        &lt;/xsl:template&gt;<br/>
+                    </code>Did you remember to include the comma?</li>
+                </ol>
+
+                <h2>Review Questions</h2>
+                <section id="multiple-choice" data-number="20" data-name="Multiple Choice">
+                    <h3>Multiple Choice</h3>
+                
+                    <ol>
+                        <li><span class="first-sentence">The <code>&lt;idiary&gt;</code> tag is a</span>
+                            <ol>
+                                <li>Collection tag</li>
+                                <li>Affinity tag</li>
+                                <li>Identification tag</li>
+                                <li>none of the above</li>
+                            </ol>
+                        </li>
+                        <li>The <code>&lt;country&gt;</code> tag is a
+                            <ol>
+                                <li>Collection tag</li>
+                                <li>Affinity tag</li>
+                                <li>Identification tag</li>
+                                <li>none of the above</li>
+                            </ol>
+                        </li>
+                        <li>The root element <code>&lt;xsl:stylesheet . . .&gt;</code> tag is a
+                            <ol>
+                                <li>Collection tag</li>
+                                <li>Affinity tag</li>
+                                <li>Identification tag</li>
+                                <li>none of the above</li>
+                            </ol>
+                        </li>
+                        <li>XML files are styled for a browser using:
+                            <ol>
+                                <li>HTML</li>
+                                <li>XSL</li>
+                                <li>SQL</li>
+                                <li>none of the above</li>
+                            </ol>
+                        </li>
+                        <li>An incremental approach to development has the advantage of
+                            <ol>
+                                <li>shortening developmental time</li>
+                                <li>making the final product smaller</li>
+                                <li>limiting errors to recently developed materials</li>
+                                <li>all of the above</li>
+                            </ol>
+                        </li>
+                        <li>When you open an XML file without a stylesheet in a browser, it
+                            <ol>
+                                <li>won't display and returns an error</li>
+                                <li>displays the text of the file</li>
+                                <li>displays a tree showing the structure of your file</li>
+                                <li>brings up a dialog box to find the stylesheet</li>
+                            </ol>
+                        </li>
+                        <li>XSL tag rules are called
+                            <ol>
+                                <li>licenses</li>
+                                <li>structures</li>
+                                <li>policies</li>
+                                <li>templates</li>
+                            </ol>
+                        </li>
+                        <li>The second line of an XML file that uses an XSL template begins with
+                            <ol>
+                                <li>&lt;xml:stylesheet&gt;</li>
+                                <li>&lt;html&gt;</li>
+                                <li>&lt;!&dash;&dash;xsl&gt;</li>
+                                <li>&lt;xsl:stylesheet</li>
+                            </ol>
+                        </li>
+                        <li>iDiary is ordered by
+                            <ol>
+                                <li>event</li>
+                                <li>date</li>
+                                <li>friend</li>
+                                <li>class</li>
+                            </ol>
+                        </li>
+                        <li>Each attribute in an XSL file requires its own
+                            <ol>
+                                <li>file</li>
+                                <li>tag</li>
+                                <li>table</li>
+                                <li>link</li>
+                            </ol>
+                        </li>
+                        <li>To add entries to iDiary you would
+                            <ol>
+                                <li>modify the XML file</li>
+                                <li>modify the XSL file</li>
+                                <li>make changes to both files</li>
+                                <li>once created the file cannot be changed</li>
+                            </ol>
+                        </li>                        
+                    </ol>
+
+                </section>
+
+                <section id="short-answer" data-number="21" data-name="Short Answer">
+                    <h3>Short Answer</h3>
+                
+                    <ol>
+                        <li class="review-question"><span class="first-sentence">XSL stands for ________.</span></li>
+                        <li class="review-question">XSL templates describe how the information should be displayed by using ________.</li>
+                        <li class="review-question">XML and XSL files are combined in a(n) ________, where they're converted to HTML for display in a browser.</li>
+                        <li class="review-question">A(n) ________ tag is the top&dash;most tag in an XSL stylesheet.</li>
+                        <li class="review-question">The root element tag of a stylesheet is a ________ tag.</li>
+                        <li class="review-question">A(n) ________ tag is used to produce successive entries on a page.</li>
+                        <li class="review-question">Items enclosed in an entity are called ________.</li>
+                        <li class="review-question">Each attribute in an XSL file requires its own ________.</li>
+                        <li class="review-question">A description of how a page should be displayed is called a(n) ________.</li>
+                        <li class="review-question">Use the ________ tag to embed multimedia in a page.</li>
+                    </ol>
+
+                </section> 
+
+                <section id="exercises" data-number="22" data-name="Exercises">
+                    <h3>Exercises</h3>
+                
+                    <ol>
+                        <li class="review-question"><span class="first-sentence">Use XML to define your class schedule.</span></li>
+                        <li class="review-question">Create a list of other content that could be added to the iDiary database.</li>
+                        <li class="review-question">Design a database similar to iDiary with details for a vacation.</li>
+                        <li class="review-question">Create an online resume using XML and XSL.</li>
+                        <li class="review-question">Create a family history using XML and XSL.</li>
+                        <li class="review-question">Create an iStore database to display items you have for sale.</li>
+                        <li class="review-question">Use XML and XSL to create a testbank of true/false, multiple choice, and short answer questions. Build into it the ability to display pictures.</li>
+                        <li class="review-question">A used car dealer wants you to develop a Web site to display their vehi- cles. Their inventory changes daily. Explain what you would include on the site and how you would update on a daily basis.</li>
+                    </ol>
+
+                </section>
+                    
+
+            </div> <!-- /content -->
+
+        </section> <!-- /conclustion -->
+
+    </div> <!-- /container -->
+
+</body>
+</html>

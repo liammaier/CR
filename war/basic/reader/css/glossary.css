@@ -1,0 +1,13 @@
+.entry {
+	padding: 0px 5px 20px 5px;
+}
+
+.term {
+	display: inline-block;
+	font-weight: bold;
+}
+
+.def {
+	display: inline-block;
+	font-style: italic;
+}

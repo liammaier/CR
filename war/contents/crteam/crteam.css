@@ -1,0 +1,49 @@
+.crteam.container {
+	font-family: Veranda,Arial,sans-serif;
+	max-width: 1000px;
+	width: 900px;
+	background-color: white;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 3em;
+}
+
+
+/* COMMON */
+
+.crteam p {
+	font-size: 100%;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.crteam h2 {
+	font-size: 100%;
+	font-weight: bold;
+	margin-left: 1em;
+}
+
+.crteam div.border {
+	border: #99CCFF solid 1px;
+	border-radius: 10px;
+	margin: .5em;
+	padding: .3em;
+}
+
+.crteam div.clear {
+	clear: both;
+}
+
+/* IMAGES */
+
+.crteam img {
+	float: left;
+	margin: 10px;
+}
+
+.crteam img.centered {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	float: none;
+}

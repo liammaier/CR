@@ -1,0 +1,389 @@
+div.tesol.container {
+	font-family: "Times New Roman";
+	max-width: 1000px;
+	width: 900px;
+	background-color: white;
+	font-size: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 0;
+}
+
+/* COMMON */
+
+.tesol h1 {
+	font-size: 80px;
+	font-family: Eurostile;
+	font-weight: normal;
+	margin-top: .83em;
+	margin-bottom: .83em;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.tesol h2 {
+	font-size: 50px;
+	font-family: Eurostile;
+	font-weight: normal;
+	margin-top: .83em;
+	margin-bottom: .83em;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.tesol h3 {
+	font-weight: bolder;
+	font-size: 150%;
+	font-family: Eurostile;
+	margin-bottom: 0;
+}
+
+.tesol h4 {
+	font-family: Eurostile;
+	font-size: 125%;
+	font-weight: normal;
+	margin-bottom: 0;
+}
+
+.tesol h5 {
+	font-style: italic;
+	font-weight: bold;
+	font-size: 110%;
+	margin: 0;
+}
+
+.tesol h6 {
+	font-weight: bold;
+	font-size: 110%;
+	margin: 0;
+}
+
+.tesol .longQuote {
+	margin-left: 3em;
+	margin-right: 3em;
+}
+
+.tesol .gradientHeader {
+	background: -webkit-gradient(radial, center center, 0, center center, 460, from(#D7D7D7), to(#646464));
+	text-align: center;
+	padding-top: .5em;
+	padding-bottom: .5em;
+	margin-bottom: 1em;
+}
+
+.tesol .gradientHeader h3, .gradientHeader h4 {
+	margin: 0;
+	font-weight: bold;
+}
+
+.tesol p {
+	margin-right: 4em;
+	margin-top: 0;
+	margin-bottom: 1.5em;
+}
+
+.tesol li {
+	margin-right: 4em;
+	margin-left: 2em;
+	margin-bottom: 12px;
+}
+
+.tesol .left {
+	text-align: left;
+}
+
+.tesol .right {
+	text-align: right;
+}
+
+.tesol .center {
+	text-align: center;
+}
+
+.tesol .floatLeft {
+	float: left;
+}
+
+.tesol .floatRight {
+	float: right;
+}
+
+.tesol .clear {
+	clear: both;
+}
+
+.tesol .invisible {
+	visibility: hidden;
+}
+
+.tesol .hidden {
+	display: none;
+}
+
+.tesol .regular {
+	font-style: normal;
+}
+
+.tesol .lineBreak {
+	display: inline-block;
+	border-bottom: 1px solid black;
+	width: 100%;
+}
+
+.tesol .marginSeparation {
+	margin-bottom: 5em;
+}
+
+.tesol p.partDescription {
+	font-family: Eurostile;
+	margin-left: 14em;
+	font-size: 18px;
+	line-height: 27px;
+	margin-right: 0em;
+}
+
+.tesol .chapterSummary {
+	margin-left: 6em;
+	margin-right: 8em;
+	font-style: italic;
+	font-weight: bold;
+}
+
+.tesol .resources {
+	text-indent: -2em;
+	margin-left: 2em;
+	margin-bottom: .5em;
+}
+
+.tesol .indentHeader {
+	float: left;
+	padding-bottom: 3em;
+	margin-right: 1em;
+}
+
+.tesol .indentHeader.increasedHeader {
+	padding-bottom: 4em;
+}
+
+/* PAGEBREAK */
+
+.tesol .pagebreak {
+	border-bottom: 1px solid black;
+	width: 1000px;
+	float: left;
+	margin-bottom: 50px;
+	top: -100px;
+}
+
+.tesol p.breakText {
+	font-size: 80%;
+	position: relative;
+	bottom: -130px;
+}
+
+.tesol .pageNumber {
+	position: relative;
+	bottom: -136px;
+	display: inline-block;
+	width: 100%;
+	text-align: center;
+	font-weight: bold;
+	font-family: Arial;
+}
+
+.tesol .breakGraphic {
+	background-image:url('images/breakgraphic.png');
+	height: 173px;
+	width: 33px;
+	position: relative;
+	right: 5px;
+	top: -3px;
+}
+
+/* IMAGES */
+
+.tesol .barGraphic {
+	margin-left: 9em;
+}
+
+.tesol .centerImage {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.tesol .caption {
+	font-family: Eurostile;
+}
+
+/* TABLES */
+.tesol table.fullGrey {
+	border: 1px solid white;
+	display: table;
+	border-collapse: separate;
+	border-spacing: 2px;
+	font-family: Eurostile;
+	width: 100%;
+	margin: 0;
+}
+
+.tesol .fullGrey th {
+	background-color: #666666;
+	color: white;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.tesol .fullGrey td {
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: #B4B4B4;
+	min-height: 12px;
+}
+
+.tesol .fullGrey > thead > tr > th:first-child {
+	text-align: left;
+	width: 12em;
+}
+
+.tesol table.greyTable {
+	border: 1px solid white;
+	display: table;
+	border-collapse: separate;
+	border-spacing: 2px;
+	font-family: Eurostile;
+	line-height: 2em;
+	width: 100%;
+	margin: 0;
+}
+
+.tesol table.greyTable.noLineHeight {
+	line-height: 1.4em;
+}
+
+.tesol table.greyTable.noLineHeight td {
+	vertical-align: top;
+}
+
+.tesol .greyTable th {
+	background-color: #666666;
+	color: white;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.tesol .greyTable td {
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: #DBDBDB;
+}
+
+.tesol .greyTable td.darkGrey {
+	background-color: #B4B4B4;
+}
+
+.tesol .greyTable p {
+	margin-right: 0;
+	margin-left: 0;
+	margin-top: .5em;
+	margin-bottom: .5em;
+}
+
+.tesol .greyTable > thead > tr > th:first-child {
+	text-align: left;
+	width: 12em;
+}
+
+.tesol .greyTable.evenColumns > thead > tr > th:first-child {
+	width: 50%;
+}
+
+.tesol .greyTable.threeColumns > thead > tr > th:first-child {
+	width: 33%;
+}
+
+.tesol .greyTable.standardsTable th:first-child {
+	width:15%;
+}
+
+.tesol .greyTable.standardsTable td:nth-child(2), .tesol .greyTable.standardsTable td:nth-child(3) {
+	width: 40%;
+}
+
+.tesol .greyTable > thead > tr > th:last-child {
+	text-align: center;
+}
+
+.tesol .greyTable > tbody > tr > td:first-child {
+	background-color: #B4B4B4;
+	vertical-align: top;
+}
+
+.tesol .greyTable > tbody > tr > td:last-child {
+	background-color: #DBDBDB;
+	vertical-align: top;
+}
+
+.tesol .greyTable > tbody > tr > td.darkGrey {
+	background-color: #B4B4B4;
+}
+
+.tesol .greyTable td.standardsLists {
+	text-indent: -1em;
+	padding-left: 1.5em;
+}
+
+.tesol .greyTable.teacherStandards td {
+	padding-left: 1.5em;
+}
+
+.tesol .greyTable.teacherStandards thead > tr > th:first-child {
+	width: 33%;
+}
+
+.tesol .greyTable.teacherStandards th {
+	width: 12%;
+}
+
+.tesol .greyTable.teacherStandards  td.secondaryHeader {
+	padding-left: .5em;
+	font-weight: bold;
+}
+
+.tesol .learnerProfile {
+	border: none;
+	border-collapse: collapse;
+	margin-left: 3em;
+	margin-right: 3em;
+}
+
+.tesol .learnerProfile td {
+	min-width: 8em;
+	vertical-align: top;
+	padding-bottom: 1em;
+}
+
+.tesol .learnerProfile > tbody > tr > td:first-child {
+	font-weight: bold;
+	font-style: italic;
+}
+
+.tesol .teacherProfile {
+	border: none;
+	border-collapse: collapse;
+	margin-left: 3em;
+	margin-right: 3em;
+}
+
+.tesol .teacherProfile td {
+	min-width: 8em;
+	vertical-align: top;
+	padding-bottom: 1em;
+}
+
+.tesol .teacherProfile > tbody > tr > td:first-child {
+	font-weight: bold;
+	font-style: italic;
+}

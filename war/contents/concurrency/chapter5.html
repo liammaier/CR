@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h1>5</h1>
+				<h2>Monitors and Condition Synchronization</h2>
+				<div class="border"></div>
+
+				<p><span class="first-sentence">Monitors are language features for concurrent programming.</span> A monitor encapsulates data, which can only be observed and modified by monitor access procedures. Only a single access procedure may be active at a time. An access procedure thus has mutually exclusive access to the data variables encapsulated in the monitor. Monitors should sound familiar since we have already seen the monitor concept in the last chapter, though explained using different terminology. An object satisfies the data access requirement of a monitor since it encapsulates data which, if declared <code><strong>private</strong></code>, can be accessed only by the object's methods. These methods can be <code><strong>synchronized</strong></code> to provide mutually exclusive access. Thus, a monitor is simply represented in Java as a class that has synchronized methods.</p>
+
+				<p class="i">Monitors support <em>condition synchronization</em> in addition to ensuring that access to the data they encapsulate is mutually exclusive. Condition synchronization, as the term suggests, permits a monitor to block threads until a particular condition holds, such as a count becoming non-zero, a buffer becoming empty or new input becoming available. This chapter describes how condition synchronization in monitors is modeled and how it is implemented in Java.</p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Condition Synchronization">
+
+				<h3>5.1 Condition Synchronization</h3>
+
+				<p><span class="first-sentence">We illustrate condition synchronization using a simple example.</span> A controller is required for a car park, which only permits cars to enter when the car park is not full and, for consistency, does not permit cars to leave when there are no cars in the car park. A snapshot of our Java simulation of the car park is given in Figure 5.1. It depicts the situation in which the car park is full, the barrier is down and no further cars are permitted to enter. Car arrivals and departures are simulated by separate threads. In Figure 5.1, the departures thread has been stopped to allow</p>
+
+				<div class="pagebreak pageNumber">80</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure5-1.png">
+					<figcaption><strong>Figure 5.1</strong> Car park display.</figcaption>
+				</figure>
+
+				<p>the car park to become full. The arrivals thread is therefore blocked from further progress.</p>
+
+				<section class="subsection" data-number="2" data-name="Car Park Model">
+
+					<h4>5.1.1 Car Park Model</h4>
+
+					<p><span class="first-sentence">The first step in modeling a system is to decide which events or actions are of interest.</span> In the car park system, we can abstract details such as display panel rotation and the starting and stopping of the display threads. We thus omit the actions concerned with running, rotation, pausing and terminating threads that we modeled in section 3.2.1. Instead, we concern ourselves with only two actions: car arrival at the car park and car departure from the car park. These actions are named <em>arrive</em> and <em>depart</em> respectively. The next step is to identify the processes. These are the arrivals process, the departures process and the process that controls access to the car park. Both the arrivals process and the departures process are trivial. They attempt to generate, respectively, a sequence of arrival actions and a sequence of departure actions. The car park control must only permit arrival actions to occur <em>when</em> there is space in the car park and departures to occur <em>when</em> there are cars in the car park. This expresses the synchronization conditions that must be satisfied by the other processes when interacting with the car park.</p>
+
+					<p class="i">The car park model is given in Figure 5.2. The <code>CARPARKCONTROL</code> process uses the indexed state <code>SPACES</code> to record the number of available spaces in the car park. The control requirements described above have been modeled using the <em>FSP</em> guarded action construct (see section2.1.5). Thus in state <code>SPACES[0]</code>, <code>arrive</code> actions are not accepted and in state <code>SPACES[N]</code>, <code>depart</code> actions are not accepted.</p>
+
+					<p class="i">The behavior of the car park system is depicted as an <em>LTS</em> in Figure 5.3. The <em>LTS</em> has been generated directly from the model of Figure 5.2. It clearly shows that a</p>
+
+					<div class="pagebreak pageNumber">81</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure5-2.png">
+						<figcaption><strong>Figure 5.2</strong> Car park model.</figcaption>
+					</figure>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure5-3.png">
+						<figcaption><strong>Figure 5.3</strong> Car park <em>LTS</em>.</figcaption>
+					</figure>
+
+					<p>maximum of four <code>arrive</code> actions can be accepted before a <code>depart</code> action must occur.</p>
+
+				</section>
+
+				<section class="subsection" data-number="3" data-name="Car Park Program">
+
+					<h4>5.1.2 Car Park Program</h4>
+
+					<p><span class="first-sentence">Our models of concurrent systems represent all the entities in a system as processes.</span> In implementing the behavior of a model as a Java program, we must decide which entities are active and which are passive. By <em>active</em>, we mean an entity that initiates actions; this is implemented as a <em>thread</em>. By <em>passive</em>, we mean an entity that responds to actions; this is implemented as a <em>monitor</em>. As we will see in subsequent examples, the decision as to which processes in a model become threads in the implementation and which become monitors is not always clear-cut. However, in the car park example, the decision is clear. The processes <code>ARRIVALS</code> and <code>DEPARTURES</code>, which initiate <code>arrive</code> and <code>depart</code> actions, should</p>
+
+					<div class="pagebreak pageNumber">82</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure5-4.png">
+						<figcaption><strong>Figure 5.4</strong> <code>Car park</code> class diagram.</figcaption>
+					</figure>
+
+					<p>be implemented as threads. The <code>CARPARKCONTROL</code> process, which responds to <code>arrive</code> and <code>depart</code> actions, should be a monitor. The class structure of the car park program is depicted in Figure 5.4.</p>
+
+					<p class="i">We have omitted the <code>DisplayThread</code> and <code>GraphicCanvas</code> threads managed by <code>ThreadPanel</code> to simplify Figure 5.4. These are organized in exactly the same way as depicted in the class diagram for <code>ThreadDemo</code> in Chapter 3. The classes that are relevant to the concurrent execution of the program are the two <code>Runnable</code> classes, <code>Arrivals</code> and <code>Departures</code>, and the <code>CarParkControl</code> class, which controls arrivals and departures. Instances of these classes are created by the <code>CarPark</code> applet <code>start()</code> method:</p>
+
+					<pre>
+<strong>public</strong> void start() {
+  CarParkControl c = 
+    <strong>new</strong> DisplayCarPark(carDisplay, Places);
+    arrival.start(<strong>new</strong> Arrivals(c));
+    departures.start(<strong>new</strong> Departures(c));
+}
+					</pre>
+
+					<p><code>Arrivals</code> and <code>Departures</code> are instances of the <code>ThreadPanel</code> class and <code>carDisplay</code> is an instance of <code>CarParkCanvas</code> as shown in the class diagram.</p>
+
+					<p class="i">The code for the <code>Arrivals</code> and <code>Departures</code> classes is listed in Program 5.1. These classes use a <code>ThreadPanel.rotate()</code> method which takes as its parameter the number of degrees the rotating display segment is moved. The <code>CarParkControl</code> class must block the activation of <code>arrive()</code> by the arrivals thread if the car</p>
+
+					<div class="pagebreak pageNumber">83</div>
+
+					<pre class="program">
+<strong>class</strong> Arrivals <strong>implements</strong> Runnable {
+  CarParkControl carpark;
+
+  Arrivals(CarParkControl c) {carpark = c;}
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      <strong>while</strong>(true) {
+        ThreadPanel.rotate(330);
+        carpark.arrive();
+        ThreadPanel.rotate(30);
+      }
+    } <strong>catch</strong> (InterruptedException e) {}
+  }
+}
+
+<strong>class</strong> Departures <strong>implements</strong> Runnable {
+  CarParkControl carpark;
+
+  Departures(CarParkControl c) {carpark = c;}
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      <strong>while</strong>(true) {
+        ThreadPanel.rotate(180);
+        carpark.depart();
+        ThreadPanel.rotate(180);
+      }
+    } <strong>catch</strong> (InterruptedException e) {}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 5.1</strong> <code>Arrivals</code> and <code>Departures</code> classes.</p>
+
+					<p>park is full and block the activation of <code>depart()</code> by the departures thread if the car park is empty. How do we implement this in Java?</p>
+
+				</section>
+
+				<section class="subsection" data-number="4" data-name="Condition Synchronization in Java">
+
+					<h4>5.1.3 Condition Synchronizaion in Java</h4>
+
+					<p><span class="first-sentence">Java provides a thread wait set per monitor; actually, per object, since any
+					object may have a monitor synchronization lock associated with it.</span> The following
+					methods are provided by <strong><code>class Object</code></strong> from which all other classes are derived.</p>
+
+					<div class="pagebreak pageNumber">84</div>
+
+					<div class="definition">
+						<code><strong>public final</strong>void notify()</code>
+						<p class="i">Wakes up a single thread that is waiting on this object's wait set.</p><br/>
+						<code><strong>public final</strong>void notifyAll()</code>
+						<p class="i">Wakes up all threads that are waiting on this object's wait set.</p><br/>
+						<code><strong>public final</strong>void wait() <strong>throws</strong>InterruptedException</code>
+						<p class="i">Waits to be notified by another thread. The waiting thread releases the synchronization lock associated with the monitor. When notified, the thread must wait to reacquire the monitor before resuming execution.</p>
+					</div>
+
+					<p>The operations fail if called by a thread that does not currently "own" the monitor
+					(i.e. one that has not previously acquired the synchronization lock by executing a synchronized method or statement). We refer to a thread <em>entering</em> a monitor when it acquires the mutual exclusion lock associated with the monitor and <em>exiting</em> the monitor when it releases the lock. From the above definitions, it can be seen that a thread calling <code>wait()</code> exits the monitor. This allows other threads to enter the monitor and, when the appropriate condition is satisfied, to call <code>notify()</code> or <code>notifyAll()</code> to awake waiting threads. The operation of <code>wait()</code> and <code>notify()</code> is depicted in Figure 5.5.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure5-5.png">
+						<figcaption><strong>Figure 5.5</strong> Monitor <code>wait()</code> and <code>notify()</code>.</figcaption>
+					</figure>
+
+					<p>The basic format for modeling a guarded action for some condition <em><code>cond</code></em> and action <em><code>act</code></em> using <em>FSP</em> is shown below:</p>
+
+					<pre>
+FSP: when <em>cond act</em> -> NEWSTAT
+					</pre>
+
+					<p>The corresponding format for implementing the guarded action for condition <em><code>cond</code></em> and action <em><code>act</code></em> using Java is as follows:</p>
+
+					<div class="pagebreak pageNumber">85</div>
+
+					<pre>
+Java: <strong>public synchronized</strong> void act()
+		<strong>throws</strong> InterruptedException
+	{
+	  <strong>while</strong> (!cond) wait();
+	  <span>// modify monitor data</span>
+	  notifyAll()
+	}
+					</pre>
+
+					<p>The <strong><code>while</code></strong> loop is necessary to ensure that <code>cond</code> is indeed satisfied when a thread re-enters the monitor. Although the thread invoking <code>wait()</code> may have been notified that <code>cond</code> is satisfied, thereby releasing it from the monitor wait set, <code>cond</code> may be invalidated by another thread that runs between the time that the waiting thread is awakened and the time it re-enters the monitor (by acquiring the lock).</p>
+
+					<p class="i">If an action modifies the data of the monitor, it can call <code>notifyAll()</code> to awaken all other threads that may be waiting for a particular condition to hold with respect to this data. If it is not certain that only a single thread needs to be awakened, it is safer to call <code>notifyAll()</code> than <code>notify()</code> to make sure that threads are not kept waiting unnecessarily.</p>
+
+					<p class="i">Returning to the car park example, the implementation of the <code>CarParkControl</code> monitor is given in Program 5.2. Since either the <code>ARRIVALS</code> thread is blocked waiting space or the <code>DEPARTURES</code> thread is blocked waiting cars and these conditions are exclusive, only a single thread may be waiting on the monitor queue at any one time. Consequently, we can use <code>notify()</code> rather than <code>notifyAll()</code>. Note that we have made the <code>spaces</code> and <code>capacity</code> variables <strong><code>protected</code></strong> rather than <strong><code>private</code></strong> so that they can be accessed by the display class that is derived from <code>CarParkControl</code>.</p>
+
+					<p class="i">The general rules for guiding the translation of the process model into a Java monitor are as follows:</p>
+
+					<div class="definition">Each guarded action in the model of a monitor is implemented as a <strong><code>synchronized</code></strong> method which uses a <strong><code>while</code></strong> loop and <code>wait()</code> to implement the guard. The <strong><code>while</code></strong> loop condition is the negation of the model guard condition.</div>
+
+					<p>and</p>
+
+					<div class="definition">Changes in the state of the monitor are signaled to waiting threads using <code>notify()</code> or <code>notifyAll()</code>.</div>
+
+
+					<div class="pagebreak pageNumber">86</div>
+
+					<pre class="program">
+<strong>class</strong> CarParkControl {
+  <strong>protected</strong> int spaces;
+  <strong>protected</strong> int capacity;
+
+  CarParkControl(n)
+    {capacity = spaces = n;}
+
+  <strong>synchronized</strong> void arrive()
+      <strong>throws</strong> InterruptedException {
+    <strong>while</strong> (spaces==0) <strong>wait()</strong>;
+    --spaces;
+    <strong>notify()</strong>;
+  }
+
+  <strong>synchronized</strong> void depart()
+      <strong>throws</strong> InterruptedException{
+    <strong>while</strong> (spaces==capacity) <strong>wait()</strong>;
+    ++spaces;
+    <strong>notify()</strong>;
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 5.2</strong> <code>CarParkControl</code> monitor.</p>
+
+					<p>Thus in the car park model:</p>
+
+					<pre>
+FSP: <strong>when</strong>(i&gt;0) arrive->SPACES[i-1]
+					</pre>
+
+					<p>becomes</p>
+
+					<pre>
+Java: <strong>while</strong> (spaces==0) wait(); --spaces;
+					</pre>
+
+					<p>and</p>
+
+					<pre>
+FSP: <strong>when</strong>(i&lt;N) depart->SPACES[i+1]
+					</pre>
+
+					<p>becomes</p>
+
+					<pre>
+Java: <strong>while</strong> (spaces==N) wait(); ++spaces;
+					</pre>
+
+					<p>The state of the car park monitor is the integer variable <code>spaces</code>. Each method
+					modifies <code>spaces</code> and consequently, the change is signaled by <code>notify()</code> at the
+					end of each method.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="5" data-name="Semaphores">
+
+				<h3>5.2 Semaphores</h3>
+
+				<p><span class="first-sentence">Semaphores, introduced by Dijkstra (1968a), were one of the first mechanisms proposed to deal with inter-process synchronization problems.</span> A semaphore <em>s</em> is</p>
+
+				<div class="pagebreak pageNumber">87</div>
+
+				<p>an integer variable that can take only non-negative values. Once s has been given an initial value, the only operations permitted on <em>s</em> are <em>up(s)</em> and <em>down(s)</em> defined as follows:</p>
+
+				<pre class="times">
+<span>down(s)</span>: <strong>when</strong> s&gt;0 <strong>do</strong> decrement <span>s</span>;
+
+<span>up(s)</span>: increment <span>s</span>
+				</pre>
+
+				<p>In Dijkstra's original proposal, the <em>down</em> operation was called P (for the first letter
+				in the Dutch word <em>passeren</em>, which means "to pass"). The <em>up</em> operation was called
+				<em>V</em> (for the first letter of the Dutch word <em>vrijgeven</em>, which means "to release").
+				Semaphores are implemented in the kernels of many operating systems and realtime
+				executives. The above definition of semaphores seems to imply some sort of
+				busy wait by <em>down(s)</em> until <em>s</em> becomes non-zero. In fact, in the kernel of an operating
+				system, semaphores are usually implemented by a blocking wait as shown below:</p>
+
+				<pre class="times">
+<span>down(s):</span> <strong>if</strong> s&gt;0 <strong>then</strong>
+                           decrement <em>s</em>
+               <strong>else</strong>
+                           block execution of the calling process
+
+<span>up(s):</span>      <strong>if</strong> processes blocked on <span>s</span> <strong>then</strong>
+                           awaken one of them
+               <strong>else</strong>
+                           increment <span>s</span>
+                </pre>
+
+                <p>Implementations of semaphores usually manage processes, blocked on a semaphore by <em>down</em>, as a first-in-first-out (FIFO) queue. The <em>up</em> operation awakens the process at the head of the queue. FIFO queuing should not be relied on in reasoning about the correctness of semaphore programs.</p>
+
+                <p class="i">In the following, we describe how semaphores are modeled and how they can be implemented using Java monitors. However, it should be realized that semaphores are a low-level mechanism sometimes used in implementing the higher-level monitor construct, rather than vice versa as presented here for pedagogic reasons.</p>
+
+              	<section class="subsection" data-number="6" data-name="Modeling Semaphores">
+
+              		<h4>5.2.1 Modeling Semaphores</h4>
+
+              		<p><span class="first-sentence">The models of concurrent systems that we can describe in <em>FSP</em> are finite, to ensure they can be analyzed.</span> Consequently, we can only model semaphores that take a finite range of values. If the range is exceeded then this is regarded as an error in the model as described below:</p>
+
+              		<div class="pagebreak pageNumber">88</div>
+
+              		<pre>
+<strong>const</strong> Max = 3
+<strong>range</strong> Int = 0..Max
+
+SEMAPHORE(N=0) = SEMA[N],
+SEMA[v:Int]    = (up->SEMA[v+1]
+                 |<strong>when</strong>(v&gt;0) down->SEMA[v-1]
+                 ),
+SEMA[Max+1]    = ERROR.
+					</pre>
+
+              		<figure>
+              			<img src="/contents/concurrency/images/figure5-6.png">
+              			<figcaption><strong>Figure 5.6</strong> Semaphore <em>LTS</em>.</figcaption>
+              		</figure>
+
+              		<p>The behavior of the semaphore is depicted in Figure 5.6, with the <code>ERROR</code> state indicated by <em>state</em>(-1). In fact, since the <em>FSP</em> compiler automatically maps undefined states to the <code>ERROR</code> state, we can omit the last line of the description and model a semaphore more succinctly as:</p>
+
+              		<pre>
+SEMAPHORE(N=0)  = SEMA[N],
+SEMA[v:Int]     = (up->SEMA[v+1]
+                  |<strong>when</strong>(v&gt;0) down->SEMA[v-1]
+                  ).
+                  	</pre>
+
+                  	<p>The model follows directly from the first definition for a semaphore in the previous section. The action <code>down</code> is only accepted when the value <code>v</code> of the <code>SEMAPHORE</code> is greater than zero. The action <code>up</code> is not guarded. <code>SEMAPHORE</code> can take values in the range <code>0..Max</code> and has an initial value <code>N</code>. If an <code>up</code> action causes <code>Max</code> to be exceeded then <code>SEMAPHORE</code> moves to the <code>ERROR</code> state. When <code>SEMAPHORE</code> is used in a larger model, we must ensure that this <code>ERROR</code> state does not occur. As an example, we model the use of semaphores to provide mutual exclusion.</p>
+
+                  	<p class="i">Figure 5.7 depicts a model in which three processes <code>p[1..3]</code> use a shared semaphore <code>mutex</code> to ensure mutually exclusive access to some resource. Each process performs the action <code>mutex.down</code> to get exclusive access and <code>mutex.up</code> to release it. Access to the resource is modeled as the action <code>critical</code> (for the</p>
+
+                  	<div class="pagebreak pageNumber">89</div>
+
+                  	<figure>
+                  		<img src="/contents/concurrency/images/figure5-7.png">
+                  		<figcaption><strong>Figure 5.7</strong> Semaphore mutual exclusion model.</figcaption>
+                  	</figure>
+
+                    <p>critical section of code used to access the shared resource). The model for each of the processes is as shown below:</p>
+
+                    <pre>
+LOOP = (mutex.down->critical->mutex.up->LOOP)
+                    </pre>
+
+                    <p>The composite process <code>SEMADEMO</code>, which combines processes and semaphore and which is depicted graphically in Figure 5.7, is defined as:</p>
+
+                    <pre>
+||SEMADEMO = (p[1..3]:LOOP
+             ||{p[1..3]}::mutex:SEMAPHORE(1)).
+             		</pre>
+
+             		<p>Note that for mutual exclusion, the semaphore must be given the initial value one. The first process that tries to execute its <code>critical</code> action, performs a <code>mutex.down</code> action making the value of <code>mutex</code> zero. No further process can perform <code>mutex.down</code> until the original process releases exclusion by <code>mutex.up</code>. This can be seen clearly from the <code>SEMADEMO</code> labeled transition system in Figure 5.8.</p>
+
+             		<p class="i">It should also be clear from Figure 5.8 that no <code>ERROR</code> state is reachable in <code>SEMADEMO</code> since it does not appear in the <em>LTS</em>. In fact, the value of the semaphore does not exceed one (from the <em>LTS</em>, we can see that a trace of two consecutive <code>mutex.up</code> actions without an intermediate <code>mutex.down</code> cannot occur). For mutual exclusion, it is sufficient to use a <em>binary</em> semaphore which takes the values 0 or 1. We have already seen in the previous chapter that we can use the analysis tool to check mechanically for errors. We will see in subsequent chapters that we do not have to rely on visual inspection of the <em>LTS</em> to assert properties concerning sequences of actions. Of course, in this example, we can quickly check if <code>mutex</code> ever goes above 1 by setting <code>Max</code> to 1 and searching for errors.</p>
+
+             	</section>
+
+             	<section class="subsection" data-number="7" data-name="Semaphores in Java">
+
+             		<h4>5.2.2 Semaphores in Java</h4>
+
+             		<p><span class="first-sentence">Semaphores are passive objects that react to <code>up</code> and <code>down</code> actions; they do not initiate actions.</span> Consequently, we implement a semaphore in Java as a monitor
+             		</p>
+
+             		<div class="pagebreak pageNumber">90</div>
+
+             		<figure>
+             			<img src="/contents/concurrency/images/figure5-8.png">
+             			<figcaption><strong>Figure 5.8</strong> <code>SEMADEMO</code> <em>LTS</em>.</figcaption>
+             		</figure>
+
+             		<pre class="program">
+<strong>public class</strong> Semaphore {
+  <strong>private</strong> int value;
+
+  <strong>public</strong> Semaphore (int initial)
+    {value = initial;}
+
+  <strong>synchronized public</strong> void up() {
+    ++value;
+    notify();
+  }
+
+  <strong>synchronized public</strong> void down()
+      <strong>throws</strong> InterruptedException {
+    <strong>while</strong> (value==0) wait();
+    --value;
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 5.3</strong> <code>Semaphore</code> class.</p>
+
+					<p>class. The actions <code>up</code> and <code>down</code> become synchronized methods. The guard on the <code>down</code> action in the model is implemented using condition synchronization as we saw in section 5.1. The class that implements semaphores is listed in Program 5.3.</p>
+
+					<div class="pagebreak pageNumber">91</div>
+
+					<p class="i">Even though the <code>down()</code> method in Program 5. 3 changes the state of the monitor by decrementing <code>value</code>, we do not use <code>notify()</code> to signal the change in state. This is because threads only wait for the value of the semaphore to be incremented, they do not wait for the value to be decremented. The semaphore implementation does not check for overflow on increment. This is usually the case in semaphores implemented by operating systems. It is the responsibility of the programmer to ensure, during design, that overflow cannot occur. We advocate the use of analyzable models to check such properties.</p>
+
+					<p class="i">Figure 5. 9 depicts the display of the semaphore demonstration program modeled in the previous section. A thread executing in its critical section is indicated by a lighter-colored segment. Each thread display rotates counter-clockwise. In Figure 5.9, Thread 1 is executing in its critical section, Thread 2 is blocked waiting to enter its critical section and Thread 3 has finished its critical section and is executing non-critical actions. The sliders underneath each thread adjust the time a thread spends executing critical, as opposed to non-critical, actions. If the total time spent in critical sections by all three threads is less than a full rotation then it is possible to get all three threads to execute concurrently. In other words, there need be no conflict for access to the critical resource. This is often the case in real systems. Mechanisms for mutual exclusion only take effect when there is conflicting access to a shared resource. In real systems, it is therefore advisable to keep the time spent in critical sections as short as possible so as to reduce the likelihood of conflict.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure5-9.png">
+						<figcaption><strong>Figure 5.9</strong> <code>SEMADEMO</code> display.</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">92</div>
+
+					<pre class="program">
+<strong>public class</strong> ThreadPanel <strong>extends</strong> Panel {
+
+  <em>// construct display with title and rotating arc color <strong>c</strong></em>
+  <strong>public</strong> ThreadPanel(String title, Color c) {...}
+
+  <em><strong>// hasSlider == true</strong> creates panel with slider</em>
+  <strong>public</strong> ThreadPanel
+  (String title, Color c, boolean hasSlider) {...}
+
+  <em>// rotate display of currently running thread 6 degrees
+    // return false when in initial color
+    // return true when in second color</em>
+  <strong>public static</strong> boolean rotate()
+      <strong>throws</strong> InterruptedException {...}
+
+  <em>// rotate display of currently running thread by <strong>degrees</strong></em>
+  <strong>public static</strong> void rotate (int degrees)
+      <strong>throws</strong> InterruptedException {...}
+
+  <em>// create a new thread with target <strong>r</strong> and start it running</em>
+  <strong>public</strong> void start(Runnable r) {...}
+
+  <em>// stop the thread using Thread.interrupt()</em>
+  <strong>public</strong> void stop() {...}
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 5.4</strong> Extended version of <code>ThreadPanel</code> class.</p>
+
+					<p>The program behind the display of Figure 5.9 uses the same <code>ThreadPanel</code> class as before; however, it uses a different constructor to create the display with multicolored segments. The interface offered by the class, extended with the methods used in this chapter, is shown in Program 5.4.</p>
+
+					<p class="i">The <code>MutexLoop</code> class, which provides the <code>run()</code> method for each thread, is listed in Program 5. 5. The critical (mutually exclusive) actions are the <code>rotate()</code> actions which are executed when the segment changes to the lighter color. This is indicated by the <code>rotate()</code> method returning false when the rotating arc is dark-colored and true when light-colored.</p>
+
+					<p class="i">The threads and semaphore are created in the usual way by the applet <code>start()</code> method:</p>
+
+					<pre>
+<strong>public</strong> void start() {
+	Semaphore mutex = 
+		<strong>new</strong> DisplaySemaphore(semaDisplay, 1);
+					</pre>
+
+					<div class="pagebreak pageNumber">93</div>
+
+					<pre class="program">
+<strong>class</strong> MutexLoop <strong>implements</strong> Runnable {
+  Semaphore mutex;
+
+  MutexLoop (Semaphore sema) {mutex=sema;}
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      <strong>while</strong>(true) {
+        while(!ThreadPanel.rotate());
+        mutex.down(); <em>// get mutual exclusion</em>
+        <strong>while</strong>(ThreadPanel.rotate()); <em>//critical actions</em>
+        mutex.up(); <em>//release mutual exclusion</em>
+      }
+    } <strong>catch</strong>(InterruptedException e) {}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 5.5</strong> <code>MutexLoop</code> class.</p>
+
+					<pre>
+	thread1.start(<strong>new</strong> MutexLoop(mutex));
+	thread2.start(<strong>new</strong> MutexLoop(mutex));
+	thread1.start(<strong>new</strong> MutexLoop(mutex));
+}
+					</pre>
+
+					<p>where <code>thread1</code>, <code>thread2</code> and <code>thread3</code> are <code>ThreadPanel</code> instances and <code>semaDisplay</code> is an instance of <code>NumberCanvas</code>.</p>
+
+				</section>
+
+			</section>
+
+			<section class="subsection" data-number="8" data-name="Bounded Buffers">
+
+				<h3>5.3 Bounded Buffers</h3>
+
+				<p><span class="first-sentence">Buffers are frequently used in concurrent systems to smooth out information transfer rates between the producers of data and the consumers of that data.</span> Consider, for example, a keyboard device driver that is supplying characters typed at a keyboard to an editor program. The editor can consume characters at a much faster rate, on average, than a person can type at a keyboard. However, some characters can take longer than others to process, for example a character that causes the screen to scroll or a keyboard command that invokes a formatting command. When the editor is processing a character that takes a long time to process, it is necessary to buffer characters from the keyboard, otherwise they would be lost. This buffer is sometimes referred to as the <em>type-ahead</em> buffer. It is an example of the sort of buffer that we describe in the following.</p>
+
+				<p class="i">In this section we model and program a bounded buffer, which consists of a fixed number of slots. Items are put into the buffer by a <em>producer</em> process and</p>
+
+				<div class="pagebreak pageNumber">94</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure5-10.png">
+					<figcaption><strong>Figure 5.10</strong> Bounded buffer display.</figcaption>
+				</figure>
+
+				<p>removed by a <em>consumer</em> process. The buffer is organized so that the first item put into it will be the first item out (FIFO).</p>
+
+				<p class="i">Figure 5.10 depicts the display of our example system in which a producer process communicates characters to a consumer process via a five-slot buffer. The small circle above the buffer indicates the next free slot into which the producer process can place a character. The circle below the buffer indicates the next slot from which the consumer process can take a character. The reader may note the similarity between this example and the initial car park example in section 5.1. In fact, the synchronization requirements are the same. The producer is only allowed to put a character into the buffer when there is a free slot and the consumer process can only get a character when there is at least one in the buffer. These are exactly the requirements for the car park, if we substitute space for slot and car for character. What is different between the two examples is the FIFO discipline enforced by the buffer, in contrast to the car park where cars can occupy any free space and need not leave in arrival order.</p>
+
+				<section class="section" data-number="9" data-name="Bounded Buffer Model">
+
+					<h4>5.3.1 Bounded Buffer Model</h4>
+
+					<p><span class="first-sentence">The producer-consumer system with a bounded buffer is an example of a program that handles data items without altering them.</span> In addition, the behavior of the producer, the consumer and the buffer itself are not affected by the value of the items they handle. In other words, they do not test the value of these data items. The behavior is said to be <em>data-independent</em>. If data independence can be established then models can be simplified by omitting the detailed representation of parameters and data structures. This leads to much smaller and more tractable models. The <code>get</code> and <code>put</code> operations in Figure 5.11 are simple actions that do not have parameters. The <em>LTS</em> for the bounded buffer system, depicted in Figure 5.12,</p>
+
+					<div class="pagebreak pageNumber">95</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure5-11.png">
+						<figcaption><strong>Figure 5.11</strong> Bounded buffer model.</figcaption>
+					</figure>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure5-12.png">
+						<figcaption><strong>Figure 5.12</strong> Bounded buffer <em>LTS</em>.</figcaption>
+					</figure>
+
+					<p>should be compared with the car park <em>LTS</em> of Figure 5.3 to see the similarity between the synchronization behavior of the two systems.</p>
+
+				</section>
+
+				<section class="subsection" data-number="10" data-name="Bounded Buffer Program">
+
+					<h4>5.3.2 Bounded Buffer Program</h4>
+
+					<p><span class="first-sentence">The <code>BUFFER</code> of the model becomes a monitor in the Java implementation, with synchronized methods <code>put</code> and <code>get</code> (Program 5.6).</span> We have separated the interface of the buffer from its implementation since we will provide an alternative implementation in the next section.</p>
+
+					<p class="i">The buffer has been implemented as a general-purpose class that can buffer any type of Java object. The buffer data structure is a fixed size array <code>buf</code>, indexed by <code>in</code> which points to the next free slot and <code>out</code> which points to the next slot to be emptied. These indexes are incremented modulo the size of the buffer. The code for the producer and consumer programs is listed in Program 5.7.</p>
+
+					<div class="pagebreak pageNumber">96</div>
+
+					<pre class="program">
+<strong>public</strong> interface Buffer&lt;E&gt; {
+  <strong>public</strong> void put(E o)
+    <strong>throws</strong> InterruptedException; <em>//put object into buffer</em>
+  <strong>public</strong> E get()
+    <strong>throws</strong> InterruptedException; <em>//get object from buffer</em>
+}
+
+<strong>public</strong> class BufferImpl&lt;E&gt; <strong>implements</strong> Buffer&lt;E&gt; {
+  <strong>protected</strong> E[] buf;
+  <strong>protected</strong> int in = 0;
+  <strong>protected</strong> int out = 0;
+  <strong>protected</strong> int count = 0;
+  <strong>protected</strong> int size;
+
+  <strong>public</strong> BufferImpl(int size) {
+    this.size = size;
+    buf = (E[])new Object[size];
+  }
+
+  <strong>public</strong> synchronized void put(E o)
+      <strong>throws</strong> InterruptedException {
+    <strong>while</strong> (count==size) wait();
+    buf[in] = o;
+    ++ count;
+    in=(in+1) % size;
+    notifyAll();
+  }
+
+  <strong>public</strong> synchronized E get()
+        <strong>throws</strong> InterrruptedException {
+    <strong>while</strong> (count==0) wait();
+    E o = buf[out];
+    buf[out] = null;
+    --count;
+    out=(out+1) % size;
+    notifyAll();
+    return (o);
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 5.6</strong> <code>Buffer</code> interface and  <code>BufferImpl</code> class.</p>
+
+					<div class="pagebreak pageNumber">97</div>
+
+					<pre class="program">
+<strong>class</strong> Producer <strong>implements</strong> Runnable {
+  Buffer&lt;Character&gt; buf;
+  String alphabet= "abcdefghijklmnopqrstuvwxyz";
+
+  Producer(Buffer&lt;Character&gt; b) {buf = b;}
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      int ai = 0;
+      <strong>while</strong>(true) {
+        ThreadPanel.rotate(12);
+        buf.put(alphabet.charAt(ai));
+        ai=(ai+1) % alphabet.length();
+        ThreadPanel.rotate(348);
+      }
+    } <strong>catch</strong> (InterruptedException e){}
+  }
+}
+
+<strong>class</strong> consumer <strong>implements</strong> Runnable {
+  Buffer&lt;Character&gt; buf;
+
+  Consumer(Buffer&lt;Character&gt; b) {buf = b;}
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      <strong>while</strong>(true) {
+        ThreadPanel.rotate(180);
+        Character c = buf.get();
+        ThreadPanel.rotate(180);
+      }
+    } <strong>catch</strong>(InterruptedException e){}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 5.7</strong> <code>Producer</code> and <code>Consumer</code> classes.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="11" data-name="Nested Monitors">
+
+				<h3>5.4 Nested Monitors</h3>
+
+				<p><span class="first-sentence">Suppose that we did not wish to use condition synchronization directly in the
+				implementation of the buffer monitor class but instead we decided to use two
+				semaphores <code>full</code> and <code>empty</code> to reflect the state of the buffer.</span> The semaphore
+				<code>empty</code> counts the number of spaces and is decremented during a <code>put</code> operation.
+				The <code>put</code> is, of course, blocked if the value of <code>empty</code> is zero. Similarly, <code>full</code> counts
+				the number of items in the buffer and is decremented by a <code>get</code> operation. The
+				</p>
+
+				<div class="pagebreak pageNumber">98</div>
+
+				<pre class="program">
+<strong>class</strong> SemaBuffer&lt;E&gt; <strong>implements</strong> Buffer&lt;E&gt; {
+  <strong>protected</strong> E[] buf;
+  <strong>protected</strong> int in = 0;
+  <strong>protected</strong> int out = 0;
+  <strong>protected</strong> int count = 0;
+  <strong>protected</strong> int size;
+
+  Semaphore full; <em>//counts number of items</em>
+  Semaphore empty; <em>//counts number of spaces</em>
+
+  SemaBuffer(int size) {
+    this.size = size; buf = (E[])<strong>new</strong> Object[size];
+    full = <strong>new</strong> Semaphore(0);
+    empty = <strong>new</strong> Semaphore(size);
+  }
+
+  <strong>synchronized</strong> public void put(E o)
+      <strong>throws</strong> InterruptedException {
+    empty.down();
+    buf[in] = o;
+    ++count;
+    in=(in+1) % size;
+    full.up()
+  }
+
+  <strong>synchronized</strong> public E get()
+      <strong>throws</strong> InterruptedException {
+    full.down();
+    E o = buf[out];
+    buf[out]=null;
+    --count;
+    out=(out+1) % size;
+    empty.up();
+    return(o);
+  }
+}
+				</pre>
+
+				<p class="program-caption"><strong>Program 5.8</strong> <code>Buffer class</code> using semaphores.</p>
+
+				<p><code>get</code> is therefore blocked if the value of <code>full</code> is zero. The modified buffer class is shown in Program 5. 8.</p>
+
+				<p class="i">The semaphores of Program 5. 8 replace the <code>count</code> variable in the original implementation, the conditional waits on the value of count and the notification of changes in its value. An updated model to reflect the changes in the buffer implementation is shown below:</p>
+
+				<div class="pagebreak pageNumber">99</div>
+
+				<pre>
+<strong>const</strong> Max = 5
+<strong>range</strong> Int = 0..Max
+
+SEMAPHORE(I=0) = SEMA[I],
+SEMA[v:Int]    = (up->SEMA[v+1]
+                 |<strong>when</strong>(v&gt;0) down->SEMA[v-1]
+                 ).
+
+BUFFER = (put -> empty.down ->full.up ->BUFFER
+         |get -> full.down ->empty.up ->BUFFER
+         ).
+
+PRODUCER = (put -> PRODUCER).
+CONSUMER = (get -> CONSUMER).
+
+||BOUNDEDBUFFER = (PRODUCER || BUFFER || CONSUMER
+                  ||empty:SEMAPHORE(5)
+                  ||full:SEMAPHORE(0))@{put, get}.
+
+                </pre>
+
+                <p>A problem occurs when we check this model using the analyzer tool <em>LTSA</em> and find that it reports a potential deadlock together with a trace of actions to that deadlock:</p>
+
+                <pre>
+Composing
+ potential DEADLOCK
+States Composed: 28 Transitions: 32 in 60ms
+Trace to DEADLOCK:
+	get
+				</pre>
+
+				<p>We discuss deadlock in more detail in the next chapter. However, in essence, it means that a system can make no further progress since there are no further actions it can take. The deadlock in the model can be seen in the demonstration version of the program by starting the consumer and letting it block, waiting to get a character from the empty buffer. When the producer is started, it cannot put a character into the buffer. Why? The reason is to do with the use of two levels of synchronization lock: the first gives mutually exclusive access to the buffer monitor and the second gives mutually exclusive access to the semaphores.</p>
+
+				<p class="i">When the consumer calls <code>get</code>, it acquires the <code>Buffer</code> monitor lock and then acquires the monitor lock for the <code>full</code> semaphore by calling <code>full.down()</code> to check if there is something in the buffer. Since initially the buffer is empty, the call to <code>full.down()</code> blocks the consumer thread (using <code>wait()</code>) and releases the monitor lock for the <code>full</code> semaphore. However, it does not release the monitor lock for <code>Buffer</code>. Consequently, the producer cannot enter the monitor to put a</p>
+
+				<div class="pagebreak pageNumber">100</div>
+
+				<pre class="program">
+<strong>class</strong> FixedSemaBuffer&lt;E&gt; <strong>implements</strong> Buffer&lt;E&gt; {
+  <strong>protected</strong> E[] buf;
+  <strong>protected</strong> int in = 0;
+  <strong>protected</strong> int out = 0;
+  <strong>protected</strong> int count = 0; <em>//only used for display purposes</em>
+  <strong>protected</strong> int size;
+
+  Semaphore full;  <em>//counts number of items</em>
+  Semaphore empty; <em>//counts number of spaces</em>
+
+  FixedSemaBuffer(int size) {
+    this.size = size; buf = (E[])<strong>new</strong> Object[size];
+    full  = <strong>new</strong> Semaphore(0);
+    empty = <strong>new</strong> Semaphore(size);
+  }
+
+  <strong>public</strong> void put(E o)
+        <strong>throws</strong> InterruptedException {
+    empty.down();
+    synchronized(this){
+      buf[in] = o; ++count; in=(in+1)%size;
+    }
+    full.up()
+  }
+
+  <strong>public</strong> E get()
+        <strong>throws</strong> InterruptedException {
+    full.down(); E o;
+    <strong>synchronized</strong>(this){
+      o=buf[out]; buf[out]=null;
+      --count; out=(out+1)%size;
+    }
+    empty.up();
+    return (o);
+  }
+}
+				</pre>
+
+				<p class="program-caption"><strong>Program 5.9</strong> Fixed bounded buffer using semaphores.</p>
+
+				<p>character into the buffer and so no progress can be made by either producer or consumer -hence the deadlock. The situation described above is known as the <em>nested monitor problem</em>. The only way to avoid it in Java is by careful design. In our example, the deadlock can be removed by ensuring that the monitor lock for the buffer is not acquired until after semaphores are decremented (Program 5.9).</p>
+
+				<div class="pagebreak pageNumber">101</div>
+
+				<p>As mentioned before, in this book we advocate the use of the model and analysis to aid in the process of "careful design". Those parts of the model which need to be revised to take into account the changes to the buffer, documented in Program 5.9, are shown below:</p>
+
+				<pre>
+BUFFER = (put -> BUFFER
+         |get -> BUFFER 
+         ).
+
+PRODUCER = (empty.down->put ->full.up ->PRODUCER).
+CONSUMER = (full.down ->get ->empty.up->CONSUMER).
+				</pre>
+
+				<p>Moving the semaphore actions from the buffer process to the producer and consumer processes reflects the change in the implementation where the semaphore actions are performed outside the monitor (i.e. before acquiring the monitor lock). If this modified model is composed and minimized, it generates an identical <em>LTS</em> to that depicted in Figure 5.12 for the original model. This gives us confidence that our revised semaphore implementation of the bounded buffer is equivalent to the original one which used <code>wait()</code> and <code>notify()</code> directly.</p>
+
+			</section>
+
+			<section class="section" data-number="12" data-name="Monitor Invariants">
+
+				<h3>5.5 Monitor Invariants</h3>
+
+				<p><span class="first-sentence">An invariant for a monitor is an assertion concerning the variables it encapsulates.</span>
+				This assertion must hold whenever there is no thread executing inside the monitor.
+				Consequently, the invariant must be true at any point that a thread releases the
+				monitor lock -when a thread returns from a synchronized method call and when
+				a thread is blocked by a <code>wait()</code>. A formal proof of the correctness of a monitor can
+				be achieved by demonstrating that the constructor for a monitor establishes the
+				invariant and that the invariant holds after the execution of each access method and
+				just before a <code>wait()</code> is executed. Such an approach requires a programming logic,
+				a formal logical system that facilitates making precise statements about program
+				execution. Greg Andrews (1991) uses this approach in his book. Similarly, Fred
+				Schneider (1997) discusses formal derivation and reasoning about concurrent
+				programs in his book.</p>
+
+				<p class="i">Instead, for the reasons outlined at length in Chapter I, we have chosen to use a model-based approach amenable to mechanical proof. The disadvantage is that our mechanical proofs only apply to specific cases or models while the manual proof-theoretic approach used by Andrews permits correctness proofs for the general case. For example, a proof method could establish monitor correctness for all sizes of a bounded buffer rather than just a specific size. However, it is usually</p>
+
+				<div class="pagebreak pageNumber">102</div>
+
+				<p>the case that if a model for a specific case is shown to be correct, the general case can be inferred by induction.</p>
+
+				<p class="i">Although we do not use invariants in formal correctness proofs, they are useful program documentation that aid informal correctness reasoning. The invariants for the monitor programs developed in this chapter are:</p>
+
+				<pre>
+	<strong>CarParkControl Invariant:</strong> 0 &lt;= <em>spaces</em> &lt;= N
+				</pre>
+
+				<p>The invariant for the car park controller simply states that the number of spaces available must always be greater than or equal to zero and less than or equal to the maximum size of the car park (<em>N</em>).</p>
+
+				<pre>
+	<strong>Semaphore Invariant:</strong> 0 &lt;= <em>value</em>
+				</pre>
+
+				<p>The semaphore invariant simply asserts that the value of a semaphore must always be a non-negative value.</p>
+
+				<pre>
+	<strong>Buffer Invariant:</strong> 0 &lt;= <em>count</em> &lt;= <em>size</em>
+		      <strong>and</strong> 0 &lt;= <em>in</em> &lt; <em>size</em>
+		      <strong>and</strong> 0 &lt;= <em>out</em> &lt; <em>size</em>
+		      <strong>and</strong> <em>in</em> = <em>(out + count)</em> modulo <em>size</em>
+				</pre>
+
+				<p>The bounded buffer invariant asserts that the number of items in the buffer must lie in the range zero to <code><em>size</em></code> and that the indexes <code><em>in</em></code> and <code><em>out</em></code> must lie in the range zero to <code><em>size</em></code>-1. It states that the <code><em>in</em></code> index must always be <code><em>count</em></code> items "ahead" of the <code><em>out</em></code> index where ahead means addition modulo <code><em>size</em></code>.</p>
+
+				<p class="i">Invariants are also used to reason about the correctness of classes in sequential object-oriented programs. The invariant is required to hold after each method execution. The difference in concurrent programs is the additional responsibility to establish that the invariant holds at any point where the object's monitor lock is released. These additional points are where a <code>wait()</code> can be executed.</p>
+
+			</section>
+
+			<section class="subsection" data-number="13" data-name="Summary">
+
+				<h3>Summary</h3>
+
+				<p><span class="first-sentence">In this chapter, we introduced condition synchronization, which in combination with the mutual exclusion provided by <strong>synchronized</strong> methods, supports the concept of a monitor in Java.</span> Condition synchronization is implemented using the <code>wait()</code>, <code>notify()</code> and <code>notifyAll()</code> primitives which operate on a waiting queue which can be associated with any Java object. Operation <code>wait()</code> suspends the calling thread on the wait queue, <code>notify()</code> unblocks one of the threads on the wait queue and <code>notifyAll()</code> unblocks all the threads on the wait queue. When a thread suspends itself by calling <code>wait()</code>, the monitor mutual exclusion lock is</p>
+
+				<div class="pagebreak pageNumber">103</div>
+
+				<p>released. Use of these primitives causes an exception if the invoking thread does not currently hold the monitor lock.</p>
+
+				<p class="i">Model processes that react to actions rather than instigate them are usually translated into monitors in the program that implements the model. Each guarded action in the model of a monitor is implemented as a <strong>synchronized</strong> method which uses a <code><strong>while</strong></code> loop and <code>wait()</code> to implement the guard. The <code><strong>while</strong></code> loop condition is the negation of the model guard condition. Changes in the state of the monitor are signaled to waiting threads using <code>notify()</code> or <code>notifyAll()</code>.</p>
+
+				<p class="i">Nested monitor calls should be used with great care as they can cause a program to deadlock. This can occur since a thread that waits in a monitor releases only its lock, not the lock of any monitor from which it may have been called.</p>
+
+			</section>
+
+			<section class="section" data-number="14" data-name="Notes and Further Reading">
+
+				<h3>Notes and Further Reading</h3>
+
+				<p><span class="first-sentence">The idea of associating data encapsulation with mutual exclusion, which is the essence of the monitor concept, is jointly due to Edsger W. Dijkstra (1972b), Per Brinch-Hansen (1972) and CA.R. Hoare (1974).</span> The monitors in CA. R. Hoare's classic paper differ in a number of respects from the way monitors appear in Java. Condition wait queues are declared explicitly in the original proposal and more than one can be declared in a monitor. This contrasts with the Java monitor, which permits only a single implicit condition queue. Multiple queues allow less rescheduling and thread-awakening if multiple threads are waiting on different conditions. In Java, all threads must be awakened to re-test their waiting conditions. If a thread's condition does not hold, it blocks again. In practice, threads waiting on different conditions usually wait at different times and consequently there is no extra thread-activation cost. Even when it does occur, the extra scheduling does not usually cause a problem.</p>
+
+				<p class="i">Another difference is the semantics of <code>notify()</code>. The Java semantic for <code>notify()</code> is known as <em>signal and continue</em>. This means that the notified thread is taken off the wait queue and put into the scheduler's ready queue. However, the thread invoking the <code>notify</code> operation does not necessarily give up the processor and can continue running. Conditions in Java are thus always re-tested when the notified thread regains the monitor, since the condition may have been invalidated between the time it was notified and the time the monitor lock is re-acquired. In contrast, the <code>notify</code> operation of the original proposal had <em>signal</em> and <em>urgent</em> wait semantics. <code>Notify</code> would cause the notified thread to be executed immediately and the notifying thread to be suspended. However, the notifying thread would regain the monitor lock before new entries. Signal and urgent wait has the advantage that wait conditions do not need to be re-tested. The disadvantages are additional implementation complexity and, in a Java context, the fact that the</p>
+
+				<div class="pagebreak pageNumber">104</div>
+
+				<p>semantics do not fit well with having a single wait queue. An extensive discussion of the different semantics possible for condition synchronization may be found in Greg Andrews' book (1991).</p>
+
+				<p class="i">The development of monitors was inspired by the class concept of SIMULA-67 (Birtwistle, Dahl, Myhrhaug, <em>et al</em>., 1973). Monitors have been included in a wide range of early concurrent programming languages. Concurrent Pascal (BrinchHansen, 1975) was the first concurrent programming language to include monitors. Subsequent influential concurrent programming languages with monitors include Modula (Wirth, 1977), Mesa (Lampson and Redell, 1980), Pascal Plus (Welsh and Bustard, 1979), Concurrent Euclid (Holt, 1983) and Turing Plus (Holt and Cordy, 1988). The problem of nested monitor calls was raised by Andrew Lister (1977). Java has brought the development of monitors full circle by including the concept in an object-oriented programming language.</p>
+
+			</section>
+
+			<section class="section" data-number="15" data-name="Excercises">
+
+				<h3>Excercises</h3>
+
+				<ol id="five">
+
+					<li><span class="first-sentence">A single-slot buffer may be modeled by:</span>
+						<pre>
+ONEBUF = (put->get->ONEBUF).
+						</pre>
+						Program a Java class, <code>OneBuf</code>, that implements this one-slot buffer as a monitor.
+					</li>
+
+					<li>Replace the condition synchronization in your implementation of the one-slot buffer by using semaphores. Given that Java defines assignment to scalar types (with the exception of long and double) and reference types to be atomic, does your revised implementation require the use of the monitor's mutual exclusion lock?</li>
+
+					<li>In the museum example (Chapter 3, exercise 3.6), identify which of the processes, <code>EAST</code>, <code>WEST</code>, <code>CONTROL</code> and <code>DIRECTOR</code>, should be threads and which should be monitors. Provide an implementation of the monitors.</li>
+
+					<li><em>The Dining Savages</em>: A tribe of savages eats communal dinners from a large pot that can hold <em>M</em> servings of stewed missionary. When a savage wants to eat, he helps himself from the pot unless it is empty in which case he waits for the pot to be filled. If the pot is empty, the cook refills the pot with <em>M</em> servings. The behavior of the savages and the cook is described by:
+						<pre>
+	SAVAGE = (getserving -> SAVAGE). 
+	COOK   = (fillpot -> COOK).
+						</pre>
+					Model the behavior of the pot as an <em>FSP</em> process and then implement it as a Java monitor.</li>
+
+					<li><em>FSP</em> allows multiple processes to synchronize on a single action. A set of processes with the action <code>sync</code> in their alphabets must all perform this action before any of them can proceed. Implement a monitor called <code>Barrier</code> in Java with a <code>sync</code> method that ensures that all of <em>N</em> threads must call <code>sync</code> before any of them can proceed.</li>
+
+					<div class="pagebreak pageNumber">105</div>
+
+					<li><em>The Savings Account Problem:</em> A savings account is shared by several people. Each person may deposit or withdraw funds from the account subject to the constraint that the balance of the account must never become negative. Develop a model for the problem and from the model derive a Java implementation of a monitor for the savings account.</li>
+
+				</ol>
+
+			</section>
+
+		</div> <!--container-->
+
+	</div> <!--concurrency-->
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+						
+
+
+
+
+
+
+
+

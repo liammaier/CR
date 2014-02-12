@@ -1,0 +1,31 @@
+.noteview {
+	margin: 5px;
+	padding:5px;
+	margin-left: 25%;
+	width: 70%;
+	background-color: lightgray;
+}
+
+.sectionCollection {
+	margin: 5px;
+	padding:5px;
+	border:2px solid;
+	border-radius:5px;
+	padding-left: 5%;
+}
+
+.contentCollection {
+	margin: 5px;
+	padding:5px;
+	border:2px solid;
+	border-radius:5px;
+	padding-left: 5%;
+}
+
+.content-header {
+	font-weight: bold;
+}
+
+.notes-header{
+	font-weight: bold;
+}

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Introducing Regular Expressions</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="regexp">
+
+		<div class="container">
+				
+			<h3>CHAPTER 1</h3>
+			<div class="border"></div>
+			
+			<section class="intro" data-number="0" data-name="Chapter 1 Introduction">
+
+				<h1>What Is a Regular Expression?</h1>
+
+				<p><span class="first-sentence">Regular expressions are specially encoded text strings used as patterns for matching
+				sets of strings.</span> They began to emerge in the 1940s as a way to describe regular languages,
+				but they really began to show up in the programming world during the 1970s. The
+				first place I could find them showing up was in the QED text editor written by Ken
+				Thompson.</p>
+
+				<blockquote>“A regular expression is a pattern which specifies a set of strings of characters; it is said
+				to match certain strings.” —Ken Thompson</blockquote>
+
+				<p>Regular expressions later became an important part of the tool suite that emerged from
+				the Unix operating system—the <em>ed</em>, <em>sed</em> and <em>vi</em> (<em>vim</em>) editors, <em>grep</em>, <em>AWK</em>, among others.
+				But the ways in which regular expressions were implemented were not always so
+				regular.</p>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>This book takes an inductive approach; in other words, it moves from
+					the specific to the general. So rather than an example after a treatise,
+					you will often get the example first and then a short treatise following
+					that. It’s a learn-by-doing book.</p>
+				</div>
+
+				<p>Regular expressions have a reputation for being gnarly, but that all depends on how
+				you approach them. There is a natural progression from something as simple as this:</p>
+
+				<p class="indented"><code>\d</code></p>
+
+				<p>a <em>character shorthand</em> that matches any digit from 0 to 9, to something a bit more
+				complicated, like:</p>
+
+				<p class="indented"><code>^(\(\d{3}\)|^\d{3}[.-]?)?\d{3}[.-]?\d{4}$</code></p>
+				
+				<p>which is where we’ll wind up at the end of this chapter: a fairly robust regular expression
+				that matches a 10-digit, North American telephone number, with or without parentheses
+				around the area code, or with or without hyphens or dots (periods) to separate
+				the numbers. (The parentheses must be balanced, too; in other words, you can’t just
+				have one.)</p>
+
+				<div class="pagebreak right"><span class="pageNumber">1</span></div>
+				
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p><strong>Chapter 10</strong> shows you a slightly more sophisticated regular expression
+					for a phone number, but the one above is sufficient for the purposes of
+					this chapter.</p>
+				</div>
+
+				<p>If you don’t get how that all works yet, don’t worry: I’ll explain the whole expression
+				a little at a time in this chapter. If you will just follow the examples (and those throughout
+				the book, for that matter), writing regular expressions will soon become second
+				nature to you. Ready to find out for yourself?</p>
+
+				<p>I at times represent Unicode characters in this book using their code point—a fourdigit,
+				hexadecimal (base 16) number. These code points are shown in the form
+				U+0000. U+002E, for example, represents the code point for a full stop or period (.).</p>
+
+			</section>
+		
+			<section class="section" data-number="1" data-name="Getting Started with Regexpal">
+
+				<h2>Getting Started with Regexpal</h2>
+
+				<p><span class="first-sentence">First let me introduce you to the Regexpal website at <span class="url">http://www.regexpal.com.</span></span> Open
+				the site up in a browser, such as Google Chrome or Mozilla Firefox. You can see what
+				the site looks like in <strong>Figure 1-1</strong>.</p>
+				<p>You can see that there is a text area near the top, and a larger text area below that. The
+				top text box is for entering regular expressions, and the bottom one holds the subject
+				or target text. The target text is the text or set of strings that you want to match.</p>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>At the end of this chapter and each following chapter, you’ll find a
+					“Technical Notes” section. These notes provide additional information
+					about the technology discussed in the chapter and tell you where to get
+					more information about that technology. Placing these notes at the end
+					of the chapters helps keep the flow of the main text moving forward
+					rather than stopping to discuss each detail along the way.</p>
+				</div>
+
+			</section>
+			
+			<section class="section" data-number="2" data-name="Matching a North American Phone Number">
+
+				<h2>Matching a North American Phone Number</h2>
+
+				<p><span class="first-sentence">Now we’ll match a North American phone number with a regular expression.</span> Type the
+				phone number shown here into the lower section of Regexpal:</p>
+
+				<p class="indented"><code>707-827-7019</code></p>
+
+				<p>Do you recognize it? It’s the number for O’Reilly Media.</p>
+
+				<p>Let’s match that number with a regular expression. There are lots of ways to do this,
+				but to start out, simply enter the number itself in the upper section, exactly as it is
+				written in the lower section (hold on now, don’t sigh):</p>
+
+				<p class="indented"><code>707-827-7019</code></p>
+
+				<div class="pagebreak left"><span class="pageNumber">2</span> | Chapter 1: What Is a Regular Expression?</div>
+				
+				<figure>
+					<img src="/contents/regularexpressions/images/figure1-1.png">
+					<figcaption>Figure 1-1. Regexpal in the Google Chrome browser</figcaption>
+				</figure>
+				
+				<p>What you should see is the phone number you entered in the lower box highlighted
+				from beginning to end in yellow. If that is what you see (as shown in <strong>Figure 1-2</strong>), then
+				you are in business.</p>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>When I mention colors in this book, in relation to something you might
+					see in an image or a screenshot, such as the highlighting in Regexpal,
+					those colors may appear online and in e-book versions of this book, but,
+					alas, not in print. So if you are reading this book on paper, then when I
+					mention a color, your world will be grayscale, with my apologies.</p>
+				</div>
+
+				<p>What you have done in this regular expression is use something called a <em>string literal</em>
+				to match a string in the target text. A string literal is a literal representation of a string.</p>
+
+				<p>Now delete the number in the upper box and replace it with just the number 7. Did
+				you see what happened? Now only the sevens are highlighted. The literal character
+				(number) 7 in the regular expression matches the four instances of the number 7 in the
+				text you are matching.</p>
+
+			</section>
+			
+			<section class="section" data-number="3" data-name="Matching Digits with a Character Class">
+
+				<div class="pagebreak right"><span class="pageNumber">3</span> | What Is a Regular Expression?</div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure1-2.png">
+					<figcaption>Figure 1-2. Ten-digit phone number highlighted in Regexpal</figcaption>
+				</figure>
+
+				<h2>Matching Digits with a Character Class</h2>
+
+				<p><span class="first-sentence">What if you wanted to match all the numbers in the phone number, all at once?</span> Or
+				match any number for that matter?</p>
+
+				<p>Try the following, exactly as shown, once again in the upper text box:</p>
+
+				<p class="indented"><code>[0-9]</code></p>
+
+				<p>All the numbers (more precisely <em>digits</em>) in the lower section are highlighted, in alternating
+				yellow and blue. What the regular expression <code>[0-9]</code> is saying to the regex processor
+				is, “Match any digit you find in the range 0 through 9.”</p>
+
+				<p>The square brackets are not literally matched because they are treated specially as
+				<em>metacharacters</em>. A metacharacter has special meaning in regular expressions and is reserved.
+				A regular expression in the form <code>[0-9]</code> is called a <em>character class</em>, or sometimes
+				a <em>character set</em>.</p>
+
+				<div class="pagebreak left"><span class="pageNumber">4</span> | Chapter 1: What Is a Regular Expression?</div>
+				
+				<p>You can limit the range of digits more precisely and get the same result using a more
+				specific list of digits to match, such as the following:</p>
+
+				<p class="indented"><code>[012789]</code></p>
+
+				<p>This will match only those digits listed, that is, 0, 1, 2, 7, 8, and 9. Try it in the upper
+				box. Once again, every digit in the lower box will be highlighted in alternating colors.</p>
+
+				<p>To match any 10-digit, North American phone number, whose parts are separated by
+				hyphens, you could do the following:</p>
+
+				<p class="indented"><code>[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]</code></p>
+
+				<p>This will work, but it’s bombastic. There is a better way with something called a
+				shorthand.</p>
+
+			</section>
+			
+			<section class="section" data-number="4" data-name="Using a Character Shorthand">
+
+				<h2>Using a Character Shorthand</h2>
+
+				<p><span class="first-sentence">Yet another way to match digits, which you saw at the beginning of the chapter, is with
+				<code>\d</code> which, by itself, will match all Arabic digits, just like <code>[0-9]</code></span>. Try that in the top section
+				and, as with the previous regular expressions, the digits below will be highlighted. This
+				kind of regular expression is called a <em>character shorthand</em>. (It is also called a <em>character
+				escape</em>, but this term can be a little misleading, so I avoid it. I’ll explain later.)</p>
+
+				<p>To match any digit in the phone number, you could also do this:</p>
+
+				<p class="indented"><code>\d\d\d-\d\d\d-\d\d\d\d</code></p>
+
+				<p>Repeating the <code>\d</code> three and four times in sequence will exactly match three and four
+				digits in sequence. The hyphen in the above regular expression is entered as a literal
+				character and will be matched as such.</p>
+
+				<p>What about those hyphens? How do you match them? You can use a literal hyphen (-)
+				as already shown, or you could use an escaped uppercase <em>D</em> (<code>\D</code>), which matches any
+				character that is <em>not</em> a digit.</p>
+
+				<p>This sample uses \D in place of the literal hyphen.</p>
+
+				<p class="indented"><code>\d\d\d\D\d\d\d\D\d\d\d\d</code></p>
+
+				<p>Once again, the entire phone number, including the hyphens, should be highlighted
+				this time.</p>
+
+			</section>
+			
+			<section class="section" data-number="5" data-name="Matching Any Character">
+
+				<h2>Matching Any Character</h2>
+
+				<p><span class="first-sentence">You could also match those pesky hyphens with a dot (.):</span></p>
+
+				<p class="indented"><code>\d\d\d.\d\d\d.\d\d\d\d</code></p>
+
+				<p>The dot or period essentially acts as a wildcard and will match any character (except,
+				in certain situations, a line ending). In the example above, the regular expression
+				matches the hyphen, but it could also match a percent sign (%):</p>
+				
+				<div class="pagebreak right">Matching Any Character | <span class="pageNumber">5</span></div>
+				
+				<p class="indented"><code>707%827%7019</code></p>
+
+				<p>Or a vertical bar (|):</p>
+
+				<p class="indented"><code>707|827|7019</code></p>
+
+				<p>Or any other character.</p>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>As I mentioned, the dot character (officially, the full stop) will not normally
+					match a new line character, such as a line feed (U+000A). However,
+					there are ways to make it possible to match a newline with a dot,
+					which I will show you later. This is often called the <em>dotall</em> option.</p>
+				</div>
+
+			</section>
+			
+			<section class="section" data-number="6" data-name="Capturing Groups and Back References">
+
+				<h2>Capturing Groups and Back References</h2>
+
+				<p><span class="first-sentence">You’ll now match just a portion of the phone number using what is known as a <em>capturing
+				group</em>.</span> Then you’ll refer to the content of the group with a <em>backreference</em>. To
+				create a capturing group, enclose a <code>\d</code> in a pair of parentheses to place it in a group,
+				and then follow it with a <code>\1</code> to backreference what was captured:</p>
+
+				<p class="indented"><code>(\d)\d\1</code></p>
+
+				<p>The <code>\1</code> refers back to what was captured in the group enclosed by parentheses. As a
+				result, this regular expression matches the prefix <code>707</code>. Here is a breakdown of it:</p>
+
+				<ul>
+					<li><code>(\d)</code> matches the first digit and captures it (the number <em>7</em>)</li>
+					<li><code>\d</code> matches the next digit (the number <em>0</em>) but does not capture it because it is not
+					enclosed in parentheses</li>
+					<li><code>\1</code> references the captured digit (the number <em>7</em>)</li>
+				</ul>
+
+				<p>This will match only the area code. Don’t worry if you don’t fully understand this right
+				now. You’ll see plenty of examples of groups later in the book.</p>
+
+				<p>You could now match the whole phone number with one group and several
+				backreferences:</p>
+
+				<p class="indented"><code>(\d)0\1\D\d\d\1\D\1\d\d\d</code></p>
+
+				<p>But that’s not quite as elegant as it could be. Let’s try something that works even better.</p>
+
+			</section>
+			
+			<section class="section" data-number="7" data-name="Using Quantifiers">
+
+				<h2>Using Quantifiers</h2>
+
+				<p><span class="first-sentence">Here is yet another way to match a phone number using a different syntax:</span></p>
+
+				<p class="indented"><code>\d{3}-?\d{3}-?\d{4}</code></p>
+
+				<p>The numbers in the curly braces tell the regex processor <em>exactly</em> how many occurrences
+				of those digits you want it to look for. The braces with numbers are a kind of <em>quantifier</em>.
+				The braces themselves are considered metacharacters.</p>
+				
+				<div class="pagebreak left"><span class="pageNumber">6</span> | Chapter 1: What Is a Regular Expression?</div>
+
+				<p>The question mark (?) is another kind of quantifier. It follows the hyphen in the regular
+				expression above and means that the hyphen is optional—that is, that there can be zero
+				or one occurrence of the hyphen (one or none). There are other quantifiers such as the
+				plus sign (+), which means “one or more,” or the asterisk (*) which means “zero or
+				more.”</p>
+
+				<p>Using quantifiers, you can make a regular expression even more concise:</p>
+
+				<p class="indented"><code>(\d{3,4}[.-]?)+</code></p>
+
+				<p>The plus sign again means that the quantity can occur one or more times. This regular
+				expression will match either three or four digits, followed by an optional hyphen or
+				dot, grouped together by parentheses, one or more times (+).</p>
+
+				<p>Is your head spinning? I hope not. Here’s a character-by-character analysis of the regular
+				expression above:</p>
+
+				<ul>
+					<li><code>(</code> open a capturing group</li>
+					<li><code>\</code> start character shorthand (escape the following character)</li>
+					<li><code>d</code> end character shorthand (match any digit in the range 0 through 9 with \d)</li>
+					<li><code>{</code> open quantifier</li>
+					<li><code>3</code> minimum quantity to match</li>
+					<li><code>,</code> separate quantities</li>
+					<li><code>4</code> maximum quantity to match</li>
+					<li><code>}</code> close quantifier</li>
+					<li><code>[</code> open character class</li>
+					<li><code>.</code> dot or period (matches literal dot)</li>
+					<li><code>-</code> literal character to match hyphen</li>
+					<li><code>]</code> close character class</li>
+					<li><code>?</code> zero or one quantifier</li>
+					<li><code>)</code> close capturing group</li>
+					<li><code>+</code> one or more quantifier</li>
+				</ul>
+
+				<p>This all works, but it’s not quite right because it will also match other groups of 3 or 4
+				digits, whether in the form of a phone number or not. Yes, we learn from our mistakes
+				better than our successes.</p>
+
+				<p>So let’s improve it a little:</p>
+
+				<p class="indented"><code>(\d{3}[.-]?){2}\d{4}</code></p>
+
+				<p>This will match two nonparenthesized sequences of three digits each, followed by an
+				optional hyphen, and then followed by exactly four digits.</p>
+				
+				<div class="pagebreak right">Using Quantifiers | <span class="pageNumber">7</span></div>
+		
+			</section>
+			
+			<section class="section" data-number="8" data-name="Quoting Literals">
+
+				<h2>Quoting Literals</h2>
+
+				<p><span class="first-sentence">Finally, here is a regular expression that allows literal parentheses to optionally wrap
+				the first sequence of three digits, and makes the area code optional as well:</span></p>
+
+				<p class="indented"><code>^(\(\d{3}\)|^\d{3}[.-]?)?\d{3}[.-]?\d{4}$</code></p>
+
+				<p>To ensure that it is easy to decipher, I’ll look at this one character by character, too:</p>
+
+				<ul>
+					<li><code>^</code> (caret) at the beginning of the regular expression, or following the vertical bar
+					(|), means that the phone number will be at the beginning of a line.</li>
+					<li><code>(</code> opens a capturing group.</li>
+					<li><code>\(</code> is a literal open parenthesis.</li>
+					<li><code>\d</code> matches a digit.</li>
+					<li><code>{3}</code> is a quantifier that, following <code>\d</code>, matches exactly three digits.</li>
+					<li><code>\)</code> matches a literal close parenthesis.</li>
+					<li><code>|</code> (the vertical bar) indicates <em>alternation</em>, that is, a given choice of alternatives. In
+					other words, this says “match an area code with parentheses or without them.”</li>
+					<li><code>^</code> matches the beginning of a line.</li>
+					<li><code>\d</code> matches a digit.</li>
+					<li><code>{3}</code> is a quantifier that matches exactly three digits.</li>
+					<li><code>[.-]?</code> matches an optional dot or hyphen.</li>
+					<li><code>)</code> close capturing group.</li>
+					<li><code>?</code> make the group optional, that is, the prefix in the group is not required.</li>
+					<li><code>\d</code> matches a digit.</li>
+					<li><code>{3}</code> matches exactly three digits.</li>
+					<li><code>[.-]?</code> matches another optional dot or hyphen.</li>
+					<li><code>\d</code> matches a digit.</li>
+					<li><code>{4}</code> matches exactly four digits.</li>
+					<li><code>$</code> matches the end of a line.</li>
+				</ul>
+
+				<p>This final regular expression matches a 10-digit, North American telephone number,
+				with or without parentheses, hyphens, or dots. Try different forms of the number to
+				see what will match (and what won’t).</p>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>The capturing group in the above regular expression is not necessary.
+					The group is necessary, but the capturing part is not. There is a better
+					way to do this: a non-capturing group. When we revisit this regular
+					expression in the last chapter of the book, you’ll understand why.</p>
+				</div>
+			
+			</section>
+			
+			<section class="section" data-number="9" data-name="A Sample of Applications">
+				
+				<div class="pagebreak left"><span class="pageNumber">8</span> | Chapter 1: What Is a Regular Expression?</div>
+
+				<h2>A Sample of Applications</h2>
+
+				<p><span class="first-sentence">To conclude this chapter, I’ll show you the regular expression for a phone number in
+				several applications.</span></p>
+
+				<p>TextMate is an editor that is available only on the Mac and uses the same regular
+				expression library as the Ruby programming language. You can use regular expressions
+				through the Find (search) feature, as shown in <strong>Figure 1-3</strong>. Check the box next to <em>Regular expression</em>.</p>
+				
+				<figure>
+					<img src="/contents/regularexpressions/images/figure1-3.png">
+					<figcaption>Figure 1-3. Phone number regex in TextMate</figcaption>
+				</figure>
+				
+				<p>Notepad++ is available on Windows and is a popular, free editor that uses the PCRE
+				regular expression library. You can access them through search and replace (<strong>Figure
+				1-4</strong>) by clicking the radio button next to <em>Regular expression</em>.</p>
+				
+				<p>Oxygen is also a popular and powerful XML editor that uses Perl 5 regular expression
+				syntax. You can access regular expressions through the search and replace dialog, as
+				shown in <strong>Figure 1-5</strong>, or through its regular expression builder for XML Schema. To use
+				regular expressions with Find/Replace, check the box next to <em>Regular expression</em>.</p>
+				
+				<div class="pagebreak right">A Sample of Applications | <span class="pageNumber">9</span></div>
+				
+				<figure>
+					<img src="/contents/regularexpressions/images/figure1-4.png">
+					<figcaption>Figure 1-4. Phone number regex in Notepad++</figcaption>
+				</figure>
+				
+				<figure>
+					<img src="/contents/regularexpressions/images/figure1-5.png">
+					<figcaption>Figure 1-5. Phone number regex in Oxygen</figcaption>
+				</figure>
+
+				<p>This is where the introduction ends. Congratulations. You’ve covered a lot of ground
+				in this chapter. In the next chapter, we’ll focus on simple pattern matching.</p>
+				
+				<div class="pagebreak left"><span class="pageNumber">10</span> | Chapter 1: What Is a Regular Expression?</div>
+				
+			</section>
+			
+			<section class="section" data-number="10" data-name="What You Learned in Chapter 1">
+
+				<h2>What You Learned in Chapter 1</h2>
+
+				<ul>
+					<li><span class="first-sentence">What a regular expression is</span></li>
+					<li>How to use Regexpal, a simple regular expression processor</li>
+					<li>How to match string literals</li>
+					<li>How to match digits with a character class</li>
+					<li>How to match a digit with a character shorthand</li>
+					<li>How to match a non-digit with a character shorthand</li>
+					<li>How to use a capturing group and a backreference</li>
+					<li>How to match an exact quantity of a set of strings</li>
+				</ul>
+
+				<ul>
+					<li>How to match a character optionally (zero or one) or one or more times</li>
+					<li>How to match strings at either the beginning or the end of a line</li>
+				</ul>
+
+			</section>
+			
+			<section class="section" data-number="11" data-name="Technical Notes">
+
+				<h2>Technical Notes</h2>
+
+				<ul>
+					<li><span class="first-sentence">Regexpal (<span class="url">http://www.regexpal.com</span>) is a web-based, JavaScript-powered regex implementation.</span>
+					It’s not the most complete implementation, and it doesn’t do everything
+					that regular expressions can do; however, it’s a clean, simple, and very
+					easy-to-use learning tool, and it provides plenty of features for you to get started.</li>
+
+					<li>You can download the Chrome browser from <span class="url">https://www.google.com/chrome</span> or
+					Firefox from <span class="url">http://www.mozilla.org/en-US/firefox/new/</span>.</li>
+
+					<li>Why are there so many ways of doing things with regular expressions? One reason
+					is because regular expressions have a wonderful quality called <em>composability</em>. A
+					language, whether a formal, programming or schema language, that has the quality
+					of <em>composability</em> (James Clark explains it well at <span class="url">http://www.thaiopensource.com/
+					relaxng/design.html#section:5</span>) is one that lets you take its atomic parts and composition
+					methods and then recombine them easily in different ways. Once you learn
+					the different parts of regular expressions, you will take off in your ability to match
+					strings of any kind.</li>
+
+					<li>TextMate is available at <span class="url">http://www.macromates.com</span>. For more information on
+					regular expressions in TextMate, see <span class="url">http://manual.macromates.com/en/regular_ex
+					pressions</span>.</li>
+
+					<li>For more information on Notepad, see <span class="url">http://notepad-plus-plus.org</span>. For documentation
+					on using regular expressions with Notepad, see <span class="url">http://sourceforge.net/apps/
+					mediawiki/notepad-plus/index.php?title=Regular_Expressions</span>.</li>
+					
+					<li>Find out more about Oxygen at <span class="url">http://www.oxygenxml.com</span>. For information on
+					using regex through find and replace, see <span class="url">http://www.oxygenxml.com/doc/ug-edi
+					tor/topics/find-replace-dialog.html</span>. For information on using its regular expression
+					builder for XML Schema, see <span class="url">http://www.oxygenxml.com/doc/ug-editor/topics/
+					XML-schema-regexp-builder.html</span>.</li>
+				</ul>
+
+				<div class="pagebreak right"><span class="pageNumber">11</span> | Chapter 1: What Is a Regular Expresion?</div>
+
+			</section>			
+		</div> <!--/container-->
+
+	</div> <!--/regexp-->
+	
+</body>
+</html>

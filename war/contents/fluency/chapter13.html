@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+
+	<title>Chapter 13</title>
+
+	
+</head>
+
+<body>
+
+  <div id="FLU" class="container fit">
+  
+    <section class="intro" data-number="0" data-name="Chapter 13 Introduction">
+		<img src="/contents/fluency/images/sidepic.png" />
+
+		<div class="content">
+			<h1><span class="first-sentence">Privacy and Digital Security</span></h1>
+			<h2>Shhh, It's a Secret</h2>
+			<h3>learning objectives</h3>
+			<ul class="learning-objectives">
+				<li>Explain what is meant by privacy; discuss the issues surrounding privacy of information</li>
+				<li>List and explain the meaning of the OECD Fair Information Practices</li>
+				<li>Compare privacy in the United States to the European Union privacy practices</li>
+				<li>Discuss the issues of disagreement concerning privacy: Opt-in/Opt-out and compliance/enforcement</li>
+				<li>Explain the security methods used in public key cryptosystems (PKCs), in particular, in the RSA system</li>
+				<li>Perform simple encryption from cleartext to cipher text and perform the reverse decryption</li>
+			</ul>
+		</div>
+    </section> <!-- / intro1 -->
+
+	<div class="pagebreak pageNumber">374</div>
+
+	<section class="intro">
+	
+		<div class="content">
+		
+			<blockquote>
+				I've never looked through a keyhole without finding someone was looking back.
+				<p class="citation">-JUDY GARLAND, COMMENTING ON HER LACK OF PRIVACY, 1967</p>
+			</blockquote>
+			
+			
+			<div class="intro-text"> 
+				<p>
+					<strong>Privacy </strong>is a fundamental human right. The United Nations Universal Declaration of Human Rights recognizes privacy in Article 12. The nations of Australia, Hungary, and South Africa, among others, state a right to privacy. Though privacy is not explicitly mentioned in the U.S. Constitution the U.S. Supreme Court has accepted privacy as a right implied by constitutional guarantees. And privacy is a right that matters to us all. No matter how exemplary our lives may be, there are aspects of it we prefer to keep secret. And they are no one else's business. When those aspects interact with information technology, the issues of electronic privacy and security become important. There is much more than our passwords that we want to keep to ourselves.
+				</p>
+				<p>
+					In this chapter we discuss privacy and security. To begin, we consider a business transaction as a basis for understanding the topic of privacy and for considering who has an interest in private information. We consider different definitions of privacy, adopting a clear but abstract definition. We look at how private information can be kept private, and we list the principles of privacy, including the principles from the Organization for Economic Cooperation and Development. Then we explore the differences between how the principles are followed in the United States and in other countries, including a disagreement between the United States and the European Union over these principles. Next we consider how cookies can be abused to compromise Web users' security. Finally, we discuss the problem of identity theft. 
+				</p>
+				<p>
+					The next topic is encryption. After learning encryption vocabulary, we study a simple encryption example. Public key cryptosystems (PKCs) are studied as a means of achieving more convenient security for Internet-related situations. PKC systems seem at first to offer almost no protection, and then they seem to offer so much protection that it's impossible to decrypt what was encrypted. This dilemma is resolved for the RSA public key system. We explore the matter of compromising RSA's security, with the outcome that 100 billion computers wouldn't really help!
+				</p>
+				<p>
+					Finally, we consider how to keep your information secure from computer failures.
+				</p>
+			</div>
+		</div>
+
+        <img src="/contents/fluency/images/sidepic.png" />
+    </section> <!-- /intro2 -->
+
+	<div class="pagebreak pageNumber">375</div>
+		
+	<section class="page section" data-number="1" data-name="Privacy: Whose Information Is It?">
+		<h2>Privacy: Whose Information Is It?</h2>
+		<p><span class="first-sentence">Buying a product at a store generates a transaction, which produces information.</span> The merchant can gather the date and time of the purchase, the product, the cost, and possibly information about other products in the same "market basket." Is this information connected to a specific customer? Paying with cash generally ensures anonymity; that is, the buyer is not connected with the purchase, though cash payments in small towns or even in neighborhood stores where "everyone knows everyone" probably aren't anonymous. However, other transactions can definitely link the purchase with the customer:</p>
+		
+		<ul>
+			<li>Paying by check, credit card, or debit card</li>
+			<li>Purchasing through mail order or on the Internet</li>
+			<li>Providing a "preferred customer" number</li>
+			<li>Buying a product that must be registered for a service agreement or warranty</li>
+		</ul>
+		<p>If you're buying socks, you probably don't care if this information is recorded. If you're buying <em>Dating for Total Dummies</em>, you probably do. You want your purchase of the book to be private.</p>
+		<p>But what is private? It's not easy to define; we'll give a formal definition later. For now, we'll examine the <em>Dating for Total Dummies</em> transaction.</p>
+		
+		<section class="subsection" data-number="2" data-name="How Can the Information Be Used?">
+			<h3>How Can the Information Be Used?</h3>
+			<p>
+				<span class="first-sentence">The book merchant, who accepts your credit card for <em>Dating for Total Dummies</em>, can reasonably claim that gathering the transaction information is a normal part of conducting business (keeping a record until the payment clears), and so the information belongs to the store, or at least doesn't belong to you alone.</span> If the bookstore decides, based on the information from this transaction, to send you an advertisement &ndash; "<em>Improve Your Love Life</em> Spring Sale" &ndash; the store is using the information for the standard business practice of generating more business. You may even be happy to receive the advertisement. But even if you're not, using "customer information" is so established &ndash;  it's probably been used since merchandising began &ndash; that few would claim the store misused the information. If the merchant sells your name and lovelorn status to the local florists, movie theaters, restaurants, cosmetic surgeons, and so forth, has the information been misused? They are only trying to generate more business, too. Is it misused if the information gets to the campus newspaper, where it is published? Has the store broken the law? (The United States differs from Europe in this respect.) Can't you just be left alone to upgrade your dating skills in peace?
+			</p>		
+		</section>
+		<section class="subsection" data-number="3" data-name="Modern Devices and Privacy">
+			<h3>Modern Devices and Privacy</h3>
+			<p>
+				<span class="first-sentence">Supreme Court Justice Louis D. Brandeis would have sympathized with your wish.</span> He described privacy as the individual's "right to be left alone." He also wrote (with Samuel D. Warren) in the <em>Harvard Law Review</em>:
+			</p>	
+			<div class="pagebreak pageNumber">376</div>
+			<blockquote class="text-quote">
+				The narrower doctrine [of privacy] may have satisfied the demands of society at a time when the abuse to be guarded against could rarely have arisen without violating a contract or a special confidence; but now that <strong>modern devices</strong> afford abundant opportunities for the perpetration of such wrongs without any participation of the injured party, the protection granted by the law must be placed upon a broader foundation. [Emphasis added]
+			</blockquote>
+			<p>
+				This argues that, in the past, it was hard for people's privacy to be violated without their knowledge, but using <em>modern devices</em>, people's privacy can be violated without their knowing it. The amazing thing about Warren and Brandeis' comments is that they were written in 1890. The modern devices they referred to were the first portable cameras and the faster film permitting short exposure photographs. They continued,
+			</p>	
+			<blockquote class="text-quote">
+				While, for instance, the state of the photographic art was such that one's picture could seldom be taken without his consciously "sitting" for the purpose, the law of contract or of trust might afford the prudent man sufficient safeguards against the improper circulation of his portrait; but since the latest advances in photographic art have rendered it possible to take pictures surreptitiously, the doctrines of contract and of trust are inadequate to support the required protection.
+			</blockquote>	
+			<p>
+				What would Warren and Brandeis have thought about phone cameras, the ever-present surveillance camera, Flickr, or YouTube? Their important point is that your image &ndash; and more generally, information about you &ndash; deserves "sufficient safeguards against improper circulation." It's a nineteenth-century formulation of a twenty-first-century concern.
+			</p>	
+		</section>
+		<section class="subsection" data-number="4" data-name="Controlling the Use of Information">
+			<h3>Controlling the Use of Information</h3>
+			<p>
+				<span class="first-sentence">The <em>Dating for Total Dummies</em> problem comes down to, "Who controls the use, if any, of the transaction information?"</span> There is a spectrum spanning four main possibilities.
+			</p>
+			<ol>
+				<li><strong>No Uses.</strong> The information ought to be deleted when the store is finished with it (for example, when the payment has cleared), because there is no further use of it.</li>
+				<li><strong>Approval or Opt-in.</strong> The store can use it for other purposes, but only if you approve the use.</li>
+				<li><strong>Objection or Opt-out.</strong> The store can use it for other purposes, but not if you object to a use.</li>
+				<li><strong>No Limits.</strong> The information can be used any way the store chooses.</li>
+			</ol>
+			<p>
+				This spectrum, which ranges from No Uses to No Limits, includes other intermediate points, too.
+			</p>
+			<div class="pagebreak pageNumber">377</div>
+			<p>
+				There is also a fifth possibility, call it <em>Internal Use</em>, where the store can use the information to conduct business with you, but for no other use. "Conducting business with you" might mean keeping your address on file so that they can send you announcements about book readings. It would not include giving or selling your information to another person or business, but it may not require your approval either.
+			</p>
+			<div class="fluency-bit">
+					<strong class="fluency-bit-title">Another Perspective.</strong> The Preamble to the Australian Privacy Charter states, "A free and democratic people requires respect for the autonomy of individuals, and limits on the power of both state and private organizations to intrude on that autonomy.... Privacy is a basic human right and the reasonable expectation of every person."
+			</div>
+			<p>
+				If the transaction took place in Europe, New Zealand, Australia, Canada, Hong Kong, or several other countries, the law and standards would place it between (1) and (2) on the spectrum, but very close to (1). If the transaction occurred in the United States, the law and standards would place it between (3) and (4) on the spectrum, but very close to (4). Perhaps of greater concern, many Americans apparently <em>assume</em> that there is a privacy law that is close to the fifth case, internal use. We will return to these different standards in a later section, but first we must understand the concept of privacy.
+			</p>
+		</section>
+	</section>
+	<section class="page section" data-number="5" data-name="A Privacy Definition">
+		<h2>A Privacy Definition</h2>
+		<p>
+			<span class="first-sentence">As important as it is, privacy is difficult to define.</span> It is more than Brandeis' right "to be left alone." Generally, privacy concerns four aspects of our lives: our bodies, territory, personal information, and communication. Of these only the last two concern us here. We adopt this definition:
+		</p>			
+		<div class="definition">
+			<p>
+				<span class="defterm">Privacy:</span>
+				The right of people to choose freely under what circumstances and to what extent they will reveal themselves, their attitude, and their behavior to others.
+			</p>
+		</div>
+		<p>
+			This definition emphasizes first that it is the person who decides the "circumstances" and the "extent" to which information is revealed, not anyone else. The person has the control. Second, it emphasizes that the range of features over which the person controls the information embodies every aspect of the person &ndash; themselves, their attitudes, and their behaviors. Adopting such an inclusive definition is essential for covering situations of importance. For example, buying <em>Dating for Total Dummies</em> was an act, covered by behavior, included in our privacy definition. Notice that it doesn't automatically imply the No Uses classification. We may decide that the fact that the book was paid for with a credit card rather than cash &ndash; that is, with an identifying form of payment as opposed to an anonymous one &ndash; was evidence of a willingness by the buyer to reveal the fact of the purchase. Or we could decide that the form of payment has no bearing on whether the information should be revealed; permission to reveal it must be explicitly given.
+		</p>
+	</section>
+	<div class="pagebreak pageNumber">378</div>
+	<section class="page section" data-number="6" data-name="Enjoying the Benefits of Privacy">
+		<h2>Enjoying the Benefits of Privacy</h2>
+		<p>
+			<span class="first-sentence">When other people decide to reveal our information, the consequences can be disastrous.</span> Consider Star Wars Kid. He was a pudgy 15-year-old Quebec high school student who in 2002 made a video of himself in his school's A/V Lab in which he waved a golf-ball retriever around pretending it was a Star Wars lightsaber. Other students at the school found the video and made a copy that they posted on Kazaa, the file sharing site. <em>They did the revealing, not him.</em> The video became an instant hit, but because the student is clumsy and nonprofessional, he was ridiculed. Many spoofs were made parodying his video. He was jeered and taunted at school. Eventually, he sought therapy. One source estimates that by 2006, it had been viewed hundreds of millions of times, making his video, which he probably wished to keep to himself, the most watched video of all time.
+		</p>
+		<p>
+			Sometimes we want publicity, and sometimes we don't. Strong privacy laws insure that we control the dissemination of our information. (Canada has strong privacy laws, but that was not the subject of the Star Wars Kid court case.) The benefits to us personally are obvious.
+		</p>
+		
+		<section class="subsection" data-number="7" data-name="Threats to Privacy">
+			<h3>Threats to Privacy</h3>
+			<p>
+				<span class="first-sentence">Now that we have the definition, what are the threats to privacy?</span> There are only two basic threats: government and business. A third threat, snooping or gossiping private parties, will be handled by security, that is, by keeping the information private. Historically, the governmental threat &ndash; a regime spying on its citizens &ndash; worries people the most, probably because when it happens the consequences are so serious. The business threat is a more recent worry, and its IT aspects even newer still. There are two types of business threats: surveillance of employees and the use of business-related information, including transaction information, for other purposes.
+			</p>	
+		</section>
+		<section class="subsection" data-number="8" data-name="Voluntary Disclosure">
+			<h3>Voluntary Disclosure</h3>
+			<p>
+				<span class="first-sentence">A person can in principle enjoy perfect privacy by simply deciding not to reveal anything to anyone; that is, to be a hermit, though that probably would mean living alone on a remote island, surviving on coconuts and clams.</span> But most of us interact with many people and organizations &ndash; businesses, our employer, and governments &ndash; to whom it is in our interest to reveal private information. That is, we freely choose to reveal information in exchange for real benefits.
+			</p>	
+			<ul>
+				<li>We tell our doctors many personal facts about ourselves so they can help us stay healthy.</li>
+				<li>We allow credit card companies to check our credit record in exchange for the convenience of paying with a card.</li>
+				<li>We permit our employer to read email we send at work, understanding that we are using the employer's computer, Internet connection, and time; that the email system is there for us to use on the job; and that we have no need or intent to send personal email.</li>
+				<li>We reveal to the government &ndash; though not in the United States &ndash;  our religion, our parents' names and birthplaces, our race and ethnicity, and so on for the purposes of enjoying the rights of citizenship.</li>
+			</ul>
+			<div class="pagebreak pageNumber">379</div>
+			<p>
+				How private can we be when we reveal so much about ourselves, our attitudes, and our behavior?
+			</p>	
+			<div class="fluency-tip">
+				<strong class="fluency-tip-title">Social Networking.</strong> Today, the most common way to share personal information is on social networking sites: Twitter, Facebook, Flickr, YouTube, and the like. We voluntarily reveal ourselves to be a friend, to make friends, to share with our friends. Of course, it's publicly available for everyone to see &ndash; friends, relatives, employers, and government investigators to name a few. As we will learn at the end of the chapter, the information may survive forever despite our best efforts to delete or remove it. So, it is wise to consider what to post on a social networking site. As they say, "If you wouldn't publish it in the paper, don't publish it on the Web."
+			</div>
+		</section>
+	</section>
+	
+	<section class="page section" data-number="9" data-name="Fair Information Practices">
+		<h2>Fair Information Practices</h2>
+		<p><span class="first-sentence">It is possible to reveal information about ourselves and still enjoy considerable privacy, but it depends on what happens to the information after we've revealed it to other people and organizations.</span> If they keep the information confidential, use it only for the purposes for which they gathered it, and protect it from all threats, our privacy is not seriously compromised. We receive the benefits and preserve our privacy. It's a good deal.</p>
+		<p>But if those people or organizations are free to give or sell the information to anyone else, they are also revealing information about us. Our privacy is com- promised. It's not enough to trust the people we give the information to. There must be clear guidelines adopted for handling private information, so that we have standards by which to judge whether the trust is warranted. For that we have the Fair Information Practices principles.</p>			
+		<section class="subsection" data-number="10" data-name="OECD Fair Information Practices">
+			<h3>OECD Fair Information Practices</h3>
+			<p><span class="first-sentence">In 1980 the Organization for Economic Cooperation and Development (OECD) &ndash; an organization of currently 30 countries concerned with international trade &ndash; developed an eight-point list of privacy principles that became known as the Fair Information Practices.</span> They have become a widely accepted standard, forming a reasonably complete solution to the problem of keeping information private while at the same time revealing appropriate information to businesses and governments. The public has an interest in these principles becoming law. The principles also give a standard that businesses and governments can meet as a "due diligence test" for protecting citizens' rights of privacy, thereby protecting themselves from criticism or legal action. The OECD principles are a practical implementation of privacy protection.</p>
+			<div class="pagebreak pageNumber">380</div>
+			<p>The OECD Fair Information Practices principles are as follows.</p>
+			<ul>
+				<li><strong>Limited Collection Principle:</strong> There should be limits to the personal data collected about anyone; data should be collected by fair and lawful means; and it should be collected with the knowledge and consent of the person whenever appropriate and possible.</li>
+				<li><strong>Quality Principle:</strong> Personal data gathered should be relevant to the purposes for which it is used, and should be accurate, complete, and up-to-date.</li>
+				<li><strong>Purpose Principle:</strong> The purposes for collecting personal data should be stated when it is collected, and the uses should be limited to those purposes.</li>					
+				<li><strong>Use Limitation Principle:</strong> Personal data should not be disclosed or used for purposes other than stated in the Purpose Principle, except with the consent of the individual or by the authority of law.</li>
+				<li><strong>Security Principle:</strong> Personal data should be protected by reasonable security measures against risks of disclosure, unauthorized access, misuse, modification, destruction, or loss.</li>
+				<li><strong>Openness Principle:</strong> There should be general openness of policies and practices about personal data collection, making it possible to know of its existence, kind, and purpose of use, as well as the identity and contact information for the data controller.</li>
+				<li><strong>Participation Principle: </strong> An individual should be able to (a) determine whether the data controller has information about him or her and (b) discover what it is in a timely manner, in an understandable form, and at a reasonable charge (if any). If the inquiry is denied, the individual should be allowed to find out why and be able to challenge the denial. Further, the individual can challenge the data relating to him or her, and if successful, have the data erased, completed, or changed.</li>
+				<li><strong>Accountability Principle: </strong> The data controller should be accountable for complying with these principles.</li>
+			</ul>
+			<p>An important aspect of the OECD principles is the concept that the <strong>data controller</strong> &ndash; the person or office setting the policies &ndash; must interact with individuals about their information, if any, and must be accountable for those policies and actions.</p>
+		</section>	
+	</section>
+	
+	<section class="page section" data-number="11" data-name="Comparing Privacy Across the Atlantic">
+		<h2>Comparing Privacy Across the Atlantic</h2>
+		<p><span class="first-sentence">Despite being a fundamental human right, privacy is not enjoyed in much of the world at the OECD standard for both government- and business-held information.</span> This is somewhat surprising because privacy is well understood, its IT implications are clear, and all that's left is to enact laws and enforce them. What's the problem?</p>
+		<div class="pagebreak pageNumber">381</div>
+		<p>Privacy often comes in conflict with private or governmental interests. For example, the United States has not adopted the OECD principles, despite being a major player in the OECD and having created earlier principles on which the Fair Information Practices are based. It can be presumed that this is because many U.S. companies profit by gathering and collating information, or by buying and using information in ways that are inconsistent with the OECD principles. Similarly, the Chinese government isn't going to protect the right to privacy when it denies other basic human rights. The rights to privacy for these countries' citizens are thus diminished. Globalization may change that.</p>
+		<p>In 1995, in a landmark advancement for privacy, the European Union issued the European Data Protection Directive, a benchmark law incorporating the OECD principles. The member countries have enacted this law giving everyone in the EU the same high level of privacy.</p>
+		<p>Many non-EU countries, such as Australia, New Zealand, Canada, Hong Kong, and non-EU European countries, have adopted laws based on OECD principles. This is important because one provision in the EU Directive requires that data about EU citizens be protected by the standards of the law even when it leaves their country. Non-EU countries that want information on EU citizens must show that they have privacy laws consistent with the OECD principles. Switzerland, a non-EU country, applied and was approved. The United States applied and was not. What sorts of laws protect U.S. privacy?</p>
+		
+		<section class="subsection" data-number="12" data-name="U.S. Laws Protecting Privacy">
+			<h3>U.S. Laws Protecting Privacy</h3>
+			<p><span class="first-sentence">The United States passed the Privacy Act of 1974, a strong limit on the government's ability to invade people's privacy.</span> (The U.S. Patriot Act of 2002 and its reauthorization in 2005 has seriously weakened its protections.) This covers half of the privacy problem &ndash; interactions with <em>government</em>. But the reason the United States failed to meet the requirements of the EU Directive concerns information stored by <em>businesses</em>.</p>
+			<p>By contrast to the "omnibus" solution of adopting the OECD list, the United States uses an approach called "sectoral," meaning that it passes laws to deal with specific industries (business sectors) or practices. Examples include:</p>
+			<ul>
+				<li>Electronic Communication Privacy Act of 1986</li>
+				<li>Video Privacy Protection Act of 1988</li>
+				<li>Telephone Consumer Protection Act of 1991</li>					
+				<li>Driver's Privacy Protection Act of 1994</li>
+				<li>Health Insurance Privacy and Accountability Act of 1996</li>
+			</ul>
+			<div class="pagebreak pageNumber">382</div>
+			<p>To illustrate, the Driver's Privacy Protection Act makes it illegal for motor vehicle registration departments to make information publicly available. Mass marketers once used motor vehicle information to create mailing lists. (Driving an expensive car might imply that you have a large income.) Now, the DMV must <em>get permission from the registrant</em> before making the information available for any purpose other than registering cars.</p>
+			
+			<div class="fluency-bit">
+				<strong class="fluency-bit-title">Don't Ask.</strong> When the Supreme Court upheld the constitutionality of the Driver's Privacy Protection Act, the <em>Wall Street Journal</em> quoted a mass marketing industry spokesman as saying it was "death to us . . If you can't use information about a person without permission, that generally means you're not going to have a list of any great substance." That is, using information without permission is essential to mass marketing.
+			</div>
+			
+			<p>The sectoral approach, though it often provides very strong privacy protections in specific narrow cases, leaves much information unprotected. By contrast, an omnibus solution provides consistent protection to all information. Citizens do not have to wonder whether specific information is safe.</p>
+		</section>	
+		
+		<section class="subsection" data-number="13" data-name="Privacy Principles: European Union">
+			<h3>Privacy Principles: European Union</h3>
+			<p><span class="first-sentence">The differences in privacy laws between the U.S. and the EU are a serious problem for multinational companies and Internet and Web-based businesses.</span> A company cannot move data from an EU country to the United States until the United States meets the OECD principles. (Non-EU states subscribing to the OECD principles would probably object, too.)</p>
+			<p>The Federal Trade Commission (FTC) and the EU have been negotiating for years to solve this problem. A tentative agreement was founded on a concept called a Safe Harbor, which means a U.S. company that follows the rules of the agreement can receive information from the EU. The FTC Safe Harbor guidelines are much weaker than the OECD principles. There are two glaring points of disagreement &ndash; Opt-in/Opt-out and compliance/enforcement &ndash; that are causing most of the difficulties.</p>
+			<p><strong>Opt-in/Opt-out</strong> refers to the approval and objection aspects of privacy as illustrated in our Dating for Total Dummies example. That is, when can an organization use information it collects for one purpose for a different purpose? "Opt-in" means the business cannot use it unless the person explicitly allows the new use. "Opt-out" means the business can use it unless the person explicitly prohibits the new use. Privacy principles as far back as 1972 have consistently required Opt-in for all changes in use, because otherwise the person does not control the use of private information. (Opt-in is actually a longer-standing principle than stated. Warren and Brandeis' 1890 concept of a "special confidence" between photographers and their subjects protecting their privacy amounts to Opt-in. That is, the photographer would violate the confidence unless he or she asked for and received permission from the subject first.) It was the Opt-in requirement of the motor vehicle registration act that caused predictions of "death" by the mass marketing spokesman. The FTC guidelines, however, require Opt-in only for highly sensitive information like medical data; Opt-out is the standard in the U.S. &ndash; and opposite of the OECD guidelines.</p>
+			<div class="pagebreak pageNumber">383</div>
+			<p><strong>Compliance/Enforcement</strong> refers to how organizations meet their obligations under the principles, that is, how the role of the data controller is implemented. The EU and other OECD-subscribing countries have introduced offices to perform the duties of the data controller. There is no such person or office in the United States. The FTC proposes that U.S. companies "comply voluntarily" as a result of "market pressure." Private firms like TRUSTe and private agencies like the Better Business Bureau would do the monitoring. These private agencies and firms would then report violations to the FTC, but privacy advocates point out that such a voluntary process amounts to no enforcement at all. The EU apparently agrees.</p>
+			<p>These privacy issues are important to both sides. Without Opt-in and enforcement, the OECD principles are badly eroded. But with those requirements, industries like direct marketing are, by their own description, mortally affected. At last check, the stalemate continues.</p>
+			
+			<div class="fluency-bit">
+				<strong class="fluency-bit-title">Voluntary Compliance?</strong> Privacy consultant Richard M. Smith discovered in November 1999 that Real Networks' JukeBox software was gathering music taste profiles based on users' unique IDs. The company had a privacy policy, but it did not mention the unique ID or the profiling activity, <em>until he caught them</em>. Further, Real Networks had hired the audit firm TRUSTe.
+			</div>
+		</section>		
+		
+		<section class="subsection" data-number="14" data-name="A Privacy Success Story">
+			<h3>A Privacy Success Story</h3>
+			<p><span class="first-sentence">Americans' electronic privacy has become dramatically worse since 2000 with spam, spyware, identity theft, exploits, phishing, and the like, but there is a success story.</span> Unfortunately, the story also illustrates that, in the context of privacy, "voluntary compliance" doesn't work.</p>
+			<p>Consider the history of the Do-Not-Call List. In the 1990s households would receive numerous calls every evening from telemarketers trying to sell products. Though Americans hated the calls and heaped criticism and scorn on telemarketers, the calls only got worse. Nothing was done about it. Why? Because the "industry self-policing" mechanism was a little-known system requiring a person either (a) to write a letter to the industry association &ndash; you couldn't even call, despite the fact it was a telemarketing association &ndash; or (b) to opt-out online by paying a fee using a credit card. That is, people had to pay to stop being harassed by the telemarketers! And even then, these actions only stopped the telemarketers that belonged to that association. Despite these difficulties, five million households put their phone numbers on the list.</p>
+			<p>Finally, the problem got so bad that the U.S. government set up the Do-Not- Call List, a central place where people could simply give their phone number &ndash; by phone or online &ndash; to stop telemarketers. The list was an instant success! Ten million households opted-out on the first day of operation.</p>
+			<div class="pagebreak pageNumber">384</div>
+			<p>Today more than 175,000,000 phone numbers are on the Do-Not-Call List. And, of course, the telemarketing business has largely collapsed.</p>
+			
+			<div class="fluency-alert">
+				<strong class="fluency-alert-title">Partial Success.</strong> Voluntary compliance has succeeded in getting Web sites to publish privacy policies. It's a small accomplishment, because the privacy policies don't imply any assurance of privacy, as the Real Networks example shows. An Annenberg survey (2003) found that 57 percent of those polled thought (mistakenly) that a site with a privacy policy does not share data with other organizations. But privacy policies are all different. Some are strong; others simply explain that information <em>is</em> shared with other organizations, often in terms that make it sound like that's exactly what you would like them to do. So, read the policies carefully, or for quicker results, search for "opt" to find the place where they tell you how to opt-out of their data "sharing."
+			</div>
+			<p>There was no economic incentive for telemarketers to make it easy for people to opt-out, though history proves it was easy to do. So, rather than setting up a way for Americans to be left alone &ndash; as Brandeis wished &ndash; to enjoy dinner without the interruption of telemarketing calls, the industry association "voluntarily complied" by making it difficult and ineffective to opt-out. There is no reason to think Internet information gatherers are any different.</p>
+		</section>
+	</section>		
+
+	<section class="page section" data-number="15" data-name="The Cookie Monster">
+		<h2>The Cookie Monster</h2>
+		<p><span class="first-sentence">Cookies are a standard computer science concept originally used by Netscape engineers to connect the identity of a client across a series of independent client/server events.</span> Here's the problem cookies solve.</p>
+		<p>Recall the Web server's view of the client/server relationship, as shown in Figure 13.1. Imagine this is your bank's server, and you are paying bills online, which makes you a client. The server is helping many clients at once, and to know who's who, the server stores a <strong>cookie</strong> &ndash;  a record containing seven fields</p>
+		
+		<figure>
+			<img src="/contents/fluency/images/figure13.1.png" alt="Server Client Relationship">
+		</figure>
+		<figcaption>
+			<p>
+				<span class="figureId">Figure 13.1</span> Server's view of the client/server relationship.
+			</p>
+		</figcaption>
+		
+		<div class="pagebreak pageNumber">385</div>
+		<p>of information that uniquely identify a customer's session &ndash; on your computer. Many sites use cookies, even when the interaction is not intended to be as secure as a bank transaction. For example, the National Air and Space Museum sent me this cookie</p>
+		<code>www.nasm.si.edu FALSE / FALSE 2052246450 CFTOKEN 89367880</code>
+		<p>while I was writing Chapter 3. The meaning of the fields is unimportant, except to note that the first is the server and the last is the unique information identifying my session. Cookies are exchanged between the client and the server on each transmission of information, allowing the server to know which of the many client computers is sending information. Cookies are an elegant way for servers to give clients the illusion they are the only one being served.</p>
+		<div class="fluency-tip">
+			<strong class="fluency-tip-title">Finding Cookies.</strong> Modern browsers let you control the cookie policy for your computer &ndash; a good reason to run a modern browser. They show you the cookies you have stored and delete them at your request. Cookie control is usually found as a security or privacy tab under browser preferences. For Firefox, navigate <em>Preferences > Privacy > Show Cookies. . . or check Help.</em>
+		</div>		
+		<p>The reason users need to know about cookies is that they can be abused using a loophole called a <strong>third-party</strong> cookie. In principle, a cookie is exchanged between the client and the server making the interaction private. This privacy is enforced because browsers don't allow servers to check to see what other cookies are stored on your computer. Why would a server want to know? An online business might want to know if a customer has visited other similar businesses in the last few minutes to evaluate its competition and see how often its the first place customers visit.</p>
+		<p>But there is a loophole. If the Web site includes advertisements on its page, it often contracts with an ad company to create and place the ads. While the browser is setting up your page, the server directs it to link to the ad company &ndash; a third party &ndash; to deliver the ad. At that moment, your computer is in a client/server relationship with the ad company, and can allow it to place a cookie on your computer. You may have never heard of the ad company or be aware that it's placing information on your computer. If you visit a different server that uses the same ad company, it will also exchange cookies when it places its ads. Since the ad company gets the same cookie from your computer that it placed moments before for a different company, it knows that you visited the other company. By this means it is possible to log considerable information about a user's behavior. Is that bad? It's up to you to decide.</p>
+		<div class="fluency-bit">
+			<strong class="fluency-tip-title">Many Double Clicks.</strong> In June 2000 Richard M. Smith, the privacy consultant, testified before Congress that in the previous six months his computer had logged 250,000 Internet transactions, roughly 10 percent of which was traffic to a single Web advertising company, DoubleClick, allowing them to track the URLs of the sites he visited.</em>
+		</div>	
+		<div class="pagebreak pageNumber">386</div>
+		<p>So, cookies are useful and essential for Web interactions with online banks and brokers. But, they can be abused. What can be done? All modern browsers allow users to control how cookies are processed. One possibility is to turn them off entirely, forcing the browser to ask you every time a server wants to send you a cookie whether you will accept it. Though it may be annoying, it is also very interesting to turn off cookie acceptance for a while to see how many cookies are sent, and from what servers. You'll be surprised. Turning cookies off prevents you from being able to bank online, but you can turn cookie acceptance back on when you want.</p>
+		<p>Browsers also allow users to automatically accept cookies from the servers they visit, but not to automatically accept them from third parties. Such a setting allows cookies to work as they were originally intended, since we are usually willing to accept cookies from a site we choose to visit. Though cookies are not the worst computer privacy risk users take, it is also easy to manage the risk by simply setting your browser's cookie policy at your own comfort level.</p>
+
+		<section class="subsection" data-number="16" data-name="Identity Theft">
+			<h3>Identity Theft</h3>
+			<p><span class="first-sentence">We have focused most on the Use Limitation Principle of the Fair Information Practices, wherein a person decides whether to allow a use (Opt- in) that is different from the original use for which information was collected.</span> But the Security Principle has become at least as important. The Security Principle states that those who hold private information are obligated to maintain its privacy against unauthorized access and other hazards. Americans do not enjoy protection from this principle either.</p>
+			<p>In February of 2005 the information broker ChoicePoint announced that personal data it holds on 145,000 Americans had been, in the company's words, "viewed by unauthorized parties." ChoicePoint keeps data on people's credit rating, and initially they only admitted that information on 32,000 people had been compromised. This smaller number apparently referred only to the Californians on the list, because California has a law requiring notification of security violations. Public pressure forced ChoicePoint to admit to and notify the larger population.</p>
+			<p>The Electronic Privacy Information Center (EPIC), a privacy watchdog, stated the situation more plainly: "ChoicePoint, which recently admitted it sold personal information on 145,000 Americans to identity thieves, also sold such information on at least 7,000 people to identity thieves in 2002." In an unrelated incident in March 2005, it was discovered that information about thousands of season-pass holders to Disney Japan had been stolen.</p>
+			<p>How can this private information be used? One possibility is <strong>identity theft</strong> &ndash;  the crime of posing as someone else for fraudulent purposes. Because information from a company like ChoicePoint includes credit card numbers, Social Security numbers, bank account numbers, and employers, a thief has no more difficulty applying for a credit card or a loan than does the person whose information it actually is. It's the victim, however, who ends up with a ruined credit rating and large debts.</p>
+			<div class="pagebreak pageNumber">387</div>
+			<p>Over 800 identity thefts have been reported from the ChoicePoint event. Though the Federal Trade Commission resolved the matter with ChoicePoint by negotiating $10 million in civil fines and $5 million in consumer redress, it is likely that identity theft will remain an issue for some time.</p>
+			<div class="fluency-bit">
+				<strong class="fluency-bit-title">Identity Crisis.</strong> Chipmaker Intel introduced a unique ID for each Pentium III processor chip, but removed it under intense criticism. The ID would have greatly simplified the task of matching Web-collected data &ndash; it's like all .COMs using the same cookie on a given machine.
+			</div>	
+		</section>
+		
+		<section class="subsection" data-number="17" data-name="Managing Your Privacy">
+			<h3>Managing Your Privacy</h3>
+			<p><span class="first-sentence">Unfortunately, our brief discussion about privacy threats has touched only a few high points.</span> What's a user to do about privacy?</p>
+			<p>The main obligation is to understand that in the U.S., protecting your privacy is <em>your</em> job; the laws are completely inadequate. Constructive actions can be recommended, however:</p>
+			<ul>
+				<li>Purchase up-to-date virus checking software, as described in Chapte 12, to minimize the unsavory critters that arrive by email.</li>
+				<li>Adjust your cookie settings in your browser &ndash; they're under <em>Preferences > Privacy</em> in Firefox &ndash; to match your comfort level.</li>
+				<li>Read the privacy statement of any site to which you will give person ally identifying information <em>before</em> you give it, including credit card information for a purchase. Though you may want to assume they will not share the information, a better assumption is that they will, until you see the place in their privacy policy where they say they do not. Sites that do not share make this <em>very</em> obvious.</li>
+				<li>Review the phishing protections given in Chapter 12 to avoid scams since being a victim of a phishing scam can make you vulnerable to identity theft.</li>
+				<li>Patronize reputable companies for music, software, DVDs, and other downloaded files; file sharing is thought to be a major vector for spyware and other privacy-compromising software.</li>
+				<li>Be skeptical. Paranoia isn't necessary, but skepticism is.</li>
+				<li>Stay familiar with the current assaults on privacy; they're often announced in the national media, but it's a simple matter to find them at sites like EPIC (www.epic.org).</li>
+				<li>As a final action item, perhaps Americans should be lobbying for U.S. adoption of OECD's Fair Information Practices.</li>
+			</ul>
+			<div class="fluency-bit">
+				<strong class="fluency-bit-title">Making Privacy Public.</strong> Some Web companies are addressing issues of privacy. For example, Facebook recently held open forums to discuss its proposed Statement of Rights and Responsibilities for its site. Issues discussed included the ownership of the content, limitations on use, opt-in, deletion and removal, and other privacy-related topics.
+			</div>
+			<div class="pagebreak pageNumber">388</div>
+		</section>
+	</section>
+	<section class="page section" data-number="18" data-name="Encryption and Decryption">
+		<h2>Encryption and Decryption</h2>
+		<p><span class="first-sentence">The best way to keep electronic information secret is to <em>digitally encrypt</em> it &ndash;  that is, to transform the representation so it is no longer understandable.</span></p>
+		<section class="subsection" data-number="19" data-name="Encryption Terminology">
+			<h3>Encryption Terminology</h3>
+			<p><span class="first-sentence">In Chapter 12 you saw encryption applied to passwords.</span> We noted that if we forget our password, the superuser usually cannot tell us what it is because the software stores it in encrypted form &ndash; what we called <em>scrambled</em>. In a <strong>cryptosystem</strong> &ndash; a combination of encryption and decryption methods &ndash; the password is the <strong>cleartext</strong> or <strong>plaintext</strong>, that is, the information before encryption. The encrypted password is the <strong>cipher text</strong>, the encrypted form. Passwords use a <strong>one-way cipher</strong> &ndash; an encryption technique that cannot be easily reversed &ndash; because there's really no need to decrypt them: The system encrypts the password the user enters and compares it to the stored version, which is also encrypted. If they don't match as cipher text, they don't match as cleartext either. So, for password scrambling, the simple one-way encryption works.</p>
+			<p>Information is encrypted so it can be safely transmitted or stored. Transmitting or storing unencrypted information makes it vulnerable to snooping. Eventually, the cleartext must be recovered by reversing the encryption process, or <strong>decrypting</strong> the cipher text. In the diagram of the cryptosystem shown in Figure 13.2, the sender and receiver agree on a key, K<sub>SR</sub>. The sender uses the key to encrypt the cleartext, and the receiver uses it to decrypt the cipher text. The key can be applied to the letters of the cleartext in various ways.</p>
+			<p>A common way is as follows: ASCII letters are treated as numbers using their bit representation and transformed by some mathematical operation with an inverse, say, multiplication, to produce the cipher text bits. That is, a few letters of the ASCII text are multiplied times the key and the resulting number is sent or stored. The cleartext can be recovered by applying the inverse operation (division by the key, in this case).</p>
+			
+			<figure class="">
+				<img src="/contents/fluency/images/figure13.2.png" alt="Schematic diagram of a cryptosystem.">
+			</figure>
+			<figcaption>
+				<p>
+					<span class="figureId">Figure 13.2</span> Schematic diagram of a cryptosystem. Using a key K<sub>SR</sub> known only to them, the sender encrypts the cleartext information to produce a cipher text, and the receiver decrypts the cipher text to recover the cleartext. In the middle, where the content is exposed and can be snooped, it is unintelligible.
+				</p>
+			</figcaption>
+		</section>
+		<div class="pagebreak pageNumber">389</div>
+		<section class="subsection" data-number="20" data-name="XOR: An Encryption Operation">
+			<h3>XOR: An Encryption Operation</h3>
+			<p><span class="first-sentence"><em>Exclusive OR</em>, known as XOR, is an interesting way to apply a key to cleartext.</span> XOR, which can be described as "<em>x</em> or <em>y</em> but not both," is written like an addition symbol in a circle, &oplus;. It combines two bits by the rule: If the bits are the same, the result is 0; if the bits are different, the result is 1. Thus, if 0101 is the cleartext and 1001 is the key, then</p>
+			<table class="equation">
+				<tr>
+					<td></td>
+					<td>0101</td>
+					<td>Cleartext</td>
+				</tr>
+				<tr>
+					<td>&oplus;</td>
+					<td>1001</td>
+					<td>Key</td>
+				</tr>
+				<tr class ="total">
+					<td></td>
+					<td>1100</td>
+					<td>Cipher Text</td>
+				</tr>
+			</table>
+			<p>XOR produces 1100 for the cipher text. Applying the key to the cipher text again with XOR produces the original cleartext:</p>
+			<table class="equation">
+				<tr>
+					<td></td>
+					<td>1100</td>
+					<td>Cipher Text</td>
+				</tr>
+				<tr>
+					<td>&oplus;</td>
+					<td>1001</td>
+					<td>Key</td>
+				</tr>
+				<tr class ="total">
+					<td></td>
+					<td>0101</td>
+					<td>Cleartext</td>
+				</tr>
+			</table>
+			<p>Thus XOR is its own inverse.</p>
+			<p><span class="paragraph-header">Encrypting a message.</span> To illustrate encryption, imagine two students who have been writing messages to each other on the white board in the computer lab, but now they're worried that other people may be reading them, and so they decide to encrypt them. They agree on the key 0001 0111 0010 1101, and plan to encode pairs of ASCII letters by transforming them with the key using XOR. Here's what they do (see Figure 13.3).</p>
+			<p>Using the cleartext <code>Meet@l2:15@joe's</code>, they first write down the ASCII representation of these letters in pairs. (The ASCII representation is shown in Figure 8.3.) Next, they XOR each of these 16-bit sequences with their key sequence to produce the cipher text, which in this case has the ASCII equivalent of 
+			<code>ZHrYW<sup>F</sup><sub>S</sub>%<sup>E</sup><sub>&Sigma;</sub>&<sup>C</sup><sub>N</sub>WgxH0_</code>. This is the cipher text &ndash; a very strange sequence that should be secure to the casual observer in the computer lab. The cipher text can be easily decrypted using the same technique, because</p>
+			<figure>
+				<code>
+				<table class="example large">
+					<tr>
+						<th> </th>
+						<th>Cleartext </th>
+						<th>Key </th>
+						<th>CipherText </th>
+						<th> </th>
+					</tr>
+					<tr>
+						<td>Me</td>
+						<td>0100 1101 0110 0101</td>
+						<td></td>
+						<td>0101 1010 0100 1000</td>
+						<td>ZH</td>
+					</tr>
+					<tr>
+						<td>et</td>
+						<td>0110 0101 0111 0100</td>
+						<td></td>
+						<td>0111 0010 0101 1001</td>
+						<td>rY</td>
+					</tr>
+					<tr>
+						<td>@1</td>
+						<td>0100 0000 0011 0001</td>
+						<td></td>
+						<td>0101 0111 0001 1100</td>
+						<td>W<sup>F</sup><sub>S</sub></td>
+					</tr>
+					<tr>
+						<td>2:</td>
+						<td>0011 0010 0011 1010</td>
+						<td>&oplus; 0001 0111 0010 1101 =</td>
+						<td>0010 0101 0001 0111</td>
+						<td>%<sup>E</sup><sub>&Sigma;</sub></td>
+					</tr>
+					<tr>
+						<td>15</td>
+						<td>0011 0001 0011 0101</td>
+						<td></td>
+						<td>0010 0110 0001 1000</td>
+						<td>&<sup>C</sup><sub>N</sub></td>
+					</tr>
+					<tr>
+						<td>@J</td>
+						<td>0100 0000 0100 1010</td>
+						<td></td>
+						<td>0101 0111 0110 0111</td>
+						<td>Wg</td>
+					</tr>
+					<tr>
+						<td>oe</td>
+						<td>0110 1111 0110 0101</td>
+						<td></td>
+						<td>0111 1000 0100 1000</td>
+						<td>xH</td>
+					</tr>
+					<tr>
+						<td>'s</td>
+						<td>0010 0111 0111 0010</td>
+						<td></td>
+						<td>0011 000 0101 111</td>
+						<td>0_</td>
+					</tr>
+				</table>
+				</code>
+			</figure>
+			<figcaption>
+				<p>
+					<span class="figureId">Figure 13.3</span> Encrypting the cleartext <code>Meet@12:15@Joe's</code>, using ASCII encoding of letter pairs, the key <code>0001 0111 0010 1101</code>, and the operation of exclusive OR to produce the cipher text <code>ZHrYW<sup>F</sup><sub>S</sub>%<sup>E</sup><sub>&Sigma;</sub>&<sup>C</sup><sub>N</sub>WgxH0_</code>. (Decryption works in the opposite direction, as if the "&oplus;" and " = " symbols of the figure were exchanged.)
+				</p>
+			</figcaption>
+			
+			<div class="pagebreak pageNumber">390</div>
+			
+			<p>XOR is its own inverse: XOR each of the ASCII equivalents of the cipher text with the key to produce the cleartext bits of the pairs. Then, look up the letters in the ASCII table. We can see that this scheme must always work by reviewing Figure 13.3 and using two facts:</p>
+			<ul>
+				<li>If any bit sequence is XORed with another bit sequence (the key) and the result is also XORed again with the key, that result is the original bit sequence.</li>
+				<li>With XOR, it makes no difference whether the key is on the left or the right.</li>
+			</ul>
+			<p>These facts mean that encrypting is moving from left to right in the figure, whereas decrypting would move from right to left.</p>
+
+			<div class="try-it">
+				<p><strong>13.1 Unusual Name.</strong> Find the ASCII encoding of your name (refer back to Figure 8.3), and use the students' key XOR encryption from Figure 13.3 to encrypt it. </p>
+			</div>
+			
+			<p><span class="paragraph-header">Breaking the code.</span> How secure is the code? Probably not too secure, though being a cipher text containing only 16 characters, a code cracker has very little to work with. The longer the text, the easier it is to decode, because once enough letters have been used, it's possible to notice what bit patterns show up frequently. Even in our short message there are two <code>H's</code> in the second position, corresponding to <code>@'s</code>, and two <code>W's</code> in the first position, corresponding to <code>e's</code>. Repeated <code>W</code>'s are not very likely in a longer text, but repeated <code>H</code>'s are.</p>
+			<p>As you know, <em>e</em> is the most common letter in English. Seeing these patterns and guessing that they correspond to <em>e</em> bytes, we can begin to figure out the cleartext from the cipher text by replacing each occurrence with <em>e</em>'s. (Naturally, <code>r</code> in the first position &ndash; the encoding of <em>e</em> with the first half of the key &ndash; will show up with the same frequency) In English, the 12 most common letters are e, t, a, o, i, n, s, h, r, d, 1, and u. (Curiously, most people who remember this sequence do so by pronouncing it!) Other languages are different, of course. These dozen letters represent about 80 percent of the letters in the average English text. Using these letters, we can replace the dozen most frequently occurring (left and right) patterns. Decrypting that many letters of a cipher text would make decrypting the remainder a simple <em>Wheel-of-Fortune</em> endgame. We would have broken the code without ever knowing that the two students had used XOR as the encryption operation, or what the key was. The only property we used was that the students' code consistently replaced each letter with one of two patterns. Clearly they had better be smarter next time!</p>
+			
+			<div class="fluency-bit">
+				<strong class="fluency-bit-title">Tse Beht of Tnmeh.</strong> The frequency count for English is not fixed, of course. Different sources produce somewhat different results, even for large docu- ments. For example, A <em>Tale of Two Cities</em> contains more than half a million letters that are distributed from greatest to least frequency: e, t, a, o, n, i, h, s, r, d, I, and u. That is, <em>n</em> and <em>i</em> are swapped, and <em>s</em> and <em>h</em> are swapped from the standard distribution.
+			</div>		
+			<div class="pagebreak pageNumber">391</div>
+			<p>Being smarter about byte-for-byte substitutions is easy to do. For example, grouping more than two bytes will help our student encoders. The harder problem is that the sender and the receiver have to agree on the key <em>ahead of time</em>. That is, they had to meet or at least communicate for the purpose of selecting the key. If they don't meet, but communicate instead, that communication isn't secure because there is no agreed upon key yet. Key exchange would be a showstopper for applications like Internet commerce, where credit card numbers should be kept secret, but the customer and the company cannot meet, perhaps because they are on opposite sides of the planet. The problem is beautifully solved using public key encryption.</p>
+			
+		</section>
+					
+	</section>
+
+	<section class="page section" data-number="21" data-name="Public Key Cryptosystems">
+		<h2>Public Key Cryptosystems</h2>
+		<p><span class="first-sentence">In a <strong>public key cryptosystem (PKC)</strong>, people who want to receive secure information publish a key that senders should use to encrypt messages.</span> For example, the key could be published on a Web page. Imagine that the key is 129 digits long and the senders are told to cube 32-byte groups of ASCII letters &ndash; yes, treat the bits like a 256-bit number and raise it to the third power &ndash;  divide the result by the key, and send the remainder (that is, the bits smaller than the key that are left over from the division). The key was chosen so that the receiver, but not the general public or a code cracker, can decrypt it. If we change Figure 13.2 to a public key encryption, we get Figure 13.4.</p>
+		
+		<figure>
+			<img src="/contents/fluency/images/figure13.4.png" alt="Public key cryptosystem">
+		</figure>
+		<figcaption>
+			<p>
+				<span class="figureId">Figure 13.4 </span> Public key cryptosystem. The sender uses the receiver's public key K<sub>R</sub> to encrypt the cleartext, and only the receiver is able to decrypt it to recover the cleartext.
+			</p>
+		</figcaption>			
+		
+		<div class="fluency-bit">
+			<strong class="fluency-bit-title">Public Spirited.</strong> Computer scientists Whitfield Diffie and Martin Heiman invented public key cryptosystems in 1976.
+		</div>		
+		
+		<section class="subsection" data-number="22" data-name="Code Cracker's Problem">
+			<h3>Code Cracker's Problem</h3>
+			<p><span class="first-sentence">The bad guy who is trying to snoop on the communication by intercepting the cipher text and decrypting it knows the key, too, because it's published on the Web page.</span> And it would seem the bad guy has the same ability to perform</p>
+			<div class="pagebreak pageNumber">392</div>
+			<p>arithmetic on the cipher text that the receiver does. How much security can there be when so much information is known?</p>
+			<p>But cracking the code isn't so easy. All that was sent was the <strong>remainder</strong> &ndash; the bits that were left over from the division.</p>
+			<p>Recall from middle school that the definition for division, <em>a/b</em>, is to satisfy the equation</p>
+			<p><em>a=b &middot; c+d</em></p>
+			<p>for <em>divisor b, quotient c,</em> that is, the result of the division, and <em>remainder d</em>. Further, <em>d</em> will be smaller than b. For example, 30/8 becomes</p>
+			<p>30 = 8  &middot;  3 + 6</p>
+			<p>which is the same as saying, "30 divided by 8 is 3 with a remainder of 6." This is called the <strong>quotient-remainder form of division</strong>. Substituting the variables of our encryption situation, the equation becomes</p>
+			<p>T<sup>3</sup> = K<sub>R</sub>  &middot;  C + d</p>
+			<p>for cleartext <em>T</em> and some quotient <em>c</em> that doesn't interest us. Only <em>d</em>, the remainder, is sent.</p>
+		</section>
+		
+		<section class="subsection" data-number="23" data-name="Snooping and Decrypting">
+			<h3>Snooping and Decrypting</h3>
+			<p><span class="first-sentence">If the code cracker had the quotient <em>c</em> and the remainder <em>d</em>, he or she could simply multiply the quotient by the key (<em>K<sub>R</sub>   &middot;  c</em>) and add in the remainder to produce T<sup>3</sup>.</span> Using a calculator to find the cube root gives the binary number of the 32-byte sequences. Presto! There's the original cleartext, <em>T</em>. But the snooper didn't get both the quotient and the remainder, only the remainder. So snooping is a lot tougher.</p>
+			<p>But now it doesn't look so good for the receiver. The receiver didn't get the quotient either, only the remainder, so how is he or she supposed to figure out what was sent? It seems that the message is so well encrypted <em>no one</em> can figure it out! Happily, Leonhard Euler, an eighteenth-century mathematician, and a few enterprising computer scientists, came to everyone's rescue &ndash; except, of course, the cracker.</p>
+		</section>
+	</section>	
+
+	<section class="page section" data-number="24" data-name="RSA Public Key Cryptosystem">
+		<h2 id="margin-edit">RSA Public Key Cryotosystem</h2>
+		<p><span class="first-sentence">The <strong>RSA public key cryptosystem</strong> is the best known of the PKC systems.</span> Named for its inventors, Ron Rivest, Adi Shamir, and Len Adleman, the RSA scheme is basically the same as the PKC scheme we just described. We need to learn enough about how it works to retrieve the original cleartext. <em>Why</em> it works relies on very deep mathematics and computer science that will not be described here. But it does work. It has withstood formidable attacks and will continue to as computers get faster. We'll describe the assaults on RSA after we give it a try.</p>
+		
+		<div class="pagebreak pageNumber">393</div>
+		
+		<div class="fluency-bit">
+			<strong class="fluency-bit-title">Secret Prize.</strong> Rivest, Shamir, and Adleman were awarded the 2003 Turing Award by the Association for Computing Machinery, computing's Nobel Prize, for their creation of the RSA cryptosystem.
+		</div>		
+		
+		<p>The RSA scheme relies on prime numbers. Recall from middle school that <strong>prime numbers</strong> can only be divided evenly &ndash; that is, without a remainder &ndash; by 1 and themselves. So, the first few prime numbers are 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, ...</p>
+		<p>Mathematicians adore prime numbers because they have amazing properties. The rest of us only know that prime numbers are the basic "atoms" of a whole number: Any number can be <strong>factored</strong> into primes in only one way. The factors of a number <em>x</em> are just whole numbers that when multiplied together give <em>x</em>. So, factors of 30 are</p>
+		
+		<code><pre>
+1 x 30 = 30 
+2 x 15 = 30
+3 x 10 = 30 
+5 x 6 = 30
+2 x 3 x 5 = 30
+		</pre></code>
+		
+		<p>but only {2,3,5} are the prime factors of 30.</p>
+		
+		<section class="subsection" data-number="25" data-name="Choosing a Key">
+			<h3>Choosing a Key</h3>
+			<p><span class="first-sentence">The secret of the RSA scheme, of course, is that the receiver didn't publish any random 129-digit sequence as the public key, K<sub>R</sub>.</span> The key has some special properties. Specifically, the public key must be the product of two different prime numbers, <em>p</em> and <em>q</em>,</p>
+			<p>K<sub>R</sub> = <em>pq</em></p>
+			<p>Because multiplying two numbers of roughly equal size produces a number twice as long, <em>p</em> and <em>q</em> must be about 64 or 65 digits long to produce the 129- digit public key of the example. Additionally, <em>p</em> and <em>q</em>, besides being long enough and prime, must also be 2 greater than a multiple of 3. It's a rather strange requirement, but essential, as you'll see in a moment. Many primes have this property. For example, 5 and 11 are 2 larger than multiples of 3, namely, 3 and 9. As a running example, take</p>
+			<code><pre>
+P = 5 
+q = 11
+K<sub>R</sub> = <em>pq</em> = 55.
+			</pre></code>
+		</section>
+		
+		<section class="subsection" data-number="26" data-name="Encrypting a Message">
+			<h3>Encrypting a Message</h3>
+			<p><span class="first-sentence">To encrypt a cleartext, divide it into blocks &ndash; we'll use 6-bit blocks of the ASCII encoding for the running example, but they're usually many bytes long &ndash; cube the blocks, divide them by the public key, and transmit the remainders from the divisions. (We use 6-bit blocks just to keep the numbers small.)</span></p>
+			<div class="pagebreak pageNumber">394</div>
+			
+			<p>Thus, to encrypt the amount of a credit card transaction,</p>
+			<code>**** $0.02</code>
+			<p>the ASCII characters are expressed in their byte representation</p>
+			<code>0010 1010 0010 1010 0010 1010 0010 1010 0010 0100 0011 0000 0010 1110 0011 0000 0011 0010</code>
+			<p>and grouped into 6-bit blocks,</p>
+			<code>0010 10<span class="highlight">10 0010</span> 1010 00<span class="highlight">10 1010</span> 0010 10<span class="highlight">10 0010</span> 0100 00<span class="highlight">11 0000</span> 0010 11<span class="highlight">10 0011</span> 0000 00<span class="highlight">11 0010</span></code>
+			<p>shown in white and blue.</p>
+			<p>Recalling from Chapter 11 that bits can be interpreted in any way that is con- venient, our groups are interpreted as numbers</p>
+			<code>T= 10, <span class="highlight">34</span>, 40, <span class="highlight">42</span>, 10, <span class="highlight">34</span>, 16, <span class="highlight">48</span>, 11, <span class="highlight">35</span>, 0, <span class="highlight">50</span></code>
+			<p>Cubed, they are</p>
+			<code>T<sup>3</sup> = 1000, <span class="highlight">39304</span>, 64000, <span class="highlight">74088</span>, 1000, <span class="highlight">39304</span>, 4096, <span class="highlight">110592</span>, 1331, <span class="highlight">42875</span>, 0, <span class="highlight">125000</span> </code>
+			<p>and divided by the key K<sub>R</sub> = 55 and expressed in quotient, remainder form they are as follows</p>
+			
+			<table class="equation">
+				<tr>
+					<td>1000</td>
+					<td>=</td>
+					<td>55  &middot;  18 +10</td>
+				</tr>
+				<tr class="highlight">
+					<td>39304</td>
+					<td>=</td>
+					<td>55  &middot;  714 + 34</td>
+				</tr>
+				<tr>
+					<td>64000</td>
+					<td>=</td>
+					<td>55  &middot;  1163 + 35</td>
+				</tr>
+				<tr class="highlight">
+					<td>74088</td>
+					<td>=</td>
+					<td>55  &middot;  1347 + 3</td>
+				</tr>
+				<tr>
+					<td>1000</td>
+					<td>=</td>
+					<td>55  &middot;  18 + 10</td>
+				</tr>
+				<tr class="highlight">
+					<td>39304</td>
+					<td>=</td>
+					<td>55  &middot;  714 + 34</td>
+				</tr>
+				<tr>
+					<td>4096</td>
+					<td>=</td>
+					<td>55  &middot;  74 + 26</td>
+				</tr>
+				<tr class="highlight">
+					<td>110592</td>
+					<td>=</td>
+					<td>55  &middot;  2010 + 42</td>
+				</tr>
+				<tr>
+					<td>1331</td>
+					<td>=</td>
+					<td>55  &middot;  24 + 11</td>
+				</tr>
+				<tr class="highlight">
+					<td>42875</td>
+					<td>=</td>
+					<td>55  &middot;  779 + 30</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>=</td>
+					<td>55  &middot;  0 + 0</td>
+				</tr>
+				<tr class="highlight">
+					<td>125000</td>
+					<td>=</td>
+					<td>55  &middot;  2272 + 40</td>
+				</tr>
+			</table>
+			
+			<p>And finally, only the remainders are kept to yield the cipher text</p>
+			<code>C = 10, <span class="highlight">34</span>, 35, <span class="highlight">3</span>, 10, <span class="highlight">34</span>, 26, <span class="highlight">42</span>, 11, <span class="highlight">30</span>, 0, <span class="highlight">40</span></code>
+			<p>These numbers are the encrypted message to be sent. (The apparent coincidence that some of the cipher text numbers happened to be the same as their corresponding cleartext occurs because our sample numbers (55) are so small. The result is still incomprehensibly scrambled.)</p>
+			
+		</section>
+
+		<section class="subsection" data-number="27" data-name="The Decryption Method">
+			<h3>The Decryption Method</h3>
+			<p><span class="first-sentence">How does the receiver reconstruct the cleartext?</span> First, we must compute the quantity</p>
+			<code><em>s</em> = (1/3)[2(<em>p</em> - 1)(<em>q</em> - 1) + 1]</code>
+			<div class="pagebreak pageNumber">395</div>
+			
+			<p>For our running example, this curious number is</p>
+			<code>s = (1/3) (2  &middot;  4  &middot;  10 + 1) = 81/3 =27</code>
+			<p>To make <em>s</em> come out right, we added the requirement of "2 greater than a multiple of 3" when choosing <em>p</em> and <em>q</em>.</p>
+			<p>The amazing fact is that if the cipher text numbers C are each raised to the s power, C<sup>s</sup> &ndash; that's right, C<sup>27</sup> in our example &ndash; and divided by the key K<sub>R</sub>, the remainders are the cleartext! That is, for some quotient <em>c</em> that we don't care about,</p>
+			<code>C<sup>s</sup> = K<sub>R</sub>  &middot;  c + T</code>
+			<p>which is <em>truly</em> the key to the RSA scheme.</p>
+			<p>Decrypting: C = 10. To demonstrate this amazing fact, take the first number of our cipher text</p>
+			<code>C = 10</code>
+			<p>and compute</p>
+			<code>C<sup>s</sup> = C<sup>27</sup> = 1027 = 1,000,000,000,000,000,000,000,000,000</code>
+			<p>which is not a binary number, but the huge decimal number of 1 followed by 27 zeros. Divide by K<sub>R</sub> = 55 and express the result in the quotient-remainder form</p>
+			<code>1,000,000,000,000,000,000,000,000,000 <br>= 55  &middot;  18,181,818,181,818,181,818,181,818 + 10</code>
+			<p>Thus, T = 10, so the first 6 bits of the cleartext must be 10 in binary, 001010, as can be checked.</p>
+			<p>Decrypting: C = 3. The numbers can get very large for us &ndash; encryption algorithms actually use several techniques, such as modular arithmetic, to avoid the large intermediate numbers &ndash; but let's try another example. The fourth term of the cipher text is</p>
+			<code>C = 3</code>
+			<p>which we can raise to the 27th power with a calculator to get</p>
+			<code>3<sup>s</sup> = 3^<sup>27</sup> = 7,625,597,484,987</code>
+			<p>Dividing by the public key K<sub>R</sub> and expressing the result in the quotient- remainder form yields</p>
+			<code>7,625,597,484,987 = 55  &middot;  138,647,226,999 + 42</code>
+			<p>implying that the fourth block of the text is binary for 42, or 101010, as can be verified. As a third example, we notice that everything works out right for the cipher text C = 0.</p>
+			<p>Why does the RSA work? Euler proved the following theorem in 1736. (This is the only occurrence of higher mathematics in this book. It isn't necessary to</p>
+			<div class="pagebreak pageNumber">396</div>
+			
+			<p>understand it. Simply accept that Euler's formula makes the RSA scheme work out.)</p>
+			<p><strong><em>Theorem:</em></strong> Let <em>p</em> and <em>q</em> be distinct primes, K = <em>pq</em>, 0 < T < K, and <em>r</em> > 0. If T<sup>r(<em>p</em> 1)(<em>q</em> 1) + 1</sup> is divided by K, the remainder is T</p>
+			<p>For our use of Euler's formula, <em>r</em> = 2, because</p>
+			<code><pre>
+(T<sup>3</sup>)<sup>s</sup>=(T<sup>3</sup>)<sup>(1/3)[2 (<em>p</em> -1)(<em>g</em> -1)+1]</sup>
+  = T<sup>2</sup>(<em>p</em> -1)(<em>g</em> -1) + 1
+			</pre></code>
+			<p>Thus, when the cipher text &ndash; that is, the remainders &ndash; is raised to the s power and divided by the key, the cleartext is recovered.</p>
+			
+		</section>
+		
+		<section class="subsection" data-number="28" data-name="Summarizing the RSA System">
+			<h3>Summarizing the RSA System</h3>
+			<p><span class="first-sentence">To summarize, (our sample version op the RSA public key crypto scheme follows these steps:</span></p>
+			<ol>
+				<li><strong>Publishing.</strong> Select two different prime numbers, <em>p</em> and <em>q</em>, which are 2 larger than a multiple of 3, and define K<sub>R</sub>= <em>pq</em>, the public key. Compute s = (1/3)[2(<em>p</em> - 1)(<em>q</em> - 1) + 1]. Keep <em>p, q,</em> and <em>s</em> secret. Publish K<sub>R</sub> where senders can find it.</li>
+				<li><strong>Encrypting.</strong> Get the public key from the receiver, and break the cleartext bit-sequence into blocks according to the receiver's instructions, but less than K<sub>R</sub>. Cube each block, divide each of the cubes by K<sub>R</sub>, and send the remainders to the receiver as the cipher text.</li>
+				<li><strong>Decrypting.</strong> Using the secret value <em>s</em>, raise each number in the cipher text to the <em>s</em> power, divide each result by K<sub>R</sub>, and assemble the remainders into the blocks of the bit sequence of the cleartext.</li>
+			</ol>
+			
+			<p>Of course, humans don't do these calculations. Software does. And though the software is extremely sophisticated to perform these operations fast, the principles that the programs implement are embodied in these three steps.</p>
+			<p><span class="paragraph-header">RSA security challenge.</span> Can RSA withstand attacks? Can anyone actually break the code? As far as is known, scientifically, a code cracker would have to figure out what <em>s</em> is to break the code. Constructing <em>s</em> is easy if the two primes <em>p</em> and <em>q</em> are known.</p>
+			<p><span class="paragraph-header">Factoring the key.</span> The problem of finding <em>s</em> reduces to factoring the public key K<sub>R</sub> to discover <em>p</em> and <em>q</em>. But factoring large numbers is a computationally difficult problem, even for the world's fastest computers. It is the fact that factoring large numbers is so difficult that keeps the public key encryption schemes secure. Put another way, if the key is large enough, it can be published because there is no known way to factor it into its two prime components in any reasonable amount of time.</p>
+			
+		</section>
+
+		<section class="subsection" data-number="29" data-name="Strong Encryption Techniques">
+			<h3>Strong Encryption Techniques</h3>
+			<p>Public key encryption techniques are known as <strong>strong encryption</strong>. The term is intended to convey the fact that a communicating party can use the tech-</p>
+			<div class="pagebreak pageNumber">397</div>
+			
+			<div class="fluency-flashback">
+				<p><strong class="fluency-flashback-title">RSA's Challenge.</strong> In 1977, shortly after inventing their scheme, Rivest, Shamir, and Adleman issued a challenge to the world: Break the small cipher text they encrypted with their public key RSA129 &ndash; the 129 refers to the number of digits of their key &ndash; and win $100. This was a bold challenge because, although there was no known way to factor a 129-digit key quickly, maybe someone could invent a better factoring algorithm. The best known method at the time wasn't much better than the grammar school technique of dividing consecutive prime numbers into the number, looking for one that divides evenly. If computer scientists were clever enough to come up with public key encryption in the first place, they could probably come up with better ways to factor.</p>
+				<p>In fact, in 1981 Carl Pornerance did invent a new factoring method that gave some hope, though all the while other computer scientists were trying to prove that the factoring process could never be improved much. Pornerance's algorithm was better, but it didn't crack the code. Eventually, Arjen Lenstra and Mark Manasse organized an effort, which in 1994, using better algorithms, the Internet, and the improved speed of computers, cracked the RSA129 cipher. Their strategy took eight months and used nearly a thousand computers from around the world. But this wasn't the end of public key cryptosystems &ndash; it only revealed the factors of a <em>single</em> public key.</p>
+				<p>Most of us don't have a thousand computers or eight months to spend trying to snoop a single credit card transaction. Even if the secret is extremely important &ndash;  a missile code, for example, or the outcome of the final episode of a TV series &ndash;  and the code cracker has the resources of the U.S. government, the RSA scheme is still secure because all it takes to make things harder for code crackers is to increase the size of the key.</p>
+				<p>The difficulty of factoring increases dramatically as the key length grows. It has been estimated that increasing the key to 250 digits &ndash; that is, doubling its length &ndash; would increase the cracking time 100,000,000 times. Keys can be increased to 300 or 400 digits or more if one hundred million times harder is not enough. Larger keys do not seriously complicate the problem for the encryption and decryption processes compared to their impact on increasing the factoring time.</p>
+				<p>When RSA129 was cracked &ndash; an effort dubbed the largest computation of all time &ndash; everyone was waiting breathlessly to know what the secret message was. It turned out to be THE MAGIC WORDS ARE SQUEAMISH OSSIFRAGE.</p>
+			</div>	
+			
+			<p>nology to protect their communication so that no one else can read it. Period. From a national defense or crime-fighting perspective, complete secrecy is of great concern. Agencies that protect society from internal and external threats have routinely snooped on those people and organizations that may cause harm. Because surveillance would be impossible if the "bad guys" got such technology, the U.S. government has fought a long-running battle since the invention of PKC technology to keep it contained and out of the hands of "bad guys." This has never been a very realistic goal because papers describing the scientific foundations of the technology &ndash; including Diffie and Helman's original paper, "New Directions in Cryptography" (<em>IEEE Transactions on Information Theory</em> IT(22):644-654) &ndash; are published in scientific journals,</p>
+			<div class="pagebreak pageNumber">398</div>
+			<p>which anyone with a respectable computer science education can read to build his or her own encryption software. On the other hand, security professionals probably have a point. It could be valuable to spy on people who are in the process of planning crimes or attacks.</p>
+			<p>Of course, most people don't write their own software &ndash; they buy it &ndash; and that probably includes most "bad guys." If cryptography software vendors had to give government agencies and law enforcement officials a way to break such codes, perhaps we could have both security and a defense against the "bad guys." How could that be? Doesn't breaking the code require earth-shaking discoveries in factoring? Not from the software vendor's point of view.</p>
+			<p>Two techniques that could be used are known as <strong>trapdoor</strong> and <strong>key escrow</strong>.</p>				
+			<ul>
+				<li><strong>Trapdor.</strong> While the software is encrypting the clear text, ways might be provided to bypass the security. When the cipher text is sent, the cleartext could also be sent to law enforcement or security officials. The trapdoor would work like a telephone wiretap in that the "bad guys" encryption software would be configured without their knowledge. Legal safeguards (a court-approved warrant) would be required to do so. Other trapdoor techniques exist.</li>
+				<li><strong>Key Escrow.</strong> Knowing the key makes breaking the code easy, so a key escrow system would require encryption software to register the key (actually, the two prime numbers from which the key is created) with a third party, who would hold the primes in confidence. Then, if there is ever a need to break a code &ndash; law enforcement personnel having a court-approved warrant, for example, or your computer being toasted in a fire &ndash; the escrow agent could provide the two primes.</li>
+			</ul>
+			<p>These two schemes could also be abused: Couldn't anyone with (legal or illegal) access to your computer open the trapdoor? Wouldn't the escrow company be a tantalizing target for criminals because it contains everyone's PKC keys? Neither of these schemes has satisfied security and other experts.</p>
+		</section>
+	</section>
+	<section class="page section" data-number="30" data-name="Redundancy Is Very, Very Good">
+		<h2>Redundancy Is Very, Very, Very Good</h2>
+		<p><span class="first-sentence">As the saying goes, "Life is uncertain; eat dessert first."</span> Uncertainty poses physical security challenges for networking and computer use generally.</p>
+		<p>Uncertainty results from lightning strikes that cut power, earthquakes and other natural disasters, terrorist attacks, accidents, and simple entropy &ndash; the tendency of things to "run down." To the list of physical risks, add the potential logical problems of program bugs, operator errors &ndash; <em>How could I have done that?!</em> &ndash; computer viruses, worms, backdoor assaults, and many more. Each of us would like to avoid such disasters. Life is uncertain, so it makes sense to take precautions.</p>
+		<p>Businesses whose success depends on computers &ndash; that is, most businesses &ndash;  archive files daily and store these backups off-site so the disaster that zaps the original information doesn't also zap the backup. These companies have a sys-</p>
+		<div class="pagebreak pageNumber">399</div>
+		<p>tem recovery team to clean up after a disaster strikes. And often they have system redundancy, that is, multiple computers performing the same work, so that when one fails, another &ndash; <em>a hot spare</em> &ndash; is up and running.</p>
+		
+		<div class="fluency-tip">
+			<strong class="fluency-tip-title">Alternate Superstition.</strong> People can be superstitious, believing, for example, that thinking about a disaster can make it happen. Naturally, repressing such thoughts is sensible. But believing a different superstition &ndash; that taking precautions against disasters, like saving often, prevents them &ndash; may make more sense in computing. They're both superstitions, of course, but the second one reduces the harm when it turns out to be wrong, which it will.
+		</div>		
+		
+		<section class="subsection" data-number="31" data-name="A Fault Recovery Program for Business">
+			<h3>A Fault Recovery Program for Business</h3>
+			<p><span class="first-sentence">Preparing to recover information after a disaster is quite technical, beyond the scope of this book, but the basic idea is easy.</span></p>
+			<p>Start by keeping a complete copy of everything written on the system as of some date and time. This is a <strong>full backup</strong>. After that, create <strong>partial backups</strong> of the changes since the last full (or partial) backup. "Changes" means to keep a copy of any files or folders that have been created or modified. Having the full backup and a copy of the changes allows the current version to be reconstructed by using the changes to update the earlier full backup.</p>
+			<p>Eventually there will have been so many partial backups that another full backup should be made. How often partial backups are performed is usually decided by the cost, and grief, of losing all of the information since the last partial backup. It would be easier to have full backups every few minutes, but that's too much information to copy and save. However, too many partial backups can make reconstruction extremely tedious, so regular full backups are a good idea.</p>
+			<p>After a disaster, recover by installing the last full backup copy. Then recreate the state of the system by making the changes saved in the partial backups in order. Continue with each partial backup until the most recent. That's as close to "full recovery" as it's possible to get. All of the information since the most recent backup (full or partial) has been lost.</p>
+		
+			<div class="try-it">
+				<p><strong>13.2 Backup Plan.</strong> Imagine that a computer with the following file structure is backed up for the first time:</p>
+				<code><pre>
+FOLDER: Desktop 
+  newCarPhoto.jpg 
+  FOLDER: Stuff
+    oldCarPhoto.jpg 
+    ChrisLetter.doc
+				</pre></code>
+				<p>Then, the <code>ChrisLetter</code> document is edited, the <code>oldCarPhoto</code> image is deleted, and a new file, <code>insurance.pdf</code>, is added. Say what information the archiving software would copy in a partial backup.</p>
+			</div>					
+		</section>
+		<div class="pagebreak pageNumber">400</div>
+		<section class="subsection" data-number="32" data-name="Backing Up a Personal Computer">
+			<h3>Backing Up a Personal Computer</h3>
+			<p><span class="paragraph-header"><span class="first-sentence">Backups aren't just for businesses.</span></span> If you work on a computer system that is managed by a professional staff (like most college systems), there is little need to worry about backups. The support staff nearly always takes care of backups, though you should check to be sure. However, backing up your own personal computer is your responsibility. There are two important points to think about regarding backups.</p>
+			<p><span class="paragraph-header">How and what to back up.</span> First, to back up your own computer, you need a place to keep the copy, and you need software to make the copy. </p>
+			<p>The two easiest "places" to keep the copy are on an external hard disk or "in the cloud," which is an online storage server. The price of external disks is low enough that anyone who can afford a computer can afford an external disk, which can also be used as permanent storage for large collections such as videos. The "cloud" solution works like free email accounts such as Yahoo! and Gmail: The company's computers store the information for you and they take responsibility of keeping it available to you. When making a backup, you upload the files you need to archive.</p>
+			<p>Software for making a backup to an external device like a hard disk comes with modern operating systems. For Windows Vista, it is the Backup and Restore Center facility, and for the Mac OSX, it is the Time Machine facility. The best advice is to follow the guidelines offered by the software.</p>
+			
+			<div class="fluency-alert">
+				<strong class="fluency-alert-title">A Three-Line Sermon.</strong> Disasters don't just happen to someone else. (I had disk meltdowns while writing each of the previous editions of Fluency.) Backups are truly important. Backup today. Amen.
+			</div>						
+			<p>Of course, in exceptional cases &ndash; when you are traveling, perhaps &ndash; you can back up manually by simply copying your directories and files to a CD. Remember, you don't have to back up information that:</p>
+			<ul>
+				<li>Can be recreated from some permanent source, such as software</li>
+				<li>Was saved before but has not changed &ndash; last year's email archive, for example</li>
+				<li>You don't care about, like your Web cache or old versions of term papers</li>					
+			</ul>
+			<p>Most of us do not have much to back up if we do so every two or three months.</p>
+			<div class="fluency-tip">
+				<strong class="fluency-tip-title">How Often? </strong> No rule says when to back up. Organizations must follow a fixed schedule, but individuals can simply assess the risk of losing everything. Hard use makes laptops more likely to fail than desktops; very new and very old equipment is more likely to fail than a middle-aged system. There is always risk.
+			</div>	
+			<div class="pagebreak pageNumber">401</div>
+			<p><span class="paragraph-header">Recovering deleted information. </span> The second thing about backups is that they prevent "delete from deleting." Here is why. An organization's support staff backs up files regularly, usually daily. They keep the information safe so fires and earthquakes will not harm it. And, they often keep it for a very long time so people can go back to find information that they deleted long ago. If you accidentally delete important files, file restoration is a very desirable and helpful service. So, deleting a file that is in the archive means that it is not truly gone. For example, in Try It 13.2, notice that <code>oldCarPhoto.jpg</code> is still in the full backup, and so could be recovered even though it was deleted</p>
+			<p>Of course, backups can save evidence of crimes or other inappropriate behavior, too. Computer users have hastily tried to delete incriminating files in hopes of covering up undesirable activity only to learn later that the files like <code>oldCarPhoto.jpg</code> can be completely recreated from the backups. Unlike paper files, digital copies of files are easy to create and cheap to store, so it can be difficult to eradicate all copies of digital information.</p>
+			<p>Email is especially dangerous if you're trying to hide inappropriate behavior, but it's especially helpful if you're trying to discover it: Two copies of email are produced immediately when the <strong>Send</strong> button is clicked &ndash; one in the sender's sent mail directory, and one somewhere else, which is probably impossible for the sender to delete. Further, if that email is around for more than a few hours, it will probably be backed up. Of course, your own backups have this same permanence property. Perhaps the Information Age will promote better behavior.</p>
+			
+			<div class="fluency-bit">
+				<strong class="fluency-bit-title">Gone, but Not Forgotten. </strong> Emptying trash on a personal computer is another example when delete does not truly delete. Computers keep a <em>free list</em> of available disk storage blocks, and they take blocks from it whenever they write data. <em>Emptying trash</em> usually adds the trashed files' blocks to the free list, allowing them to be reused but without changing their contents. Until the blocks are over- written, experts can recover the information. Choose "Secure" Empty Trash to completely remove files.
+			</div>		
+		</section>		
+	</section>
+	<section class="page section" data-number="33" data-name="Summary">
+		<h2>Summary</h2>
+		<p><span class="first-sentence">After discussing a privacy scenario, we defined privacy as the right of individuals to choose freely under what circumstances and to what extent they will reveal themselves, their attitudes, and their behaviors.</span> We learned that:</p>
+		<div class="pagebreak pageNumber">402</div>
+		<ul>
+			<li>Revealing personal information can be beneficial, so the people and organizations that receive the information must keep it private. The guidelines for keeping data private have been created by several organizations, including the Organization for Economic Cooperation and Development.</li>
+			<li>Guidelines often conflict with the interests of business and government, so some countries like the United States have not adopted them. Because the U.S. takes a sectoral approach to privacy, adopting laws only for specific business sectors or practices, much of the information collected on its citizens is not protected by OECD standards.</li>
+			<li>There have been long-runing negotiations betwen the EU and the United States regarding privacy standards. The dispute's two main sticking points are Opt-in/Opt-out and compliance/enforcement</li>
+			<li>The "third-party cookie" loophole allows companies togather information; identity theft is an unresolved problem. The best way to manage privacy in the Information Age is to have OECD-grade privacy laws.</li>
+			<li>Public key cryptography (PKC) is a straight forward idea built on familiar concepts.</li>
+			<li>Computer scientists have not yet proved the invincibility of the RSA scheme, but it can be "made more secure" simply by increasing the size of the key. This has little effect on the encryption and decryption processes, but it greatly increases the problem of finding the prime factors that make up the key.</li>
+			<li>Strong encryption methods worry defense and law enforcement officials, but the conflict between balancing those concerns with the interests of peaceful, law-abiding citizens has not been reconciled.</li>
+			<li>Backing up computer files is an esential safeguard. It ensures that your files will survive for a long time, even if you don't want them to.</li>
+		</ul>
+		<p>Privacy and security topics have not been fully resolved in the public forum, and both pose daunting challenges. Laws and policies are still under construction. Privacy seems to be waiting for the broad adoption of the OECD safe- guards for both business and government information gathering. Security seems to be waiting for a way for parties to communicate securely by mechanisms fully within their control, yet that can be compromised in extraordinary circumstances of public importance.</p>
+	</section>
+
+	<section id="conclusion" data-number="34" data-name="Try It Solutions">
+		<div class="content">
+			<h2>Try-it Solutions</h2>
+			<ol id ="try-it-solutions">
+				<li class="thirteen-one">
+					<span class="first-sentence">Assume your name is Barack Obama.</span> The following would be the ASCII representation and XOR encryption of your first name:
+					<code>
+						<table class ="large">
+							<tr>
+								<td>name:</td>
+								<td>0100 0010</td>
+								<td><span class="highlight">0110 0001</span></td>
+								<td>0111 0010</td>
+								<td><span class="highlight">0110 0001</span></td>
+								<td>0110 0011</td>
+								<td><span class="highlight">0110 1011</span></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>B</td>
+								<td>A</td>
+								<td>R</td>
+								<td>A</td>
+								<td>C</td>
+								<td>K</td>
+							</tr>
+							<tr>
+								<td>&oplus; key:</td>
+								<td>0001 0111</td>
+								<td>0010 1101</td>
+								<td>0001 0111</td>
+								<td>0010 1101</td>
+								<td>0001 0111</td>
+								<td>0010 1101</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>key</td>
+								<td></td>
+								<td>key</td>
+								<td></td>
+								<td>key</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>cipher:</td>
+								<td>0101 0101</td>
+								<td><span class="highlight">0100 1100</span></td>
+								<td>0110 0101</td>
+								<td><span class="highlight">0100 1100</span></td>
+								<td>0111 0100</td>
+								<td><span class="highlight">0100 0110</span></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>U</td>
+								<td>L</td>
+								<td>e</td>
+								<td>L</td>
+								<td>t</td>
+								<td>f</td>
+							</tr>
+						</table>
+					</code>
+				</li>
+				<li class="thirteen-two">
+					<code>ChrisLetter.doc</code>, <code>insurance.pdf</code>, <code>Stuf_file_list</code>, and <code>Desktop_file_list</code> would be backed up.
+				</li>
+			</ol>
+			<div class="pagebreak pageNumber">403</div>
+			<h2>Review Questions</h2>
+			<section id="multiple-choice" data-number="35" data-name="Multiple Choice">
+				<h3>Multiple Choice</h3>
+				<ol>
+					<li> <span class="first-sentence">For a business, the least restrictive use of private information is called</span>
+						<ol>
+							<li>No Uses </li>
+							<li>Approval </li>
+							<li>Objection </li>
+							<li>No Limits </li>
+						</ol>
+					</li>
+					<li> An individual faces the fewest potential invasions of privacy from the policy called
+						<ol>
+							<li>No Uses </li>
+							<li>Approval </li>
+							<li>Objection </li>
+							<li>No Limits </li>
+						</ol>
+					</li>
+					<li> Which of the following is an example of identity theft?
+						<ol> 
+							<li>taking a test for someone else </li>
+							<li>using your older sibling's ID </li>
+							<li>posing as someone you're not to vote </li>
+							<li> all of the above</li>
+						</ol>
+					</li>
+					<li> The Code of Fair Information Practices lacked
+						<ol>
+							<li>methods for correcting mistakes </li>
+							<li>legal penalties </li>
+							<li>protection for children </li>
+							<li>rules for gaining access to your own data </li>
+						</ol>
+					</li>
+					<li> You discover that credit information on you is inaccurate. Which principle does this violate?
+						<ol>
+							<li>Limited Collection </li>
+							<li>Quality </li>
+							<li>Security </li>
+							<li>Openness </li>
+						</ol>
+					</li>
+					<li> Which Fair Information Practice provides for ways to correct your faulty credit record?
+						<ol>
+							<li>Quality </li>
+							<li>Purpose </li>
+							<li>Participation </li>
+							<li>Accountability </li>
+						</ol>
+					</li>
+					<li> Data on EU citizens is
+						<ol>
+							<li>not as secure as data on Americans </li>
+							<li>protected even outside of the EU </li>
+							<li>not protected by OECD principles </li>
+							<li>protected in Europe but not outside of it </li>
+						</ol>
+					</li>
+					<div class="pagebreak pageNumber">404</div>
+					<li> The Driver's Privacy Protection Act
+						<ol>
+							<li>prevents departments of motor vehicles from releasing private information </li>
+							<li>prevents departments of motor vehicles from charging for information </li>
+							<li>prevents departments of motor vehicles from releasing information without permission </li>
+							<li>allows departments of motor vehicles to sell information, provided the buyer discloses how the information will be used </li>
+						</ol>
+					</li>
+					<li> Information from people in EU countries can be shared outside of the EU, providing the business or government follows the principles of
+						<ol>
+							<li>Don't ask, don't tell </li>
+							<li>Safe Harbor </li>
+							<li>Fair Information Practices </li>
+							<li>Opt-in/Opt-out </li>
+						</ol>
+					</li>
+					<li> If the cleartext is 1101 and the XOR key is 1001, the cipher is
+						<ol>
+							<li>1011 </li>
+							<li>0100 </li>
+							<li>0110 </li>
+							<li>1110 </li>
+						</ol>
+					</li>
+					<li> XOR can be described as
+						<ol>
+							<li>x and y or x or y </li>
+							<li>x or y </li>
+							<li>x or y but not both </li>
+							<li>none of the above </li>
+						</ol>
+					</li>
+					<li> Digital encryption is
+						<ol>
+							<li>only used for passwords </li>
+							<li>easily broken by computer experts </li>
+							<li>the use of math to make communication unreadable to snoops </li>
+							<li>all of the above </li>
+						</ol>
+					</li>
+					<li> Social networking
+						<ol>
+							<li>is not private </li>
+							<li>can be viewed by potential employers </li>
+							<li>allows members to present themselves to others and to interact with them </li>
+							<li>all of the above </li>
+						</ol>
+					</li>
+				</ol>
+			</section>
+			<section id="short-answer" data-number="36" data-name="Short Answer">
+				<h3>Short Answer</h3>
+				<ol>
+					<li><span class="first-sentence">________ is the right of people to choose freely under what circumstances and to what extent they will reveal themselves, their attitude, and their behavior to others.</span></li>
+					<li>In regard to information technology, privacy is primarily concerned with ________ and ________</li>
+					<li>________ is an anonymous form of payment</li>
+					<li>The ________ serve as a guideline for protecting personal privacy in regard to international trade.</li>
+					<div class="pagebreak pageNumber">405</div>
+					<li>The ________ provides a benchmark by which businesses can measure how well they are protecting the privacy of individuals.</li>
+					<li>A(n) ________ is responsible for maintaining personal information and is held accountable for it.</li>
+					<li>The ________ is the European Union's law incorporating the OECD principles.</li>
+					<li>In the United States, ________ offers more protection than ________ for protecting personal information.</li>
+					<li>A(n) ________ is a combination of encryption and decryption.</li>
+					<li>________ or plaintext is information before it is encrypted.</li>
+					<li>Passwords generally use a(n) ________ because it's hard to reverse and there's little need to decrypt it.</li>
+					<li>The ________ cryptosystern is the best-known public key cryptosystem.</li>
+					<li>________ is the crime of posing as someone else for fraudulent purposes.</li>
+					<li>________ is software that monitors and records details of computer usage.</li>
+					<li>A(n) ________ is an incremental backup of all changes since the last backup.</li>
+					<li>A(n) ________ is the listing of available blocks that can be used to store files.</li>
+					<li>________ is the posting of personal information on publicly viewable space.</li>
+				</ol>
+			</section>
+			<section id="exercises" data-number="37" data-name="Exercises">
+				<h3>Exercises</h3>
+				<ol>
+					<li><span class="first-sentence">What are the two types of business threats regarding privacy?</span></li>
+					<li>There are several national "sweepstakes" that deliver big prizes to the winners. To be a part of these contests, you must register and provide your address (so they can deliver your check on national TV!). What potential privacy concerns are involved with such contests?</li>
+					<li>Credit card companies track your transactions. How can they abuse this?</li>
+					<li>What flaws exist in a sectoral approach to privacy?</li>
+					<li>Based on existing legislation, who appears to have more influence, busi- ness or individuals?</li>
+					<li>Explain how a simple serial number stored in a cookie can be used to store personal information.</li>
+					<li>Is compliance without enforcement effective?</li>
+					<li>Discuss the different approaches to privacy taken by the European Union and the United States.</li>
+					<li>Discuss the loopholes between compliance and enforcement.</li>
+					<li>Using XOR and 10110110, determine the cipher for the ASCII text for THE MAGIC WORDS ARE SQUEAMISH OSSIFRAGE.</li>
+				</ol>
+			</section>				
+		</div>
+	</section
+		
+
+
+  </div> <!-- /container -->
+
+
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<html>
+
+	<head>
+
+		<title> User Reminders </title>
+
+		<!-- Stylesheets -->
+		<link rel="stylesheet" type="text/css" href="/lib/bootstrap/css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="/basic/shared/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="reminders.css" />
+
+		<!-- Scripts -->
+		<script src="/lib/jquery-1.7.2.min.js"></script>
+		<script src="/lib/jquery.autosize-min.js"></script>
+		<script src="/lib/underscore-min.js"></script>
+		<script src="/lib/backbone-min.js"></script>
+
+		<script src="/lib/bootstrap/js/bootstrap-dropdown.js"></script>
+		<script src="/basic/shared/js/user-models.js"></script>
+		<script src="/basic/shared/js/userbar.js"></script>
+
+		<script src="/basic/options/reminder-views.js"></script>
+		<script src="/basic/options/reminders.js"></script>
+		
+
+
+	</head>
+
+	<body>
+
+		<div id="titleResourcesBar">
+			<!-- Back button -->
+			<input id="backBtn" type="button" class="btn" value="Back"/>
+			<center>
+				<h1 class="title inline">Reading Profile</h1>
+			</center>
+			<hr>
+			<br>
+
+		</div>
+
+
+
+		<form id ="reminders" method="post" action="/submitreminders">
+			<h2 class="reminder-header" > I. Plan My Time</h2>
+			<div id="reminders-plan" class="reminders">
+				<div class="reminder">
+					<input type="checkbox" class="single-input" id="total-time" name="total-time"><label for="total-time"><span></span>Select Total Time for Reading Session</label>
+					<div class="fields" hidden>
+						<input type="radio" id="total-time10" name="time" value="10"><label for="total-time10"><span></span>10 minutes</label><br/>
+						<input type="radio" id="total-time15" name="time" value="15"><label for="total-time15"><span></span>15 minutes</label><br/>
+						<input type="radio" id="total-time30" name="time" value="30"><label for="total-time30"><span></span>30 minutes</label><br/>
+						<input type="radio" id="total-time45" name="time" value="45"><label for="total-time45"><span></span>45 minutes</label><br/>
+						<input type="radio" id="total-time60" name="time" value="60"><label for="total-time60"><span></span>60 minutes</label><br/>
+						<input type="radio" id="total-time90" name="time" value="90"><label for="total-time90"><span></span>90 minutes</label><br/>
+					</div>
+				</div>
+				<div class="reminder">
+					<input type="checkbox" class="single-input" id="time-left" name="time-left"><label for="time-left"><span></span>Remind me how much time I have left</label>
+					<div class="fields" hidden>
+						<input type="checkbox" id="time-left5" name="time-left5"><label for="time-left5"><span></span>5 minutes remaining</label><br/>
+						<input type="checkbox" id="time-left10" name="time-left10"><label for="time-left10"><span></span>10 minutes remaining</label><br/>
+						<input type="checkbox" id="time-left20" name="time-left20"><label for="time-left20"><span></span>20 minutes remaining</label><br/>
+						<input type="checkbox" id="time-left30" name="time-left30"><label for="time-left30"><span></span>30 minutes remaining</label><br/>
+					</div>
+				</div>
+			</div>
+			
+
+			<h2 class="reminder-header" style=""> II. Set Personal Reminders to Appear Prior to Reading </h2>
+			<div id="reminders-prior" class="reminders">
+				<div>
+					<div class="reminder">
+						<input type="checkbox" class="single-input" id="startup-materials" name="startup-materials"><label for="startup-materials"><span></span>Gather Materials</label>
+						<div class="fields" hidden>
+							<input type="checkbox" id="startup-materials-glasses" name="startup-materials-glasses"><label for="startup-materials-glasses"><span></span>Glasses</label><br/>
+							<input type="checkbox" id="startup-materials-syllabus" name="startup-materials-syllabus"><label for="startup-materials-syllabus"><span></span>Syllabus</label><br/>
+							<input type="checkbox" id="startup-materials-notes" name="startup-materials-notes"><label for="startup-materials-notes"><span></span>Lecture notes</label><br/>
+							<input type="checkbox" id="startup-materials-other" name="startup-materials-other"><label for="startup-materials-other"><span></span>Other</label><br/>
+							<textarea id="startup-materials-other-text" name="startup-materials-other-text" class="other" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 50px;"></textarea>
+						</div>
+					</div>
+
+					<div class="reminder">
+						<input type="checkbox" class="single-input" id="startup-organize" name="startup-organize"><label for="startup-organize"><span></span>Organize Study Space</label>
+						<div class="fields" hidden>
+							<input type="checkbox" id="startup-organize-door" name="startup-organize-door"><label for="startup-organize-door"><span></span>Shut Door</label><br/>
+							<input type="checkbox" id="startup-organize-devices" name="startup-organize-devices"><label for="startup-organize-devices"><span></span>Turn off other devices (e.g. cellphone, tv)</label><br/>
+							<input type="checkbox" id="startup-organize-light" name="startup-organize-light"><label for="startup-organize-light"><span></span>Turn on light</label><br/>
+							<input type="checkbox" id="startup-organize-other" name="startup-organize-other"><label for="startup-organize-other"><span></span>Other</label><br/>
+							<textarea id="startup-organize-other-text" name="startup-organize-other-text" class="other" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 50px;"></textarea>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<h2 class="reminder-header" style=""> III. Set Personal Reminders to Appear During Reading</h2>
+			<div id="reminders-during" class="reminders"> 
+				<input type="checkbox" class="single-input" id="encourage-progress" name="encourage-progress"><label for="encourage-progress"><span></span>Encourage Progress</label><br/>
+				<div id="encourage-progress-fields" class="fields" hidden> </div>
+				<input type="checkbox" class="single-input" id="manage-symptoms" name="manage-symptoms"><label for="manage-symptoms"><span></span>Manage physical symptoms</label>
+				<div id="manage-symptoms-fields" class="fields" hidden> </div>
+			</div>
+			
+
+			<h2 class="reminder-header" style=""> IV. Set up reminders to do Review </h2>
+			<div id="reminders-review" class="reminders">
+				<div class="reminder">
+					<input type="checkbox" class="single-input" id="review-time" name="review-time"><label for="review-time"><span></span>By Time</label>
+					<div class="fields" hidden>
+						<input type="radio" id="review-time-10" name="review-time-time" value="10"><label for="review-time-10"><span></span>Every 10 minutes</label><br/>
+						<input type="radio" id="review-time-15" name="review-time-time" value="15"><label for="review-time-15"><span></span>Every 15 minutes</label><br/>
+						<input type="radio" id="review-time-20" name="review-time-time" value="20"><label for="review-time-20"><span></span>Every 20 minutes</label><br/>
+					</div>
+				</div>
+				<div class="reminder">
+					<input type="checkbox" class="single-input" id="review-section" name="review-section"><label for="review-section"><span></span>By Section</label>
+					<div class="fields" hidden>
+						<input type="radio" id="review-section-1" name="review-section-num" value="1"><label for="review-section-1"><span></span>Every section</label><br/>
+						<input type="radio" id="review-section-2" name="review-section-num" value="2"><label for="review-section-2"><span></span>Every 2 sections</label><br/>
+						<input type="radio" id="review-section-3" name="review-section-num" value="3"><label for="review-section-3"><span></span>Every 3 sections</label><br/>
+					</div>
+				</div>
+			</div>
+
+			<input id="submitbtn" type="button" class="btn disabled btn-large" value="Save and Return to Menu">
+		</form>
+
+		<br><br><br><br><br>
+		<br>
+		<br>
+		<br>
+		<div id="spinnerbox">
+			<img src="/images/spinner.gif"/>
+		</div>
+	</body>
+
+</html>

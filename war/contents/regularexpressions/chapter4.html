@@ -1,0 +1,724 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Introducing Regular Expressions</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="regexp">
+
+		<div class="container">
+
+			<h3>CHAPTER 4</h3>
+			<div class="border"></div>
+
+			<section class="intro" data-number="0" data-name="Chapter 4 Introduction">
+
+				<h1>Alternation, Groups and<br/>
+					Backreferences</h1>
+
+				<p><span class="first-sentence">You have already seen groups in action. Groups surround text with parentheses to help
+				perform some operation, such as the following:</span></p>
+
+				<ul>
+
+					<li>Performing alternation, a choice between two or more optional patterns</li>
+
+					<li>Creating subpatterns</li>
+
+					<li>Capturing a group to later reference with a backreference</li>
+
+					<li>Applying an operation to a grouped pattern, such as a quantifer</li>
+
+					<li>Using non-capturing groups</li>
+
+					<li>Atomic grouping (advanced)</li>
+
+				</ul>
+
+				<p>We’ll be using a few contrived examples, in addition to the text from “The Rime of the
+				Ancyent Mariner” again, in <em>rime.txt</em>. This time, I’ll use the desktop version of RegExr,
+				as well as other tools like <em>sed</em>. You can download the desktop version of RegExr from
+				<span class="url">http://www.regexr.com</span>, for Windows, Mac, or Linux (it was written with Adobe AIR).
+				Click the Desktop Version link on the RegExr web page (lower-right corner) for more
+				information.</p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Alternation">
+
+				<h2>Alternation</h2>
+
+				<p><span class="first-sentence">Simply said, <em>alternation</em> gives you a choice of alternate patterns to match.</span> For example,
+				let’s say you wanted to find out how many occurrences of the article <em>the</em> are in the “The
+				Rime of the Ancient Mariner.” The problem is, the word occurs as <em>THE</em>, <em>The</em>, and <em>the</em>
+				in the poem. You can use alternation to deal with this peculiarity.</p>
+
+				<p>Open the RegExr desktop application by double-clicking on its icon. It looks very much
+				like the online version but has the advantage of being local on your machine, so you
+				won’t suffer the network issues that sometimes occur when using web applications.</p>
+
+				<div class="pagebreak pageNumber right">41</div>
+
+				<p>I’ve copied and pasted the entire poem in RegExr desktop for the next exercise. I’m
+				using it on a Mac running OS X Lion.</p>
+
+				<p>In the top text box, enter the pattern:</p>
+
+				<p class="indented"><code>(the|The|THE)</code></p>
+
+				<p>and you’ll see all occurrences of <em>the</em> in the poem highlighted in the lower box (see
+				<strong>Figure 4-1</strong>). Use the scroll bar to view more of the result.</p>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure4-1.png">
+					<figcaption>Figure 4-1. Using alternation in RegExr desktop version</figcaption>
+				</figure>
+
+				<p>We can make this group shorter by applying an option. Options let you specify the way
+				you would like to search for a pattern. For example, the option:</p>
+
+				<p class="indented"><code>(?i)</code></p>
+
+				<p>makes your pattern case-insensitive, so instead of using the original pattern with alternation,
+				you can do this instead:</p>
+
+				<p class="indented"><code>(?i)the</code></p>
+
+				<p>Try this in RegExr to see how it works. You can also specify case-insensitivity by
+				checking <em>ignoreCase</em> in RegExr, but both will work. This and other options or modifiers
+				are listed in <strong>Table 4-1</strong>.</p>
+
+				<div class="pagebreak left"><span class="pageNumber">42</span> | Chapter 4: Alternation, Groups, and Backreferences</div>
+
+				<table>
+					<caption>Table 4-1. Options in regular expressions</caption>
+
+					<tr>
+						<th>Option</th>
+						<th>Description</th>
+						<th>Supported by</th>
+					</tr>
+
+					<tr>
+						<td><code>(?d)</code></td>
+						<td>Unix lines</td>
+						<td>Java</td>
+					</tr>
+
+					<tr>
+						<td><code>(?i)</code></td>
+						<td>Case insensitive</td>
+						<td>PCRE, Perl, Java</td>
+					</tr>
+
+					<tr>
+						<td><code>(?J)</code></td>
+						<td>Allow duplicate names</td>
+						<td>PCRE*</td>
+					</tr>
+
+					<tr>
+						<td><code>(?m)</code></td>
+						<td>Multiline</td>
+						<td>PCRE, Perl, Java</td>
+					</tr>
+
+					<tr>
+						<td><code>(?s)</code></td>
+						<td>Single line (dotall)</td>
+						<td>PCRE, Perl, Java</td>
+					</tr>
+
+					<tr>
+						<td><code>(?u)</code></td>
+						<td>Unicode case</td>
+						<td>Java</td>
+					</tr>
+
+					<tr>
+						<td><code>(?U)</code></td>
+						<td>Default match lazy</td>
+						<td>PCRE</td>
+					</tr>
+
+					<tr>
+
+						<td><code>(?x)</code></td>
+						<td>Ignore whitespace, comments</td>
+						<td>PCRE, Perl, Java</td>
+					</tr>
+
+					<tr>
+						<td><code>(?-...)</code></td>
+						<td>Unset or turn off options</td>
+						<td>PCRE</td>
+					</tr>
+				</table>
+
+				<p class="table-note">* See “Named Subpatterns” in <span class="url">http://www.pcre.org/pcre.txt</span>.</p>
+
+				<p>Let’s now use alternation with <em>grep</em>. The options in <strong>Table 4-1</strong>, by the way, don’t work
+				with <em>grep</em>, so you are going to use the original alternation pattern. To count the number
+				of lines where the word <em>the</em> occurs, regardless of case, one or more times, use:</p>
+
+				<p class="indented"><code>grep -Ec "(the|The|THE)" rime.txt</code></p>
+
+				<p>and get this answer:</p>
+
+				<p class="indented"><code>327</code></p>
+
+				<p>This result does not tell the whole story. Stay tuned.</p>
+
+				<p>Here is an analysis of the <em>grep</em> command:</p>
+
+				<ul>
+
+					<li>The <em>-E</em> option means that you want to use extended regular expressions (EREs)
+					rather than basic regular expressions (BREs). This, for example, saves you from
+					having to escape the parentheses and the vertical bar, like <code>\(THE\|The\|the\)</code>, as
+					you must with BREs.</li>
+
+					<li>The <em>-c</em> option returns a count of the matched lines (not matched words).</li>
+
+					<li>The parentheses group the choice or alternation of the, The, or THE.</li>
+
+					<li>The vertical bar separates possible choices, which are evaluated left to right.</li>
+
+				</ul>
+
+				<p>To get a count of actual words used, this approach will return each occurrence of the
+				word, one per line:</p>
+
+				<p class="indented"><code>grep -Eo "(the|The|THE)" rime.txt | wc -l</code></p>
+
+				<p>This returns:</p>
+
+				<p class="indented"><code>412</code></p>
+
+				<p>And here is a bit more analysis:</p>
+
+				<ul>
+
+					<li>The <em>-o</em> option means to show only that part of the line that matches the pattern,
+					though this is not apparent due to the pipe (|) to <em>wc</em>.</li>
+
+				</ul>
+
+				<div class="pagebreak right">Alternation | <span class="pageNumber">43</span></div>
+
+				<ul>
+
+					<li>The vertical bar, in this context, pipes the output of the <em>grep</em> command to the input
+					of the <em>wc</em> command. <em>wc</em> is a word count command, and <code>-l</code> counts the number of
+					lines of the input.</li>
+
+				</ul>
+
+				<p>Why the big difference between 327 and 412? Because <em>-c</em> gives you a count of matching
+				lines, but there can be more than one match on each line. If you use <em>-o</em> with <em>wc -l</em>, then
+				each occurrence of the various forms of the word will appear on a separate line and be
+				counted, giving the higher number.</p>
+
+				<p>To perform this same match with Perl, write your command this way:</p>
+
+				<p class="indented"><code>perl -ne 'print if /(the|The|THE)/' rime.txt</code></p>
+
+				<p>Or better yet, you can do it with the <code>(?i)</code> option mentioned earlier, but without
+				alternation:</p>
+
+				<p class="indented"><code>perl -ne 'print if /(?i)the/' rime.txt</code></p>
+
+				<p>Or even better yet, append the <em>i</em> modifier after the last pattern delimiter:</p>
+
+				<p class="indented"><code>perl -ne 'print if /the/i' rime.txt</code></p>
+
+				<p>and you will get the same outcome. The simpler the better. For a list of additional
+				modifiers (also called <em>flags</em>), see <strong>Table 4-2</strong>. Also, compare options (similar but with a
+				different syntax) in <strong>Table 4-1</strong>.</p>
+
+				<table>
+					<caption>Table 4-2. Perl modifiers (flags)*</caption>
+
+					<tr>
+						<th>Modifier</th>
+						<th>Description</th>
+					</tr>
+					<tr>
+						<td>a</td>
+						<td>Match \d, \s, \w, and POSIX in ASCII range only</td>
+					</tr>
+					<tr>
+						<td>c</td>
+						<td>Keep current position after match fails</td>
+					</tr>
+					<tr>
+						<td>d</td>
+						<td>Use default, native rules of the platform</td>
+					</tr>
+					<tr>
+						<td>g</td>
+						<td>Global matching</td>
+					</tr>
+					<tr>
+						<td>i</td>
+						<td>Case-insensitive matching</td>
+					</tr>
+					<tr>
+						<td>l</td>
+						<td>Use current locale's rules</td>
+					<tr/>
+					<tr>
+						<td>m</td>
+						<td>Multiline strings</td>
+					</tr>
+					<tr>
+						<td>p</td>
+						<td>Preserve the matched string</td>
+					</tr>
+					<tr>
+						<td>s</td>
+						<td>Treat strings as a single line</td>
+					</tr>
+					<tr>
+						<td>u</td>
+						<td>Use Unicode rules when matching</td>
+					</tr>
+					<tr>
+						<td>x</td>
+						<td>Ignore whitespace and comments</td>
+					</tr>
+				</table>
+
+				<p class="table-note">* See <span class="url">http://perldoc.perl.org/perlre.html#Modifiers</span>.</p>
+
+				<div class="pagebreak left"><span class="pageNumber">44</span> | Chapter 4: Alternation, Groups, and Backreferences</div>
+
+			</section>
+
+			<section class="section" data-number="2" data-name="Subpatterns">
+
+				<h2>Subpatterns</h2>
+
+				<p><span class="first-sentence">Most often, when you refer to <em>subpatterns</em> in regular expressions, you are referring to
+				a group or groups within groups.</span> A subpattern is a pattern within a pattern. Often, a
+				condition in a subpattern is matchable when a preceding pattern is matched, but not
+				always. Subpatterns can be designed in a variety of ways, but we’re concerned primarily
+				with those defined within parentheses here.</p>
+
+				<p>In one sense, the pattern you saw earlier:</p>
+
+				<p class="indented"><code>(the|The|THE)</code></p>
+
+				<p>has three subpatterns: <em>the</em> is the first subpattern, <em>The</em> is the second, and <em>THE</em> the third,
+				but matching the second subpattern, in this instance, is not dependent on matching
+				the first. (The leftmost pattern is matched first.)</p>
+
+				<p>Now here is one where the subpattern(s) depend on the previous pattern:</p>
+
+				<p class="indented"><code>(t|T)h(e|eir)</code></p>
+
+				<p>In plain language, this will match the literal characters <em>t</em> or <em>T</em> followed by an <em>h</em> followed
+				by either an <em>e</em> or the letters <em>eir</em>. Accordingly, this pattern will match any of:</p>
+
+				<ul>
+
+					<li><em>the</em></li>
+
+					<li><em>The</em></li>
+
+					<li><em>their</em></li>
+
+					<li><em>Their</em></li>
+
+				</ul>
+
+				<p>In this case, the second subpattern <code>(e|eir)</code> is dependent on the first <code>(tT)</code>.</p>
+
+				<p>Subpatterns don’t require parentheses. Here is an example of subpatterns done with
+				character classes:</p>
+
+				<p class="indented"><code>\b[tT]h[ceinry]*\b</code></p>
+
+				<p>This pattern can match, in addition to <em>the</em> or <em>The</em>, words such as <em>thee</em>, <em>thy</em> and <em>thence</em>.
+				The two word boundaries (<code>\b</code>) mean the pattern will match whole words, not letters
+				embedded in other words.</p>
+
+				<p>Here is a complete analysis of this pattern:</p>
+
+				<ul>
+
+					<li><code>\b</code> matches a beginning word boundary.</li>
+
+					<li><code>[tT]</code> is a character class that matches either an lowercase <em>t</em> or an uppercase <em>T</em>. We
+					can consider this the first subpattern.</li>
+
+					<li>Then the pattern matches (or attempts to match) a lowercase <em>h</em>.</li>
+
+					<li>The second or last subpattern is also expressed as a character class <code>[ceinry]</code> followed
+					by a quantifier * for zero or more.</li>
+
+					<li>Finally, another word boundary <code>\b</code> ends the pattern.</li>
+
+				</ul>
+
+				<div class="pagebreak right">Subpatterns | <span class="pageNumber">45</span></div>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>One interesting aspect of the state of regular expressions is that terminology,
+					while usually close in meaning, can also range far. In defining
+					<em>subpattern</em> and other terms in this book, I’ve examined a variety of sources
+					and have tried to bring them together under one roof. But I suspect
+					that there are some who would argue that a character class is not a
+					subpattern. My take is they can function as subpatterns, so I lump
+					them in.</p>
+				</div>
+
+			</section>
+
+			<section class="section" data-number="3" data-name="Capturing Groups and Backreferences">
+
+				<h2>Capturing Groups and Backreferences</h2>
+
+				<p><span class="first-sentence">When a pattern groups all or part of its content into a pair of parentheses, it captures
+				that content and stores it temporarily in memory.</span> You can reuse that content if you
+				wish by using a backreference, in the form:</p>
+
+				<p class="indented"><code>\1</code></p>
+
+				<p>or:</p>
+
+				<p class="indented"><code>$1</code></p>
+
+				<p>where <code>\1</code> or <code>$1</code> reference the first captured group, <code>\2</code> or <code>$2</code> reference the second captured
+				group, and so on. <em>sed</em> will only accept the <code>\1</code> form, but Perl accepts both.</p>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>Originally, <em>sed</em> supported backreferences in the range <code>\1</code> through <code>\9</code>, but
+					that limitation does not appear to exist any longer.</p>
+				</div>
+
+				<p>You have already seen this in action, but I’ll demonstrate it here again. We’ll use it to
+				rearrange the wording of a line of the poem, with apologies to Samuel Taylor Coleridge.
+				In the top text box in RegExr, after clicking the Replace tab, enter this pattern:</p>
+
+				<p class="indented"><code>(It is) (an ancyent Marinere)</code></p>
+
+				<p>Scroll the subject text (third text area) down until you can see the highlighted line, and
+				then in the second box, enter:</p>
+
+				<p class="indented"><code>$2 $1</code></p>
+
+				<p>and you’ll see in the lowest box the line rearranged as:</p>
+
+				<p class="indented"><code>an ancyent Marinere It is,</code></p>
+
+				<p>(See <strong>Figure 4-2</strong>.)</p>
+
+				<div class="pagebreak left"><span class="pageNumber">46</span> | Chapter 4: Alternation, Groups, and Backreferences</div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure4-2.png">
+					<figcaption>Figure 4-2. Referencing backreferences with $1 and $2</figcaption>
+				</figure>
+
+				<p>Here is how to accomplish the same result with <em>sed</em>:</p>
+
+				<p class="indented"><code>sed -En 's/(It is) (an ancyent Marinere)/\2 \1/p' rime.txt</code></p>
+
+				<p>and the output will be:</p>
+
+				<p class="indented"><code>an ancyent Marinere It is,</code></p>
+
+				<p>just as in RegExr. Let’s analyze the <em>sed</em> command to help you understand everything
+				that is going on:</p>
+
+				<ul>
+
+					<li>The <em>-E</em> option once again invokes EREs, so you don’t have to quote the parentheses,
+					for example.</li>
+
+					<li>The <em>-n</em> option suppresses the default behavior of printing every line.</li>
+
+					<li>The substitute command searches for a match for the text “It is an ancyent Marinere,”
+					capturing it into two groups.</li>
+
+					<li>The substitute command also replaces the match by rearranging the captured text
+					in the output, with the backreference <code>\2</code> first, then <code>\1</code>.</li>
+
+					<li>The <em>p</em> at the end of the substitute command means you want to print the line.</li>
+
+				</ul>
+
+				<div class="pagebreak right">Capturing Groups and Backreferences | <span class="pageNumber">47</span></div>
+
+				<p>A similar command in Perl will do the same thing:</p>
+
+				<p class="indented"><code>perl -ne 'print if s/(It is) (an ancyent Marinere)/\2 \1/' rime.txt</code></p>
+
+				<p>Notice that this uses the <code>\1</code> style syntax. You can, of course, use the <code>$1</code> syntax, too:</p>
+
+				<p class="indented"><code>perl -ne 'print if s/(It is) (an ancyent Marinere)/$2 $1/' rime.txt</code></p>
+
+				<p>I like how Perl lets you print a selected line without jumping through hoops.</p>
+
+				<p>I’d like to point out something about the output:</p>
+
+				<p class="indented"><code>an ancyent Marinere It is,</code></p>
+
+				<p>The capitalization got mixed up in the transformation. Perl can fix that with <code>\u</code> and
+				<code>\l</code>. Here’s how:</p>
+
+				<p class="indented"><code>perl -ne 'print if s/(It is) (an ancyent Marinere)/\u$2 \l$1/' rime.txt</code></p>
+
+				<p>Now the result looks much better:</p>
+
+				<p class="indented"><code>An ancyent Marinere it is,</code></p>
+
+				<p>And here is why:</p>
+
+				<ul>
+
+					<li>The <code>\l</code> syntax does not match anything, but it changes the character that follows
+					to lowercase.</li>
+
+					<li>The <code>\u</code> syntax capitalizes the character that follows it.</li>
+
+					<li>The <code>\U</code> directive (not shown) turns the text string that follows into all uppercase.</li>
+
+					<li>The <code>\L</code> directive (not shown) turns the text string that follows into all lowercase.</li>
+
+				</ul>
+
+				<p>These directives remain in effect until another is found (like <code>\l</code> or <code>\E</code>, the end of a
+				quoted string). Experiment with these to see how they work.</p>
+
+				<section class="subsection" data-number="4" data-name="Named Groups">
+
+					<h4>Named Groups</h4>
+
+					<p><span class="first-sentence"><em>Named groups</em> are captured groups with names.</span> You can access those groups by name
+					later, rather than by integer. I’ll show you how here in Perl:</p>
+
+					<p class="indented"><code>perl -ne 'print if s/(?<one>It is) (?<two>an ancyent Marinere)/\u$+{two}<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;\l$+{one}/' rime.txt</code></p>
+
+					<p>Let's look at it:</p>
+
+					<ul>
+
+						<li>Adding <code>?&lt;one&gt;</code> and <code>?&lt;two&gt;</code> inside the parentheses names the groups <em>one</em> and <em>two</em>,
+						respectively.</li>
+
+						<li>$+{one} references the group named one, and $+{two}, the group named two.</li>
+
+					</ul>
+
+					<p>You can also reuse named groups within the pattern where the group was named. I’ll
+					show you what I mean. Let’s say you were searching for a string that contained six
+					zeros all together:</p>
+
+					<p class="indented"><code>000000</code></p>
+
+					<div class="pagebreak left"><span class="pageNumber">48</span> | Chapter 4: Alternation, Groups, and Backreferences</div>
+
+					<p>It’s a shallow example, but serves to show you how this works. So name a group of
+					three zeros with this pattern (the <em>z</em> is arbitrary):</p>
+
+					<p class="indented"><code>(?&lt;z&gt;0{3})</code></p>
+
+					<p>You can then use the group again like this:</p>
+
+					<p class="indented"><code>(?&lt;z&gt;0{3})\k&lt;z&gt;</code></p>
+
+					<p>Or this:</p>
+
+					<p class="indented"><code>(?&lt;z&gt;0{3})\k'z'</code></p>
+
+					<p>Or this:</p>
+
+					<p class="indented"><code>(?&lt;z&gt;0{3})\g{z}</code></p>
+
+					<p>Try this in RegExr for quick results. All these examples will work. <strong>Table 4-3</strong> shows
+					many of the possibilities with named group syntax.</p>
+
+					<table>
+						<caption>Table 4-3. Named group syntax</caption>
+
+						<tr>
+							<th>Syntax</th>
+							<th>Description</th>
+						</tr>
+
+						<tr>
+							<td>(?<em>&lt;name&gt;</em>…)</td>
+							<td>A named group</td>
+						</tr>
+
+						<tr>
+							<td>(?<em>name</em>…)</td>
+							<td>Another named group</td>
+						</tr>
+
+						<tr>
+							<td>(?P<em>&lt;name&gt;</em>…)</td>
+							<td>A named group in Python</td>
+						</tr>
+
+						<tr>
+							<td>\k<em>&lt;name&gt;</em></td>
+							<td>Reference by name in Perl</td>
+						</tr>
+
+						<tr>
+							<td>\k'<em>name</em>'</td>
+							<td>Reference by name in Perl</td>
+						</tr>
+
+						<tr>
+							<td>\g{<em>name</em>}</td>
+							<td>Reference by name in Perl</td>
+						</tr>
+
+						<tr>
+							<td>\k{<em>name</em>}</td>
+							<td>Reference by name in .NET</td>
+						</tr>
+
+						<tr>
+							<td>(?P=<em>name</em>)</td>
+							<td>Reference by name in Python</td>
+						</tr>
+					</table>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="5" data-name="Non-Capturing Groups">
+
+				<h2>Non-Capturing Groups</h2>
+
+				<p><span class="first-sentence">There are also groups that are non-capturing groups—that is, they don’t store their
+				content in memory.</span> Sometimes this is an advantage, especially if you never intend to
+				reference the group. Because it doesn’t store its content, it is possible it may yield better
+				performance, though performance issues are hardly perceptible when running the simple
+				examples in this book.</p>
+
+				<p>Remember the first group discussed in this chapter? Here it is again:</p>
+
+				<p class="indented"><code>(the|The|THE)</code></p>
+
+				<p>You don’t need to backreference anything, so you could write a non-capturing group
+				this way:</p>
+
+				<p class="indented"><code>(?:the|The|THE)</code></p>
+
+				<p>Going back to the beginning of this chapter, you could add an option to make the
+				pattern case-insensitive, like this (though the option obviates the need for a group):</p>
+
+				<div class="pagebreak right">Non-Capturing Groups | <span class="pageNumber">49</span></div>
+
+				<p class="indented"><code>(?i)(?:the)</code></p>
+
+				<p>Or you could do it this way:</p>
+
+				<p class="indented"><code>(?:(?i)the)</code></p>
+
+				<p>Or, better yet, the <em>pièce de résistance</em>:</p>
+
+				<p class="indented"><code>(?i:the)</code></p>
+
+				<p>The option letter <em>i</em> can be inserted between the question mark and the colon.</p>
+
+				<section class="subsection" data-number="6" data-name="Atomic Groups">
+
+					<h4>Atomic Groups</h4>
+
+					<p><span class="first-sentence">Another kind of non-capturing group is the <em>atomic group</em>.</span> If you are using a regex engine
+					that does backtracking, this group will turn backtracking off, not for the entire regular
+					expression but just for that part enclosed in the atomic group. The syntax looks like this:</p>
+
+					<p class="indented"><code>(?&gt;the)</code></p>
+
+					<p>When would you want to use atomic groups? One of the things that can really slow
+					regex processing is backtracking. The reason why is, as it tries all the possibilities, it
+					takes time and computing resources. Sometimes it can gobble up a lot of time. When
+					it gets really bad, it’s called <em>catastrophic backtracking</em>.</p>
+
+					<p>You can turn off backtracking altogether by using a non-backtracking engine like re2
+					(<span class="url">http://code.google.com/p/re2/</span>) or by turning it off for parts of your regular expression
+					with atomic grouping.</p>
+
+					<div class="pawprints">
+						<img src="/contents/regularexpressions/images/pawprints.png">
+						<p>My focus in this book is to introduce syntax. I talk very little about
+						performance tuning here. Atomic groups are mainly a performance consideration
+						in my view.</p>
+					</div>
+
+					<p>In <strong>Chapter 5</strong>, you’ll learn about character classes.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="7" data-name="What You Learned in Chapter 4">
+
+				<h2>What You Learned in Chapter 4</h2>
+
+				<ul>
+
+					<li><span class="first-sentence">That alternation allows a choice between two or more patterns</span></li>
+
+					<li>What options modifiers are and how to use them in a pattern</li>
+
+					<li>Different kinds of subpatterns</li>
+
+					<li>How to use capturing groups and backreferences</li>
+
+					<li>How to use named groups and how to reference them</li>
+
+					<li>How to use non-capturing groups</li>
+
+					<li>A little about atomic grouping</li>
+
+				</ul>
+
+				<div class="pagebreak left"><span class="pageNumber">50</span> | Chapter 4: Alternation, Groups, and Backreferences</div>
+
+			</section>
+
+			<section class="section" data-number="8" data-name="Technical Notes">
+
+				<h2>Technical Notes</h2>
+
+				<ul>
+
+					<li><span class="first-sentence">The Adobe AIR runtime lets you use HTML, JavaScript, Flash, and ActionScript
+					to build web applications that run as standalone client applications without having
+					to use a browser.</span> Find out more at <span class="url">http://www.adobe.com/products/air.html</span>.</li>
+
+					<li>Python (<span class="url">http://www.python.org</span>) is an easy-to-understand, high-level programming
+					language. It has a regular expression implementation (see <span class="url">http://docs.python.org/
+					library/re.html</span>).</li>
+
+					<li>.NET (<span class="url">http://www.microsoft.com/net</span>) is a programming framework for the Windows
+					platform. It, too, has a regular expression implementation (see <span class="url">http://msdn
+					.microsoft.com/en-us/library/hs600312.aspx</span>).</li>
+
+				</ul>
+
+			</section>
+
+		</div> <!-- /container -->
+
+	</div> <!-- /regexp -->
+	
+</body>
+</html>

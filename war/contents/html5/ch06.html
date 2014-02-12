@@ -1,0 +1,3812 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+
+	<title>Chapter 6. Talking to The Web: Extroverted Apps</title>
+	
+	
+	<META name="javascript" javascript="/contents/html5/html5.js">
+	
+
+</head>
+
+<body>
+
+	<div id="html51" class="html5 container">
+	
+		<section class="section" data-number="0" data-name="Talking to the Web Extroverted Apps">
+
+			<div class="pagebreak pageNumber">213</div>
+
+			<h1>Chapter 6. Talking to The Web: Extroverted Apps</h1>
+
+			<div class="informalfigure">
+				<div class="mediaobject">
+					<img src="/contents/html5/figs/web/213fig01.png" />
+				</div>
+			</div>
+
+			<p><strong>You’ve been sitting in your page for too long.</strong>
+				It’s time to get out a little, to talk to web
+				services, to gather data and to bring it all back so you can build
+				better experiences mixing all that great data together. That’s a big
+				part of writing modern HTML5 applications, but to do that you’ve got
+				to <em>know how</em> to talk to web services. In this chapter we’re
+				going to do just that, and
+				incorporate some data from a real web service right in your page.
+				And, after you’ve learned how to do that you’ll be able to reach out
+				and touch any web service you want. We’ll even fill you in on the
+				hippest new lingo you should use when talking to web services. So,
+				come on, you’re going to use some more APIs, the communications APIs.</p>
+
+		</section> <!-- Section 0 -->
+
+		<section class="section" data-number="1" data-name="Mighty Gumball Wants a Web App">
+
+<!-- Page 214 -->
+
+			<div class="pagebreak pageNumber">214</div>
+
+			<h2 class="title">Mighty Gumball wants a Web app</h2>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/214fig01.png" />
+			</figure>
+			
+			<p>This just in: Mighty Gumball, Inc., an innovative company that builds and deploys
+				<em>real gumball machines</em>, has contacted us for some help. If you’re not up on them,
+				they’ve recently network-enabled their gumball machines to track sales in near real time.</p>
+			
+			<aside>
+				You might remember them from our book Head First Design
+				Patterns, when we helped them design their server-side code.
+			</aside>
+
+			<p>Now it almost goes without saying that Mighty Gumball are
+				gumball experts, not software developers, and so they’d like our
+				help building an app to help them monitor gumball sales.</p>
+
+			<p>Here’s what they sent over:</p>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/214fig02.png" />
+			</figure>
+
+<!-- Page 215 -->
+
+			<div class="pagebreak pageNumber">215</div>
+
+			<figure>
+				<img src="/contents/html5/figs/web/215fig01.png" />
+			</figure>
+
+			<figure>
+				<img src="/contents/html5/figs/web/215fig02.png" />
+			</figure>
+		
+		</section> <!-- Section 1 -->
+
+		<section class="section" data-number="2" data-name="A little More Background on Mighty Gumball">
+
+<!-- Page 216, 217 -->
+
+			<div class="pagebreak pageNumber">216-217</div>
+			
+			<h2 class="title">A little more background on Mighty Gumball</h2>
+
+			<p>You probably need a little background beyond Mighty Gumball’s short note. Here’s what we’ve
+				got: first, they’ve got gumball machines all over the country
+				sending sales reports to a Mighty Gumball server, which combines all
+				those reports and makes them available through a web service. And,
+				second, they’re asking us to build a web app that displays the sales
+				in a browser for the Gumball Sales team. And, most likely they want
+				this report to be updated as the sales change over time. Here’s the
+				view from 10,000 feet:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/216fig01.png" />
+			</figure>
+
+<!-- Page 218 -->
+
+			<div class="pagebreak pageNumber">218</div>
+
+		</section> <!-- Section 2 -->
+
+		<section class="section" data-number="3" data-name="Just a Quick Start">
+
+			<h2 class="title">Just a quick start...</h2>
+
+			<p><a id="iddle2828" class="indexterm" />While we’re waiting on those specs from Mighty
+				Gumball, let’s get some HTML going.</p>
+
+			<p>You’re probably getting the idea we don’t need a lot of HTML
+				markup to get a web app off the ground, and you’re right. All we
+				need is a place to put our sales reports as they come in, and we’ll
+				let JavaScript do the rest. Go ahead and get this typed in, and then
+				we’ll take a look at how to retrieve things via the Web.</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/218fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>&lt;title&gt;Mighty Gumball&lt;/title&gt;</pre>
+<pre>&lt;meta charset="utf-8"&gt;</pre>
+<pre>&lt;script src="mightygumball.js"&gt;&lt;/script&gt;</pre>
+<pre>&lt;link rel="stylesheet" href="mightygumball.css"&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>&lt;h1&gt;Mighty Gumball Sales&lt;/h1&gt;</pre>
+<pre>&lt;div id="sales"&gt;</pre>
+							<br />
+<pre>&lt;/div&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<section class="subsection" data-number="4" data-name="Turn the Engine Over">
+
+				<div class="titlepage left">
+					<h3 class="title">Turn the engine over...</h3>
+				</div>
+
+				<figure>
+					<img src="/contents/html5/figs/web/common-10.png" />
+				</figure>
+
+				<p>Go ahead and type in the code above, load it into your favorite
+					browser and give it a try before proceeding. And remember, you can
+					download the CSS (and the other code for this chapter) from
+					<code class="literal">http://wickedlysmart.com/hfhtml5.</code></p>
+
+			</section> <!-- Section 4 -->
+
+		</section> <!-- Section 3 -->
+
+		<section class="section" data-number="5" data-name="So How Do We Make Requests to Web Services?">
+
+<!-- Page 219 -->
+
+			<div class="pagebreak pageNumber">219</div>
+
+			<h2 class="title">So how do we make requests to web services?</h2>
+			
+			<p><a id="iddle2024" class="indexterm" />Let’s step back for a sec... you already know
+				how a browser requests a page from a web server—it makes an HTTP
+				request to the server, which returns the page along with other
+				metadata that (typically) only the browser sees. What you might not
+				know is that the browser can also <em>retrieve data</em>
+				with HTTP from a web server in the same way. Here’s how that works:</p>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/219fig01.png" />
+			</figure>
+
+			<p>It helps to look a little more closely at the request we make
+				to the server and the response that comes back. The request takes
+				care of telling the server what data we’re after (which we sometimes
+				refer to as the “resource” we’re after), while the response contains
+				metadata and, if all goes well, the data we requested:</p>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/219fig02.png" />
+			</figure>
+
+			<figure>
+				<img src="/contents/html5/figs/web/219fig03.png" />
+			</figure>
+
+			<aside>
+				Note: This pattern of retrieving data using XMLHttpRequest is
+				commonly referred to as “Ajax” or XHR.
+			</aside>
+
+		</section> <!-- Section 5 -->
+
+		<section class="section" data-number="6" data-name="How to Make a Request From Javascript">
+
+<!-- Page 220 -->
+
+			<div class="pagebreak pageNumber">220</div>
+
+			<h2 class="title">How to make a request from JavaScript</h2>
+			
+			<p><a id="iddle2022" class="indexterm" /><a id="iddle3134" class="indexterm" />
+				<a id="iddle3240" class="indexterm" />Okay, so we know we can retrieve data with
+				HTTP, but how? We’re going to write a little code to create an
+				actual HTTP request and then ask the browser to make the request on
+				our behalf. After it’s made the request, the browser will then hand
+				us back the data it receives. Let’s step through making an HTTP
+				request:</p>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p>To kick things off, we’ll start with a <strong>URL</strong>.
+							After all, we need to tell the browser <strong>where</strong>
+							to get the data we’re after:</p>
+
+						<figure>
+							<img src="/contents/html5/figs/web/220fig01.png" />
+						</figure>
+					</li>
+
+					<li class="listitem">
+						<figure class="right">
+							<img src="/contents/html5/figs/web/220fig04.png" />
+						</figure>
+
+						<p>Next we’ll create a <strong>request object</strong>, like this:</p>
+
+						<figure>
+							<img src="/contents/html5/figs/web/220fig02.png" />
+						</figure>
+						
+					</li>
+
+					<div class="clear" />
+
+					<li class="listitem">
+						<figure class="right">
+							<img src="/contents/html5/figs/web/220fig05.png" />
+						</figure>
+
+						<p>Next we need to tell the request object which URL we want it to
+							retrieve along with the kind of request it should use (we’ll use
+							the standard HTTP GET request like we saw on the previous page).
+							To do this, we’ll use the request object’s
+							<code class="literal">open</code>
+							method. Now “open” sounds like a method that not only sets these
+							values in the request object, but also opens the connection and
+							retrieves the data. It doesn’t. Despite the name,
+							<code class="literal">open</code>
+							just sets up the request with a URL and tells the request object
+							the kind of request to use so that XMLHttpRequest can verify the
+							connection. Here’s how we call the
+							<code class="literal">open</code> method:</p>
+
+						<figure>
+							<img src="/contents/html5/figs/web/220fig03.png" />
+						</figure>
+						
+					</li>
+				</ol>
+			</div>
+
+<!-- Page 221 -->
+
+			<div class="pagebreak pageNumber">221</div>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1" start="4">
+					<li class="listitem">
+						<figure class="right">
+							<img src="/contents/html5/figs/web/221fig04.png" />
+						</figure>
+
+						<p><a id="iddle1632" class="indexterm" /><a id="iddle2760" class="indexterm" />
+							Okay here’s the important part, and the trick of how XMLHttpRequest works: when we finally
+							ask our XMLHttpRequest object to retrieve data, it’s going to go
+							off on its own and get the data. It might take 90 milliseconds
+							(quite a while in compute time), or, on a slow day, it might take
+							ten seconds (an eternity in compute time). So rather than just
+							waiting around for the data, we’re going to provide a handler
+							that is called when the data arrives. Here’s how you set up the
+							handler (this should look somewhat familiar):</p>
+						
+						<figure>
+							<img src="/contents/html5/figs/web/221fig01.png" />
+						</figure>
+						
+					</li>
+
+					<li class="listitem">
+						<p>Just one last step: we still need to tell the request to go out
+							and get the data, and to do that we use the <code class="literal">send</code>
+							method:</p>
+
+						<figure>
+							<img src="/contents/html5/figs/web/221fig02.png" />
+						</figure>
+
+						<p>So, to review: we create an XMLHttpRequest object, load it
+							with a URL and HTTP request type, along with a handler. Then we
+							send the request and wait for the data to arrive. When it does,
+							the handler is called.</p>
+
+						<figure>
+							<img src="/contents/html5/figs/web/221fig03.png" />
+						</figure>
+					</li>
+				</ol>
+			</div>
+
+<!-- Page 222 -->
+
+			<div class="pagebreak pageNumber">222</div>
+
+			<figure>
+				<img src="/contents/html5/figs/web/222fig00.png">
+			</figure>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/222fig01.png" />
+			</figure>
+
+			<p><a id="iddle2027" class="indexterm" /><a id="iddle3242" class="indexterm" />
+				We just hadn’t quite got there
+				yet. The data from the HTTP GET retrieval can be found in the
+				<strong><code class="literal">responseText</code></strong>
+				property of the <strong><code class="literal">request</code></strong>
+				object. So we can write code like this:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/222fig02.png" />
+			</figure>
+
+			<p>But hang on, we’re just about to the point of writing some real code
+				that uses <strong><code class="literal">request.responseText</code></strong>.</p>
+
+<!-- Page 223 -->
+
+			<div class="pagebreak pageNumber">223</div>
+
+			<div class="sidebar" id="code_magnets-id00058">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/xxviifig00.png">
+				</figure>
+
+				<h3>Code Magnets</h3>
+
+				<p>A new web service at <em><a class="ulink"
+					href="http://wickedlysmart.com/ifeelluckytoday"
+					target="_top">http://wickedlysmart.com/ifeelluckytoday</a></em>
+					returns either “unlucky” or “lucky” each time you hit it. The logic
+					is based on a secret and ancient algorithm we can’t reveal, but
+					it’s a great service to let users know if they are lucky or not on
+					a given day.</p>
+
+				<p>We need your help to create a reference implementation to
+					show others how they might include it in their site. You’ll find
+					the skeleton code below; help us fill in the details using the
+					magnets. Be careful, you may not need all the magnets. We’ve
+					already done one for you.</p>
+
+				<figure class="left">
+					<img src="/contents/html5/figs/web/223fig01.png" />
+				</figure>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/223fig02.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>window.onload = function () {</pre>
+<pre>	var url = "http://wickedlysmart.com/ifeelluckytoday";</pre>
+<pre>	var request = _____</pre>
+<pre>	_____ {</pre>
+<pre>		if (_____) {</pre>
+<pre>			displayLuck (_____);</pre>
+<pre>		}</pre>
+<pre>	};</pre>
+<pre>	_____</pre>
+<pre>	_____</pre>
+<pre>}</pre>
+<pre>function displayLuck (luck) {</pre>
+<pre>	var p = document._____("luck");</pre>
+<pre>	p.innterHTML = "Today you are" + luck;</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 224 -->
+
+			<div class="pagebreak pageNumber">224</div>
+
+			<div class="sidebar" id="code_magnets_solution-id00059">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/xxviifig00.png">
+				</figure>
+				
+				<h3>Code Magnets Solution</h3>
+				
+				<p>A new web service at <em><a class="ulink"
+					href="http://wickedlysmart.com/ifeelluckytoday"
+					target="_top">http://wickedlysmart.com/ifeelluckytoday</a></em>
+					returns either “unlucky” or “lucky” each time you hit it. The logic
+					is based on a secret and ancient algorithm we can’t reveal, but
+					it’s a great service to let users know if they are lucky or not on
+					a given day.</p>
+
+				<p>We need your help to create a reference implementation to
+					show others how they might include it in their site. You’ll find
+					the code skeleton below; help us fill in the details using the
+					magnets. Be careful, you may not need all the magnets. Here’s our
+					solution.</p>
+
+				<figure class="left">
+					<img src="/contents/html5/figs/web/224fig01.png" />
+				</figure>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/224fig02.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>window.onload = function () {</pre>
+<pre>	var url = "http://wickedlysmart.com/ifeelluckytoday";</pre>
+<pre>	var request = new XMLHttpRequest();</pre>
+<pre>	request.onload = function() {</pre>
+<pre>		if (request.status == 200) {</pre>
+<pre>			displayLuck (request.responseText);</pre>
+<pre>		}</pre>
+<pre>	};</pre>
+<pre>	request.open("GET", url);</pre>
+<pre>	request.send(null);</pre>
+<pre>}</pre>
+<pre>function displayLuck (luck) {</pre>
+<pre>	var p = document.getElementById("luck");</pre>
+<pre>	p.innterHTML = "Today you are" + luck;</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 225 -->
+
+			<div class="pagebreak pageNumber">225</div>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/xmlhttprequestexposed.png">
+			</figure>
+
+			<figure class="center">
+				<h3>This week’s interview: Confessions of an HTTP Request Object</h3>
+			</figure>	
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				Welcome XMLHttpRequest, we’re glad you could fit us into
+				your busy schedule. Tell us about how you fit into building web apps.</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong> </span>
+				I started this whole trend for bringing outside data into your web
+				page. Heard of Google Maps? GMail? That was all me. In fact, it
+				wouldn’t have been possible without me.</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>How so?</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				Until I arrived, people were building a web page on the server side and
+				baking everything into the page as they created it. I allow you to
+				go out and get data <em>after</em> the page is built. Think about Google Maps:
+				it updates what’s on the page every time you adjust your location on the map, without
+				having to reload the whole page.</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				So, you’ve been a successful guy. What’s your secret?</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				I’m humble, oh, and simple. Give me a URL and I’ll go get the data for
+				you. Not much more to me than that.</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span> That’s all there is to it?</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				Well, you do have to tell me what to do with the data after I’ve
+				retrieved it. You can just give me a handler function—a callback of
+				sorts—and when I get the data, I’ll throw it at your handler to do
+				whatever it wants with the data.</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				What kinds of data are we talking about here?</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				The Web is full of data these days; weather, maps, social data about
+				people and friends, geolocation data about what’s nearby... really,
+				just about any data set you can think of is making its way onto the
+				Web in a form that works with me.</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				And this is all XML data, right? I mean your first name is XML.</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				Really? You’re a professional and that’s where you wanna take this
+				interview? You did your homework and all you can say is “you’re all
+				about XML, right?” Let me set you straight. Sure, there was a time
+				I mostly retrieved XML, but the world is moving on. Nowadays, I
+				retrieve all kinds of data. Sure, some XML, but more and more I’m
+				getting requests for JSON.</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				Really? What’s JSON and why is it getting so popular?</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				JSON is JavaScript Object Notation and it has a number of
+				advantages—size, readability, the fact that it is native to the
+				most popular programming language on the Web: my friend JavaScript,
+				of course.</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				But isn’t it the case that the format really shouldn’t
+				matter to you? Users should be able to request XML or JSON or
+				teletype for all you care. No?</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>&lt;silence&gt;</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				Well, it seems I’ve hit on a sore spot. That’s okay,
+				we’ve got to go to break... So, XMLHttpRequest, I think we’ve got
+				more time with you later in this chapter?</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				Yes, unfortunately I see that in my schedule...</p>
+
+		</section> <!-- Section 6 -->
+
+		<section class="section" data-number="7" data-name="Move Over XML, meet JSON">
+
+<!-- Page 226 -->
+
+			<div class="pagebreak pageNumber">226</div>
+
+			<h2 class="title">Move over XML, meet JSON</h2>
+			<p><a id="iddle2203" class="indexterm" /><a id="iddle2226" class="indexterm" />
+				<a id="iddle2507" class="indexterm" /><a id="iddle2860" class="indexterm" />
+				<a id="iddle2865" class="indexterm" />
+				You might (or might not) remember that XML was going to save us all—a data
+				format that was human readable and machine parseable, a data format
+				that was going to support all the data needs of the world. And when
+				XMLHttpRequest was first developed, XML was indeed the way we all
+				exchanged data (thus, the name XMLHttpRequest).</p>
+
+			<p>Well, along the way XML apparently slipped on a banana peel thrown
+				by JSON. Who’s JSON? Just the latest and greatest data format, born
+				out of JavaScript, and being adopted across the Web in the browser
+				and on the server side. And might we add, it’s quickly become the
+				<em>format of choice</em> for HTML5 apps?</p>
+
+			<p>So, what’s so great about JSON? Well, it’s pretty darn
+				human-readable, and it can be parsed quickly and easily straight
+				into JavaScript values and objects. Unlike XML, it’s so cute and
+				cuddly... anyway, can you tell we like it just a little? You’ll be
+				seeing a lot of JSON in this book. We’re going to use it to exchange
+				JavaScript data over the network, to store data in a local store
+				with the Web Storage API, and as part of another way to access web
+				data (more on that shortly).</p>
+
+			<p>But wait a sec, network data exchange formats... storage formats...
+				that’s complex stuff, right? No worries, <span class="strikethrough">over
+					the next ten pages we’re going to make you an expert</span> you already
+				know practically everything about JSON you need to. To use JSON you
+				just need to understand JavaScript objects (which you do, big time)
+				and two simple method calls. Here’s how it all works:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/226fig01.png" />
+			</figure>
+
+		</section> <!-- Section 7 -->
+
+		<section class="section" data-number="8" data-name="Quick Example Using JSON">
+
+<!-- Page 227 -->
+
+			<div class="pagebreak pageNumber">227</div>
+			
+			<h2 class="title">A quick example using JSON</h2>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p><a id="iddle2206" class="indexterm" /><a id="iddle2508" class="indexterm" />
+							Let’s run through a quick example that converts an object into its JSON string format.
+							We’ll start with an object you already understand, the Movie object from
+							Chapter 4. Not everything can be converted into a JSON string—for
+							instance, methods—but all the basic types, like numbers, strings, and
+							arrays, are supported. Let’s create an object and then stringify it:</p>
+
+						<div class="note" id="ch06note03">
+							<p>There are actually a few other restrictions, but we won’t
+								worry about those now.</p>
+						</div>
+
+						<figure>
+							<img src="/contents/html5/figs/web/227fig01.png" />
+						</figure>
+					</li>
+					
+					<li class="listitem">
+						<figure class="right">
+							<img src="/contents/html5/figs/web/227fig02.png" />
+						</figure>
+
+						<p>Once you’ve got an object, you can convert it into the JSON
+							string format with the <code class="literal">JSON.stringify</code>
+							method. Let’s see how this works... (feel free to try this by opening your
+							Chapter 4 movie code back up and adding the following code to
+							the bottom of your script):</p>
+
+<pre>var jsonString = <u>JSON.stringify</u> (plan9movie) ;</pre>
+
+<pre>alert(jsonString);</pre>
+						
+					</li>
+
+					<div class="clear" />
+
+					<li class="listitem">
+						<figure class="right">
+							<img src="/contents/html5/figs/web/227fig03.png" />
+						</figure>
+
+						<p>Now we’ve got a JSON string that represents our movie object. At
+							this point we could take this string and do any number of things
+							with it, like send it over HTTP to a server. We can also receive
+							a JSON string from another server. Let’s say a server gave us
+							this string; how would we turn it back into an object we can do
+							something with? Just use <code class="literal">JSON.stringify</code>
+							’s sister method: <code class="literal">JSON.parse</code>. Like this:</p>
+
+<pre>var jsonMovieObject = <u>JSON.parse</u> (jsonString);</pre>
+
+<pre>alert("JSON Movie is " + jsonMovieObject.title);</pre>
+						
+					</li>
+				</ol>
+			</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/227fig04.png" />
+			</figure>
+
+			<div class="sidebar-left">
+
+				<img src="/contents/html5/figs/web/brainpower.png">
+
+				<p>Try this URL. What do you see?</p>
+
+				<pre class="programlisting"><strong>http://search.twitter.com/search.json?q=hfhtml5</strong></pre>
+
+				<aside>
+					Note: Firefox will ask you to open or save a file. You
+					can open with TextEdit, Notepad, or any basic text editor.
+				</aside>
+
+			</div>
+
+			<div class="clear" />
+
+<!-- Page 228 -->
+
+			<div class="pagebreak pageNumber">228</div>
+
+			<figure>
+				<img src="/contents/html5/figs/web/228fig01.png" />
+			</figure>
+
+		</section> <!-- Section 8 -->
+
+		<section class="section" data-number="9" data-name="Let's get to work!">
+
+<!-- Page 229 -->
+
+			<div class="pagebreak pageNumber">229</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/229fig02.png" />
+			</figure>
+
+			<h2 class="title">Let’s get to work!</h2>
+
+			<p><a id="iddle1608" class="indexterm" /><a id="iddle2432" class="indexterm" />
+				<a id="iddle2541" class="indexterm" /><a id="iddle3251" class="indexterm" />
+				We’ve got our specs from Mighty
+				Gumball and you’ve done your training on XMLHttpRequest and JSON.
+				You should be all ready to get some code written and to get a first
+				cut of the Gumball App running.</p>
+
+			<p>Now, remember we’ve already laid out some HTML to work from, which
+				links to a file called <code class="literal">mightygumball.js</code>.
+				That’s what we’re going to start writing our code now. Remember
+				too that we’ve already left a spot in the HTML where we’re going to
+				put the gumball sales data, right into the <code class="literal">&lt;div&gt;</code>
+				we labeled with an id of “sales.” So let’s put everything together and write some code.</p>
+
+			<section class="subsection" data-number="10" data-name="Writing an onload handler function">
+				
+				<div class="titlepage">
+					<h3 class="title">Writing an onload handler function</h3>
+				</div>
+		
+				<p>We’re sure this is old hat for you now, but we’re going to write an
+					onload handler that gets invoked when the HTML is fully loaded;
+					we’re also going to go ahead and fire off an HTTP request to get
+					the sales data. When the data comes back we’ll ask the
+					<code class="literal">XMLHttpRequest</code> to call the function
+					<code class="literal">updateSales</code> (which we’ll write in just a sec):</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/229fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>window.onload = function () {</pre>
+<pre>	var url = "http://wickedlysmart.com/ifeelluckytoday";</pre>
+<pre>	var request = new XMLHttpRequest();</pre>
+<pre>	request.onload = function() {</pre>
+<pre>		if (request.status == 200) {</pre>
+<pre>			updateSales(request.responseText);</pre>
+<pre>		}</pre>
+<pre>	};</pre>
+<pre>	request.send(null);</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+				<div class="sidebar-left">
+					<figure class="left">
+						<img src="/contents/html5/figs/web/watchit.png">
+					</figure>
+
+					<p><strong>If you’re using Opera or IE 8 or older, we recommend you test with another browser.
+						We’ll talk about how to support Opera and older IE browsers later.</strong></p>
+				</div>
+
+				<div class="clear" />
+
+			</section> <!-- Section 10 -->
+
+		</section> <!-- Section 9 -->
+
+		<section class="section" data-number="11" data-name="Displaying the gumball sales data">
+
+<!-- Page 230 -->
+
+			<div class="pagebreak pageNumber">230</div>
+		
+			<h2 class="title">Displaying the gumball sales data</h2>
+
+			<p><a id="iddle2028" class="indexterm" /><a id="iddle2428" class="indexterm" />
+				<a id="iddle2761" class="indexterm" /><a id="iddle2964" class="indexterm" />
+				<a id="iddle3254" class="indexterm" />Now we need to write the handler,
+				<code class="literal">updateSales</code>. Let’s make this easy and just go
+				with the simplest implementation possible, we can always make it better later:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/230fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function updateSales(responseText) {</pre>
+<pre>	var salesDiv = document.getElementById("sales");</pre>
+<pre>	salesDiv.innerHTML = responseText;</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 11 -->
+
+		<section class="section" data-number="12" data-name="Watch Out, Detour Ahead!">
+
+			<h2 class="title left">Watch Out, Detour Ahead!</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-5.png" />
+			</figure>
+
+			<div class="clear" />
+
+			<p>It’s time for another test drive, but we have a little detour
+				to take care of first. The Mighty Gumball engineers asked us to test
+				locally before hitting their production server, which is a good
+				idea. But to do that we need the data to live on a server so that
+				XMLHttpRequest can use the HTTP protocol to retrieve it.</p>
+
+			<p>In terms of servers you’ve got a few choices:</p>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/230fig03.png" />
+			</figure>
+			
+			<div class="itemizedlist">
+				<ul class="itemizedlist">
+					<li class="listitem"><p>If your company has servers that are available for testing, use those.</p></li>
+					
+					<li class="listitem"><p>Or, you can use a third-party hosting service like GoDaddy,
+						Dreamhost or one of many other hosting companies.</p></li>
+				
+					<li class="listitem"><p>Finally, you can set up a server right on your own machine. In that
+						case your URLs are going to look something like:</p>
+
+						<figure>
+							<img src="/contents/html5/figs/web/230fig02.png" />
+						</figure>
+					</li>
+				</ul>
+			</div>
+
+			<p>Check out the next page for tips and pointers. Keep in mind,
+				hosting environments differ a fair bit, so we can’t write a general
+				guide to these. So, may the force be with you, and if you don’t have
+				easy access to a server already, setting up a server on your local
+				machine may be your best choice!</p>
+
+		</section> <!-- Section 12 -->
+
+		<section class="section" data-number="13" data-name="How to set up your own Web Server">
+
+<!-- Page 231 -->
+
+			<div class="pagebreak pageNumber">231</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/detour.png" />
+			</figure>
+			
+			<h2 class="title">How to set up your own Web Server</h2>
+
+			<p><a id="iddle2259" class="indexterm" /><a id="iddle2417" class="indexterm" />
+				<a id="iddle2599" class="indexterm" /><a id="iddle3085" class="indexterm" />
+				<a id="iddle3123" class="indexterm" /><a id="iddle3220" class="indexterm" />
+
+			<p>How you set up your local hosting really depends on what kind
+				of operating system you’re using. Check out the tips below for OS X
+				(otherwise known as the Mac), the PC and Linux. You’ll find other
+				options on the next page.</p>
+
+			<div class="sidebar-left-pair">
+				<h3>I’m a Mac</h3>
+
+				<figure>
+					<img src="/contents/html5/figs/web/231fig01.png" />
+				</figure>
+
+				<p>Setting up a web server on the Mac is easy. Go to
+					<span class="inlinemediaobject" id="inline_id00016">
+						<img src="/contents/html5/figs/web/happle.png" /></span>
+						&gt; System Preferences, and then choose Sharing. In the panel
+						on the left, make sure Web Sharing is checked:</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/231fig02.png" />
+				</figure>
+
+				<p> Once you’ve turned Web Sharing on (or if you already have it on),
+					you’ll see some information about how to access your local server.
+					You should be able to use localhost instead of the IP address
+					(which tends to change if you’re using a DHCP router, so localhost
+					will work better for you). By default, your files are served from
+					<code class="literal">http://localhost/~YOUR_USERNAME/</code>
+					, which serves files from your
+					<code class="literal">YOUR_USERNAME/Sites/</code>
+					folder, so you’ll probably want to set up a subfolder there for
+					Mighty Gumball.</p>
+			</div>
+
+			<div class="sidebar-right-pair">
+				<h3>I’m a PC</h3>
+
+				<figure>
+					<img src="/contents/html5/figs/web/231fig03.png" />
+				</figure>
+
+				<p>Installing your own web server on Windows is easier than it used to
+					be thanks to the Microsoft Web Platform Installer (also known as
+					Web PI). The current version is available for Windows 7, Windows
+					Vista SP2, Windows XP SP3+, Windows Server 2003 SP2+, Windows
+					Server 2008, and Windows Server 2008 R2, and you can download it
+					from here:
+					<code class="literal">http://www.microsoft.com/web/downloads/platform.aspx</code></p>
+
+				<p>Another option is to install the open source WampServer,
+					which comes with Apache, PHP and MySQL for web application
+					development. It’s easy to install and manage.</p>
+
+				<p>You can download WampServer from: <code class="literal">http://www.wampserver.com/en/</code>.</p>
+
+				<p>There are a few other open source solutions out there if you look, so you’ve got lots of options.</p>
+			</div>
+
+			<div class="clear" />
+
+			<div class="sidebar" id="iapostrophem_a_total_geek_linux_distribu">
+				<h3>I’m a <del>total geek</del> Linux Distribution</h3>
+
+				<p>Let’s face it, you already know what you’re doing. Right?
+					Apache is usually installed by default, so check your distribution
+					documentation.</p>
+			</div>
+
+		</section> <!-- Section 13 -->
+
+		<section class="section" data-number="14" data-name="How to set up your own Web Server, continued">
+
+<!-- Page 232 -->
+
+			<div class="pagebreak pageNumber">232</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/detour.png" />
+			</figure>
+			
+			<h2 class="title">How to set up your own Web Server, continued</h2>
+
+			<p>Ah, you want to <em>really</em> host
+				your pages? Excellent, there’s no substitute for having your pages
+				hosted on the real Web. Check out the tips below and have fun!</p>
+
+			<div class="sidebar" id="threerd_party_hostinghellip">
+				<h3>3rd Party Hosting...</h3>
+
+				<p>If you don’t want to set up your own server, you can always
+					use a remote server, but you’ll need to host your HTML, JavaScript
+					and CSS, as well as the JSON file, all on the same server (we’ll
+					talk later about why this is crucial) in order to follow along with
+					this example.</p>
+
+				<p>Most hosting services will give you FTP access to a folder where
+					you can put all these files. If you have access to a server like
+					this, upload all the files and substitute your server name wherever
+					you see <code class="literal">localhost</code> in the following pages.</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/232fig01.png" />
+				</figure>
+
+				<p>We’ve put together a list of hosting providers in case you need a
+					recommendation, but they’re easy to find; just search for “web
+					hosting” and you’ll find lots to choose from. Our list is at
+					<code class="literal">http://wickedlysmart.com/hfhtml5/hosting/hosting.html</code>.
+					And let us know if you get an HTML5 web site up online; we’d love to see it!</p>
+			</div>
+
+		</section>  <!-- Section 14 -->
+
+		<section class="section" data-number="15" data-name="Back to the code">
+
+<!-- Page 233 -->
+
+			<div class="pagebreak pageNumber">233</div>
+	
+			<h2 class="title">Back to the code</h2>
+
+			<p><a id="iddle3131" class="indexterm" />At this
+				point we’re expecting you’ve got your own server up and running—that
+				could be a server running on your local machine (what we’re doing)
+				or a server somewhere else you have access to. In either case you’re
+				going to place your HTML and JavaScript files on the server and then
+				point your browser to the HTML file. You’re also going to need the
+				Mighty Gumball sales data test file there too, so we’re going to
+				give you a simple data file to place on your server. To your
+				application it will look just like it’s being generated from Mighty
+				Gumball’s near-real-time server, and it gives you a way to test your
+				code without hitting the Mighty Gumball server. Here’s what the file
+				looks like; it’s named <code class="literal">sales.json</code>
+				and it’s included with the code for the book (or you can type it in
+				if you enjoy that kind of thing):</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/233fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>[{"name":"ARTESIA","time":1308774240669,"sales":8},</pre>
+<pre>{"name":"LOS ANGELES","time":1308774240669,"sales":2},</pre>
+<pre>{"name":"PASADENA","time":1308774240669,"sales":8},</pre>
+<pre>{"name":"STOCKTON","time":1308774240669,"sales":2},</pre>
+<pre>{"name":"FRESNO","time":1308774240669,"sales":2},</pre>
+<pre>{"name":"SPRING VALLEY","time":1308774240669,"sales":9},</pre>
+<pre>{"name":"ELVERTA","time":1308774240669,"sales":5},</pre>
+<pre>{"name":"SACRAMENTO","time":1308774240669,"sales":7},</pre>
+<pre>{"name":"SAN MATEO","time":1308774240669,"sales":1}]</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p>Go ahead and put this file on your server and then make sure you
+				update your JavaScript to the URL for this file. Ours is
+				<code class="literal">http://localhost/gumball/sales.json:</code></p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/233fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>window.onload = function () {</pre>
+<pre>	var url = "http://localhost/gumball/sales.json";</pre>
+<pre>	var request = new XMLHttpRequest();</pre>
+<pre>	request.open("GET", url);{</pre>
+<pre>	request.onload = function() {</pre>
+<pre>		if (request.status == 200) {</pre>
+<pre>			updateSales(request.responseText);</pre>
+<pre>		}</pre>
+<pre>	};</pre>
+<pre>	request.send(null);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 15 -->
+
+		<section class="section" data-number="16" data-name="Let's test this already!">
+
+<!-- Page 234 -->
+
+			<div class="pagebreak pageNumber">234</div>
+
+			<h2 class="title left">Let’s test this already!</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+
+			<div class="clear" />
+
+			<p>It’s been a long road but we’re finally ready to test this code!</p>
+
+			<p>Just make sure you’ve got the HTML, JavaScript, JSON—and don’t
+				forget your CSS—files on the server. Go ahead and enter the URL of
+				your HTML file into your browser (ours is
+				<code class="literal">http://localhost/gumball/mightygumball.html</code>), press return...</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/234fig01.png" />
+			</figure>
+
+			<figure>
+				<img src="/contents/html5/figs/web/234fig02.png" />
+			</figure>
+
+		</section> <!-- Section 16 -->
+
+		<section class="section" data-number="17" data-name="Impressing the Client...">
+
+<!-- Page 235 -->
+
+			<div class="pagebreak pageNumber">235</div>
+
+			<h2 class="title">Impressing the client...</h2>
+
+			<p>We’ve done a lot of heavy lifting to get this app working, and that’s great, but Mighty
+				Gumball is going to be a lot more impressed if it looks good too. Here’s what we’re going for...</p>
+
+			<div class="left">
+				<p><strong>What we have</strong></p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/235fig01.png" />
+				</figure>
+			</div>
+
+			<div>
+				<p><strong>What we want</strong></p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/235fig02.png" />
+				</figure>
+			</div>
+
+			<div class="clear" />
+
+			<p><strong>Here’s what we need to do to improve our display:</strong></p>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem"><p>First we need to take the data we
+							got back from our XMLHttpRequest object (which is just a JSON
+							string) and convert it into a true JavaScript object.</p></li>
+					<li class="listitem"><p>Then we can walk through the
+							resulting array and add new elements to the DOM, one per sales
+							item in the array.</p></li>
+				</ol>
+			</div>
+
+		</section> <!-- Section 17 -->
+
+		<section class="section" data-number="18" data-name="Reworking our code to make use of JSON">
+
+<!-- Page 236 -->
+
+			<div class="pagebreak pageNumber">236</div>
+
+			<h2 class="title">Reworking our code to make use of JSON</h2>
+
+			<p><a id="iddle2427" class="indexterm" /><span class="strong">
+				<strong>Let’s follow those two steps and get this code in shape:</strong></p>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p>First we need to take the data we got from the
+							<code class="literal">XMLttpRequest</code>
+							object (which is just a JSON string) and convert it into a true
+							JavaScript object.</p>
+
+						<p>To do that, let’s update the
+							<code class="literal">updateSales</code>
+							function by first deleting the line that sets the &lt;div&gt;
+							content to the <code class="literal">responseText</code>
+							string, and convert the responseText from a string to its
+							equivalent JavaScript using<code class="literal">JSON.parse</code>.</p>
+
+						<figure>
+							<img src="/contents/html5/figs/web/236fig01.png" />
+						</figure>
+					</li>
+
+					<li class="listitem"><p>Now let’s walk through the
+							resulting array and add new elements to the DOM, one per sales
+							item in the array. In this case we are going to create a new
+							&lt;div&gt; for each item:</p>
+					
+						<figure>
+							<img src="/contents/html5/figs/web/236fig02.png" />
+						</figure>
+					</li>
+				</ol>
+			</div>
+
+		</section> <!-- Section 18 -->
+
+		<section class="section" data-number="19" data-name="Home stretch...">
+
+<!-- Page 237 -->
+
+			<div class="pagebreak pageNumber">237</div>
+
+			<h2 class="title left">The Home Stretch...</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/237fig01.png" />
+			</figure>
+			
+			<br />
+
+			<p><a id="iddle2762" class="indexterm" />You already know what this one is going to look
+				like, but go ahead and make these changes. Take one more careful
+				look at the code on the previous page and make sure you’ve got it
+				all down. Then go ahead, reload that page.</p>
+
+			<div class="clear" />
+			
+		</section> <!-- Section 19 -->
+
+		<section class="section" data-number="20" data-name="Moving to the live server">
+
+			<figure>
+				<img src="/contents/html5/figs/web/237fig00.png">
+			</figure>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/237fig02.png" />
+			</figure>
+			
+			<h2 class="title">Moving to the Live Server</h2>
+			
+			<p>Mighty Gumball asked us to test locally, and we have. Now
+				we’re ready to move on to testing against the real server. This
+				time, rather than retrieving a static JSON data file, we’ll be
+				retrieving JSON that is generated dynamically from the Mighty
+				Gumball servers. We do need to update the URL that XMLHttpRequest is
+				using and change it to point to Mighty Gumball. Let’s do that:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/237fig03.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>window.onload = function () {</pre>
+<pre>	var url = "http://gumball.wickedlysmart.com";</pre>
+<pre>	var request = new XMLHttpRequest();</pre>
+<pre>	request.open("GET", url);{</pre>
+<pre>	request.onload = function() {</pre>
+<pre>		if (request.status == 200) {</pre>
+<pre>			updateSales(request.responseText);</pre>
+<pre>		}</pre>
+<pre>	};</pre>
+<pre>	request.send(null);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+		</section> <!-- Section 20 -->
+
+		<section class="section" data-number="21" data-name="A Live Test Drive...">
+
+<!-- Page 238 -->
+
+			<div class="pagebreak pageNumber">238</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/238fig01.png" />
+			</figure>
+
+			<h2 class="title left">A Live Test Drive...</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+
+			<br />
+			
+			<p>Make sure your URL change is saved in your
+				<code class="literal">mightygumball.js</code>
+				file on your server, if you want to keep retrieving your HTML from
+				there, or to your local hard drive if you are using localhost. From
+				there you know what to do: point your browser to your HTML file and
+				watch the live, beautiful, real data from all those people around
+				the world buying Mighty Gumballs!</p>
+
+			<div class="clear" />
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/238fig02.png" />
+			</figure>
+
+			<p><strong>Yikes!</strong></p>
+
+			<p>And everything was looking so good; we figured by this time
+				we’d be sipping Perrier and celebrating another successful project
+				with Mighty Gumball. Now the whole thing could go down in flames.
+				Okay, we’re getting a little overly dramatic, but what the heck?
+				This should have worked!</p>
+
+			<aside>
+				<strong>Note to Editor:</strong> actually we thought we’d be cashing a fat advance check and
+				shipping this book! Now we’ve got to write our way out of another fine mess!
+			</aside>
+
+			<p>Deep breath. Okay, there’s a logical explanation...</p>
+
+			<div class="clear" />
+
+		</section> <!-- Section 21 -->
+
+		<section class="section" data-number="22" data-name="It's a cliffhanger!">
+
+<!-- Page 239 -->
+
+			<div class="pagebreak pageNumber">239</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/239fig01.png" />
+			</figure>
+
+			<h2 class="title">It’s a cliffhanger!</h2>
+
+			<p><a id="iddle1162" class="indexterm" /><a id="iddle2023" class="indexterm" />
+				<a id="iddle2026" class="indexterm" /><a id="iddle3241" class="indexterm" />
+				We’re not seeing any data in our page. It was all working fine until we moved to the live server...</p>
+
+			<p>Will we <em><strong>find</strong></em> the problem?</p>
+
+			<p>Will we <em><strong>fix</strong></em> it?</p>
+
+			<p>Stay tuned... we’ll answer these questions, and more...</p>
+
+			<p>And in the meantime, see if you can come up with ideas for
+				what went wrong and how we can fix it.</p>
+
+			<div class="sidebar">
+				<img src="/contents/html5/figs/web/xxvifig03.png">
+
+				<div class="itemizedlist">
+					<ul class="itemizedlist">
+						<li class="listitem"><p>To get HTML files or data from a
+								server, the browser sends an HTTP request.</p></li>
+						<li class="listitem"><p>An HTTP response includes a
+								response code that indicates if there was an error with the
+								request.</p></li>
+						<li class="listitem"><p>The HTTP response code 200 means
+								the request had no errors.</p></li>
+						<li class="listitem"><p>To send an HTTP request from
+								JavaScript, use the XMLHttpRequest object.</p></li>
+						<li class="listitem"><p>The XMLHttpRequest object’s
+								onload handler handles getting the response from the server.</p></li>
+						<li class="listitem"><p>The JSON response to an
+								XMLHttpRequest is placed in the request’s responseText property.</p></li>
+						<li class="listitem"><p>To convert the responseText
+								string to JSON, use the JSON.parse method.</p></li>
+						<li class="listitem"><p>XMLHttpRequest is used in
+								applications to update content, such as maps and email, without
+								requiring a page reload.</p></li>
+						<li class="listitem"><p>XMLHttpRequest can be used to
+								retrieve any kind of text content, such as XML, JSON, and more.</p></li>
+						<li class="listitem"><p>XMLHttpRequest Level 2 is the
+								most recent version of XMLHttpRequest, but the standard is still
+								in development.</p></li>
+						<li class="listitem"><p>To use XMLHttpRequest, you must
+								serve files and request data from a server. You can set up a
+								local server on your own machine for testing, or use a hosting
+								solution.</p></li>
+						<li class="listitem"><p>The XMLHttpRequest onload
+								property isn’t supported by older browsers, like IE8 and lower,
+								and Opera 10 and lower. You can write code to check for the
+								browser version and provide an alternative for older browsers.</p></li>
+					</ul>
+				</div>
+			</div>
+
+<!-- Page 240 -->
+
+			<div class="pagebreak pageNumber">240</div>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/xmlhttprequestexposedpart2.png">
+			</figure>
+
+			<figure class="center">
+				<h3>This week’s interview: Internet Explorer, and “Did you say JSON?”</h3>
+			</figure>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				Welcome back to the second part of the interview,
+				XMLHttpRequest. I wanted to ask you about browser support—are you
+				available in only the newer browsers only?</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				The guys don’t call me “old man” for nothing; I’ve been supported by
+				browsers since 2004. In Internet years I’m a senior citizen.</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				Well, what about obsolescence, do you worry about that?</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				I’m someone who reinvents himself every decade or so. Right now, we’re
+				all working on the second version of XMLHttpRequest, known as Level
+				2. In fact, most modern browsers already support Level 2.</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				Impressive. What is different with Level 2?</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				Well, for one thing, support for more event types, so you can do things
+				like track the progress of a request, and write more elegant code
+				(in my opinion).</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong> </span>Speaking of browser support...</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				Okay,here it comes....wait for it...</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				We’ve heard through the grapevine that you and IE don’t really get along...</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				...and there it is...if you want the answer to that, all you have to do is
+				read every interview I’ve ever given. But apparently, you missed
+				it. Are you kidding me? This whole XMLHttpRequest business started
+				with IE.</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				Yeah, but what about ActiveXObject and XDomainRequest? Have you heard those names before?</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				Those are my nicknames! That’s what they call me at Microsoft! Okay, I
+				agree it is a pain that we have different names for me, but they
+				all do the same thing. It’s easily handled with a little more code,
+				and in terms of the recent Microsoft browsers, version 9 and later,
+				everything is good. If this is news to your readers, I’m happy to
+				stay after the interview to make sure their code works on older
+				versions of IE.</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				That’s very kind, we’ll make sure that makes it into this chapter somewhere.</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				Hey, I’m a nice guy, I wouldn’t leave your readers hanging on this.</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				We’ll take your word for it. Another question: you mentioned JSON and that
+				you are a big fan of it. Do you worry at all about, well, JSONP?</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				What me? Worry?</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				Word on the street is a lot people are using it in place of you.</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>
+				Okay, sure, with JSONP you can retrieve data, but it’s just a clever
+				hack. I mean, think of the convoluted code you have to write, and what about security?</p>
+
+			<p><span class="formalpara-title"><strong>Head First:</strong></span>
+				Hey, I’m not overly technical, all I know is a lot of
+				people say it gets them around problems you can’t solve. Anyway,
+				that’s all we have time for.</p>
+
+			<p><span class="formalpara-title"><strong>XMLHttpRequest:</strong></span>Heh,
+				well at least you got the “not overly technical” part right.</p>
+
+<!-- Page 241 -->
+
+			<div class="pagebreak pageNumber">241</div>
+
+			<div class="sidebar">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/watchit.png">
+				</figure>
+			
+				<p><strong>The XMLHttpRequest onload property isn’t supported by older versions
+							of browsers, but there’s an easy workaround.</strong></p>
+			
+				<p><span class="emphasis"><em>We’ve been using
+					request.onload to define a function that is called when the
+					request finishes getting the data from the server. This a feature
+					of XMLHttpRequest Level 2 (think of it as “version 2”).
+					XMLHttpRequest Level 2 is still pretty new, so many users may
+					still be using browsers that don’t support it. In particular, IE
+					8 (and lower), and Opera 10 (and lower) support only
+					XMLHttpRequest Level 1. The good news is that the new features of
+					XMLHttpRequest Level 2 are enhancements, so you can continue to
+					use only the features of version 1 in all browsers without any
+					problems; it just means your code isn’t quite as elegant. Here’s
+					the code to use XMLHttpRequest Level 1:</em></span>
+				</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/241fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>function init() {</pre>
+<pre>	var url = "http://localhost/gumball/sales.json";</pre>
+<pre>	var request = new XMLHttpRequest();</pre>
+<pre>	request.onreadystatechange = function() {</pre>
+<pre>		if (request.readyState == 4 && request.status == 200) {</pre>
+<pre>			updateSales(request.responseText);</pre>
+<pre>		}</pre>
+<pre>	};</pre>
+<pre>	request.open("GET", url);</pre>
+<pre>	request.send(null);</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 22 -->
+
+		<section class="section" data-number="23" data-name="Remember, we left you with a cliffhanger? A bug.">
+
+<!-- Page 242 -->
+	
+			<div class="pagebreak pageNumber">242</div>
+
+			<h2 class="title">Remember, we left you with a cliffhanger? A bug</h2>
+
+			<p><a id="iddle2763" class="indexterm" />We had all the code working just fine using our
+				local server, but as soon as we moved to the live server on the Web, it failed!</p>
+
+			<div class="sidebar-left-pair-borderless">
+				<p><strong>What we expected:</strong></p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/242fig01.png" />
+				</figure>
+
+				<p>Here’s what our page looks like when we run the code using our local
+					server to serve the sales data from
+					<code class="literal">http://localhost/gumball/sales.json.</code></p>
+			</div>
+
+			<div class="sidebar-right-pair-borderless">
+				<p><strong>What we Got:</strong></p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/242fig02.png" />
+				</figure>
+
+				<p>Here’s what our page looks like when we run the code using the live
+					Mighty Gumball server to serve the sales data from
+					<code class="literal">http://gumball.wickedlysmart.com</code>.</p>
+			</div>
+
+			<div class="clear" />
+
+		</section> <!-- Section 23 -->
+
+		<section class="section" data-number="24" data-name="So, what do we do now?!">
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/242fig03.png" />
+			</figure>
+			
+			<h2 class="title">So, what do we do now?!</h2>
+
+			<p>Why, let’s do what we always do, pull the crew together for a
+				quick cubicle conversation. We’re sure that together, all of us
+				(including a few fictional characters) can figure this out! Frank?
+				Jim? Joe? Where are you? Oh, there you are on the next page...</p>
+
+			<div class="clear" />
+
+<!-- Page 243 -->
+
+			<div class="pagebreak pageNumber">243</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/243fig01.png" />
+			</figure>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				<a id="iddle1412" class="indexterm" />Do you have the correct URL?</p>
+
+			<p><span class="formalpara-title"><strong>Frank:</strong></span>
+				Yep, and in fact, I typed it into the browser to make sure I see the
+				sales data we’re expecting, and it worked fine. I don’t get it...</p>
+
+			<p><span class="formalpara-title"><strong>Joe:</strong></span>
+				I peeked at the JavaScript console in Chrome and I see something about
+				access control and origins or domains.</p>
+
+			<p><span class="formalpara-title"><strong>Frank:</strong></span>Errrrr?</p>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/243fig02.png" />
+			</figure>
+
+			<figure>
+				<img src="/contents/html5/figs/web/243fig03.png" />
+			</figure>
+
+		</section> <!-- Section 24 -->
+
+		<section class="section" data-number="25" data-name="What Browser Security Policy?">
+
+<!-- Page 244 -->
+	
+			<div class="pagebreak pageNumber">244</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/244fig01.png" />
+			</figure>
+			
+			<h2 class="title">What Browser Security Policy?</h2>
+
+			<p><a id="iddle1489" class="indexterm" /><a id="iddle2752" class="indexterm" />
+				<a id="iddle3136" class="indexterm" />Okay, it’s embarassing to hit this kind
+				of snag—just think of the position
+				we’re putting you readers in—but Judy’s right, the browser does
+				enforce some security around your
+				<code class="literal">XMLHttpRequest</code>
+				HTTP requests and that can cause some issues.</p>
+
+			<p>So what is this policy? Well, it’s a browser policy, and it says you
+				can’t retrieve data from a domain that is different from the domain
+				the page itself was served from. Say you’re running the site for
+				DaddyWarBucksBank.com and someone has hacked into your systems and
+				inserted a bit of JavaScript that takes the user’s personal
+				information and does all kinds of interesting things with it by
+				communicating with the server HackersNeedMoreMoney. com. Sounds bad
+				right? Well, to stop that sort of thing, browsers prevent you from
+				making <code class="literal">XMLHttpRequest</code>
+				s to domains other than the original domain the page was served from.</p>
+
+			<p>Let’s take a look at what is okay, and what isn’t:</p>
+
+			<section class="subsection" data-number="26" data-name="Acceptable Behavior for JavaScript code">
+		
+				<div class="titlepage">
+					<h3 class="title">Acceptable Behavior for JavaScript code</h3>
+				</div>
+
+				<div class="orderedlist">
+					<ol class="orderedlist" type="1">
+						<li class="listitem">
+							<p>First the user (through the
+								browser) makes a request for an HTML page (and, of course, any
+								associated JavaScript and CSS):</p>
+							
+							<div class="informalfigure" id="med_id00492a">
+								<div class="mediaobject" id="med_id00492">
+									<img src="/contents/html5/figs/web/244fig02.png" />
+								</div>
+							</div>
+						</li>
+						
+						<li class="listitem">
+							<p>The page needs some data from GoodDomain.com so it makes a XMLHttpRequest for the data:</p>
+
+							<div class="informalfigure" id="med_id00493a">
+								<div class="mediaobject" id="med_id00493">
+									<img src="/contents/html5/figs/web/244fig03.png" />
+								</div>
+							</div>
+						</li>
+					</ol>
+				</div>
+
+			</section> <!-- Section 26 -->
+
+			<section class="subsection" data-number="27" data-name="Unacceptable Behavior for JavaScript code">
+
+<!-- Page 245 -->
+
+				<div class="pagebreak pageNumber">245</div>
+
+				<div class="titlepage">
+					<h3 class="title">Unacceptable Behavior for JavaScript code</h3>
+				</div>
+
+				<p>Now let’s see what happens when your page hosted at
+					GoodDomain.com tries to make a request for data using
+					XMLHttpRequest to BadDomain.com instead.</p>
+
+				<div class="orderedlist">
+					<ol class="orderedlist" type="1">
+						<li class="listitem">
+							<p>Just like before, the browser
+								makes a request for a page on GoodDomain.com. This may include
+								JavaScript and CSS files that are also hosted at GoodDomain.com.</p>
+
+							<div class="informalfigure" id="med_id00494a">
+								<div class="mediaobject" id="med_id00494">
+									<img src="/contents/html5/figs/web/245fig01.png" />
+								</div>
+							</div>
+						</li>
+						
+						<li class="listitem">
+							<p>But now we have code that wants
+								data from another source, that is, BadDomain.com. Let’ s see
+								what happens when the page requests that data using
+								XMLHttpRequest:</p>
+
+							<div class="informalfigure" id="med_id00495a">
+								<div class="mediaobject" id="med_id00495">
+									<img src="/contents/html5/figs/web/245fig02.png" />
+								</div>
+							</div>
+						</li>
+					</ol>
+				</div>
+
+<!-- Page 246 -->
+
+				<div class="pagebreak pageNumber">246</div>
+
+				<figure class="right">
+					<img src="/contents/html5/figs/web/246fig01.png" />
+				</figure>
+
+				<p><strong>Usuallythe answer is yes.</strong></p>
+
+				<p>Say you were a developer working on code for Mighty Gumball, then
+					you’d typically have access to their servers (or to people who
+					could deploy files to the servers for you), and you could place all
+					your files there and avoid any cross-domain issues. In this case,
+					however (and we do hate to break your suspension of disbelief),
+					you’re <span class="emphasis"><em>not</em></span> actually working
+					for Mighty Gumball, you’re readers of this book, and we can’t think
+					of a way to have a couple hundred-thousand people copy their files
+					to the Mighty Gumball servers.</p>
+
+				<div class="note" id="ch06note08">
+					<p>At least not on the budget the editor has given us!</p>
+				</div>
+
+				<p>So where does that leave us? Have we reached a dead end? No,
+					we’ve still got a few options. Let’s step through them...</p>
+
+				<div class="clear" />
+
+			</section> <!-- Section 27 -->
+
+		</section> <!-- Section 25 -->
+
+		<section class="section" data-number="28" data-name="So, what are our options?">
+
+<!-- Page 247 -->
+
+			<div class="pagebreak pageNumber">247</div>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/247fig01.png" />
+			</figure>
+	
+			<h2 class="title">So, what are our options?</h2>
+
+			<p><a id="iddle2424" class="indexterm" />We gotta be honest with you, we knew all along
+				that the <code class="literal">XMLHttpRequest</code>
+				cross-origin request would fail. But, as we just said, when you’re
+				building apps you’ve often got access to the server and so this
+				isn’t an issue (and if you’re building apps largely dependent on
+				your own data, using <code class="literal">XMLHttpRequest</code>
+				is usually the best way to do it).</p>
+
+			<p>But at this point we can hear you saying “that’s great, but
+				how can we get this code working already?” Well, we’ve got a couple
+				ways to make that happen:</p>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p><strong>Plan 1: Use ourhosted files.</strong></p>
+
+						<p>We’ve already put files on our server for you and placed
+							the files at:</p>
+						
+						<pre class="programlisting" id="pro_id00035">http://gumball.wickedlysmart.com/gumball/gumball.html</pre>
+						
+						<p>Go ahead and give it a try by pointing your browser to this
+							URL and you’ll be able to see the same code you typed in so far
+							in action and working.</p>
+					</li>
+					
+					<li class="listitem">
+						<p><strong>Plan 2: Use another way to get the data.</strong></p>
+
+						<p>So, <code class="literal">XMLHttpRequest</code>
+							is a great way to get data into your apps when that data is
+							hosted at the same domain as your app, but what if you need to
+							really get data from a third party? Say you need data from Google
+							or Twitter for instance? In those cases we really do have to
+							break through this problem and find another approach.</p>
+
+						<p>As it turns out there is another way, based on JSON, known
+							as JSONP (if you’re curious it stands for “JSON with Padding”; we
+							agree that sounds weird, but we’ll walk through it in just a
+							sec). Get your jetpack on because the way it works is a little
+							“from another planet” if you know what we mean.</p>
+					</li>
+				</ol>
+			</div>
+
+<!-- Page 248 -->
+
+			<div class="pagebreak pageNumber">248</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/248fig01.png" />
+			</figure>
+
+			<p><span class="formalpara-title"><strong>Joe:</strong></span>
+				<a id="iddle2744" class="indexterm" />Totally! But, what is it?</p>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				Sounds like it is another way to get data from web services into our apps.</p>
+
+			<p><span class="formalpara-title"><strong>Frank:</strong></span>
+				I’m useless here, I’m just the creative guy.</p>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				Frank, I don’t think this is that bad. I quickly google’d JSONP and
+				basically it is a way of getting the <code class="literal">&lt;script&gt;</code>
+				tag to do the work of retrieving the data.</p>
+
+			<p><span class="formalpara-title"><strong>Joe:</strong></span>
+				Huh, is that legit?</p>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				Totally legit—a lot of big services are supporting it, like Twitter.</p>
+
+			<p><span class="formalpara-title"><strong>Frank:</strong></span>
+				Sounds like a hack.</p>
+
+			<p><span class="formalpara-title"><strong>Joe:</strong></span>
+				Well yeah, that’s what I was getting at. I mean, how can using the
+				<code class="literal">&lt;script&gt;</code> tag be a kosher way of
+				getting data? I don’t even get how that would work.</p>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				I’m only a little way into understanding it myself. But think about it
+				this way: when you use a <code class="literal">&lt;script&gt;</code>
+				element, it is retrieving code for you right?</p>
+
+			<p><span class="formalpara-title"><strong>Joe:</strong></span>
+				Right...</p>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				Well, what if you put data in that code?</p>
+
+			<p><span class="formalpara-title"><strong>Joe:</strong></span>
+				Okay, wheels are turning...</p>
+
+			<p><span class="formalpara-title"><strong>Frank:</strong></span>
+				Yeah, you mean hamster wheels...</p>
+
+<!-- Page 249 -->
+
+			<div class="pagebreak pageNumber">249</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/249fig01.png" />
+			</figure>
+
+			<p><span class="formalpara-title"><strong>HTML5 Guru:</strong></span>
+				<a id="iddle2829" class="indexterm" />...and this is one of those times. Grasshopper,
+				look at this code:</p>
+
+			<p>What does it do?</p>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				When you evaluate it, assuming it is running in a
+				browser, it will display an alert saying “woof”.</p>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				Ah, yes. Create your own simple HTML file and put a &lt;script&gt;
+				element in it, in the body, like this:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/249fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;script src="http://wickedlysmart.com/hfhtml5/chapter6/dog.js"&gt;</pre>
+<pre>&lt;/script&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				What does it do?
+			</p>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				It loads the page, which loads the JavaScript from
+				dog.js from wickedlysmart.com, which calls the alert function, and I
+				see an alert with “woof” displayed by the browser.</p>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				So a JavaScript file, served from another domain, can call a function
+				within your browser?</p>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				Well, now that you put it that way, yes Guru, I guess
+				that is what is happening. The dog.js file at wickedlysmart.com,
+				once retrieved, calls alert in my browser.</p>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				You’ll find another file at:
+				<a class="ulink" href="http://wickedlysmart.com/hfhtml5/chapter6/dog2.js"
+					target="_top">http://wickedlysmart.com/hfhtml5/chapter6/dog2.js</a> with the JavaScript:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/249fig03.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>animalSays("dog", "woof");</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				What does it do?</p>
+
+<!-- Page 250 -->
+
+			<div class="pagebreak pageNumber">250</div>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				It’s similar to dog.js, but it calls a function animalSays. It also has two
+				arguments not one: the animal type, and the animal sound.</p>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				Write the function animalSays and add it in a &lt;script&gt; element in
+				the head of your HTML file, above the &lt;script&gt; element that
+				points to wickedlysmart.</p>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				How’s this?</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/250fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function animalSays(type, sound) {</pre>
+<pre>	alert(type + " says " + sound);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				Very good, you’re progressing well. Now, change your other &lt;script&gt;
+				reference, the one that points to dog.js, to point to dog2.js and
+				reload the page in your browser.</p>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				I get an alert that says “dog says woof”.</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/250fig02.png" />
+				</figure>
+				
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>animalSays("cat", "meow");</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				Take a look at <a class="ulink" href="http://wickedlysmart.com/hfhtml5/chapter6/cat2.js"
+					target="_top">http://wickedlysmart.com/hfhtml5/chapter6/cat2.js</a>,
+				change your &lt;script&gt; reference to point to cat2.js and try that.</p>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				I get an alert that says “cat says meow”.</p>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				So not only can a JavaScript file that was served from another domain
+				call any function it wants in your code, but it can also pass us any
+				data it wants?</p>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				I don’t see any data really, just two arguments.</p>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				And arguments aren’t data? What if we change the arguments to look like this:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/250fig03.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var animal = {"type": "cat", "sound": "meow"};</pre>
+<pre>animalSays(animal);</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				Now the function animalSays is passing one argument
+				that happens to be an object. Hmm, I can certainly see how that
+				object starts to look like data.</p>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				Can you rewrite animalSays so it uses the new object?</p>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				I’ll give it a try...</p>
+
+<!-- Page 251 -->
+
+			<div class="pagebreak pageNumber">251</div>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				How’s this?</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/251fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function animalSays(animal) {</pre>
+<pre>	alert(animal.type + " says " + animal.sound);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				Very good. Change your reference to <a class="ulink"
+					href="http://wickedlysmart.com/hfhtml5/chapter6/dog3.js"
+					target="_top">http://wickedlysmart.com/hfhtml5/chapter6/dog3.js</a>
+				and try it. Try <a class="ulink"
+					href="http://wickedlysmart.com/hfhtml5/chapter6/cat3.js"
+					target="_top">http://wickedlysmart.com/hfhtml5/chapter6/cat3.js</a>
+				too.</p>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				Yes, both work as you would expect with my new function.</p>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				What if you change the name of animalSays to updateSales?</p>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				Guru, I don’t see how animals are related to gumball sales?</p>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				Work with me here. What if we rename dog3.js to sales.js, and rewrite it like this:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/251fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var sales = [{"name":"ARTESIA","time":1308774240669,"sales":8},</pre>
+<pre>	{"name":"LOS ANGELES","time":1308774240669,"sales":2},</pre>
+<pre>updateSales(sales);</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				I think I’m starting to get it. We are passing data
+				through the JavaScript file we’re referencing, rather than using
+				XMLHttpRequest to retrieve it ourselves.</p>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				Yes, Grasshopper. But don’t miss the forest for the trees. Are we not
+				also getting it from another domain? Something that is forbidden by
+				XMLHttpRequest.</p>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				Yes, it appears that way. This seems truly like magic.</p>
+
+			<p><span class="formalpara-title"><strong>Guru:</strong></span>
+				There is no magic, the &lt;script&gt; element has always worked like this.
+				The answer was within you all along. Now please go meditate on how
+				this works to make it stick.</p>
+
+			<p><span class="formalpara-title"><strong>Web Developer:</strong></span>
+				Yes master. “Make it stick”... you know that phrase sounds so familiar but I can’t quite place it.</p>
+
+			<div class="sidebar">
+				<img src="/contents/html5/figs/web/zenmoment.png">
+				
+				<p>Using JavaScript to retrieve data is something you have to
+					become one with. Grab a sheet of paper or use the inside cover of
+					this book. Draw a server that hosts your HTML &amp; JavaScript
+					files. Also draw a server at another domain that has the files
+					dog3.js and cat3.js. Now go through the steps the browser uses to
+					get and use the object in each file. When you think you’ve got it,
+					we’ll go through it all again together.</p>
+			</div>
+
+		</section> <!-- Section 28 -->
+
+		<section class="section" data-number="29" data-name="Meet JSONP">
+
+<!-- Page 252 -->
+
+			<div class="pagebreak pageNumber">252</div>
+
+			<h2 class="title">Meet JSONP</h2>
+
+			<p><a id="iddle2216" class="indexterm" />You’ve probably figured out that JSONP is a way
+				to retrieve JSON objects by using the <code class="literal">&lt;script&gt;</code>
+				tag. It’s also a way of retrieving data (again, in the form of JSON
+				objects) that avoids the same-origin security issues we saw with XMLHttpRequest.</p>
+
+			<p>Let’s step through how JSONP works over the next few pages:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/252fig01.png" />
+			</figure>
+
+<!-- Page 253 -->
+
+			<div class="pagebreak pageNumber">253</div>
+
+		</section> <!-- Section 29 -->
+
+		<section class="section" data-number="30" data-name="But what is the "P" in JSONP for?">
+
+			<h2 class="title">But what is the “P” in JSONP for?</h2>
+			
+			<p>OK, the first thing you need to know about
+				JSONP is it has a dumb and non-obvious name: “JSON with Padding.” If
+				we had to name it, we’d call it something like “JSON with a
+				Callback” or “get me some JSON and execute it when you get it back”
+				or, well, really just about anything other than JSON with Padding.</p>
+
+			<p>But, all the padding amounts to is wrapping a function around
+				the JSON before it comes back in the request. Here’s how that works:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/253fig01.png" />
+			</figure>
+
+<!-- Page 254 -->
+
+			<div class="pagebreak pageNumber">254</div>
+
+			<figure>
+				<img src="/contents/html5/figs/web/254fig00.png">
+			</figure>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/254fig01.png" />
+			</figure>
+
+			<p><a id="iddle1829" class="indexterm" /><a id="iddle3132" class="indexterm" />
+				<strong>Web services let you specify a callback function.</strong></p>
+
+			<p>In general, web services allow you to specify what you want
+				the function to be named. Although we didn’t tell you, Mighty
+				Gumball is already supporting a way to do this. Here’s how it works:
+				when you specify your URL, add a parameter on the end, like this:</p>
+		
+			<figure>
+			<img src="/contents/html5/figs/web/254fig02.png" />
+			</figure>
+			
+			<p>MightyGumball will then use <code class="literal">updateSales</code>
+				to wrap the JSON formatted object before sending it back to you.
+				Typically, web services name this parameter <code class="literal">callback</code>
+				, but check with your web service documentation to make sure that’s what they’re using.</p>
+
+			<div class="sidebar">
+				<img src="/contents/html5/figs/web/brainpower.png">
+				
+				<p>Try these URLs: what do you see in the response?</p>
+				
+<pre><strong>http://search.twitter.com/search.json?q=hfhtml5&amp;callback=myCallback</strong></pre>
+
+<pre><strong>http://search.twitter.com/search.json?q=hfhtml5&amp;callback=justDoIt</strong></pre>
+
+<pre><strong>http://search.twitter.com/search.json?q=hfhtml5&amp;callback=updateTweets</strong></pre>
+
+				<aside>
+					Note: Firefox will ask you to open or save a file. You can
+					open with TextEdit, Notepad, or any basic text editor.</p>
+				</aside>
+			</div>
+
+<!-- Page 255 -->
+
+			<div class="pagebreak pageNumber">255</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/255fig01.png" />
+			</figure>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				Well, almost.</p>
+
+			<p><span class="formalpara-title"><strong>Joe:</strong></span>
+				I think this actually allows us to delete some code.</p>
+
+			<p><span class="formalpara-title"><strong>Frank:</strong></span>
+				And I’m ready to make it all look good when you’re done.</p>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				So Joe, code-wise, what do you have in mind?</p>
+
+			<p><span class="formalpara-title"><strong>Joe:</strong></span>
+				With XMLHttpRequest we were retrieving a string. Using JSONP, the script
+				tag is going to parse and evaluate the code coming back, so by the
+				time we get our hands on the data it will be a JavaScript object.</p>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				Right, and with XMLHttpRequest we were using JSON.parse to convert the
+				string into an object. We can just get rid of that?</p>
+
+			<p><span class="formalpara-title"><strong>Joe:</strong></span>
+				Yup. That’s my story and I’m sticking to it.</p>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				What else?</p>
+
+			<p><span class="formalpara-title"><strong>Joe:</strong></span>
+				Well obviously we need to insert the <code class="literal">&lt;script&gt;</code> element.</p>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				I was wondering about that. Where do we put it?</p>
+
+			<p><span class="formalpara-title"><strong>Joe:</strong></span>
+				Well, the browser is going to control when it loads, and we want the page
+				to be loaded first, so we can update the DOM when <code class="literal">updateSales</code>
+				is called. The only way I can think of dealing with that is to put the
+				<code class="literal">&lt;script&gt;</code> at the bottom of the page in the body of the HTML.</p>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				Yeah, sounds like a good guess. We should look into that a little more.
+				But for starters let’s try it.</p>
+
+			<p><span class="formalpara-title"><strong>Joe:</strong></span>
+				Okay, I want to get this code working! Let’s get this code in!</p>
+
+			<p><span class="formalpara-title"><strong>Frank:</strong></span>
+				You guys better hurry, I bet Judy’s already got her own version in the works.</p>
+
+		</section> <!-- Section 30 -->
+
+		<section class="section" data-number="31" data-name="Let's update the Mighty Gumball web app">
+
+<!-- Page 256 -->
+
+			<div class="pagebreak pageNumber">256</div>
+
+			<h2 class="title">Let’s update the Mighty Gumball web app</h2>
+
+			<p><a id="iddle2430" class="indexterm" />It’s time to update your Mighty Gumball code
+				with JSONP. Other than removing the existing code that deals with
+				the XMLHttpRequest call, all the changes are minor. Let’s make those changes now:</p>
+
+			<p><strong>What we need to do:</strong></p>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem"><p>Remove our XMLHttpRequest code.</p></li>
+					<li class="listitem"><p>Make sure the updateSales function
+							is ready to receive an object, not a string (as it was with the
+							XMLHttpRequest).</p>
+					</li>
+					<li class="listitem"><p>Add the &lt;script&gt; element to
+							do the actual data retrieval.</p>
+					</li>
+				</ol>
+			</div>
+
+			<hr>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem"><p>All the code in our onload
+							function was code involved in the XMLHttpRequest, so we can just
+							delete it. We’ll keep the onload function around in case we need
+							it a little later. For now it will do nothing. Open up your
+							mightygumball.js file and make these changes:</p>
+					
+						<div class="hiddencode">
+							<figure>
+								<img class="codeimage" src="/contents/html5/figs/web/256fig01.png" />
+							</figure>
+
+							<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  				<div class="modal-body">
+									<code>
+<pre>window.onload = function () {</pre>
+										<del><pre>	var url = "http://gumball.wickedlysmart.com";</pre>
+<pre>	var request = new XMLHttpRequest();</pre>
+<pre>	request.open("GET", url);</pre>
+<pre>	request.onload = function() {</pre>
+<pre>		if (request.status == 200) {</pre>
+<pre>			updateSales(request.responseText);</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>	request.send(null);</pre>
+<pre>}</pre></del>
+									</code>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ol>
+			</div>
+
+<!-- Page 257 -->
+
+			<div class="pagebreak pageNumber">257</div>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" start="2">
+					<li class="listitem">
+						<p><a id="iddle2745" class="indexterm" />Next,
+							remember that when we use the &lt;script&gt; element, we’re
+							telling the browser that it needs to retrieve JavaScript, and so
+							the browser retrieves it, parses it and evaluates it. That means
+							by the time it gets to your updateSales function, the JSON is no
+							longer in string form, but is a first-class JavaScript object.
+							When we used XMLHttpRequest, the data came back in the form of a
+							string. Right now, updateSales assumes it is getting a string, so
+							let’s change that so that it handles an object, not a string:</p>
+						
+						<div class="hiddencode">
+							<figure>
+								<img class="codeimage" src="/contents/html5/figs/web/257fig01.png" />
+							</figure>
+
+							<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  				<div class="modal-body">
+									<code>
+										<del><pre>function updateSales(responseText) {</pre></del>
+<pre>function updateSales(sales) {</pre>
+<pre>	var salesDiv = document.getElementById("sales");</pre>
+										<del><pre>	var sales = JSON.parse(responseText);</pre></del>
+<pre>	for (var i = 0; i < sales.length; i++) {</pre>
+<pre>		var sale = sales[i];</pre>
+<pre>		var div = document.createElement("div");</pre>
+<pre>		div.setAttribute("class", "saleItem");</pre>
+<pre>		div.innerHTML = sale.name + " sold " + sale.sales + " gumballs";</pre>
+<pre>		salesDiv.appendChild(div);</pre>
+<pre>	}</pre>
+<pre>}</pre>
+									</code>
+								</div>
+							</div>
+						</div>
+					</li>
+					
+					<li class="listitem">
+						<p>And finally, let’s add the &lt;script&gt; element to do the actual data retrieval.</p>
+
+						<div class="hiddencode">
+							<figure>
+								<img class="codeimage" src="/contents/html5/figs/web/257fig02.png" />
+							</figure>
+
+							<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  				<div class="modal-body">
+									<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>	&lt;title&gt;Mighty Gumball&lt;/title&gt;</pre>
+<pre>	&lt;meta charset="utf-8"&gt;</pre>
+<pre>	&lt;script src="mightygumball.js"&gt;&lt;/script&gt;</pre>
+<pre>	&lt;link rel="stylesheet" href="mightygumball.css"&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;h1&gt;Mighty Gumball Sales&lt;/h1&gt;</pre>
+<pre>	&lt;div id="sales"&gt;</pre>
+<pre>	&lt;/div&gt;</pre>
+<pre>	&lt;script src="http://gumball.wickedlysmart.com/?callback=updateSales"&gt;&lt;/script&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+									</code>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ol>
+			</div>
+
+		</section> <!-- Section 31 -->
+
+		<section class="section" data-number="32" data-name="Test drive your new JSONP-charged code">
+
+<!-- Page 258 -->
+
+			<div class="pagebreak pageNumber">258</div>
+
+			<h2 class="title left">Test drive your new JSONP-charged code</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+
+			<div class="clear" />
+
+			<p>If you’ve made all your changes, it’s time for a test drive. Reload
+				<code class="literal">mightygumball.html</code>
+				into your browser. You’re now loading Mighty Gumball sales data
+				using your web app and JSONP. The page should look the same as when
+				you were getting the sales data from the local file, but you know
+				that it’s using a whole different method of getting the data.</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/258fig01.png" />
+			</figure>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/258fig02.png" />
+			</figure>
+
+			<figure>
+				<img src="/contents/html5/figs/web/258fig03.png" />
+			</figure>
+
+<!-- Page 259 -->
+
+			<div class="pagebreak pageNumber">259</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/259fig01.png" />
+			</figure>
+
+			<p><a id="iddle2751" class="indexterm" /><strong>It’s not any more or less
+						secure than using &lt;script&gt; to load JavaScript.</strong></p>
+
+			<p>It’s true: if you make a JSONP request to a malicious web
+				service, the response could include JavaScript code you’re not
+				expecting and the browser will execute it.</p>
+
+			<p>But it’s no different than including JavaScript by linking to
+				libraries hosted on other servers. Any time you link to JavaScript,
+				whether it’s to a library in the <code class="literal">&lt;head&gt;</code>
+				of your document, or using JSONP, you need to be sure you trust that
+				service. And if you’re writing a web app that uses authentication to
+				give the user access to sensitive data, it’s probably best not to
+				use third party libraries or JSON data hosted on other servers at
+				all.</p>
+
+			<p>So choose the web services you link to carefully. If you’re
+				using an API like Google, Twitter, Facebook or one of the many other
+				well-known web services out there, you’re safe. Otherwise, caution
+				is advised.</p>
+
+			<p>In our case, we know the Mighty Gumball engineers personally
+				and we know they’d never put anything malicious in their JSON data,
+				so you’re safe to proceed.</p>
+
+<!-- Page 260 -->
+
+			<div class="pagebreak pageNumber">260</div>
+
+			<img class="left" src="/contents/html5/figs/web/firesidechats.png">
+				
+			<p>Tonight’s talk:<strong>XMLHttpRequest and JSONP</strong></p>
+
+			<p>Tonight, we have two popular methods of retrieving data from your browser.</p>
+
+			<div class="clear" />
+
+			<div class="informaltable">
+				<table style="border-collapse: collapse;">
+					<colgroup>
+						<col class="c1" />
+						<col class="c2" />
+					</colgroup>
+					<thead>
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+								<p><strong>XMLHttpRequest:<strong></p>
+							</td>
+							<td style="vertical-align: top; border-bottom: 0.5pt solid;"><p><strong>JSONP:</strong></p></td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+								<p>No offense meant, but aren’t you kind of a hack? I mean your
+									purpose is to retrieve code, and people are using you to do
+									requests for data.</p>
+							</td>
+							<td style="border-bottom: 0.5pt solid;"></td>
+						</tr>
+						<tr>
+							<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+							<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+								<p>Hack? I’d call it elegance. We can use the same means of retrieving
+									code and data. Why have two ways of doing it?</p>
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+								<p> But all you’re doing is throwing some data in with code. And
+									there’s no way for you to make your requests directly from
+									JavaScript code; you’ve got to use an HTML <code class="literal">&lt;script&gt;</code>
+									element. Seems very confusing for your users.</p>
+							</td>
+							<td style="border-bottom: 0.5pt solid;"></td>
+						</tr>
+						<tr>
+							<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+							<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+								<p>Hey, it works, and it allows people to write code that retrieves
+									JSON from services like Twitter and Google and a lot of
+									others. How are you going to do that with XMLHttpRequest given
+									your security restrictions. I mean you’re still stuck on the
+									old days, “XML,” heh.</p>
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+								<p>Hey XML is still in wide use, don’t knock it. And you can retrieve
+									JSON just fine with me.</p>
+							</td>
+							<td style="border-bottom: 0.5pt solid;"></td>
+						</tr>
+						<tr>
+							<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+							<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+								<p>Sure, if you want to always JSON.parse the result.</p>
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+								<p>At least with me you’re in control of what data gets parsed into
+									JavaScript. With you it just happens.</p>
+							</td>
+							<td style="border-bottom: 0.5pt solid;"></td>
+						</tr>
+						<tr>
+							<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+							<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+								<p>That’s an advantage—by the time my users get their data, it’s all
+									nicely parsed for them. Look, I have a lot of respect for you,
+									you made this whole way of writing apps happen, but the
+									problem is you’re too restrictive. Today, in this world of web
+									services, we need to be able to make requests to other
+									domains.</p>
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+								<p>Well you can go ahead and use a hack, like JSON-With-Padding—heh,
+									dumb name—or, you can use the right thing, XMLHttpRequest and
+									grow with it as it evolves. After all, people are working on
+									making me more flexible while still secure.</p>
+							</td>
+							<td style="border-bottom: 0.5pt solid;"></td>
+						</tr>
+						<tr>
+							<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+							<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+								<p>Sure people are working on new ways, but my users have real needs
+									today—they can’t wait for you to figure out all your
+									cross-domain issues.</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+<!-- Page 261 -->
+
+			<div class="pagebreak pageNumber">261</div>
+			
+			<div class="informaltable">
+				<table style="border-collapse: collapse;">
+					<colgroup>
+						<col class="c1" />
+						<col class="c2" />
+					</colgroup>
+					
+					<thead>
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+								<p><strong>XMLHttpRequest:<strong></p>
+							</td>
+							<td style="vertical-align: top; border-bottom: 0.5pt solid;"><p><strong>JSONP:</strong></p></td>
+						</tr>
+					</thead>
+					
+					<tbody>
+						<tr>
+							<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+							<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+								<p>And there’s nothing dumb about “padding,” it just means that when
+									a user makes a web service request it also asks it to add a
+									little prefix, like “updateSales()”, on to the result. And
+									what were they calling you for a while? Ajax? Isn’t that a
+									bathroom cleaner?</p>
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+								<p>I had nothing to do with the name Ajax, so don’t ask me! By the
+									way, you never said how you are secure?</p>
+							</td>
+							<td style="border-bottom: 0.5pt solid;"></td>
+						</tr>
+						<tr>
+							<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+							<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+								<p>Coders have always needed to be careful. If you’re retrieving code
+									from another server, yeah you need to know what you’re doing.
+									But the answer isn’t to just say “don’t do it.”</p>
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+								<p>All I can say is if you don’t need to go get someone else’s data,
+									like Twitter or Google, and you’re writing your own web
+									service and client, stick with me. I’ve got more security and
+									I’m more straightforward to use.</p>
+							</td>
+							<td style="border-bottom: 0.5pt solid;"></td>
+						</tr>
+						<tr>
+							<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+							<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+								<p>Hello? No one is writing services that don’t use outside data. Ever
+									heard the name “mashup?”</p>
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+								<p>Yeah yeah, mishmash.</p>
+							</td>
+							<td style="border-bottom: 0.5pt solid;"></td>
+						</tr>
+						<tr>
+							<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+							<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+								<p>Hey, at least I’m consistently supported everywhere, I’d hate to
+									have to write XMLHttpRequest code that worked across old
+									browsers.</p>
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+								<p>Come on, it doesn’t take that much code to support me going all the
+									way back to IE5.</p>
+							</td>
+							<td style="border-bottom: 0.5pt solid;"></td>
+						</tr>
+						<tr>
+							<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+							<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+								<p>Haha, for me it takes ZERO code. Just a simple HTML tag.</p>
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+								<p>Yeah, well there’s more to it than that, and have you ever tried to
+									do something iterative, where you need to retrieve something
+									over and over? Like that Mighty Gumball thing they’ve been
+									working on. How are they going to make that work?</p>
+							</td>
+							<td style="border-bottom: 0.5pt solid;"></td>
+						</tr>
+						<tr>
+							<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+							<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+								<p> Hey, it’s not that bad. You just need to use write a new
+									<code class="literal">&lt;script&gt;</code> element into the DOM to do another request.</p>
+							</td>
+						</tr>
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+								<p>Here’s my impression of your readers having just heard the sentence
+									you just said: “Say what?”</p>
+							</td>
+							<td style="border-bottom: 0.5pt solid;"></td>
+						</tr>
+						<tr>
+							<td style="border-right: 0.5pt solid; border-bottom: 0.5pt solid;"></td>
+							<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+								<p><strong>HEAD FIRST:</strong></p>
+							</td>
+						</tr>
+						<tr>
+							<td style="border-right: 0.5pt solid;"></td>
+							<td style="vertical-align: top;"><p>Thanks guys! I’m afraid we’re out of time!</p></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+<!-- Page 262 -->
+
+			<div class="pagebreak pageNumber">262</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/262fig01.png" />
+			</figure>
+
+			<div class="clear" />
+
+			<div class="sidebar">
+				<img src="/contents/html5/figs/web/brainpower.png">
+				
+				<p>
+					He’s right, we need to change our app so that it is updating
+					the display with new sales at some regular interval (say, every ten
+					seconds). Right now we’re just putting a &lt;script&gt; element
+					into the page that initiates the request to the server only one
+					time. Can you think of any way to use JSONP to continually retrieve
+					new sales reports?
+				</p>
+				
+				<aside>
+					Hint: using the DOM we can insert a new &lt;script&gt;
+					element into the page. Could that work?
+				</aside>
+			</div>
+
+<!-- Page 263 -->
+
+			<div class="pagebreak pageNumber">263</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/263fig01.png" />
+			</figure>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				<a id="iddle1499" class="indexterm" /><a id="iddle2742" class="indexterm" />Yeah, he
+				wants the data to be continually updated in the display.</p>
+
+			<p><span class="formalpara-title"><strong>Judy:</strong></span>
+				That does make sense. I mean one big advantage of a web app is you don’t
+				have to refresh it like a web page.</p>
+
+			<p><span class="formalpara-title"><strong>Joe:</strong></span>
+				Fair enough, and obviously we know how to replace old sales data with new
+				sales data in the page using the DOM. But we’re not sure yet how to
+				handle the JSONP part.</p>
+
+			<p><span class="formalpara-title"><strong>Judy:</strong></span>
+				Remember, you can use the DOM with the <code class="literal">&lt;script&gt;</code>
+				element too. In other words, you can create a new <code class="literal">&lt;script&gt;</code>
+				element in the DOM any time you want to retrieve more data.</p>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				Okay, right over my head. Can you say that again?</p>
+
+			<p><span class="formalpara-title"><strong>Joe:</strong></span>
+				I think I sort of get it. Right now, we’re putting the
+				<code class="literal">&lt;script&gt;</code> element statically in the HTML markup by
+				just typing it in. We could instead create a new <code class="literal">&lt;script&gt;</code>
+				element with JavaScript code, and add it to the DOM. The only part I’m not sure of is,
+				will the browser do another retrieval when we create the new <code class="literal">&lt;script&gt;</code>
+				element?</p>
+
+			<p><span class="formalpara-title"><strong>Judy:</strong></span>It sure will.</p>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				I see, so we’re creating a new <code class="literal">&lt;script&gt;</code>
+				element any time we want the browser to do a JSONP-type operation for us.</p>
+
+			<p><span class="formalpara-title"><strong>Judy:</strong></span>
+				Right! Sounds like you’re getting it. And you know how to do it over and over?</p>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				Well, uh, we’re not there yet, we were still thinking about the JSONP.</p>
+
+			<p><span class="formalpara-title"><strong>Judy:</strong></span>
+				You know all about handler functions by now, you know like <code class="literal">onload</code>
+				or <code class="literal">onclick</code>. You can set up a timer to call a function 
+				handler at a specified interval using the <code class="literal">setInterval</code> method in JavaScript.</p>
+
+			<p><span class="formalpara-title"><strong>Joe:</strong></span>
+				So, let’s get that set up and get the dynamic JSONP working ASAP for the Gumball CEO.</p>
+
+			<p><span class="formalpara-title"><strong>Jim:</strong></span>
+				Oh, is that all you want? We better get on it!</p>
+
+		</section> <!-- Section 32 -->
+
+		<section class="section" data-number="33" data-name="Improving Mighty Gumball">
+
+<!-- Page 264 -->
+
+			<div class="pagebreak pageNumber">264</div>
+
+			<h2 class="title">Improving Mighty Gumball</h2>
+
+			<p><a id="iddle2422" class="indexterm" />As you can see we have a little more work to
+				do, but it’s not going to be too bad. Basically, we wrote our first
+				version so that it grabs the latest sales reports from Mighty
+				Gumball and displays them, <em>once</em>.
+				Our bad, because almost any web app these days should continuously
+				monitor data and update the app in (near) real time.</p>
+
+			<p><strong>Here’s what we need to do:</strong></p>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p>We’re going to remove the JSONP
+							&lt;script&gt; element from the Mighty Gumball HTML, because we
+							won’t be using that any more.</p>
+					</li>
+					<li class="listitem">
+						<p>We need to set up a handler to
+							handle making the JSONP request every few seconds. We’ll take
+							Judy’s advice and use JavaScript’s setInterval method.</p>
+					</li>
+					<li class="listitem">
+						<p>Then we need to implement our
+							JSONP code in the handler, so that each time it is called it
+							makes a request to get the latest Mighty Gumball sales reports.</p>
+					</li>
+				</ol>
+			</div>
+
+		</section> <!-- Section 33 -->
+
+		<section class="section" data-number="34" data-name="Taking care of the script element...">
+
+			<h2 class="title">Step 1: Taking care of the script element...</h2>
+
+			<p>We’re going to be using a new way to invoke our JSONP requests, and so let’s go ahead and remove the
+				<code class="literal">&lt;script&gt;</code> element from our HTML.</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/264fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>	&lt;title&gt;Mighty Gumball&lt;/title&gt;</pre>
+<pre>	&lt;meta charset="utf-8"&gt;</pre>
+<pre>	&lt;script src="mightygumball.js"&gt;&lt;/script&gt;</pre>
+<pre>	&lt;link rel="stylesheet" href="mightygumball.css"&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;h1&gt;Mighty Gumball Sales&lt;/h1&gt;</pre>
+<pre>	&lt;div id="sales"&gt;</pre>
+<pre>	&lt;/div&gt;</pre>
+							<del><pre>	&lt;script src="http://gumball.wickedlysmart.com/?callback=updateSales"&gt;&lt;/script&gt;</pre></del>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 34 -->
+
+		<section class="section" data-number="35" data-name="Now it's time for the timer">
+
+<!-- Page 265 -->
+
+			<div class="pagebreak pageNumber">265</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/265fig04.png" />
+			</figure>
+			
+			<h2 class="title">Step 2: Now it’s time for the timer</h2>
+
+			<p><a id="iddle1965" class="indexterm" /><a id="iddle2782" class="indexterm" />
+				<a id="iddle3215" class="indexterm" />Okay, we’re progressing from retrieving the
+				sales reports once, to retrieving them every so often, say every
+				three seconds. That might be too fast or slow depending on the
+				application, but for Mighty Gumball we’re going to start with three
+				seconds.</p>
+
+			<p>Now, to do something every three seconds we need to have a function
+				we can call every three seconds. And, as Judy mentioned, we can use
+				the <code class="literal">setInterval</code> method in the <code class="literal">window</code>
+				object to do this; here’s what it looks like:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/265fig01.png" />
+			</figure>
+
+			<p>So every 3,000 milliseconds JavaScript will invoke your handler, in
+				this case the <code class="literal">handleRefresh</code>
+				function. Let’s write a simple handler and give it a try:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/265fig02.png" />
+			</figure>
+
+			<p>Now we just need some code to set up the <code class="literal">setInterval</code>
+				call, which we’ll add to the onload function so it gets set up right after the entire page is loaded:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/265fig03.png" />
+			</figure>
+
+			<p>Let’s give this a try and then when we know it’s working—that
+				is, when we see our our handler being invoked every three
+				seconds—we’ll implement the JSONP code.</p>
+
+		</section> <!-- Section 35 -->
+
+		<section class="section" data-number="36" data-name="A time-driven test drive">
+
+<!-- Page 266 -->
+
+			<div class="pagebreak pageNumber">266</div>
+
+			<h2 class="title left">A time-driven test drive</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+
+			<div class="clear" />
+
+			<p><a id="iddle2177" class="indexterm" />This should be fun. Make sure you’ve typed in
+			the <code class="literal">handleRefresh</code> function and also made the changes to the
+			<code class="literal">onload</code> handler. Save everything and load it into your browser. You’ll see a
+			stream of alerts, and you’ll have to close your browser window to stop it!</p>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/266fig01.png" />
+			</figure>
+
+			<div class="sidebar" id="sharpen_your_pencil-id00061">
+				<img src="/contents/html5/figs/web/sharpenpencil.png">
+
+				<p>Now that you know about setInterval (not to mention
+				XMLHttpRequest and JSONP), think of ways you could use them in
+				other web applications. List those here:</p>
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web/266fig02.png" />
+				</figure>
+				
+<pre><span class="underline">Check and update progress on a task and display it.</span>_______</pre>
+				
+<pre><span class="underline">See if any new comments have been posted on a topic.</span>______</pre>
+
+<pre><span class="underline">Update a map if any friends have shown up nearby.</span>_________</pre>
+
+<pre>__________________________________________________________</pre>
+
+<pre>__________________________________________________________</pre>
+
+<pre>__________________________________________________________</pre>
+
+<pre>__________________________________________________________</pre>
+
+<pre>__________________________________________________________</pre>
+
+<pre>__________________________________________________________</pre>
+			</div>
+	
+<!-- Page 267 -->
+
+			<div class="pagebreak pageNumber">267</div>
+
+		</section> <!-- Section 36 -->
+
+		<section class="section" data-number="37" data-name="Step 3: Reimplementing JSONP">
+
+			<h2 class="title">Step 3: Reimplementing JSONP</h2>
+
+			<p><a id="iddle1562" class="indexterm" /><a id="iddle2033" class="indexterm" />
+				<a id="iddle2743" class="indexterm" /><a id="iddle2777" class="indexterm" />
+				<a id="iddle2830" class="indexterm" />We still want to use JSONP to retrieve our data,
+				but we need a way to do it
+				whenever our refresh handler is called, not just at page load time.
+				That’s where the DOM comes in—the great thing about the DOM is that
+				we can <em>insert new elements</em> into the DOM <em>at any time</em>,
+				<span class="underline">even <code class="literal">&lt;script&gt;</code>
+				elements</span>. So, we should be able to insert a new <code class="literal">&lt;script&gt;</code>
+				element any time we want to make a JSONP call. Let’s work up some
+				code using everything we know about the DOM and JSONP to do this.</p>
+
+			<div class="sect2" id="firstcomma_letapostrophes_set_up_the_jso">
+				<div class="titlepage">
+					<h3 class="title">First, let’s set up the JSONP URL</h3>
+				</div>
+			</div>
+
+			<p>This is the same URL we used with our previous script
+				element. Here we’ll assign it to a variable for later use. Delete
+				the alert out of your handler and add this code:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/267fig01.png" />
+			</figure>
+
+		</section> <!-- Section 37 -->
+
+		<section class="section" data-number="38" data-name="Next, let's create a new script element">
+
+			<div class="titlepage">
+				<h3 class="title">Next, let’s create a new script element</h3>
+			</div>
+
+			<p>Now, instead of having the &lt;script&gt; element in our
+				HTML, we’re going to build a &lt;script&gt; element using
+				JavaScript. We need to create the element, and then set its src and
+				id attributes:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/267fig02.png" />
+			</figure>
+
+<!-- Page 268 -->
+
+			<div class="pagebreak pageNumber">268</div>
+
+		</section> <!-- Section 38 -->
+
+		<section class="section" data-number="39" data-name="How do we insert the script into the DOM?">
+
+			<div class="titlepage">
+				<h3 class="title">How do we insert the script into the DOM?</h3>
+			</div>
+
+			<p>We’re almost there, we just
+				need to insert our newly created script element. Once we do that
+				the browser will see it and do its thing, causing the JSONP request
+				to be made. Now, to insert the script requires a little bit of
+				planning and forethought; let’s see how this is going to work:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/268fig01.png" />
+			</figure>
+
+			<p>Once we’ve inserted the script, the browser will see the new
+				script in the DOM and go retrieve what’s at the URL in the src
+				attribute. Now, we’ve also got a second use case. Let’s look at it.</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/268fig02.png" />
+			</figure>
+
+		</section> <!-- Section 39 -->
+
+		<section class="section" data-number="40" data-name="Now let's write the code to insert into the DOM">
+
+<!-- Page 269 -->
+				
+			<div class="pagebreak pageNumber">269</div>
+
+			<div class="titlepage">
+				<h3 class="title">Now let’s write the code to insert the script into the DOM</h3>
+			</div>
+
+			<p>Now that we know the steps, let’s check out the code. We’ll do this in two
+				steps too: first we’ll show the code to add a new script, then the code to replace a script:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/269fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function handleRefresh() {</pre>
+<pre>	var url = "http://gumball.wickedlysmart.com?callback=updateSales";</pre>
+							<br />
+<pre>	var newScriptElement = document.createElement("script");</pre>
+<pre>	newScriptElement.setAttribute("src", url);</pre>
+<pre>	newScriptElement.setAttribute("id", "jsonp");</pre>
+							<br />
+<pre>	var oldScriptElement = document.getElementById("jsonp");</pre>
+<pre>	var head = document.getElementsByTagName("head")[0];</pre>
+<pre>	if (oldScriptElement == null) {</pre>
+<pre>		head.appendChild(newScriptElement);</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p>Okay, let’s check out the code that replaces the script
+				element if it already exists. We’ll just show the conditional if
+				statement, which is where all the new code is:</p>
+			
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/269fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>if (oldScriptElement == null) {</pre>
+<pre>	head.appendChild(newScriptElement);</pre>
+<pre>}	else {</pre>
+<pre>	head.replaceChild(newScriptElement, oldScriptElement);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 270 -->
+
+			<div class="pagebreak pageNumber">270</div>
+
+			<div class="sidebar">
+				<img src="/contents/html5/figs/web/getelementsbytagnameupclose.png">
+
+				<p><a id="iddle1478" class="indexterm" /><a id="iddle1513" class="indexterm" />
+					<a id="iddle1921" class="indexterm" /><a id="iddle2096" class="indexterm" />
+					<a id="iddle2708" class="indexterm" />
+					This is the first time you’ve seen the <code class="literal">getElementsByTagName</code>
+					method, so let’s take a quick up close look. It’s similar to <code class="literal">getDocumentById</code>
+					, except that it returns an array of elements that match a given tag name.</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/270fig01.png" />
+				</figure>
+
+				<p>Once you have the array, you can get the first item in it using index 0:</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/270fig02.png" />
+				</figure>
+
+				<p>Now we can combine these two lines, like this:</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/270fig03.png" />
+				</figure>
+
+				<p>In our code example, we’re always using the first <code class="literal">&lt;head&gt;</code>
+					element but you can use this method on any tag, like <code class="literal">&lt;p&gt;</code>,
+					<code class="literal">&lt;div&gt;</code> and so on. And usually you’ll get more than one of those back on
+					the array.</p>
+
+			</div>
+
+			<div class="sidebar" id="replacechild_up_close">
+				<img src="/contents/html5/figs/web/replacechildupclose.png">
+
+				<p>Let’s also look at the <code class="literal">replaceChild</code>
+					method because you haven’t seen that before. Call the
+					<code class="literal">replaceChild</code> method on the element in which you want to replace a child,
+					passing in the references to both the new and old children. The
+					method simply replaces the old child with the new one.</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/270fig04.png" />
+				</figure>
+
+			</div>
+
+<!-- Page 271 -->
+
+			<div class="pagebreak pageNumber">271</div>
+
+			<div class="sidebar" id="there_are_no_dumb_questions-id00062">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+				</figure>
+
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<div class="qandaset" id="ch06qa1">
+							<table style="border: 0;">
+								<colgroup>
+									<col style="text-align: left; width: 1%;" />
+									<col />
+								</colgroup>
+								<tbody>
+									<tr class="question" id="id36220763">
+										<td style="text-align: left; vertical-align: top;" id="ch06qa1q1">
+											<p><strong>Q:</strong></p>
+										</td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><a id="iddle1510"class="indexterm" />
+												<a id="iddle2070" class="indexterm" />
+												<a id="iddle2097" class="indexterm" />
+												<a id="iddle2199" class="indexterm" />
+												<a id="iddle2215" class="indexterm" />
+												<a id="iddle2487" class="indexterm" />
+												<a id="iddle2664" class="indexterm" />
+												<a id="iddle3129" class="indexterm" />
+												<a id="iddle3135" class="indexterm" />
+												<strong>Q: Why can’t I just replace the data in the src attribute instead of
+												replacing the whole &lt;script&gt; element?</strong></p>
+										</td>
+									</tr>
+
+									<tr class="answer" id="ch06qa1q1a1">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> If you
+												replace just the src attribute with the new URL, the
+												browser doesn’t see it as a new script, and so it doesn’t
+												make the request to retrieve the JSONP. To force the
+												browser to make the request, we have to create this whole
+												new script. This is a technique known as “script
+												injection.”</p>
+										</td>
+									</tr>
+
+									<tr class="question" id="id36220951">
+										<td style="text-align: left; vertical-align: top;" id="ch06qa1q2">
+											<p><strong>Q:</strong></p>
+										</td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: What happens to the old child when I replace it?</strong></p>
+										</td>
+									</tr>
+
+									<tr class="answer" id="ch06qa1q2a2">
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> It’s removed from the DOM. What happens from there depends on
+												you: if you’ve still got a reference to it stored in a
+												variable somewhere you can continue to use it (in whatever
+												way might make sense). However if you don’t, the JavaScript
+												runtime might eventually reclaim the memory the element is
+												taking up in your browser.</p>
+										</td>
+									</tr>
+
+									<tr class="question" id="id36220977">
+										<td style="text-align: left; vertical-align: top;" id="ch06qa1q3">
+											<p><strong>Q:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: What if there is more than one &lt;head&gt; element? Your code
+												seems to depend on there being only one head when you
+												index by zero in the array returned by getElementsByTag?</strong></p>
+										</td>
+									</tr>
+
+									<tr class="answer" id="ch06qa1q3a3">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> By definition, an HTML file has only one &lt;head&gt; element.
+												That said, sure, someone could type two into an HTML file.
+												In that case your results may vary (and that’s what you get
+												for not validating your HTML!), but as usual, the browser
+												will do its very best to do the right thing (what that is,
+												just may depend on the browser).</p>
+										</td>
+									</tr>
+
+									<tr class="question" id="id36221006">
+										<td style="text-align: left; vertical-align: top;" id="ch06qa1q4">
+											<p><strong>Q:</strong></p>
+										</td>
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: Can I stop the interval timer after I start it?</strong></p>
+										</td>
+									</tr>
+
+									<tr class="answer" id="ch06qa1q4a4">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> You sure can. The setInterval method actually returns an id that
+												identifies the timer. By storing the id in a variable you
+												can then pass it to the clearInterval method at any time to
+												stop the timer. Closing your browser also stops the timer.</p>
+										</td>
+									</tr>
+
+									<tr class="question" id="id36221028">
+										<td style="text-align: left; vertical-align: top;" id="ch06qa1q5"><p> <strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: How can I know the parameters a web service uses? And if it
+														supports JSON and JSONP?</strong></p>
+										</td>
+									</tr>
+
+									<tr class="answer" id="ch06qa1q5a5">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Most web
+												services publish a public API that includes the ways you
+												can access the service as well as all the things you can do
+												with the service. If you’re using a commercial API you
+												might need to get this documentation directly from the
+												provider. For many public APIs you’ll most likely find the
+												information you need through a web search or on the
+												organization’s developer section of their web site. You can
+												also visit sites like programtheweb.com, which documents
+												the growing list of APIs out there.</p>
+										</td>
+									</tr>
+
+									<tr class="question" id="id36221058">
+										<td style="text-align: left; vertical-align: top;" id="ch06qa1q6"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: XMLHttpRequest is obviously older than HTML5, but what
+												about JSON and JSONP? Are they part of HTML5? Do I need
+												HTML5 to use them?</strong></p>
+										</td>
+									</tr>
+
+									<tr class="answer" id="ch06qa1q6a6">
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong></p>
+										</td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> We’d call JSON and JSONP contemporaries of HTML5. While neither one
+												is defined by an HTML5 specification, they are in heavy use
+												by HTML5 applications and are a core part of building web
+												apps. So, when we say HTML5 = Markup + JavaScript APIs +
+												CSS, well, JSON and JSONP are very much part of that
+												picture (as are requests using HTTP with XMLHttpRequest).</p>
+										</td>
+									</tr>
+
+									<tr class="question" id="id36221084">
+										<td style="text-align: left; vertical-align: top;" id="ch06qa1q7"><p><strong>Q:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: Do peoplestill use XML? Or is everything JSON now?</strong></p></td>
+									</tr>
+
+									<tr class="answer" id="ch06qa1q7a7">
+										<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> One truism in the computer industry is that nothing ever dies, and so
+												we’re sure we’ll have XML for a long time to come. That
+												said, we’d also say JSON has momentum right now and so lots
+												of new services are being created using JSON. You’ll often
+												find that many web services support a variety of data
+												formats including XML, JSON and many others (like RSS).
+												JSON has the advantage that it is based directly on
+												JavaScript and JSONP gets us around cross domain issues.</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div> <!-- /quandaset -->
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+		</section> <!-- Section 40 -->
+
+		<section class="section" data-number="41" data-name="We almost forgot: watch our for the dread browser cache">
+
+<!-- Page 272 -->
+
+			<div class="pagebreak pageNumber">272</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/272fig01.png" />
+			</figure>
+
+			<h2 class="title">We almost forgot: watch out for the dreaded browser cache</h2>
+
+			<p><a id="iddle1190"class="indexterm" /><a id="iddle1933" class="indexterm" />
+				<a id="iddle1967" class="indexterm" /><a id="iddle2971" class="indexterm" />
+				We’re almost ready to go here,
+				but there’s a small detail we need to take care of, and it’s one of
+				those “if you’ve never done it before, how would you know you need
+				to address it” kind of issues.</p>
+
+			<p>Most browsers have an interesting property in that if you
+				retrieve the same URL over and over (like our JSONP request will),
+				the browser ends up caching it for efficiency, and so you just get
+				the same cached file (or data) back over and over. Not what we want.</p>
+
+			<p>Luckily there is an easy and old-as-the-Web cure for this. All
+				we do is add a random number onto the end of the URL, and then the
+				browser is tricked into thinking it’s a new URL the browser’s never
+				seen before. Let’s fix our code by changing the URL line above to:</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/272fig02.png" />
+			</figure>
+			
+			<p>With this new code, the generated URL will look something like this:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/272fig03.png" />
+			</figure>
+
+			<p>Go ahead and replace the <code class="literal">url</code> variable declaration in your
+				<code class="literal">handleRefresh</code> function with the code and then we’ll be
+				ready for a test drive!</p>
+			
+		</section> <!-- Section 41 -->
+
+		<section class="section" data-number="42" data-name="One more TIME test drive">
+
+<!-- Page 273 -->
+
+			<div class="pagebreak pageNumber">273</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/273fig01.png" />
+			</figure>
+
+			<h2 class="title left">One more TIME test drive</h2>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+
+			<br />
+			
+			<p>
+			Alright, surely we’ve thought
+			of everything this time. We should be all ready. Make sure you’ve
+			got all the code in since the last test drive, and reload the page.
+			Wow, we’re seeing continuous updates!
+			</p>
+
+			<div class="clear" />
+
+		</section> <!-- Section 42 -->
+			
+		<section class="section" data-number="43" data-name="How to remove duplicate sales reports">
+			
+			<h2 class="title">How to remove duplicate sales reports</h2>
+			
+			<p>If you take a quick look back at the Gumball Specs in
+				“A quick example using JSON”,
+				you’ll see that you can specify a last report time parameter in the
+				request URL, like this:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/273fig02.png" />
+			</figure>
+
+			<p>That’s a great, but how do we know the time of the last report
+			we’ve retrieved? Let’s look at the format of the sales reports
+			again:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/273fig03.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>[{"name":"LOS ANGELES","time":1309208126092,"sales":2},</pre>
+<pre>{"name":"PASADENA","time":1309208128219,"sales":8},</pre>
+<pre>{"name":"DAVIS CREEK","time":1309214414505,"sales":8}}</pre>
+<pre>...]</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 274 -->
+
+			<div class="pagebreak pageNumber">274</div>
+
+			<figure>
+				<img src="/contents/html5/figs/web/274fig01.png" />
+			</figure>
+
+			<p><a id="iddle3130" class="indexterm" /><strong>Yougot it.</strong></p>
+
+			<p>And to keep track of the last sales report received we’re going to
+				need to make some additions to the <code class="literal">updateSales</code>
+				function, where all the processing of the sales data happens. First,
+				though, we should declare a variable to hold the time of the most
+				recent report:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/274fig02.png" />
+			</figure>
+
+			<p>And let’s grab the time of the most recent sale in <code class="literal">updateSales:</code></p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/274fig03.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function updateSales(sales) {</pre>
+<pre>	var salesDiv = document.getElementById("sales");</pre>
+<pre>	for (var i = 0; i < sales.length; i++) {</pre>
+<pre>		var sale = sales[i];</pre>
+<pre>		var div = document.createElement("div");</pre>
+<pre>		div.setAttribute("class", "saleItem");</pre>
+<pre>		div.innerHTML = sale.name + " sold " + sale.sales + " gumballs";</pre>
+<pre>			" gumballs ";</pre>
+<pre>		salesDiv.appendChild(div);</pre>
+<pre>	}</pre>
+<pre>	if (sales.length > 0) {</pre>
+<pre>		lastReportTime = sales[sales.length=1].time;</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 43 -->
+
+		<section class="section" data-number="44" data-name="Updating the JSON URL to include the lastreporttime">
+	
+<!-- Page 275 -->
+
+			<div class="pagebreak pageNumber">275</div>
+
+			<h2 class="title">Updating the JSON URL to include the lastreporttime</h2>
+
+			<p><a id="iddle2202" class="indexterm" /><a id="iddle2431" class="indexterm" />
+				<a id="iddle2768" class="indexterm" />
+				Now that we’re keeping track of the last reported sales time, we need to make
+				sure we’re sending it to Mighty Gumball as part of the JSON request.
+				To do that, we’ll edit the <code class="literal">handleRefresh</code>
+				function, and add the <code class="literal">lastreporttime</code>
+				query parameter like this:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/275fig01.png" />
+				<figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function handleRefresh() {</pre>
+<pre>	var url = "http://gumball.wickedlysmart.com" +</pre>
+<pre>		"?callback=updateSales" +</pre>
+<pre>		"&lastreporttime=" + lastReportTime +</pre>
+<pre>		"&random=" + (new Date()).getTime();</pre>
+<pre>	var newScriptElement = document.createElement("script");</pre>
+<pre>	newScriptElement.setAttribute("src", url);</pre>
+<pre>	newScriptElement.setAttribute("id", "jsonp");</pre>
+<pre>	var oldScriptElement = document.getElementById("jsonp");</pre>
+<pre>	var head = document.getElementsByTagName("head")[0];</pre>
+<pre>	if (oldScriptElement == null) {</pre>
+<pre>		head.appendChild(newScriptElement);</pre>
+<pre>	}</pre>
+<pre>	else {</pre>
+<pre>		head.replaceChild(newScriptElement, oldScriptElement);</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 44 -->
+
+		<section class="section" data-number="45" data-name="Test drive lastReportTime">
+
+			<h2 class="title left">Test drive lastReportTime</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+
+			<div class="clear" />
+
+			<p>Let’s take the <code class="literal">lastreporttime</code>
+				query parameter for a test run and see if it solves our duplicate
+				sales reports problem. Make sure you type in the new code, reload
+				the page, and click that refresh button.</p>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/275fig02.png" />
+			</figure>
+
+			<figure>
+				<img src="/contents/html5/figs/web/275fig03.png" />
+			</figure>
+
+<!-- Page 276 -->
+
+			<div class="pagebreak pageNumber">276</div>
+
+			<figure>
+				<img src="/contents/html5/figs/web/276fig01.png" />
+			</figure>
+
+<!-- Page 277 -->
+
+			<div class="pagebreak pageNumber">277</div>
+
+			<div class="sidebar" id="bullet_points-id00063">
+				<img src="/contents/html5/figs/web/xxvifig03.png">
+
+				<div class="itemizedlist">
+					<ul class="itemizedlist">
+						<li class="listitem">
+							<p><a id="iddle1191" class="indexterm" />
+								<a id="iddle2223" class="indexterm" />
+								<a id="iddle3244" class="indexterm" />
+								XMLHttpRequest does not allow you to request data from a different server than
+								the one from which your HTML and JavaScript are being served.
+								This is a browser security policy designed to prevent malicious
+								JavaScript from getting access to your web pages and a user’s cookies.</p>
+						</li>
+						
+						<li class="listitem"><p>An alternative to XMLHttpRequest for accessing
+							data hosted by web services is JSONP.</p>
+						</li>
+						
+						<li class="listitem"><p>Use XMLHttpRequest when your HTML
+							and JavaScript are hosted on the same machine as your data.</p>
+						</li>
+						
+						<li class="listitem"><p>Use JSONP when you need to access
+							data hosted by a web service on a remote server (assuming that
+							web service supports JSONP). A web service is a web API that is
+							accessed by HTTP.</p>
+						</li>
+						
+						<li class="listitem"><p>JSONP is a method of retrieving
+							data by using the &lt;script&gt; element.</p>
+						</li>
+						
+						<li class="listitem"><p>JSONP is JSON data wrapped in
+							JavaScript; typically, a function call.</p>
+						</li>
+						
+						<li class="listitem"><p>The function call that wraps the
+							JSON data in JSONP is referred to as a “callback.”</p>
+						</li>
+						
+						<li class="listitem"><p>Specify the callback function as
+							a URL query parameter in a JSONP request.</p>
+						</li>
+						
+						<li class="listitem"><p>JSONP is no more (or less) secure
+							than linking to JavaScript libraries using the &lt;script&gt;
+							element. Use caution whenever you link to third-party
+							JavaScript.</p>
+						</li>
+						
+						<li class="listitem"><p>Specify the &lt;script&gt;
+							element to make the JSONP request by adding it directly to your
+							HTML, or by writing the &lt;script&gt; element to the DOM using
+							JavaScript.</p>
+						</li>
+						
+						<li class="listitem"><p>Use a random number on the end of
+							your JSONP request URL if you are making the request multiple
+							times so the browser doesn’t cache the response.</p>
+						</li>
+						
+						<li class="listitem"><p>The method replaceChild replaces
+							an element in the DOM with another element.</p>
+						</li>
+						
+						<li class="listitem"><p>setInterval is a timer that calls
+							a function at a specified interval. You can use setInterval to
+							make repeated JSONP requests to a server to retrieve new data.</p>
+						</li>
+					</ul>
+				</div> <!-- itemizedlist -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 278 -->
+		
+			<div class="pagebreak pageNumber">278</div>
+
+			<div class="sidebar" id="html5cross-id00064">
+
+				<img src="/contents/html5/figs/web/html5cross2.png">
+				
+				<p>Wow, you got your apps talking to the Web in this chapter! Time for
+					some left-brain activity to help it all sink in.</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/278fig01.png" />
+				</figure>
+
+				<div class="informaltable">
+					<table style="border-collapse: collapse;">
+						<colgroup>
+							<col class="c1" />
+							<col class="c2" />
+						</colgroup>
+						<thead>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>Across</p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;"><p>Down</p></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid;">
+									<p>2. The pattern of using XMLHttpRequest to get data from servers is sometimes called ______.</p>
+									<p>5. ______ is the latest Mighty Gumball Web-enabled gumball machine.</p>
+									<p>8. XMLHttpRequest made fun of JSONP’s ___________.</p>
+									<p>10. The Guru teaches Grasshopper that function arguments are also _______.</p>
+									<p>12. We were ___________ to get twenty-five pages into the chapter before
+										discovering the browser security policy.</p>
+									<p>15. One of XMLHttpRequest’s nicknames at Microsoft.</p>
+									<p>16. JSONP stands for “JSON with _______”.</p>
+								</td>
+
+								<td style="vertical-align: top;">
+									<p>1. JSON P uses a ____________.</p>
+									<p>3. JSONP uses these types of objects.</p>
+									<p>4. Format we all thought would save the world.</p>
+									<p>6. _______ has a JSONP Web service.</p>
+									<p>7. This chapter had one of these in the middle.</p>
+									<p>9. Mighty Gumball is testing the MG2200 in ___________.</p>
+									<p>11. ______ reminded Frank, Jim, and Joe about the cross-domain security issues with
+										XMLHttpRequest.</p>
+									<p>13. It’s easy to set up a local server on a ______.</p>
+									<p>14. ______, the QA guy, was upset when the request to the production Gumball server failed.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- /informaltable -->
+			</div> <!-- /sidebar -->
+			
+		</section> <!-- Section 45 -->
+
+		<section class="section" data-number="46" data-name="A Special Message from Chapter 7...">
+
+<!-- Page 279 -->
+
+			<div class="pagebreak pageNumber">279</div>
+
+			<h2 class="title">A Special Message from Chapter 7...</h2>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/279fig01.png" />
+			</figure>
+
+			<figure>
+				<img src="/contents/html5/figs/web/279fig02.png" />
+			</figure>
+
+<!-- Page 280 -->
+
+			<div class="pagebreak pageNumber">280</div>
+
+			<div class="sidebar" id="html5cross_solution-id00065">
+				
+			<img src="/contents/html5/figs/web/html5crosssolution.png">
+
+			<figure>
+				<img src="/contents/html5/figs/web/280fig01.png" />
+			</figure>
+
+		</section> <!-- Section 46 -->	
+
+	</div> <!-- /container -->
+
+</body>
+</html>

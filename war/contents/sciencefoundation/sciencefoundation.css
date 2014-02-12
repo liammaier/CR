@@ -1,0 +1,86 @@
+div.container.sciencefoundation {
+	font-family: "Times New Roman";
+	font-size: 11pt;
+	width: 520px;
+	margin-left:auto;
+	margin-right: auto;
+}
+
+.sciencefoundation h1 {
+	font-size: 12pt;
+	background-image:url('images/headerbackground.png');
+	font-family: Arial;
+	padding-left: 15px;
+	padding-top: 10px;
+	padding-bottom: 7px;
+	width: 518px;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	color: #800000;
+	line-height: 21px;
+}
+
+.sciencefoundation .clear {
+	clear: both;
+}
+
+.sciencefoundation p.right {
+	text-align: right;
+}
+
+.sciencefoundation div.rightFigure {
+	float: right;
+	display: block;
+	background-color: #FFCC00;
+	width: 55%;
+	margin-left: 10px;
+}
+
+.sciencefoundation div.rightFigure.largerFigure {
+	width: 61%;
+}
+
+.sciencefoundation div.rightFigure img {
+	padding: 10px;
+	margin-left:;
+}
+
+.sciencefoundation div.rightFigure p {
+	font-size: 80%;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 1em;
+}
+
+.sciencefoundation div.centerFigure {
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #FFCC00;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.sciencefoundation div.centerFigure img {
+	padding: 10px;
+}
+
+.sciencefoundation div.centerFigure p {
+	font-size: 80%;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 1em;
+}
+
+
+
+
+
+
+
+
+
+
+
+

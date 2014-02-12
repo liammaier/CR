@@ -1,0 +1,3946 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+
+	<title>Chapter 7. Bringing Out Your Inner Artist: The Canvas</title>
+	
+	
+	<META name="javascript" javascript="/contents/html5/html5.js">
+	
+
+</head>
+
+<body>
+  
+  <div id="html51" class="html5 container">
+
+    <section class="section" data-number="0" data-name="Introduction">
+
+<!-- Page 281 -->
+
+    	<div class="pagebreak pageNumber">281</div>
+
+      <h1 class="title"> Chapter 7. Bringing Out Your Inner Artist: The Canvas </h1>
+
+			<figure class="center">
+				<img src="/contents/html5/figs/web/281fig01.png" />
+			</figure>
+				
+			<aside class="right">
+				Okay, "destroy" might be a little overly dramatic.
+			</aside>
+				
+			<p>
+				<strong>HTML's been liberated from being just a "markup" language.</strong> With HTML5's
+				new canvas element, you've got the power to create, manipulate and destroy <em>pixels</em>,
+				right in your own hands. In this chapter we'll use the canvas element to bring out your
+				inner artist-no more talk about HTML being all semantics and no presentation; with canvas
+				we're going to paint and draw with color. Now it's <em>all</em> about presentation. We'll
+				tackle how to place a canvas in your pages, how to draw text and graphics (using JavaScript,
+				of course), and even how to handle browsers that don't support the canvas element. And
+				canvas isn't just a one-hit wonder; you're going to be seeing a lot more of canvas in other
+				chapters in this book.
+			</p>
+				
+			<aside>
+				In fact we hear &lt;canvas&gt; and &lt;video&gt; have been sharing more than just web pages...
+				we'll get into the juicy details later.
+			</aside>
+
+<!-- Page 282 -->
+
+			<div class="pagebreak pageNumber clear">282</div>
+		
+		</section> <!-- Section 0 -->
+		
+		<section class="section" data-number="1" data-name="Our new start-up: TweetShirt">
+				
+			<figure class="left">
+				<img src="/contents/html5/figs/web/282fig01.png" />
+			</figure>
+				
+			<h2 class="title">Our new start-up: TweetShirt</h2>
+				
+			<p>
+				Our motto is "if it's worth tweeting on Twitter, it's worth wearing on a t-shirt."
+			</p>
+				
+			<p>
+				After all, half the battle of calling yourself a journalist is being willing to put your
+				words in print, so what better place than printing on your or someone else's chest? At
+				least that's our start-up pitch, and we're sticking to it.
+			</p>
+			
+			<p>
+				Now, there's only one thing that stands in the way of getting this start-up off the ground:
+				we need a nice web app that lets
+				customers create a custom t-shirt design, featuring one of their recent tweets.
+			</p>
+			
+			<aside class="right">
+				You're probably thinking to yourself "you know what? That's not a bad idea". Well,
+				come on then, we'll get this start-up off the ground by the end of this chapter. Oh,
+				and if you actually go out and do this and make money, we're not claiming any intellectual
+				property or anything, but at least send us a free t-shirt!
+			</aside>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/282fig02.png" />
+			</figure>
+
+<!-- Page 283 -->
+
+			<div class="pagebreak pageNumber">283</div>
+		
+		</section> <!-- Section 1 -->
+		
+		<section class="section" data-number="2" data-name="Checking out the comps">
+			
+			<h2 class="title">Checking out the "comps"</h2>
+			
+			<aside class="right">
+				Yeah right, come on we're a start-up, we did this on a napkin at Starbuzz Coffee.
+			</aside>
+			
+			<p>
+				After exhaustive iterative
+				design and extensive focus group testing we've got a comp (otherwise
+				known as an initial visual design) ready for you to review, let's
+				take a look:
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/283fig01.png" />
+			</figure>
+
+<!-- Page 284 -->
+
+			<div class="pagebreak pageNumber">284</div>
+			
+			<div class="sidebar">
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/brainpower.png" />
+				</figure>
+
+				<br>
+				<br>
+
+				<br>
+
+				<p>
+					Take another look at the requirements on the previous page. How do you think you can
+					accomplish this using HTML5? Remember, one requirement is making
+					sure your site works across as many device formats and sizes as possible?
+				</p>
+				
+				<p>
+					Check all the possibilities below (and then circle the best answer):
+				</p>
+				
+				<div class="informaltable">
+					<table style="border-collapse: collapse;">
+						<tbody>
+							<tr>
+								<td class="checkbox">
+									<img src="/contents/html5/figs/web/squer.png" />
+								</td>
+								
+								<td class="item">
+										Just use Flash, it works on most browsers.
+								</td>	
+							</tr>
+						
+							<tr>
+								<td class="checkbox">
+									<img src="/contents/html5/figs/web/squer.png" />
+								</td>
+								
+								<td class="item">
+										Take a look at HTML5 and see if there are any new technologies that might help
+										(hint: there might be one named canvas).
+								</td>
+							</tr>
+							
+							<tr>
+								<td class="checkbox">
+									<img src="/contents/html5/figs/web/squer.png" />
+								</td>
+								
+								<td class="item">
+										Write a custom application for every device, that way you know the exact experience you're going to get.
+								</td>
+							</tr>
+							
+							<tr>
+								<td class="checkbox">
+									<img src="/contents/html5/figs/web/squer.png" />
+								</td>
+								
+								<td class="item">
+										Just compute the image on the server side and deliver a custom image back to the browser.
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- informaltable -->
+			
+			</div> <!-- sidebar -->
+			
+			<br>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/therearenodumbquestions.png" />
+			</figure>
+			
+			<blockquote>
+				<table class="qanda">
+					<tbody>
+						<tr>
+							<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+							
+							<td style="text-align: left; vertical-align: top;"><p><strong>Well seriously, why
+								not Flash, or a custom application for that matter?</strong></p></td>
+						</tr>
+						
+						<tr>
+							<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+							
+							<td style="text-align: left; vertical-align: top;"><p>Flash is a great technology, and you
+								certainly could use it. Right now, though, the industry is heading toward HTML5, and as
+								we write this, you'd have trouble running your Flash app on all devices, including some
+								very popular ones.</p>
+							
+							<p>An app may be a great choice if you really need an experience that is totally
+								customized to the device. Keep in mind that developing a custom application for a
+								variety of devices is expensive.</p>
+							
+							<p>With HTML5 you get great support across mobile devices and the desktop, and you
+								can often create an application by using a single technology solution.</p></td>
+						</tr>
+						
+						<tr>
+							<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+							
+							<td style="text-align: left; vertical-align: top;"><p><strong>I like the idea of creating
+								the image on the server. That way I can write one piece of code and images work on all
+								devices. I know a little PHP so I should be able to pull this off.</strong></p></td>
+						</tr>
+						
+						<tr>
+							<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+							
+							<td style="text-align: left; vertical-align: top;"><p>That's another way you could go, but
+								the disadvantages are that if you have a zillion users, you are going to have to worry about
+								scaling those servers to meet the demand (versus each user's client dealing with generating
+								the preview of the t-shirt). You're also going to have a much more interactive and seamless
+								experience if you write it for the browser instead.</p><p>How? Well, we're glad you asked...</p></td>
+						</tr>
+					</tbody>
+				</table>
+			</blockquote>
+
+<!-- Page 285 -->
+
+			<div class="pagebreak pageNumber">285</div>
+		
+			<section class="subsection" data-number="3" data-name="Let's drop in on the TweetShirt crew...">
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web/284fig01.png" />
+				</figure>
+				
+				<h2 class="title">Let's drop in on the TweetShirt crew...</h2>
+				
+				<p>
+					<strong>You've heard the requirements and you've got a basic design for the user experience, so
+						now comes the tough part, making it work. Let's listen in and see where this is all going...</strong>
+				</p>
+				
+				<p>
+					<strong>Joe:</strong>I thought this was going to be simple until I saw
+					those circles in the background.
+				</p>
+				
+				<p>
+					<strong>Frank:</strong>What do you mean, that's just an image...
+				</p>
+				
+				<p>
+					<strong>Judy:</strong>No no, the founder wants those circles to be random; so the circles on
+					my shirt will be different from yours. Same with the squares.
+				</p>
+				
+				<p>
+					<strong>Frank:</strong>That's okay, in the past we've done it by generating an image on the server side.
+				</p>
+				
+				<p>
+					<strong>Joe:</strong>Yeah, I know, but that didn't work out so well; remember having to pay
+					all those server fees to Amazon?
+				</p>
+				
+				<p>
+					<strong>Frank:</strong>Uh, yeah. Nevermind.
+				</p>
+				
+				<p>
+					<strong>Joe:</strong>And in any case, we want this thing to be instant gratification, you
+					know, no long trips back to the server. So, let's do it all on the client-side if we can.
+				</p>
+				
+				<p>
+					<strong>Judy:</strong>Guys, I think we can, I've been looking at the canvas stuff in HTML5.
+				</p>
+				
+				<p>
+					<strong>Frank:</strong>Canvas? Remember I'm just the design guy, fill me in.
+				</p>
+				
+				<p>
+					<strong>Judy:</strong>You must have heard of the canvas, Frank-it's a new element in HTML5
+					that creates a drawable region for 2D shapes, text and bitmap images.
+				</p>
+				
+				<p>
+					<strong>Frank:</strong>It sounds like an
+					<code class="literal">&lt;img&gt;</code> tag. We just place it on the page with a width and
+					height and the browser does the rest.
+				</p>
+				
+				<p>
+					<strong>Judy:</strong>Not a bad comparison, we do define a width and height for the canvas,
+					but in this case what gets drawn on the canvas is specified with JavaScript code.
+				</p>
+				
+				<p>
+					<strong>Joe:</strong>Well, where does markup come into that? Can we tell the canvas in
+					JavaScript to "put this <code class="literal">&lt;h1&gt;</code> element here"?
+				</p>
+				
+				<p>
+					<strong>Judy:</strong>Nope, after you place the canvas in the page you leave the markup world
+					behind; in JavaScript we're placing points, lines, paths, images and text. It's really a low level API.
+				</p>
+				
+				<p>
+					<span class="formalpara-title"><strong>Joe:</strong>Well, as long as it can pull off those
+						random circles I'm good. Okay, enough talking, let's have a look at it!
+				</p>
+
+<!-- Page 286 -->
+
+				<div class="pagebreak pageNumber">286</div>
+
+			</section> <!-- Section 3 -->
+
+		</section> <!-- Section 2 -->
+		
+		<section class="section" data-number="4" data-name="How to get a canvas into your web page">
+			
+			<h2 class="title">How to get a canvas into your web page</h2>
+			
+			<p>
+				Frank was right, in some ways a canvas is like an
+				<code class="literal">&lt;img&gt;</code>
+				element.You add a canvas like this:
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/286fig01.png" />
+			</figure>
+			
+			<aside class="right">
+				In this case, a width of 600 and a height of 200.
+			</aside>
+			
+			<p class="asided">
+				And the browser allocates some space in the page for the canvas, with the width and height you specified.
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/286fig02.png" />
+			</figure>
+
+<!-- Page 287 -->
+	
+			<div class="pagebreak pageNumber">287</div>
+		
+		</section> <!-- Section 4 -->
+		
+			<section class="subsection" data-number="5" data-name="Test drive your new canvas">
+				
+				<h2 class="title left">Test drive your new canvas</h2>
+				
+				<figure>
+					<img class="carimg" src="/contents/html5/figs/web/common-10.png" />
+				</figure>
+
+				<div class="clear" />
+
+				<p>
+					Time for you to get this working in your own web page. Go ahead and type in the code below into
+					a new file and then load it in your browser:
+				</p>
+
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>	&lt;title&gt;Look What I Drew&lt;/title&gt;</pre>
+<pre>	&lt;meta charset="utf-8"&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+				<br />
+<pre>&lt;canvas id="lookwhatIdrew" width="600" height="200"&gt;&lt;/canvas&gt;</pre>
+				<br />
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+				
+				<figure class="center">
+					<img src="/contents/html5/figs/web/287fig01.png" />
+				</figure>
+
+<!-- Page 288 -->
+				
+				<div class="pagebreak pageNumber">288</div>
+			
+			</section> <!-- Section 5 -->
+	
+		</section> <!-- Section 4 -->
+
+		<section class="section" data-number="6" data-name="How to see your canvas">
+			
+			<h2 class="title">How to see your canvas</h2>
+			
+			<p>
+				Unless you draw something in the canvas, you're not going to see it. It is simply a space in
+				the browser window for you to draw in. We're going to draw in the canvas very soon, but for now,
+				what we really want is evidence that the canvas is actually in our page.
+			</p>
+			
+			<p>
+				There is another way we can see the canvas... if we use CSS to style the
+				<code class="literal">&lt;canvas&gt;</code> element so we can see the border, we'll be able to
+				see it in the page. Let's add a simple style that adds a 1-pixel-wide black border to the canvas.
+			</p>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/288fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>	&lt;title&gt;Look What I Drew&lt;/title&gt;</pre>
+<pre>	&lt;meta charset="utf-8"&gt;</pre>
+<pre>	&lt;style&gt;</pre>
+<pre>		canvas {</pre>
+<pre>			border: 1px solid black;</pre>
+<pre>		}</pre>
+<pre>		&lt;/style&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+							<br />
+<pre>&lt;canvas id="lookwhatIdrew" width="600" height="200"&gt;&lt;/canvas&gt;</pre>
+							<br />
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/288fig02.png" />
+			</figure>
+
+<!-- Page 289 -->
+				
+			<div class="pagebreak pageNumber">289</div>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/therearenodumbquestions.png" />
+			</figure>
+			
+			<blockquote>
+				<table style="border: 0;">
+					<tbody>
+						<tr>
+							<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+							
+							<td style="text-align: left; vertical-align: top;">
+								<p><strong>Can I only have one canvas per page?</strong></p>
+							</td>
+						</tr>
+						
+						<tr>
+							<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+							
+							<td style="text-align: left; vertical-align: top;"><p>No, you can have as many as you like
+								(or that the browser or your users can handle). Just give each a unique id and you can
+								draw on each as a separate canvas. You'll see how to use the canvas id in a moment.</p></td>
+						</tr>
+						
+						<tr>
+							<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+							
+							<td style="text-align: left; vertical-align: top;"><p><strong>Is the canvas transparent?</strong></p></td>
+						</tr>
+						
+						<tr>
+							<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+							
+							<td style="text-align: left; vertical-align: top;">
+								<p>
+									By default, yes, the canvas is transparent.
+									You can draw in the canvas to fill it with colored pixels; you'll see how to do that later
+									in the chapter.
+								</p>
+							</td>
+						</tr>
+						
+						<tr>
+							<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+							
+							<td style="text-align: left; vertical-align: top;">
+								<p>
+									<strong>If it's transparent, that means
+									I could position it on top of another element to, say, draw something over an image
+									or anything else on the page, right?</strong>
+								</p>
+							</td>
+						</tr>
+						
+						<tr>
+							<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+							
+							<td style="text-align: left; vertical-align: top;">
+								<p>
+									<strong>A:</strong> That's right! That's one of the cool things about canvas. It gives
+									you the ability to add graphics anywhere on your page.
+								</p>
+							</td>
+						</tr>
+						
+						<tr>
+							<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+							
+							<td style="text-align: left; vertical-align: top;">
+								<p>
+									<strong>Can I use CSS to set the width and height of the canvas instead of the width and
+									height attributes on the element?</strong>
+								</p>
+							</td>
+						</tr>
+						
+						<tr>
+							<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+							
+							<td style="text-align: left; vertical-align: top;">
+								<p>
+									You can, but it works a little differently from how you might expect. By default, a canvas
+									element is 300px wide and 150px high. If you don't specify the width and height attributes
+									in the canvas tag, that's what you get. If you then specify a size in CSS, say 600px by
+									200px, the 300 x 150 canvas is <em>scaled</em> to fit that size, and so is everything that's
+									drawn in the canvas. It's just like scaling an image by specifying a new width and height
+									that is larger or smaller than the real width and height of the image. If you scale it up,
+									you'll get some pixelation in the image, right?
+								</p>
+							
+								<p>
+										The same thing happens with the canvas. A 300px wide canvas that becomes 600px wide has
+										the same number of pixels stretched into twice the size, so it'll look kind of chunky.
+										However, if you use the width and height attributes in the element, you're setting the
+										dimensions of the canvas to be bigger (or smaller) than 300 x 150 and everything drawn in
+										that canvas will be drawn normally. So, we recommend specifying the width and height in
+										the tag attributes, and not setting those properties in CSS unless you really mean to scale the canvas.
+								</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</blockquote>
+
+			<div class="sidebar">
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/brainpower.png" />
+				</figure>
+				
+				<br>
+				
+				<br>
+				
+				<br>
+				
+				<p>
+					You might have noticed that the canvas element didn't have any content inside it. If you
+					were to place text between the tags, what do you think the browser would do when the page is loaded?
+				</p>
+				
+				<figure class="center">
+					<img src="/contents/html5/figs/web/289fig01.png" />
+				</figure>
+			</div> <!-- sidebar -->
+
+<!-- Page 290 -->
+			
+			<div class="pagebreak pageNumber">290</div>
+		
+		</section> <!-- Section 6 -->
+		
+		<section class="section" data-number="7" data-name="Drawing on the Canvas">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/290fig02.png" />
+			</figure>
+			
+			<h2 class="title">Drawing on the Canvas</h2>
+			
+			<p>
+				Right now we've got a blank canvas staring us in the face. Rather than sit here with a case of
+				JavaScript-writers-block, we're just going to go for it and put a nice black-filled rectangle
+				on our canvas. To do that we've got to decide where it goes and how big to make it. How about
+				we put it at the location <code class="literal">x=10</code> pixels and
+				<code class="literal">y=10</code> pixels and make it 100 pixels high and wide? Works for us.
+			</p>
+			
+			<p>
+				Now let's check out some code that does this:
+			</p>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/290fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>	&lt;title&gt;Look What I Drew&lt;/title&gt;</pre>
+<pre>	&lt;meta charset="utf-8"&gt;</pre>
+<pre>	&lt;style&gt;</pre>
+<pre>		canvas { border: 1px solid black; }</pre>
+<pre>	&lt;/style&gt;</pre>
+<pre>	&lt;script&gt;</pre>
+<pre>		window.onload = function () {</pre>
+<pre>			var canvas = document.getElementById("tshirtCanvas");</pre>
+							<br />
+<pre>			var context = canvas.getContext("2d");</pre>
+							<br />
+<pre>			context.fillRect(10, 10, 100, 100);</pre>
+<pre>		};</pre>
+<pre>	&lt;/script&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+							<br />
+<pre>	&lt;canvas width="600" height="200" id="tshirtCanvas"&gt;&lt;/canvas&gt;</pre>
+							<br />
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 291 -->
+			
+			<div class="pagebreak pageNumber">291</div>
+		
+			<section class="subsection" data-number="8" data-name="A little Canvas test drive...">
+				
+				<h2 class="title left">A little Canvas test drive...</h2>
+				
+				<figure>
+					<img class="carimg" src="/contents/html5/figs/web/common-10.png" />
+				</figure>
+
+				<div class="clear" />
+
+				<p>
+					Go ahead and type this code in (or grab it from
+					<code class="literal">http://wickedlysmart.com/hfhtml5</code>) and load it into your browser.
+					Assuming you're using a modern browser you should see something like we do:
+				</p>
+				
+				<figure class="center">
+					<img src="/contents/html5/figs/web/291fig01.png" />
+				</figure>
+			
+			</section> <!-- Section 8 -->
+		
+			<section class="subsection" data-number="9" data-name="A closer look at the code">
+			
+				<h2 class="title">A closer look at the code</h2>
+				
+				<p>
+					That was a great little test run, but let's dive in a little deeper:
+				</p>
+				
+				<ol>
+					<li>
+						In our markup, we define a canvas and give it an id, using the <code class="literal">&lt;canvas&gt;</code>
+						tag. The first thing you need to do to draw into that canvas is to get a handle on the canvas object in
+						the DOM. As usual we do this with the <code class="literal">getElementById</code> method:
+						
+<pre><strong>var canvas = document.getElementById("tshirtCanvas");</strong></pre>
+					</li>
+				</ol>
+
+<!-- Page 292 -->
+						
+				<div class="pagebreak pageNumber">292</div>
+					
+				<ol start="2">
+					<li>
+						With a reference to the canvas element assigned to the <code class="literal">canvas</code> variable,
+						we now have to go through a bit of "protocol" before we draw on the canvas. We need to ask the canvas
+						to give us a context to draw on. And in this case, we specifically want a 2D context. The context
+						returned by the canvas is assigned to the <code class="literal">context</code> variable:
+						
+						<figure class="center">
+							<img src="/contents/html5/figs/web/292fig01.png" />
+						</figure>
+					</li>
+					
+					<li>
+						Now, with the context in hand, we can use it to draw onto the canvas, which we do by calling the
+						<code class="literal">fillRect</code> method. This method creates a rectangle starting at the x,
+						y position of 10, 10 and that is 100 pixels wide and high.
+						
+						<figure>
+							<img src="/contents/html5/figs/web/292fig02.png" />
+						</figure>
+					</li>
+				</ol>
+				
+				<div class="sidebar">
+					<figure class="sidebarimg">
+						<img src="/contents/html5/figs/web/brainpower.png" />
+					</figure>
+					
+					<br>
+					
+					<br>
+					
+					<br>
+					
+					<p>
+						Can you think of a way to use a canvas element if your browser supports it and if not, to
+						just display a message like "Hey, you, yes you, upgrade your browser!!"?
+					</p>
+				</div> <!-- sidebar -->
+
+<!-- Page 293 -->
+					
+				<div class="pagebreak pageNumber">293</div>
+				
+				<div class="left" style="width:40%">
+					<figure class="center">
+						<img src="/contents/html5/figs/web/therearenodumbquestions.png" />
+					</figure>
+					
+					<blockquote class="blockquote">
+						<table style="border: 0;">
+							<tbody>
+								<tr>
+									<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>How does the canvas know to make the rectangle black?</strong></p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											Black is the default fill color for a canvas. Of course, you can change this
+											using the fillStyle property, as we'll show you shortly.
+										</p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>What if I wanted a rectangle outline, not a filled rectangle?</strong></p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											To get just the outline of a rectangle, you'd use the strokeRect function instead
+											of fillRect. You'll learn more about stroking later in the chapter.
+										</p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>What is a 2d context, and why can't I just draw right on the canvas?</strong></p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											The canvas is the graphical area displayed in the web page. The context is an object
+											associated with the canvas that defines a set of properties and methods you can use to
+											draw on the canvas. You can even save the state of the context and then restore it later,
+											which comes in handy at times. You'll see many of these context properties and methods
+											in the rest of this chapter.
+										</p>
+									
+										<p>
+											The canvas was designed to support more than one interface; 2d, 3d, and others we haven't
+											even thought of yet. By using a context, we can work with different interfaces within the
+											same element, canvas. You can't draw right on the canvas because you need to specify which
+											interface you're using by choosing a context.
+										</p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p><strong>Does that mean there is a "3d" context too?</strong></p>
+									</td>
+								</tr>
+								
+								<tr>
+									<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+									
+									<td style="text-align: left; vertical-align: top;">
+										<p>
+											Not yet. There are a few competing and emerging standards for this, but nothing
+											that looks like a frontrunner yet. Stay tuned on this one; in the mean time take a
+											look at WebGL and the libraries that use it, like SpiderGL, SceneJS and three.js.
+										</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</blockquote>
+				</div> <!-- /sidebar -->
+				
+				<div class="sidebar right" style="width:50%">
+					<figure>
+						<img src="/contents/html5/figs/web/seriouscoding.png" />
+					</figure>
+					
+					<p>
+						<strong>Wondering how you can detect whether your browser supports canvas or not, in code?</strong>
+					</p>
+					
+					<p>
+						Well of course you can, and we should point out that so far we've just been assuming our browser
+						supports canvas. But in any production code you should test to make sure you have support.
+					</p>
+					
+					<p>
+						All you have to do is test to see if the getContext method exists in your canvas object
+						(the one you get back from getElementById):
+					</p>
+					
+					<figure class="center">
+						<img src="/contents/html5/figs/web/293fig01.png" />
+					</figure>
+					
+					<p>
+						If you want to test for canvas support without having to have a canvas already in your markup,
+						you can create a canvas element on the fly, using all the techniques you already know. Like this:
+					</p>
+					
+<pre><strong>var canvas =</strong></pre>
+
+<pre><strong>document.createElement("canvas");</strong></pre>
+
+					<p>
+						Be sure to check out the appendix for information about an open source library you can use
+						to test for all the functionality in HTML5 in a consistent way.
+					</p>
+				
+				</div> <!-- /sidebar -->
+
+<!-- Page 294 -->
+					
+				<div class="pagebreak pageNumber clear">294</div>
+				
+				<figure class="left">
+					<img src="/contents/html5/figs/web/294fig01.png" />
+				</figure>
+				
+				<p>
+					<strong>IE supports canvas only in versions 9 and later, so you should code your page to let your users know.</strong>
+				</p>
+				
+				<p>
+					Here's the deal: if you really really need to support canvas functionality in Internet Explorer
+					(again, pre-version 9), then you can check out the Explorer Canvas Project and other similar efforts
+					as a way to use a plug-in to get this functionality.
+				</p>
+				
+				<p>
+					For now though, let's just assume you'd like to let your users know they are missing out on your
+					great canvas content. Let's take a look at how to do this ...
+				</p>
+				
+				<aside>
+					And perhaps you can suggest that they upgrade to IE9!
+				</aside>
+			
+<!-- Page 295 -->
+		
+				<div class="pagebreak pageNumber clear">295</div>
+			
+			</section> <!-- Section 9 -->
+		
+		</section> <!-- Section 7 -->
+
+		<section class="section" data-number="10" data-name="Failing gracefully">
+			
+			<h2 class="title">Failing gracefully</h2>
+			
+			<p>
+				So, the truth is, out there somewhere, in another place and time, a user is going to visit your
+				site and not have support for the canvas element. Would you like to send them a kind message
+				saying that they really should upgrade? Here's how:
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/295fig01.png" />
+			</figure>
+			
+			<p>
+				How does this work? Well, any time a browser sees an element it doesn't recognize it
+				displays any text contained within it as a default behavior. So, when non-capable browsers
+				see the <code class="literal">&lt;canvas&gt;</code> element, they just display "Hey you, yes
+				YOU, upgrade your browser!!" Capable browsers, on the other hand, conveniently ignore any
+				text between the canvas tags and so won't display the text.
+			</p>
+			
+			<aside class="right">
+				Thank you HTML5 standards guys (and girls) for making this easy!
+			</aside>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/295fig02.png" />
+			</figure>
+			
+			<p>
+				And, as you already know, another way to handle browsers that don't support canvas is to use
+				JavaScript to detect if the browser knows about the element. This gives you a bit more flexibility to
+				give your users a different experience in case their browsers don't support it; for instance,
+				you could redirect them to a different page or display an image instead.
+			</p>
+
+<!-- Page 296 -->
+				
+			<div class="pagebreak pageNumber">296</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/296fig01.png" />
+			</figure>
+			
+			<p>
+				<strong>Frank:</strong>Sure, but also we need the user interface for the user to specify
+				all this. I mean we've got the mock-up, but we need to implement it.
+			</p>
+			
+			<p>
+				<strong>Judy:</strong>You're right Frank. Not much point in going further without the interface.
+			</p>
+			
+			<p>
+				<strong>Joe:</strong>Isn't that just HTML?
+			</p>
+			
+			<p>
+				<strong>Frank:</strong>Yeah, I guess so. But, given we're trying to do this all on the client-side,
+				how is this going to work? For instance, where does the form get submitted? I'm just not sure I
+				understand how this all fits together.
+			</p>
+			
+			<p>
+				<strong>Joe:</strong>Frank, we can just call a JavaScript function when the user clicks the
+				preview button, and then we can display the shirt design in the canvas.
+			</p>
+			
+			<p>
+				<strong>Frank:</strong>That makes sense, but how do we access the values in the form if it is all client side?
+			</p>
+			
+			<p>
+				<strong>Judy:</strong>The same way we always access the DOM; we can use
+				<code>document.getElementById</code> to grab the form values. You've done that before.
+			</p>
+			
+			<p>
+				<strong>Frank:</strong>You guys lost me way back.
+			</p>
+			
+			<p>
+				<strong>Joe:</strong>That's okay, let's step through this together. We'll start with the big
+				picture.
+			</p>
+
+<!-- Page 297 -->
+			
+			<div class="pagebreak pageNumber">297</div>
+		
+		</section> <!-- Section 10 -->
+		
+		<section class="section" data-number="11" data-name="TweetShirt: the Big Picture">
+			
+			<h2 class="title">TweetShirt: the Big Picture</h2>
+			
+			<p>
+				Before we jump into a big implementation job, let's step back and look at the big picture.
+				We're going to build this web app out of a <em>canvas element</em>along with some form elements
+				that act as the user interface, and behind the scenes we're going to make everything happen with
+				JavaScript and the <em>canvas API</em></span>.
+			</p>
+			
+			<p>
+				Here's what it looks like:
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/297fig01.png" />
+			</figure>
+
+<!-- Page 298 -->
+				
+			<div class="pagebreak pageNumber">298</div>
+			
+			<div class="sidebar">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/bethebrowser.png" />
+				</figure>
+				
+				<h2>BE the Browser</h2>
+				
+				<p>
+					<strong>Below, you'll find the form for the t-shirt interface. Your job is to play like you're
+					the browser and to render the interface. After you're done, compare your interface to the
+					one on the previous page to see if you did it correctly.</strong>
+				</p>
+
+				<div class="clear"></div>
+				
+<pre><strong>&lt;form&gt;</strong></pre>
+
+<pre><strong>&lt;p&gt;</strong></pre>
+				
+<pre>   <strong>&lt;label for="backgroundColor"&gt;Select background color:&lt;/label&gt;</strong></pre>
+				
+<pre>   <strong>&lt;select id="backgroundColor"&gt;</strong></pre>
+				
+<pre>       <strong>&lt;option value="white" selected="selected"&gt;White&lt;/option&gt;</strong></pre>
+				
+<pre>       <strong>&lt;option value="black"&gt;Black&lt;/option&gt;</strong></pre>
+				
+<pre>   <strong>&lt;/select&gt;</strong></pre>
+				
+<pre><strong>&lt;/p&gt;</strong></pre>
+				
+<pre><strong>&lt;p&gt;</strong></pre>
+				
+<pre>   <strong>&lt;label for="shape"&gt;Circles or squares?&lt;/label&gt;</strong></pre>
+				
+<pre>   <strong>&lt;select id="shape"&gt;</strong></pre>
+				
+<pre>       <strong>&lt;option value="none" selected="selected"&gt;Neither&lt;/option&gt;</strong></pre>
+				
+<pre>       <strong>&lt;option value="circles"&gt;Circles&lt;/option&gt;</strong></pre>
+				
+<pre>       <strong>&lt;option value="squares"&gt;Squares&lt;/option&gt;</strong></pre>
+				
+<pre>   <strong>&lt;/select&gt;</strong></pre>
+				
+<pre><strong>&lt;/p&gt;</strong></pre>
+				
+<pre><strong>&lt;p&gt;</strong></pre>
+				
+<pre>   <strong>&lt;label for="foregroundColor"&gt;Select text color:&lt;/label&gt;</strong></pre>
+				
+<pre>   <strong>&lt;select id="foregroundColor"&gt;</strong></pre>
+				
+<pre>       <strong>&lt;option value="black" selected="selected"&gt;Black&lt;/option&gt;</strong></pre>
+				
+<pre>       <strong>&lt;option value="white"&gt;White&lt;/option&gt;</strong></pre>
+				
+<pre>   <strong>&lt;/select&gt;</strong></pre>
+				
+<pre><strong>&lt;/p&gt;</strong></pre>
+				
+<pre><strong>&lt;p&gt;</strong></pre>
+				
+<pre>   <strong>&lt;label for="tweets"&gt;Pick a tweet:&lt;/label&gt;</strong></pre>
+				
+<pre>   <strong>&lt;select id="tweets"&gt;</strong></pre>
+				
+<pre>   <strong>&lt;/select&gt;</strong></pre>
+				
+<pre><strong>&lt;/p&gt;</strong></pre>
+				
+<pre><strong>&lt;p&gt;</strong></pre>
+				
+<pre>   <strong>&lt;input type="button" id="previewButton" value="Preview"&gt;</strong></pre>
+				
+<pre><strong>&lt;/p&gt;</strong></pre>
+				
+<pre><strong>&lt;/form&gt;</strong></pre>
+				
+			</div> <!-- sidebar -->
+
+<!-- Page 299 -->
+					
+			<div class="pagebreak pageNumber">299</div>
+				
+			<div class="sidebar">			
+		
+				<aside class="left">
+					Render your interface here. Draw the web page as it will look with the form elements on the left
+				</aside>
+
+				<div class="clear"></div>
+
+				<figure class="right">
+					<img src="/contents/html5/figs/web/299fig02.png" />
+				</figure>
+
+				<div class="clear"></div>
+				
+<pre><strong>var selectObj = document.getElementById("backgroundColor");</strong></pre>
+
+<pre><strong>var index = selectObj.selectedIndex;</strong></pre>
+
+<pre><strong>var bgColor = selectObj[index].value;</strong> __________________________________________</pre>
+
+<pre><strong>var selectObj = document.getElementById("shape");</strong></pre>
+
+<pre><strong>var index = selectObj.selectedIndex;</strong></pre>
+
+<pre><strong>var shape = selectObj[index].value;</strong> ____________________________________________</pre>
+
+<pre><strong>var selectObj = document.getElementById("foregroundColor");</strong></pre>
+
+<pre><strong>var index = selectObj.selectedIndex;</strong></pre>
+
+<pre><strong>var fgColor = selectObj[index].value;</strong> __________________________________________</pre>
+			
+			</div> <!-- sidebar -->
+
+<!-- Page 300 -->
+			
+			<div class="pagebreak pageNumber">300</div>
+		
+		</section> <!-- Section 11 -->
+		
+		<section class="section" data-number="12" data-name="First, let's get the HTML in place">
+			
+			<h2 class="title">First, let's get the HTML in place</h2>
+			
+			<p>
+				Enough talk! Let's build this thing. Before we do anything else, we just need a simple HTML
+				page. Update your <code class="literal">index.html</code>
+				file so it looks like this:
+			</p>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/300fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html lang="en"&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>  &lt;title&gt;TweetShirt&lt;/title&gt;</pre>
+<pre>  &lt;meta charset="utf-8" /&gt;</pre>
+<pre>	&lt;style&gt;</pre>
+<pre>		canvas { border: 1px solid black; }</pre>
+<pre>	&lt;/style&gt;</pre>
+<pre>	&lt;script src="tweetshirt.js"&gt;&lt;/script&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;h1&gt;TweetShirt&lt;/h1&gt;</pre>
+<pre>  &lt;canvas width="600" height="200" id="tshirtCanvas"&gt;</pre>
+<pre>  	&lt;p&gt;Please upgrade your browser to use TweetShirt!&lt;/p&gt;</pre>
+<pre>	&lt;/canvas&gt;</pre>
+<pre>	&lt;form&gt;</pre>
+							<br />
+							<br />
+<pre>	&lt;/form&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sidebar">
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/brainpower.png" />
+				</figure>
+			
+				<p class="clear">
+					What else do you need to know to replace the CSS border on your canvas with a border drawn
+					on the canvas using JavaScript? And, if you could, which method would you prefer (CSS versus
+					JavaScript), and why?
+				</p>
+			</div> <!-- sidebar -->
+
+<!-- Page 301 -->
+			
+			<div class="pagebreak pageNumber">301</div>
+		
+		</section> <!-- Section 12 -->
+		
+		<section class="section" data-number="13" data-name="Now, let's add the form">
+			
+			<h2 class="title">Now, let's add the &lt;form&gt;</h2>
+			
+			<p>
+				Okay, let's now add the user interface so we can start writing some code to create t-shirts.
+				You've seen this code before, but we added some annotations just to make everything clear;
+				as you type in the code, make sure you check out our annotations:
+			</p>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/301fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;form&gt;</pre>
+<pre>&lt;p&gt;</pre>
+<pre>	&lt;label for="backgroundColor"&gt;Select background color:&lt;/label&gt;</pre>
+<pre>	&lt;select id="backgroundColor"&gt;</pre>
+<pre>		&lt;option value="white" selected="selected"&gt;White&lt;/option&gt;</pre>
+<pre>		&lt;option value="black"&gt;Black&lt;/option&gt;</pre>
+<pre>	&lt;/select&gt;</pre>
+<pre>&lt;/p&gt;</pre>
+<pre>&lt;p&gt;</pre>
+<pre>	&lt;label for="shape"&gt;Circles or squares?&lt;/label&gt;</pre>
+<pre>	&lt;select id="shape"&gt;</pre>
+<pre>		&lt;option value="none" selected="selected"&gt;Neither&lt;/option&gt;</pre>
+<pre>		&lt;option value="circles"&gt;Circles&lt;/option&gt;</pre>
+<pre>		&lt;option value="squares"&gt;Squares&lt;/option&gt;</pre>
+<pre>	&lt;/select&gt;</pre>
+<pre>&lt;/p&gt;</pre>
+<pre>&lt;p&gt;</pre>
+<pre>	&lt;label for="foregroundColor"&gt;Select text color:&lt;/label&gt;</pre>
+<pre>	&lt;select id="foregroundColor"&gt;</pre>
+<pre>		&lt;option value="black" selected="selected"&gt;Black&lt;/option&gt;</pre>
+<pre>		&lt;option value="white"&gt;White&lt;/option&gt;</pre>
+<pre>	&lt;/select&gt;</pre>
+<pre>&lt;/p&gt;</pre>
+<pre>&lt;p&gt;</pre>
+<pre>	&lt;label for="tweets"&gt;Pick a tweet:&lt;/label&gt;</pre>
+<pre>	&lt;select id="tweets"&gt;</pre>
+<pre>	&lt;/select&gt;</pre>
+<pre>&lt;/p&gt;</pre>
+<pre>&lt;p&gt;</pre>
+<pre>	&lt;input type="button" id="previewButton" value="Preview"&gt;</pre>
+<pre>&lt;/p&gt;</pre>
+<pre>&lt;/form&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 302 -->
+			
+			<div class="pagebreak pageNumber">302</div>
+		
+		</section> <!-- Section 13 -->
+		
+		<section class="section" data-number="14" data-name="Time to get computational, with JavaScript">
+			
+			<h2 class="title">Time to get computational, with JavaScript</h2>
+			
+			<p>
+				Markup is great, but it's the JavaScript that brings the TweetShirt web application together.
+				We're going to put some code into <code class="literal">tweetshirt.js</code>. Right now, we want
+				to take the baby step of just putting random squares on the shirt. But before we even get to that,
+				we need to enable our preview button, so it calls a JavaScript function when you click it.
+			</p>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/302fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>window.onload = function() {</pre>
+<pre>	var button = document.getElementById("previewButton");</pre>
+<pre>	button.onclick = previewHandler;</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>
+				So now when the preview button is clicked, the <code class="literal">previewHandler</code>
+				function is going to be called, and that's our chance to update the canvas to represent the shirt the
+				user is designing. Let's begin writing<code class="literal">previewHandler</code>:
+			</p>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/302fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function previewHandler() {</pre>
+<pre>	var canvas = document.getElementById("tshirtCanvas");</pre>
+<pre>	var context = canvas.getContext("2d");</pre>
+							<br />
+<pre>	var selectObj = document.getElementById("shape");</pre>
+<pre>	var index = selectObj.selectedIndex;</pre>
+<pre>	var shape = selectObj[index].value;</pre>
+							<br />
+<pre>	if (shape == "squares") {</pre>
+<pre>		for (var squares = 0; squares < 20; squares++) {</pre>
+<pre>			drawSquare(canvas, context);</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 303 -->
+				
+			<div class="pagebreak pageNumber">303</div>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/therearenodumbquestions.png" />
+			</figure>
+
+			<blockquote class="blockquote">
+				<table style="border: 0;">
+					<tbody>
+						<tr>
+							<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+							
+							<td style="text-align: left; vertical-align: top;"><p><strong>How does the selectedIndex work?</strong></p></td>
+						</tr>
+						
+						<tr>
+							<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+							
+							<td style="text-align: left; vertical-align: top;">
+								<p>
+									The selectedIndex property of a selection form control returns the number of the option
+									you have chosen from the pulldown menu. Every list of options is turned into an array and
+									each option is in the array in order. So, say you have an selection list with these
+									options: "pizza", "doughnut", "granola bar". If you selected "doughnut", the selectedIndex
+									would be 1 (remember, JavaScript arrays start at 0).
+								</p>
+								
+								<p>
+									Now, you probably don't want just the index; you want the value of the option at that index
+									(in our case, "doughnut"). To get the value of the option, you first use the index to get the
+									element of the array; this returns an option <em>object</em>. To get the <em>value</em> of
+									that object, you use the value property, which returns the string in the value attribute of the option.
+								</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</blockquote>
+			
+			<br>
+				
+			<figure class="left sidebarimg">
+				<img src="/contents/html5/figs/web/pseudocodemagnets.png" />
+			</figure>
+			
+			<h3>Pseudo-code Magnets</h3>
+			
+			<p>
+				Use your pseudo-magical coding powers to arrange the pseudo code below. We need to write the
+				pseudo-code for the drawSquare function. This function takes a canvas and context and draws onerandomly
+				sized square on the canvas. Check your answer at the end
+				of the chapter before you go on.
+			</p>
+			
+			<figure class="center clear">
+				<img src="/contents/html5/figs/web/303fig01.png" />
+			</figure>
+
+<!-- Page 304 -->
+			
+			<div class="pagebreak pageNumber">304</div>
+		
+		</section> <!-- Section 14 -->
+		
+		<section class="section" data-number="15" data-name="Writing the drawSquare function">
+			
+			<h2 class="title">Writing the drawSquare function</h2>
+			
+			<p>
+				Now that you've done all the hard work of figuring out the pseudo-code, let's use what we already
+				know to write <code class="literal">drawSquare</code>:
+			</p>
+			
+			<aside class="right">
+				Feel free to specify a value other than 40 in your own code!
+			</aside>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/304fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function drawSquare(canvas, context) {</pre>
+<pre>	var w = Math.floor(Math.random() * 40);    </pre>
+							<br />
+<pre>	var x = Math.floor(Math.random() * canvas.width);</pre>
+							<br />
+<pre>	var y = Math.floor(Math.random() * canvas.height);</pre>
+							<br />
+<pre>	context.fillStyle = "lightblue";</pre>
+<pre>	context.fillRect(x, y, w, w);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p class="asided">
+				How did we figure out what numbers to multiply each
+				<code class="literal">Math.random</code> value by to get our square width and x, y position?
+				In the case of the width of the rectangle, we chose 40 because it's a nice small size with respect
+				to the canvas size. Because this is a square, we used the same value for the height. And, we chose
+				the width and height of the canvas as the basis for choosing x and y values so our square stays within the boundaries
+				of the canvas.
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/304fig02.png" />
+			</figure>
+
+<!-- Page 305 -->
+			
+			<div class="pagebreak pageNumber clear">305</div>
+		
+			<section class="subsection" data-number="16" data-name="Time for a test drive!">
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web/305fig01.png" />
+				</figure>
+				
+				<h2 class="title left">Time for a test drive!</h2>
+
+				<figure>
+					<img class="carimg" src="/contents/html5/figs/web/common-10.png" />
+				</figure>
+				
+				<br />
+
+				<p>
+					Okay, after all that typing, let's give all this code a test run. Go ahead and open your TweetShirt
+					<code class="literal">index.html</code> file in your browser. Press preview and you should see random blue
+					squares.
+				</p>
+				
+				<p>Here's what we see:</p>
+					
+				<figure class="left clear" style="width:50%; margin:0px">
+					<img src="/contents/html5/figs/web/305fig02.png" />
+				</figure>
+
+				<figure class="right" style="width:50%; margin:0px">
+					<img src="/contents/html5/figs/web/305fig03.png" />
+				</figure>
+
+<!-- Page 306 -->
+													
+				<div class="pagebreak pageNumber clear">306</div>
+				
+			</section> <!-- Section 16 -->
+
+			<section class="subsection" data-number="17" data-name="Why are we seeing the old squares and the new squares
+				when we preview?">
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web/306fig01.png" />
+				</figure>		
+				
+				<h3 class="title">Why are we seeing the old squares and the new squares when we preview?</h3>
+
+				<p>
+					This is actually kind of a cool effect... but it's not what we wanted. We want the new squares to
+					<em>replace</em> the old squares each time we press preview (just like we'll also want the new tweet to
+					replace the old tweet when we get the tweets working, too).
+				</p>
+				
+				<p>
+					The key here is to remember that we're painting pixels on the canvas. When you press preview, you're
+					getting the canvas and drawing squares on it. Whatever is already on the canvas just gets painted right
+					over with the new pixels!
+				</p>
+				
+				<p>
+					But no worries. You already know everything you need to know to fix this right now. Here's what we're going to do:
+				</p>
+				
+				<ol>
+					<li>Get the selected background color from the "backgroundColor" select object.</li>
+					
+					<li>
+						Fill the background color of the canvas using fillStyle and fillRect, each time before we start drawing squares.
+					</li>
+				</ol>
+				
+				<div class="sidebar">
+					<figure class="sidebarimg">
+						<img src="/contents/html5/figs/web/sharpenpencil.png" />
+					</figure>
+					
+					<p>
+						To make sure we see only new squares in the canvas each time we click preview, we need to fill the
+						background of the canvas with the background color the user has selected from the
+						"backgroundColor" select menu. First, let's implement a function to fill the canvas with that color.
+						Fill in the blanks below to complete the code. Check your answer with our solution at the end of the chapter before you go on.
+					</p>
+					
+					<div class="hiddencode">
+						<figure class="center">
+							<img class="codeimage" src="/contents/html5/figs/web/306fig02.png" />
+						</figure>
+
+						<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  			<div class="modal-body">
+								<code>
+<pre>function fillBackgroundColor(canvas, context) {</pre>
+<pre>	var selectObj = document.getElementById("backgroundColor");</pre>
+<pre>	var index = selectObj.selectedIndex;</pre>
+<pre>	var bgColor = selectObj[index].value;</pre>
+<pre>	context.fillStyle = bgColor;</pre>
+<pre>	context.fillRect(0, 0, canvas.width, canvas.height);</pre>
+<pre>}</pre>
+								</code>
+							</div>
+						</div>
+					</div>
+				</div>
+
+<!-- Page 307 -->
+				
+				<div class="pagebreak pageNumber">307</div>
+			
+			</section> <!-- Section 17 -->
+
+		</section> <!-- Section 15 -->
+
+		<section class="section" data-number="18" data-name="Add the call to fillBackgroundColor">
+			
+			<h2 class="title">Add the call to fillBackgroundColor</h2>
+			
+			<p>
+				You have the <code class="literal">fillBackgroundColor</code> function ready to go; now we just need to
+				make sure we call it from
+				<code class="literal">previewHandler</code>. We're going to add that as the very first thing we do so
+				we get a nice, clean background before we start adding anything else to the canvas.
+			</p>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/307fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function previewHandler() {</pre>
+<pre>	var canvas = document.getElementById("tshirtCanvas");</pre>
+<pre>	var context = canvas.getContext("2d");</pre>
+<pre>	fillBackgroundColor(canvas, context);</pre>
+							<br />
+<pre>	var selectObj = document.getElementById("shape");</pre>
+<pre>	var index = selectObj.selectedIndex;</pre>
+<pre>	var shape = selectObj[index].value;</pre>
+							<br />
+<pre>	if (shape == "squares") {</pre>
+<pre>		for (var squares = 0; squares < 20; squares++) {</pre>
+<pre>			drawSquare(canvas, context);</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<section class="subsection" data-number="19" data-name="Another quick test drive to make sure our new
+				fillBackgroundColor function works...">
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web/307fig02.png" />
+				</figure>
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web/common-10.png" />
+				</figure>
+				
+				<h3 class="title">Another quick test drive to make sure our new fillBackgroundColor function works...</h3>
+				
+				<p>
+					Add the new code to your <code class="literal">tweetshirt.js</code> file, reload your browser, select
+					a background color, select squares, and click preview. Click it again. This time you should see only
+					new squares each time you preview.
+				</p>
+				
+				<div class="sidebar clear" style="width:65%">
+					<figure class="sidebarimg">
+						<img src="/contents/html5/figs/web/brainpower.png" />
+					</figure>
+
+					<p class="clear">
+						Count the squares in a few different previews. Do you ever see less than 20 squares? You might.
+					</p>
+					
+					<p>
+						Why would this happen? What could you do to fix this problem? (After all, you don't want customers
+						cheated out of their 20 squares, do you?)
+					</p>
+				</div>
+
+<!-- Page 308 -->
+					
+				<div class="pagebreak pageNumber">308</div>
+				
+				<figure>
+					<img src="/contents/html5/figs/web/javascriptcloseup.png" />
+				</figure>
+				
+				<p>
+					Let's take a closer look at <code class="literal">fillStyle</code> since this is the first time you've
+					seen it. <code class="literal">fillStyle</code> is a property of the context that holds the color for
+					any drawing you do to the canvas.
+				</p>
+				
+				<figure class="center">
+					<img src="/contents/html5/figs/web/308fig01.png" />
+				</figure>
+				
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png" />
+				</figure>
+				
+				<blockquote>
+					<table style="border: 0;">
+						<tbody>
+							<tr>
+								<td style="text-align: left; vertical-align: top;" id="ch07qa5q1"><p><strong>Q:</strong></p></td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>I was expecting we'd set the background color of the squares and the canvas
+											by passing in a color value to fillRect. I don't really get how fillStyle works. How
+											does it affect what fillRect does?</strong>
+									</p></td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										Great question. This is a little different from how you might be used to thinking of things.
+										Remember, the context is an object that controls access to the canvas. What you're doing with
+										fillStyle and fillRect is first setting a property that tells the canvas, "Whatever you draw
+										next should be in this color". So anything you fill with color (like with fillRect) after
+										setting the fillStyle will use that color, until you change the color again by setting fillStyle
+										to a different color.
+									</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>Why does the color need quotes around it, when the property values in CSS don't? I
+											don't use quotes when I'm setting the background-color of an element, for instance.</strong>
+									</p></td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										Well, CSS is a different language from JavaScript, and CSS doesn't expect quotes. But if
+										you don't use quotes around the color, JavaScript will think that the color name is a variable
+										instead of a string, and will try to use the value of the variable for the color.</p><p>Say
+										you have a variable <code class="literal">fgColor =</code><strong>
+										<code class="literal">"</code></strong><code class="literal">black</code><strong>
+										<code class="literal">"</code></strong>. You could write
+										<code class="literal">context.fillstyle = fgColor</code>, and it would work because the value
+										of fgColor is "black".</p><p>But <code class="literal">context.fillStyle = black</code> won't
+										work because black isn't a variable (unless you set it up that way, which might be a bit confusing).
+										You'll know you've made this mistake because you'll get a JavaScript error that says something
+										like "Can't find variable: black". (Don't worry, we all make that mistake at least once.)
+									</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;" id="ch07qa5q3"><p><strong>Q:</strong></p></td>
+								
+								<td style="text-align: left; vertical-align: top;"><p><strong>Okay, I give up. Why were we seeing
+									less than 20 squares sometimes?</strong></p></td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										The x, y and width of the squares are all random. Some squares might obscure other squares.
+										A square might have an x, y position of 599, 199 so you'd only be able to see one pixel of that
+										square (because the rest of the square would be off the canvas). Some squares might be 1 pixel
+										wide, and some squares might even be 0 pixels wide because the Math.random method can return 0.
+										Or you might generate two squares of exactly the same size and location.</p>
+
+									<p>
+										But for this application it's all part of the randomness, so we think it's fine. For another
+										application we might need to ensure this doesn't happen.
+									</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</blockquote>
+
+<!-- Page 309 -->
+					
+				<div class="pagebreak pageNumber">309</div>
+			
+			</section> <!-- Section 19 -->
+
+		</section> <!-- Section 18 -->
+	
+		<section class="section" data-number="20" data-name="Meanwhile, back at TweetShirt.com...">
+			
+			<h2 class="title">Meanwhile, back at TweetShirt.com...</h2>
+			
+			<figure class="left">
+				<img src="/contents/html5/figs/web/309fig01.png" />
+			</figure>
+			
+			<p>
+				<strong>Jim:</strong> I know, and I'm impressed with how little code this took. Just think if we
+				did this the old, server-side way, we'd still be getting our server up.
+			</p>
+			
+			<p>
+				<strong>Frank:</strong> And it seems like we're in a good position to knock out the circles
+				in the design too; after all, they are just like the squares.
+			</p>
+			
+			<p>
+				<strong>Jim:</strong> I agree, where's Judy? She probably knows the API for the circles already.
+				Then again, it's probably just a matter of calling the
+				<code class="literal">fillCircle</code> method.
+			</p>
+			
+			<p>
+				<strong>Frank:</strong> Sounds right to me! Who needs Judy, we've got this!
+			</p>
+
+<!-- Page 310 -->
+				
+			<div class="pagebreak pageNumber clear">310</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/310fig01.png" />
+			</figure>
+			
+			<section class="subsection" data-number="21" data-name="And, a couple of hours later...">
+
+				<div class="clear" />
+				
+				<h3 class="title">And, a couple of hours later...</h3>	
+				
+				<p>
+					<strong>Frank:</strong> I don't know what's going on,
+					I've double checked everything, but, no matter what I do, when I call
+					<code class="literal">fillCircle</code>, I get nothing on the canvas.
+				</p>
+				
+				<p>
+					<strong>Judy:</strong> Well, show me your
+					<code class="literal">fillCircle</code> method.
+				</p>
+				
+				<p>
+					<strong>Frank:</strong> What do you mean by my method? I don't have one, I'm using the method in
+					the canvas's API directly.
+				</p>
+				
+				<p>
+					<strong>Judy:</strong> The canvas API doesn't have a <code class="literal">fillCircle</code>
+					method.
+				</p>
+				
+				<p>
+					<strong>Frank:</strong> Er, I <em>assumed</em> it did because we have a <code class="literal">fillRect</code>...
+				</p>
+				
+				<p>
+					<strong>Judy:</strong> Yeah, well you know what that ass-u-me stuff gets us. Come on, pull up a
+					browser-you can always find the API at:
+					<code class="literal">http://dev.w3.org/html5/2dcontext/</code>.
+				</p>
+				
+				<p>
+					...Anyway, drawing a circle is a little more complex than calling a single method. You need to learn
+					about paths and arcs first.
+				</p>
+				
+				<p>
+					<strong>Jim, entering:</strong> Judy, did Frank tell you about how we nailed the circle?
+				</p>
+				
+				<p>
+					<strong>Frank:</strong> Uh yeah, Jim, <em>enoughway ithway ethay irclecay!</em>
+				</p>
+				
+				<aside class="center">
+					We recommend the translation services of piglatin.bavetta.com.
+				</aside>
+
+<!-- Page 311 -->
+				
+				<div class="pagebreak pageNumber">311</div>
+			
+			</section> <!-- Section 21 -->
+	
+		</section> <!-- Section 20 -->
+				
+		<section class="section" data-number="22" data-name="Drawing with Geeks">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/311fig01.png" />
+			</figure>
+			
+			<h2 class="title">Drawing with Geeks</h2>
+			
+			<p>
+				Before digging into circles, we need to talk about paths and arcs. Let's start with paths, and draw
+				some triangles. If we want to draw a triangle on the canvas, there's no
+				<code class="literal">fillTriangle</code> method, but we can create a triangle anyway by first creating a
+				<em>path</em> in the shape of a triangle, and then <em>stroking</em> over it to draw a triangle on the canvas.
+			</p>
+			
+			<p>
+				What does that mean? Well, say you wanted to be really careful drawing on the canvas, you might take
+				a pencil and trace a light shape (let's just call it a path) on the canvas. You trace it so lightly
+				that only you can see it. Then, after you're satisfied with your path, you take a pen (with a thickness
+				and color of your choosing) and you use that to stroke over the path so everyone can see your triangle
+				(or whatever shape you traced with the pencil).
+			</p>
+			
+			<p>
+				That's just how drawing arbitary shapes with lines works on the canvas. Let's draw a triangle and see how this works:
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/311fig02.png" />
+			</figure>
+
+<!-- Page 312 -->
+				
+			<div class="pagebreak pageNumber">312</div>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/312fig01.png" />
+			</figure>
+			
+			<div class="sidebar">
+				<figure class="left sidebarimg">
+					<img src="/contents/html5/figs/web/exercise.png" />
+				</figure>
+				
+				<h3>So you have a path! Now what?</h3>
+				
+				<p>
+					You use the path to draw lines and fill in your shape with color, of course! Go ahead and create
+					a simple HTML5 page with a canvas element and type in all the code so far. Give it a test run,
+					too.
+				</p>
+				
+				<div class="hiddencode">
+					<figure class="center clear">
+						<img class="codeimage" src="/contents/html5/figs/web/312fig02.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>context.beginPath();</pre>
+<pre>context.moveTo(100, 150);</pre>
+<pre>context.lineTo(250, 75);</pre>
+<pre>context.lineTo(125, 30);</pre>
+<pre>context.closePath();</pre>
+<pre>context.lineWidth = 5;</pre>
+<pre>context.stroke();</pre>
+<pre>context.fillStyle = "red";</pre>
+<pre>context.fill();</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+			</div> <!-- sidebar -->
+
+<!-- Page 313 -->
+				
+			<div class="pagebreak pageNumber">313</div>
+			
+			<figure class="left">
+				<img src="/contents/html5/figs/web/313fig01.png" />
+			</figure>
+
+			<p>
+				<strong>To create a circle, we first create a path.</strong>
+			</p>
+			
+			<p>
+				We're about to show you how to trace a circle as a path. And, once you know how to do that, you
+				can make any kind of circle you like.
+			</p>
+			
+			<p>
+				Here's a bit more detail for you. You know how to start a path, right? Like we've been doing, you use this code:
+			</p>
+			
+<pre><strong>context.beginPath();</strong></pre>
+
+			<p>
+				Now, what we haven't told you yet is there is another method in the context object named
+				<code class="literal">arc</code>:
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/313fig02.png" />
+			</figure>
+			
+			<p>
+				What does that do? Ah, we'll spend the next page or so finding out the details. But, as you might
+				expect, it traces a path along a circle.
+			</p>
+
+<!-- Page 314 -->
+				
+			<div class="pagebreak pageNumber">314</div>
+		
+		</section> <!-- Section 22 -->
+		
+		<section class="section" data-number="23" data-name="Breaking down the arc method">
+			
+			<h2 class="title">Breaking down the arc method</h2>
+			
+			<p>
+				Let's dive right into the arc method and check out its parameters.
+			</p>
+			
+<pre><strong>context.arc(x, y, radius, startangle, endangle, direction)</strong></pre>
+
+			<p>
+				The whole point of the arc method is to specify how we want to trace a path along a circle.
+				Let's see how each parameter contributes to that:
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/314fig01.png" />
+			</figure>
+			
+			<figure class="left">
+				<img src="/contents/html5/figs/web/314fig02.png" />
+			</figure>
+
+<!-- Page 315 -->
+				
+			<div class="pagebreak pageNumber clear">315</div>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/315fig01.png" />
+			</figure>
+
+<!-- Page 316 -->
+			
+			<div class="pagebreak pageNumber">316</div>
+		
+		</section> <!-- Section 23 -->
+		
+		<section class="section" data-number="24" data-name="A little taste of using the arc">
+			
+			<h2 class="title">A little taste of using the arc</h2>
+			
+			<p>
+				What we need right now is a good example. Let's
+				say that you want to trace an arc over a circle that is centered at x=100, and y=100 and
+				you want the circle to be 150 pixels wide (or, a radius of 75). And, the path you want to trace is just 1/4 of the
+				circle, like this:
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/316fig01.png" />
+			</figure>
+			
+			<p>
+				Now let's create an arc method call that traces this path:
+			</p>
+			
+			<ol>
+				<li>
+					We start with the x, y point of the center of the circle: 100, 100.
+					
+<pre><strong>context.arc(100, 100, __, __, _____________________, ____ );</strong></pre>
+				</li>
+
+				<li>
+					Next, we need the radius of the circle, 75.
+
+<pre><strong>context.arc(100, 100, <span class="gray-background">75</span>, __, _____________________, ____ );</strong></pre>
+				</li>
+				
+				<li>
+					What about our start and end angles? Well, the start angle is 0 because the starting point is at 0 degrees
+					from the x axis. The end angle is the angle between the x-axis and the stopping point of our arc. Since
+					our arc is a 90 degree arc, our end angle is 270 degrees (90+270 = 360). (Note that if we'd measured in
+					the negative, or counterclockwise direction instead, our end angle would be -90 degrees.)
+					
+					<figure>
+						<img src="/contents/html5/figs/web/316fig02.png" />
+					</figure>
+				</li>
+				
+				<li>
+					Finally, we're tracing the arc in a counterclockwise direction, so we use <code class="literal">true</code>.
+					
+<pre><strong>context.arc(100, 100, 75, 0, degreesToRadians(270), <span class="gray-background">true</span>);</strong>	</pre>
+				</li>
+			</ol>
+
+<!-- Page 317 -->
+			
+			<div class="pagebreak pageNumber">317</div>
+		
+		</section> <!-- Section 24 -->
+		
+		<section class="section" data-number="25" data-name="I say degree, you say radian">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/317fig01.png" />
+			</figure>
+			
+			<h2 class="title">I say degree, you say radian</h2>
+			
+			<p class="asided">
+				We all talk about circle angles every day: "nice 360 dude," or "I was heading down that path and I did
+				a complete 180," or, ...well, you get the picture. The only problem is, we think in <em>degrees</em>,
+				but the canvas context thinks in <em>radians</em>.
+			</p>
+			
+			<aside class="right">
+				A radian is just another measure of an angle. One radian equals 180/3.14159265... (or 180 divided by).
+			</aside>
+			
+			<p class="clearleft">
+				Now, we could tell you that:
+			</p>
+
+<pre>360 degrees = 2Pi radians</pre>
+			
+			<p>
+				and you're good to go if you want to compute radians in your head from now on. Or, if for some
+				reason you'd rather not do that in your head, here's a handy function that will do the work for you:
+			</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/317fig02.png" />
+			</figure>
+			
+			<div class="sidebar">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/317fig00.png" />
+				</figure>
+				
+<pre><strong>context.arc(100, 100, 75, degreesToRadians(270), 0, true);</strong></pre>
+
+				<figure class="right">
+					<img src="/contents/html5/figs/web/317fig04.png" />
+				</figure>
+				
+				<figure style="display:inline">
+					<img src="/contents/html5/figs/web/317fig03.png" />
+				</figure>
+			</div> <!-- /sidebar -->
+
+<!-- Page 318 -->
+			
+			<div class="pagebreak pageNumber">318</div>
+		
+		</section> <!-- Section 25 -->
+		
+		<section class="section" data-number="26" data-name="Back to writing the TweetShirt circle code">
+			
+			<h2 class="title">Back to writing the TweetShirt circle code</h2>
+			
+			<p>
+				Now that you know how to draw circles, it's time to get back to TweetShirt and add a new function,
+				<code class="literal">drawCircle</code>. We want to draw 20 random circles, just like we did for squares.
+				To draw those circles we need to first determine that the user has selected circles from the shape menu.
+				Let's add that to the previewHandler function.
+			</p>
+		
+			<p>
+				Edit your <code class="literal">tweetshirt.js</code>
+				file and add the new code below.
+			</p>
+		
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/318fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function previewHandler() {</pre>
+<pre>	var canvas = document.getElementById("tshirtCanvas");</pre>
+<pre>	var context = canvas.getContext("2d");</pre>
+<pre>	fillBackgroundColor(canvas, context);</pre>
+							<br />
+<pre>	var selectObj = document.getElementById("shape");</pre>
+<pre>	var index = selectObj.selectedIndex;</pre>
+<pre>	var shape = selectObj[index].value;</pre>
+							<br />
+<pre>	if (shape == "squares") {</pre>
+<pre>		for (var squares = 0; squares < 20; squares++) {</pre>
+<pre>			drawSquare(canvas, context);</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>	else if (shape == "circles") {</pre>
+<pre>		for (var circles = 0; circles < 20; circles++) {</pre>
+<pre>			drawCircle(canvas, context);</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sidebar">
+				<figure class="left sidebarimg">
+					<img src="/contents/html5/figs/web/brainpower.png" />
+				</figure>
+
+				<p class="clear">
+					What start angle and end angle do you use to draw a complete circle?
+				</p>
+				
+				<p>
+					What direction do you use: counterclockwise or clockwise? Does it matter?
+				</p>
+				
+				<blockquote>
+					<p>
+						A: You draw a circle with a start angle of 0&deg; and an end angle of 360&deg;.
+						It doesn't matter what direction you use since you're drawing a complete circle.
+					</p>
+				</blockquote>
+			</div> <!-- sidebar -->
+
+<!-- Page 319 -->
+			
+			<div class="pagebreak pageNumber">319</div>
+		
+		</section> <!-- Section 26 -->
+		
+		<section class="section" data-number="27" data-name="Writing the drawCircle function...">
+			
+			<h2 class="title">Writing the drawCircle function...</h2>
+			
+			<p>
+				Now let's write the <code class="literal">drawCircle</code> function. Remember, here we just
+				need to draw one random circle. The other code is already handling calling this function 20 times.
+			</p>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/319fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function drawCircle(canvas, context) {</pre>
+<pre>	var radius = Math.floor(Math.random() * 40);</pre>
+<pre>	var x = Math.floor(Math.random() * canvas.width);</pre>
+<pre>	var y = Math.floor(Math.random() * canvas.height);</pre>
+							<br />
+<pre>	context.beginPath();</pre>
+<pre>	context.arc(x, y, radius, 0, degreesToRadians(360), true);</pre>
+							<br />
+<pre>	context.fillStyle = "lightblue";</pre>
+<pre>	context.fill();</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<section class="subsection" data-number="28" data-name="...and test drive!">
+				
+				<h3 class="title left">...and test drive!</h3>
+				
+				<figure>
+					<img class="carimg" src="/contents/html5/figs/web/common-10.png" />
+				</figure>	
+
+				<div class="clear" />
+
+				<p>
+					So go ahead and type this in (and don't forget to add the degreesToRadians function too),
+					save, and load it in your browser. Here's what we see (given these are random circles-yours will
+					look a little different):
+				</p>
+				
+				<figure class="center">
+					<img src="/contents/html5/figs/web/319fig02.png" />
+				</figure>
+
+<!-- Page 320 -->
+					
+				<div class="pagebreak pageNumber">320</div>
+				
+				<div class="sidebar">
+					<figure class="left sidebarimg">
+						<img src="/contents/html5/figs/web/intermission.png" />
+					</figure>
+
+					<h2>Intermission</h2>
+
+					<div class="clear"></div>
+
+					<figure class="left">
+						<img src="/contents/html5/figs/web/320fig02.png" />
+					</figure>
+
+					<h3>A Little Cookie Break</h3>
+					
+					<p>
+						<strong>Whew! That was a fun set of pages we just went through. We don't know about you, but we're ready
+							for some cookies. How about taking a short cookie break? But, don't think we aren't going to give you
+							something fun to do while you're having them (check on the exercise to the right).</strong>
+					</p>
+					
+					<p>
+						<strong>So, sit back, have a little break, and nibble on this while you give your brain and stomach
+						something else to do for a bit. Then come on back and we'll finish off the TweetShirt code!</strong>
+					</p>	
+	
+					<br />
+	
+					<br />
+
+					<br />
+
+					<br />
+
+				</div> <!-- sidebar -->
+
+				<div class="clear" />
+
+<!-- Page 321 -->
+						
+				<div class="pagebreak pageNumber">321</div>
+				
+				<div class="sidebar">
+
+					<figure class="right">
+						<img src="/contents/html5/figs/web/321fig01.png" />
+					</figure>
+					
+					<p>
+						To the right you'll find a smiley face (or a
+						chocolate chip cookie smiley face if you prefer). The code below to draw the smiley face is
+						almost done; we just need your help to finish it up. With all the work you've done in this chapter,
+						you've got all you need to complete this. You can always check your answer at the end of the chapter
+						when you're finished.
+					</p>
+					
+					<div class="hiddencode">
+						<figure class="center">
+							<img class="codeimage" src="/contents/html5/figs/web/321fig02.png" />
+						</figure>
+
+						<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  			<div class="modal-body">
+								<code>
+<pre>function drawSmileyFace() {</pre>
+<pre>	var canvas = document.getElementById("smiley");</pre>
+<pre>	var context = canvas.getContext("2d");</pre>
+									<br />
+<pre>	context.beginPath();</pre>
+<pre>	context.arc(300, 300, 200, 0, degreesToRadians(360), true);</pre>
+<pre>	context.fillStyle = "#ffffcc";</pre>
+<pre>	context.fill();</pre>
+<pre>	context.stroke();</pre>
+									<br />
+<pre>	context.beginPath();</pre>
+<pre>	context.arc(200, 250, 25, 0, degreesToRadians(360), true);</pre>
+<pre>	context.stroke();</pre>
+									<br />
+<pre>	context.beginPath();</pre>
+<pre>	context.arc(400, 250, 25, 0, degreesToRadians(360), true);</pre>
+<pre>	context.stroke();</pre>
+									<br />
+<pre>	context.beginPath();</pre>
+<pre>	context.moveTo(300, 300);</pre>
+<pre>	context.lineTo(300, 350);</pre>
+<pre>	context.stroke();</pre>
+									<br />
+<pre>	context.beginPath();</pre>
+<pre>	context.arc(300, 350, 75, degreesToRadians(20), degreesToRadians(160), false);</pre>
+<pre>	context.stroke();</pre>
+									<br />
+<pre>}</pre>
+								</code>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+			</section> <!-- Section 28 -->
+		
+			<section class="subsection" data-number="29" data-name="Welcome back...">
+				
+<!-- Page 322 -->
+	
+				<div class="pagebreak pageNumber">322</div>
+
+				<figure class="right">
+					<img src="/contents/html5/figs/web/322fig01.png" />
+				</figure>
+
+				<h2 class="title">Welcome back...</h2>
+			
+				<p><strong>
+					You're back, you're rested, refreshed, and we're on the home stretch to getting this start-up
+					off the ground. When you look at all the work we've done, all we really have left is to display
+					the tweets and the other text in the canvas preview.</strong>
+				</p>
+			
+				<p><strong>
+					Now, to get a get a tweet on the canvas we first need some of your recent tweets to choose from, and
+					we're going to use JSONP to do it. If you remember Chapter6, you already know how to do this.
+					If you need to, go back to Chapter6 for a quick refresher. All we're going to do is:</strong>
+				</p>
+			
+				<ol>
+					<li>
+						<strong>Add a &lt;script&gt; at the bottom of the tweetshirt. html file to make a call to the Twitter JSONP
+						API. We're going to ask for the most recent status updates of a specified user.</strong>
+					</li>
+
+					<li>
+						<strong>Implement a callback to get the tweets that Twitter sends back. We'll use the name of this
+						callback in the URL for the &lt;script&gt; in Step 1.</strong>
+
+						<div class="hiddencode">
+							<figure>
+								<img class="codeimage" src="/contents/html5/figs/web/322fig02.png" />
+							</figure>
+
+							<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  				<div class="modal-body">
+									<code>
+<pre>&lt;html&gt;</pre>
+<pre>...</pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;form&gt;</pre>
+<pre>	...</pre>
+<pre>	&lt;/form&gt;</pre>
+<pre>	&lt;script src="http://twitter.com/statuses/user_timeline/wickedsmartly.json?</pre>
+										</pre>callback=updateTweets"&gt;</pre>
+<pre>	&lt;/script&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+									</code>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ol>
+
+<!-- Page 323 -->
+				
+				<div class="pagebreak pageNumber">323</div>
+		
+			</section> <!-- Section 29 -->
+			
+		</section> <!-- Section 27 -->
+			
+		<section class="section" data-number="30" data-name="Getting your tweets">
+			
+			<h2 class="title">Getting your tweets</h2>
+			
+			<aside class="right">
+				Twitter's response is an array of tweets. Each tweet has a ton of data in it; the piece we're going to
+				use is the text of the tweet.
+			</aside>
+			
+			<p class="asided">
+				We've already done the hard work, which is getting the tweets from Twitter. Now we need to add them to
+				the tweets <code class="literal">&lt;select&gt;</code> element in the
+				<code class="literal">&lt;form&gt;</code> of our page. Just to review again: when the callback function
+				is called (in our case, the function <code class="literal">updateTweets</code>),
+				Twitter hands it a response that contains JSON formatted tweets.
+			</p>
+			
+			<p>
+				Edit your <code class="literal">tweetshirt.js</code>
+				file and add the <code class="literal">updateTweets</code> function at the bottom. Here's the code:
+			</p>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/323fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function updateTweets(tweets) {</pre>
+<pre>	var tweetsSelection = document.getElementById("tweets");</pre>
+							<br />
+<pre>	for (var i = 0; i < tweets.length; i++) {</pre>
+<pre>		tweet = tweets[i];</pre>
+<pre>		var option = document.createElement("option");</pre>
+<pre>		option.text = tweet.text;</pre>
+<pre>		option.value = tweet.text.replace("\"", "'");</pre>
+							<br />
+<pre>		tweetsSelection.options.add(option);</pre>
+<pre>	}</pre>
+<pre>	tweetsSelection.selectedIndex = 0;</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 324 -->
+			
+			<div class="pagebreak pageNumber">324</div>
+		
+			<section class="subsection" data-number="31" data-name="Test driving Tweets">
+				
+				<h2 class="title left">Test driving Tweets</h2>
+				
+				<figure>
+					<img class="carimg" src="/contents/html5/figs/web/common-10.png" />
+				</figure>
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web/324fig01.png" />
+				</figure>
+				
+				<p>
+					Let's do a quick test drive. Make sure you've got all the code added to
+					<code class="literal">tweetshirt.js</code> and <code class="literal">index.html</code>. Also make sure
+					you're using a Twitter username that has recent tweets in your script src URL (so you'll be sure you see
+					some tweets!). Load the page and click on the tweets selection. Here's
+					what we see:
+				</p>
+				
+				<figure class="left">
+					<img src="/contents/html5/figs/web/324fig02.png" />
+				</figure>
+				
+				<p style="clear:right">
+					<strong>Jim:</strong>We're almost there. We need to nail down all the text we need to
+					display. We've got the two messages: the "I saw this tweet" and "and all I got was this lousy t-shirt!"and
+					also the tweet the user has chosen to display. Now we've got to figure out how to display it, not to mention
+					apply some styling to the text.
+				</p>
+				
+				<p>
+					<strong>Frank:</strong>I'm assuming we can throw some text in the canvas and then apply some
+					CSS to it?
+				</p>
+				
+				<p>
+					<strong>Joe:</strong>I don't think it works like that. The canvas is a drawing area, I don't
+					think we can place text and style it, we have to draw text onto the canvas.
+				</p>
+				
+				<p>
+					<strong>Jim:</strong>Well, this time I learned my lesson and I've already checked out the API for text.
+				</p>
+				
+				<p>
+					<strong>Joe:</strong>Good, I haven't looked yet; how does it look?
+				</p>
+				
+				<p>
+					<strong>Jim:</strong>Remember that arc method? We have to custom draw all our text using that.
+				</p>
+
+<!-- Page 325 -->
+					
+				<div class="pagebreak pageNumber">325</div>
+				
+				<p>
+					<strong>Frank:</strong>Are you
+					kidding me? I guess I'll be working all weekend now.
+				</p>
+				
+				<p>
+					<strong>Jim:</strong>Gotcha! No seriously, there is a <code class="literal">fillText</code>
+					method that takes the text to draw on the canvas along with the x, y position of where to draw it.
+				</p>
+				
+				<p>
+					<strong>Joe:</strong>That sounds pretty straightforward. What about the differences in style?
+					If I remember the comp, the tweet text is italic, and the rest of the text is bold.
+				</p>
+				
+				<p>
+					<strong>Jim:</strong>We need to look a bit more, there are various methods for setting alignment and
+					fonts and fill styles, but I'm not not quite sure how to use them.
+				</p>
+				
+				<p>
+					<strong>Frank:</strong>And to think maybe I could have helped, but no CSS?
+				</p>
+				
+				<p>
+					<strong>Jim:</strong>Sorry, like Joe said, this is an API for drawing onto a canvas, it doesn't
+					make use of HTML or CSS styling in any way.
+				</p>
+				
+				<p>
+					<strong>Joe:</strong>Well, lets pull up the API and take a look and then we can try
+					getting the "I saw a tweet" text on the canvas. Come on Frank, join us, this can't be too bad and
+					I'm sure we can use your knowledge of fonts, styles and all that.
+				</p>
+				
+				<p>
+					<strong>Frank:</strong>Sure thing, I'm here for you!
+				</p>
+				
+				<figure class="center">
+					<img src="/contents/html5/figs/web/324fig03.png" />
+				</figure>
+				
+				<aside class="left">
+					Frank's tablet.
+				</aside>
+
+<!-- Page 326 -->
+					
+				<div class="pagebreak pageNumber">326</div>
+				
+				<figure class="left">
+					<img src="/contents/html5/figs/web/326fig01.png" />
+				</figure>
+				
+				<p><strong>
+					That's a really good point.
+				</strong></p>
+				
+				<p>
+					Now let's work through why it's set up this way. Remember that canvas is designed to give you a
+					way to present graphics within the browser. Everything in the canvas is considered presentation, not
+					content. So while you usually think of text-and certainly tweets-as content, in this case, you've got to
+					think of it as presentation. It's part of the design. Like an artist who uses letterforms as part of
+					her artwork, you're using tweets as part of the artwork of your t-shirt design.
+				</p>
+				
+				<p>
+					One of the main reasons that separating presentation and content is a good idea is so that the browser
+					can be smart about how it presents the content in different situations: for example, an article from a
+					news web site is presented one way on a big screen and a different way on your phone.
+				</p>
+				
+				<p>
+					For our t-shirt design, we want what's in the canvas to be more like an image: it should be displayed
+					the same way no matter how you are viewing it.
+				</p>
+				
+				<p>
+					So, let's get the text on the canvas and get this start-up rolling!
+				</p>
+
+<!-- Page 327 -->
+					
+				<div class="pagebreak pageNumber">327</div>
+				
+				<div class="sidebar">
+					<figure class="left sidebarimg">
+						<img src="/contents/html5/figs/web/pseudocodemagnets.png" />
+					</figure>
+					
+					<h3>Code Magnets</h3>
+					
+					<p>
+						It's time for your first experiment with canvas text. Below we've started the code for drawText, the
+						method we're going to call to draw all the text onto the preview canvas. See if you can finish up the
+						code to draw "I saw this tweet" and "and all I got was this lousy t-shirt!" on the canvas, we'll save
+						drawing the actual tweet for later. Make sure you check your answer with the solution at the end of
+						the chapter before you go on.
+					</p>
+					
+					<div class="hiddencode">
+						<figure class="center">
+							<img class="codeimage" src="/contents/html5/figs/web/327fig01.png" />
+						</figure>
+
+						<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  			<div class="modal-body">
+								<code>
+<pre>function drawText(canvas, context) {</pre>
+<pre>	var selectObj = document.getElementById("_____");</pre>
+<pre>	var index = selectObj.selectedIndex;</pre>
+<pre>	var fgColor = selectObj[index].value;</pre>
+<pre>	context._____ = fgColor;</pre>
+<pre>	context._____ = "bold 1em sans-serif";</pre>
+<pre>	context._____ = "left";</pre>
+<pre>	context._____("_____", 20, 40);</pre>
+									<br />
+<pre>	// Get the selected tweet from the tweets menu</pre>
+<pre>	// Draw the tweet</pre>
+									<br />
+<pre>	context.font = "_____";</pre>
+<pre>	context._____ = "_____";</pre>
+<pre>	context._____("and all I got was this lousy t-shirt!", </pre>
+<pre>		_____, _____);</pre>
+<pre>}</pre>
+								</code>
+							</div>
+						</div>
+					</div>
+
+				</div> <!-- sidebar -->
+				
+<!-- Page 328 -->
+		
+				<div class="pagebreak pageNumber">328</div>
+				
+			</section> <!-- Section 31 -->
+
+		</section> <!-- Section 30 -->
+
+		<section class="section" data-number="32" data-name="Canvas Text Up Close">
+			
+			<figure class="left sidebarimg">
+				<img src="/contents/html5/figs/web/upclose.png" />
+			</figure>
+			
+			<h3>Canvas Text Up Close</h3>
+			
+			<p>
+				Now that you've had a chance to draw your first text in the canvas, it's time to take a closer look at
+				the text methods and properties available in the canvas API. As you found out in the exercise this
+				is a fairly low-level API-you have to tell the context what text to draw, what position to use, and what font to use.
+			</p>
+			
+			<p>
+				In this <em>Up Close</em></span> segment we'll examine the alignment, font, and baseline properties,
+				and the fill and stroke methods in detail so you'll be a canvas text expert by the time you turn the page!
+			</p>
+			
+			<div class="sidebar">
+				<figure class="right">
+					<img src="/contents/html5/figs/web/328fig01.png" />
+				</figure>
+				
+				<h3>alignment</h3>
+				<p>
+					The <code class="literal">textAlign</code>
+					property specifies where the anchor point for the text is. "start" is the default.
+				</p>
+				
+<pre><strong>context.textAlign = "left";</strong></pre>
+
+				<p>
+					Possible values are: start, end, left, right, and center. Start and end mean the same as left and
+					right in left-to-right languages, like English, and are reversed in right-to-left
+					languages, like Hebrew.
+				</p>
+
+			</div> <!-- sidebar -->
+			
+			<div class="sidebar">
+				<figure class="right">
+					<img src="/contents/html5/figs/web/328fig02.png" />
+				</figure>
+				
+				<h3>fill and stroke</h3>
+				
+				<p>
+					Just like for rectangles, we can stroke and fill text. We provide the text to draw, the x,
+					y position and an optional parameter, maxwidth, that causes the text to scale if it is wider than maxwidth.
+				</p>
+				
+				<figure>
+					<img src="/contents/html5/figs/web/328fig03.png" />
+				</figure>
+			</div> <!-- sidebar -->
+
+<!-- Page 329 -->
+				
+			<div class="pagebreak pageNumber">329</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/329fig02.png" />
+			</figure>
+			
+			<div class="sidebar" style="width: 75%">
+				<h3>font</h3>
+				
+				<p>
+					To set the font properties, you can use the same format you're used to using in CSS, which is handy.
+					If you specify every property value, you'll include: font style, weight, size, and family, in that order.
+				</p>
+				
+				<figure>
+					<img src="/contents/html5/figs/web/329fig01.png" />
+				</figure>
+				
+				<p>
+					The spec recommends that you use vector fonts only (bitmap fonts may not display very well).
+				</p>
+			</div> <!-- sidebar -->
+				
+			
+			<div class="sidebar clear">
+				<h3>baseline</h3>
+				
+				<p>
+					The <code class="literal">textBaseline</code>
+					property sets the alignment points in the font and determines the line your letters sit on.
+					To see how the line affects the text, try drawing a line at the same x, y point you draw a text.
+				</p>
+				
+				<figure>
+					<img src="/contents/html5/figs/web/329fig03.png" />
+				</figure>
+				
+				<p>
+					Possible values are: top, hanging, middle, alphabetic, ideographic, and bottom. The default
+					is alphabetic. Experiment with the different values to find what you need (and check out the spec for more details).
+				</p>
+			</div> <!-- sidebar -->
+
+<!-- Page 330 -->
+			
+			<div class="pagebreak pageNumber">330</div>
+		
+		</section> <!-- Section 32 -->
+		
+		<section class="section" data-number="33" data-name="Giving drawText a spin">
+			
+			<h2 class="title">Giving drawText a spin</h2>
+			
+			<p>
+				Now that you've got more of the API in your head, go ahead and get the code you created in the Magnet
+				Code exercise typed in-here it is with the
+				magnets nicely translated to code:
+			</p>
+			
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/330fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function drawText(canvas, context) {</pre>
+<pre>	var selectObj = document.getElementById("foregroundColor");</pre>
+<pre>	var index = selectObj.selectedIndex;</pre>
+<pre>	var fgColor = selectObj[index].value;</pre>
+							<br />
+<pre>	context.fillStyle = fgColor;</pre>
+<pre>	context.font = "bold 1em sans-serif";</pre>
+<pre>	context.textAlign = "left";</pre>
+<pre>	context.fillText("I saw this tweet", 20, 40);</pre>
+							<br />
+							<br />
+							<br />
+<pre>	context.font = "bold 1em sans-serif";</pre>
+<pre>	context.textAlign = "right";</pre>
+<pre>	context.fillText("and all I got was this lousy t-shirt!", </pre>
+<pre>		canvas.width-20, canvas.height-40);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sidebar right" style="width:40%">
+				<figure class="left sidebarimg">
+					<img src="/contents/html5/figs/web/pencil.png" />
+				</figure>
+				
+				<h3>Sharpen your pencil</h3>
+				
+				<p class="clear">
+					Take a shot at completing the drawText function. You need to get the selected tweet, set the font
+					to an italic serif font that's slightly (1.2em) bigger than than the default, make sure the text
+					is aligned left, and position it at x = 30, y = 100. This is the last step before we see the TweetShirt!
+				</p>
+				
+				<aside>
+					Write your code above, and don't peek at the next page! (Really!)
+				</aside>
+			</div>
+			
+			<p style="width:50%">
+				After you've got it typed in, update your <code class="literal">previewHandler</code> function to call the
+				<code class="literal">drawText</code> function, and give it a test drive by loading it in your browser. You
+				should see something like we do:
+			</p>
+			
+			<figure class="left" style="width:45%">
+				<img src="/contents/html5/figs/web/330fig02.png" />
+			</figure>
+
+<!-- Page 331 -->
+				
+			<div class="pagebreak pageNumber clear">331</div>
+		
+		</section> <!-- Section 33 -->
+		
+		<section class="section" data-number="34" data-name="Completing the drawText function">
+			
+			<h2 class="title">Completing the drawText function</h2>
+			
+			<p>
+				Here's our solution code. How does it compare to yours? If you haven't already typed your code in, go
+				ahead and type in the code below (or your version if you prefer), and reload your
+				<code class="literal">index.html</code>. We'll show you our test drive on the next page.
+			</p>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/331fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function drawText(canvas, context) {</pre>
+<pre>	var selectObj = document.getElementById("foregroundColor");</pre>
+<pre>	var index = selectObj.selectedIndex;</pre>
+<pre>	var fgColor = selectObj[index].value;</pre>
+							<br />
+<pre>	context.fillStyle = fgColor;</pre>
+<pre>	context.font = "bold 1em sans-serif";</pre>
+<pre>	context.textAlign = "left";</pre>
+<pre>	context.fillText("I saw this tweet", 20, 40);</pre>
+							<br />
+							<br />
+<pre>	selectObj = document.getElementById("tweets");</pre>
+<pre>	index = selectObj.selectedIndex;</pre>
+<pre>	var tweet = selectObj[index].value;</pre>
+<pre>	context.font = "italic 1.2em serif";</pre>
+<pre>	context.fillText(tweet, 30, 100);</pre>
+							<br />
+<pre>	context.font = "bold 1em sans-serif";</pre>
+<pre>	context.textAlign = "right";</pre>
+<pre>	context.fillText("and all I got was this lousy t-shirt!", </pre>
+<pre>		canvas.width-20, canvas.height-40);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/331fig02.png" />
+			</figure>
+
+<!-- Page 332 -->
+			
+			<div class="pagebreak pageNumber">332</div>
+		
+			<section class="subsection" data-number="35" data-name="A quick test drive and then LAUNCH!">
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web/332fig01.png" />
+				</figure>
+				
+				<h2 class="title" style="line-height:120%">A quick test drive and then <img src="/contents/html5/figs/web/332fig00.png" />LAUNCH!</h2>
+				
+				<p>
+					<strong>We hope you're seeing what we're seeing! Nice huh? Give the interface a real bit of quality
+					assurance testing: try all the combinations of colors and shapes, or swap out the username for another you like.
+					</strong>
+				</p>
+				
+				<p><strong>Feel like you're ready to launch this for real? Let's do it!</strong></p>
+				
+				<figure class="lefthalf">
+					<img src="/contents/html5/figs/web/332fig02.png" />
+				</figure>
+				
+				<figure class="righthalf">
+					<img src="/contents/html5/figs/web/332fig03.png" />
+				</figure>
+
+<!-- Page 333 -->
+					
+				<div class="pagebreak pageNumber clear">333</div>
+				
+				<figure class="center">
+					<img src="/contents/html5/figs/web/333fig01.png" />
+				</figure>
+				
+				<ol>
+					<li>
+						The first thing we need is an image. We've put an image named <code class="literal">twitterBird.png</code>
+						in the TweetShirt folder. To get that into the canvas we first need a JavaScript image object. Here's how we get one:
+						
+						<figure>
+							<img src="/contents/html5/figs/web/333fig02.png" />
+						</figure>
+					</li>
+					
+					<li>
+						The next part should feel pretty natural by now; we need to draw the image on the canvas using a
+						context method named, you guessed it, <code class="literal">drawImage</code>.
+						
+						<figure>
+							<img src="/contents/html5/figs/web/333fig03.png" />
+						</figure>
+					</li>
+					
+					<li>
+						There's one other thing to know about images: they don't always load immediately, so you need to make
+						sure that the image has fully loaded beford you draw it. How do we wait until something is loaded before
+						we take action? We implement an onload handler:
+						
+						<figure>
+							<img src="/contents/html5/figs/web/333fig04.png" />
+						</figure>
+					</li>
+				</ol>
+
+<!-- Page 334 -->
+					
+				<div class="pagebreak pageNumber">334</div>
+				
+				<div class="sidebar">
+					<figure class="sidebarimg left">
+						<img src="/contents/html5/figs/web/exercise.png" />
+					</figure>
+					
+					<p>
+						See if you can put together the drawBird
+						function from all the pieces Judy gave us. The drawBird function takes a canvas and context, and
+						draws the bird onto the canvas. You can assume that with this function we're placing "twitterBird.png"
+						at the location x=20, y=120, with a width and height of 70. We've written the method declaration and
+						the first line for you. You'll find our solution at the end of the chapter.
+					</p>				
+					
+					<aside class="right">
+						Make sure you add a call to the drawBird function in the previewHandler function.
+					</aside>
+					
+					<figure>
+						<img src="/contents/html5/figs/web/334fig02.png" />
+					</figure>
+				</div>
+			
+			</section> <!-- Section 35 -->
+
+			<section class="subsection" data-number="36" data-name="Yet another test drive">
+				
+				<h2 class="title left">Yet another test drive</h2>
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web/334fig01.png" />
+				</figure>
+				
+				<figure>
+					<img src="/contents/html5/figs/web/common-10.png" class="carimg" />
+				</figure>
+				
+				<p>
+					<strong>Double check your code and get in another test drive! Wow, this is really looking polished now.</strong>
+				</p>
+				
+				<p>
+					<strong>Give it a few tries; try it with circles or squares. You'll notice that we used a png with a transparent
+					background so that the circles and squares work if they're behind the bird.</strong>
+				</p>
+
+<!-- Page 335 -->
+					
+				<div class="pagebreak pageNumber clear">335</div>
+				
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png" />
+				</figure>
+				
+				<blockquote>
+					<table style="border: 0;">
+						<colgroup>
+							<col style="text-align: left; width: 1%;" />
+							<col />
+						</colgroup>
+						
+						<tbody>
+							<tr>
+								<td style="text-align: left; vertical-align: top;">
+									<p><strong>Q:</strong></p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>We haven't seen the Image object before. You used it when you added an image to the canvas.
+										What is this? Why didn't we create it with document.createElement("img")?</strong>
+									</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;">
+									<p><strong>A:</strong></p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										Good catch. Both methods you mention create image objects. The JavaScript Image constructor
+										is arguably a more direct way to create images from JavaScript and gives us a little more control
+										over the loading process (like giving us the ability to easily use a handler to be notified when
+										the image is loaded).
+									</p>
+									
+									<p>
+										So, our goal here is to create an image, and to make sure it's loaded before we draw it on the
+										canvas. The Image object gives us the best path to doing that.
+									</p>
+								</td>
+							</tr>
+						
+							<tr>
+								<td style="text-align: left; vertical-align: top;">
+									<p><strong>Q:</strong></p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>Canvas is cool... but also kind of a pain compared to HTML. Anything more complicated
+											than basic shapes must be really difficult to do.</strong>
+									</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;">
+									<p><strong>A:</strong></p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										There's no doubt about it, you're writing graphics code when you're
+										programming canvas. Unlike the browser, which takes care of a lot of details for you, like
+										flowing elements onto the page so you don't have to worry about drawing everything yourself,
+										you have to tell canvas where to put everything.
+									</p>
+									
+									<p>
+										Canvas gives you a lot of power to do almost any kind of graphics (currently, 2D) you can
+										imagine, however. And we're in early days of canvas; it's likely that libraries of JavaScript
+										code will make it easier to write graphics for canvas in the future.
+									</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>I noticed that for very long tweets, the tweet just disappears off the edge of the
+										canvas. How can I fix that?</strong>
+									</p>
+								</td>
+							</tr>
+							
+							<tr class="answer">
+								<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										One way to fix it is to check to see how many characters the tweet contains and if it's
+										greater than a certain number, split it into multiple lines and draw each line separately
+										onto the canvas. We've included a function, splitIntoLines, in the code on wickedlysmart.com
+										that you can use to do just that.
+									</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;"><p><strong>Q:</strong></p></td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>I also noticed that some tweets have HTML entities in them, like &amp;quot; and &amp;amp;.
+											What's that all about?</strong>
+									</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;"><p><strong>A:</strong></p></td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										The Twitter API that we're using to get tweets as JSON converts characters that people post in
+										their tweets to HTML entities. It's actually a good thing because any special characters, or
+										even quotes, that would mess up our ability to get the tweets properly from the JSON are
+										represented as entities. If we were displaying the tweets in HTML, those entities would be
+										displayed in the browser as the characters you're meant to see, just like entities you add to
+										your own page are displayed correctly in the browser. However, as you saw, in the canvas they
+										don't look so great. Unfortunately, right now there is no function in the canvas API that will
+										convert those entities back to their characters, so you'd have to do that yourself.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;">
+									<p><strong>Q:</strong></p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p><strong>Can you do anything fancy in canvas, like put dropshadows on text or shapes?</strong></p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;">
+									<p><strong>A:</strong></p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										Yes! There are lots of fancy things you can do with canvas and dropshadows is certainly one of
+										them. As you'd expect, you create a shadow by setting properties on the context. For instance,
+										to set the blur size of the shadow, you set context.shadowBlur. You can set the position of the
+										shadow with context.shadowOffsetX and context.shadowOffsetY, and the color with context.shadowColor.
+									</p>
+									
+									<p>
+										Other things you can do with canvas you might want to check into are things like drawing gradients, rotating
+										shapes, and putting rounded corners on rectangles.
+									</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;">
+									<p><strong>Q:</strong></p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p><strong>What other interesting things can I do with canvas?</strong></p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;">
+									<p><strong>A:</strong></p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										A lot! We'll cover a couple more ways to use canvas in later chapters, and you'll definitely
+										want to check out the canvas API for more:
+										<a class="ulink" href="http://dev.w3.org/html5/2dcontext/" target="_top">
+										http://dev.w3.org/html5/2dcontext/</a>.
+									</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;">
+									<p><strong>Q:</strong></p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										<strong>Is all this canvas stuff going to work on my mobile device too? Or am I going to have
+										to rewrite it for mobile users?</strong>
+									</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="text-align: left; vertical-align: top;">
+									<p><strong>A:</strong></p>
+								</td>
+								
+								<td style="text-align: left; vertical-align: top;">
+									<p>
+										If your mobile device has a modern browser (devices like Android, iPhone and iPad all do),
+										then this will work just fine (the sizing of the page might be off, but the functionality will
+										work. The nice thing about canvas is, because you're drawing with raw pixels, what you draw
+										will look the same everywhere (or, everywhere on browsers that support canvas). Fortunately,
+										modern smart devices like Android, iPhone and iPad all have sophisticated browsers that have
+										most of the functionality of desktop browsers.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</blockquote>
+
+<!-- Page 336 -->
+					
+				<div class="pagebreak pageNumber">336</div>
+				
+				<figure class="left">
+					<img src="/contents/html5/figs/web/336fig01.png" />
+				</figure>
+				
+				<h4>
+					No, that requires a little extra work.
+				</h4>
+				
+				<p>
+					The canvas is really meant to be a simple drawing surface. When you draw a shape, the canvas just
+					sees it as pixels. The canvas isn't aware of the specifics of what you're drawing, and it doesn't
+					keep track of any shapes. It simply creates the pixels you ask it to create. (If you're familiar
+					with the graphics terms "bitmap" and "vector" drawing, you'll recognize what canvas is doing as "bitmap" drawing).
+				</p>
+				
+				<p>
+					If you'd like to treat the rectangles in your canvas as a set of objects that you can save and
+					maybe even move or manipulate, you need to maintain the information about the shapes and paths
+					as you create them on the canvas. You can store this data in JavaScript objects. For instance, if
+					you're keeping track of the random circles we've drawn on the TweetShirt canvas, you'd need to save
+					the x, y location, the circle radius and color in order to be able to recreate that circle.
+				</p>
+				
+				<p>
+					This sounds like a good project for you..;)
+				</p>
+
+<!-- Page 337 -->
+					
+				<div class="pagebreak pageNumber">337</div>
+				
+				<figure class="lefthalf">
+					<img src="/contents/html5/figs/web/337fig02.png" />
+				</figure>
+				
+				<figure class="righthalf">
+					<img src="/contents/html5/figs/web/337fig01.png" />
+				</figure>
+
+<!-- Page 338 -->
+					
+				<div class="pagebreak pageNumber clear">338</div>
+				
+			</section> <!-- Section 36 -->
+
+		</section> <!-- Section 34 -->
+
+		<section class="section" data-number="37" data-name="Bullet Points">
+				
+			<div class="sidebar">
+				<figure class="sidebarimg">
+					<img src="/contents/html5/figs/web/bullet.png" />
+				</figure>
+				
+				<h3>Bullet Points</h3>
+				
+				<ul class="clear">
+					<li>
+						Canvas is an element you place in your page to create a drawing space.
+					</li>
+					
+					<li>
+						The canvas has no default style or content until you provide it (so you won't see it on the page until
+						you draw something in it or add a border with CSS).
+					</li>
+					
+					<li>
+						You can have more than one canvas on your page. Of course, you'll need to give each one a unique id
+						to access each using JavaScript.
+					</li>
+					
+					<li>
+						To specify the size of the canvas element, use the width and height attributes on the element.
+					</li>
+					
+					<li>
+						Everything you put in canvas is drawn using JavaScript.
+					</li>
+					
+					<li>
+						To draw on the canvas, you first need to create a context. Currently, a 2D context is your only option,
+						although other context types may exist in the future.
+					</li>
+					
+					<li>
+						A context is needed to draw in the canvas because it provides a specific kind of interface
+						(e.g., 2D versus 3D). You'll be able to choose from more than one kind of interface to draw on a canvas.
+					</li>
+					
+					<li>
+						You access the canvas by using context properties and methods.
+					</li>
+					
+					<li>
+						To draw a rectangle in the canvas, use the context. fillRect method. This creates a rectangle filled with color.
+					</li>
+					
+					<li>
+						To create a rectangle outline, use strokeRect instead of fillRect.
+					</li>
+					
+					<li>
+						Use fillStyle and strokeStyle to change the default fill and stroke color, which is black.
+					</li>
+					
+					<li>
+						You can specify colors using the same format as you use with CSS (e.g., "black", "#000000",
+						"rgb(0, 0, 0)". Remember to put quotes around the value of the fillStyle.
+					</li>
+					
+					<li>
+						There is no fillCircle method. To draw a circle in canvas, you need to draw an arc.
+					</li>
+					
+					<li>
+						To create arbitrary shapes or arcs, you first need to create a path.
+					</li>
+					
+					<li>
+						A path is a invisible line or shape you create that defines a line or area on the canvas. You can't
+						see the path until you stroke or fill it.
+					</li>
+					
+					<li>
+						To create a triangle, create a path using beginPath, then use moveTo and lineTo to draw the path.
+						Use closePath to join two points on the path.
+					</li>
+					
+					<li>
+						To draw a circle, create an arc that is 360 degrees. Your start angle is 0, and your end angle is 360 degrees.
+					</li>
+					
+					<li>
+						Angles are specified in canvas using radians, not degrees, so you need to convert from degrees
+						to radians to specify your start and end angles.
+					</li>
+					
+					<li>
+						360 degrees = 2Pi radians.
+					</li>
+					
+					<li>
+						To draw text in canvas, use the fillText method.
+					</li>
+					
+					<li>
+						When you draw text in canvas, you need to specify the position, style, and other properties
+						using context properties.
+					</li>
+					
+					<li>
+						When you set a context property, it applies to all the drawing that follows until you change the
+						property again. For example, changing the fillStyle will affect the color of shapes and text
+						you draw after setting the fillStyle.
+					</li>
+					
+					<li>
+						Add an image to your canvas with the drawImage method.
+					</li>
+					
+					<li>
+						To add an image, you first need to create an image object and make sure it's completely loaded.
+					</li>
+					
+					<li>
+						Drawing on canvas is like doing "bitmap" drawing in graphics programs.
+					</li>
+				</ul>
+			</div> <!-- sidebar -->
+
+<!-- Page 339 -->
+				
+			<div class="pagebreak pageNumber">339</div>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/339fig01.png" />
+			</figure>
+
+<!-- Page 340 -->
+				
+			<div class="pagebreak pageNumber">340</div>
+			
+			<figure class="sidebarimg">
+				<img src="/contents/html5/figs/web/html5cross.png" />
+			</figure>
+			
+			<h3>HTML5cross</h3>
+			
+			<p>
+				We're looking forward to checking out the &lt;canvas&gt; and &lt;video&gt; scoop in the next
+				chapter. In the meantime, cement your new canvas knowledge with a quick crossword and perhaps a cup of tea.
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/340fig01.png" />
+			</figure>
+			
+			<div class="informaltable">
+				<table style="border-collapse: collapse;">
+					<colgroup>
+						<col />
+						<col />
+						<col />
+						<col />
+					</colgroup>
+					
+					<thead>
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid;" colspan="2"><p>Across</p></td>
+							
+							<td style="vertical-align: top;" colspan="2"><p>Down</p></td>
+						</tr>
+					</thead>
+					
+					<tbody>
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>4.</p></td>
+						
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>Everything on the canvas is _________.</p></td>
+						
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>1.</p></td>
+						
+							<td style="vertical-align: top;"><p>Best place for a good tweet.</p></td>
+						</tr>
+						
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>5.</p></td>
+						
+							<td style="vertical-align: top; border-right: 0.5pt solid;">
+								<p>We _______ aligned the "and all I got was this lousy t-shirt!" text.</p>
+							</td>
+							
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>2.</p></td>
+							
+							<td style="vertical-align: top;"><p>This context method creates a rectangle.</p></td>
+						</tr>
+					
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>6.</p></td>
+					
+							<td style="vertical-align: top; border-right: 0.5pt solid;">
+								<p>The property we set to fill a shape with a color.</p>
+							</td>
+							
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>3.</p></td>
+							
+							<td style="vertical-align: top;"><p>canvas and _______ go well together.</p></td>
+						</tr>
+						
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>7.</p></td>
+						
+							<td style="vertical-align: top; border-right: 0.5pt solid;">
+								<p>You can tell when something has finished loading using an ________ handler.</p>
+							</td>
+						
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>8.</p></td>
+						
+							<td style="vertical-align: top;"><p>There are 360 _____ in a circle.</p></td>
+						</tr>
+					
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>9.</p></td>
+					
+							<td style="vertical-align: top; border-right: 0.5pt solid;">
+								<p>The non-existent context method Jim tried to use to create circles.</p>
+							</td>
+					
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>9.</p></td>
+					
+							<td style="vertical-align: top;"><p>Use this method to draw text on the canvas.</p></td>
+						</tr>
+						
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>12.</p></td>
+						
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>Draw a circle with an _____.</p></td>
+						
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>10.</p></td>
+						
+							<td style="vertical-align: top;"><p>We think in degrees, canvas thinks in _________.</p></td>
+						</tr>
+					
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>14.</p></td>
+					
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>How we make the path of a shape visible.</p></td>
+					
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>11.</p></td>
+					
+							<td style="vertical-align: top;">
+								<p>An object with methods and properties to draw on a canvas.</p>
+							</td>
+						</tr>
+					
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>15.</p></td>
+					
+							<td style="vertical-align: top; border-right: 0.5pt solid;">
+								<p>Want to know which option is selected? You might need this property.</p>
+							</td>
+					
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>13.</p></td>
+					
+							<td style="vertical-align: top;"><p>To move your path pencil to point 100, 100, use ________ (100, 100);</p></td>
+						</tr>
+						
+						<tr>
+							<td style="vertical-align: top; border-right: 0.5pt solid;"><p>16.</p></td>
+						
+							<td style="vertical-align: top; border-right: 0.5pt solid;">
+								<p>An invisible line you create to draw a shape.</p>
+							</td>
+						
+							<td style="border-right: 0.5pt solid;"></td>
+						
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</figure>
+
+<!-- Page 341 -->
+				
+			<div class="pagebreak pageNumber">341</div>
+			
+		</section> <!-- Section 37 -->
+			
+		<section class="section" data-number="38" data-name="BE the Browser Solution">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/341fig00.png" />
+			</figure>
+		
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/341fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var selectObj = document.getElementById("backgroundColor");</pre>
+<pre>var index = selectObj.selectedIndex;</pre>
+<pre>var bgColor = selectObj[index].value;</pre>
+							<br />
+<pre>var selectObj = document.getElementById("shape");</pre>
+<pre>var index = selectObj.selectedIndex;</pre>
+<pre>var shape = selectObj[index].value;</pre>
+							<br />
+<pre>var selectObj = document.getElementById("foregroundColor");</pre>
+<pre>var index = selectObj.selectedIndex;</pre>
+<pre>var fgColor = selectObj[index].value;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 342 -->
+				
+			<div class="pagebreak pageNumber">342</div>
+			
+			<figure class="left sidebarimg">
+				<img src="/contents/html5/figs/web/pseudocodemagnets.png" />
+			</figure>
+			
+			<h3>Pseudo-code Magnets Solution</h3>
+			
+			<p>
+				Use your pseudo-magical coding powers to
+				arrange the pseudo code below. We need to write the pseudo-code for the drawSquare function.
+				This function takes a canvas and context and draws one randomly sized square on the canvas. Here's our solution.
+			</p>
+			
+			<figure class="center">
+				<img src="/contents/html5/figs/web/342fig01.png" />
+			</figure>
+			
+			<div class="sidebar">
+				<figure class="left sidebarimg">
+					<img src="/contents/html5/figs/web/pencil.png" />
+				</figure>
+				
+				<h3 class="left">Sharpen your pencil<br>Solution</h3>
+				
+				<p class="left">
+					To make sure we see only new squares in the canvas each time we click preview, we need to fill
+					the background of the canvas with the background color the user has selected from the "backgroundColor"
+					select menu. First, let's implement a function to fill the canvas with that color. Fill in the
+					blanks below to complete the code. Here's our solution.
+				</p>
+				
+				<div class="hiddencode">
+					<figure class="center">
+						<img class="codeimage" src="/contents/html5/figs/web/342fig02.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>function fillBackgroundColor(canvas, context) {</pre>
+<pre>	var selectObj = document.getElementById("backgroundColor");</pre>
+<pre>	var index = selectObj.selectedIndex;</pre>
+<pre>	var bgColor = selectObj[index].value;</pre>
+<pre>	context.fillStyle = bgColor;</pre>
+<pre>	context.fillRect(0, 0, canvas.width, canvas.height);</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			
+			</div> <!-- sidebar -->
+
+<!-- Page 343 -->
+				
+			<div class="pagebreak pageNumber">343</div>
+			
+			<div class="sidebar">
+				<figure class="left sidebarimg">
+					<img src="/contents/html5/figs/web/bethebrowser.png" />
+				</figure>
+			
+				<h3>BE the Browser Solution</h3>
+			
+				<p>
+					<strong>Interpret the call to the arc method and sketch out all the values on the circle, including
+					the path the method creates.</strong>
+				</p>
+			
+				<figure class="center">
+					<img src="/contents/html5/figs/web/343fig01.png" />
+				</figure>
+			</div> <!-- sidebar -->
+			
+			<h3 class="title">So you have a path! Now what?</h3>
+			
+			<figure class="left sidebarimg">
+				<img src="/contents/html5/figs/web/exercisesolution.png" />
+			</figure>	
+			
+			<p>
+				You use the path to draw lines and fill in your shape with color, of course! Go ahead and create
+				a simple HTML5 page with a canvas element and type in all the code so far. Give it a test run, too.
+			</p>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/343fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>context.beginPath();</pre>
+<pre>context.moveTo(100, 150);</pre>
+<pre>context.lineTo(250, 75);</pre>
+<pre>context.lineTo(125, 30);</pre>
+<pre>context.closePath();</pre>
+<pre>context.lineWidth = 5;</pre>
+<pre>context.stroke();</pre>
+<pre>context.fillStyle = "red";</pre>
+<pre>context.fill();</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 344 -->
+				
+			<div class="pagebreak pageNumber">344</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/344fig01.png" />
+			</figure>
+			
+			<figure class="left sidebarimg">
+				<img src="/contents/html5/figs/web/intermission.png" />
+			</figure>
+			
+			<h2>Intermission Solution</h2>
+			
+			<p class="clearleft">
+				Time to practice your new arc and path drawing skills to create a smiley face. Fill in the blanks
+				below with the code you need to complete the smiley face. We've given you some hints about where
+				the eyes, nose and mouth should go in the diagram.
+			</p>
+			
+			<p>Here's our solution:</p>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/344fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function drawSmileyFace() {</pre>
+<pre>	var canvas = document.getElementById("smiley");</pre>
+<pre>	var context = canvas.getContext("2d");</pre>
+							<br />
+<pre>	context.beginPath();</pre>
+<pre>	context.arc(300, 300, 200, 0, degreesToRadians(360), true);</pre>
+<pre>	context.fillStyle = "#ffffcc";</pre>
+<pre>	context.fill();</pre>
+<pre>	context.stroke();</pre>
+							<br />
+<pre>	context.beginPath();</pre>
+<pre>	context.arc(200, 250, 25, 0, degreeToRadian(360), true);</pre>
+<pre>	context.stroke();</pre>
+							<br />
+<pre>	context.beginPath();</pre>
+<pre>	context.arc(200, 250, 25, 0, degreesToRadians(360), true);</pre>
+<pre>	context.stroke();</pre>
+							<br />
+<pre>	context.beginPath();</pre>
+<pre>	context.moveTo(300, 300);</pre>
+<pre>	context.moveTo(300, 350);</pre>
+<pre>	context.stroke();</pre>
+							<br />
+<pre>	context.beginPath();</pre>
+<pre>	context.arc(300, 350, 75, degreesToRadians(20), degreesToRadians(160), false);</pre>
+<pre>	context.stroke();</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 345 -->
+				
+			<div class="pagebreak pageNumber">345</div>
+			
+			<figure class="left sidebarimg">
+				<img src="/contents/html5/figs/web/pseudocodemagnets.png" />
+			</figure>
+			
+			<h2>Code Magnets Solution</h2>
+			
+			<p>
+				It's time for your first experiment with canvas text. Below we've started the code for
+				drawText, the method we're going to call to draw all the text onto the preview canvas. See
+				if you can finish up the code to draw "I saw this tweet" and "and all I got was this lousy
+				t-shirt!" on the canvas, we'll save drawing the actual tweet for later. Here's our solution.
+			</p>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/345fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function drawText(canvas, context) {</pre>
+<pre>	var selectObj = document.getElementById("foregroundColor");</pre>
+<pre>	var index = selectObj.selectedIndex;</pre>
+<pre>	var fgColor = selectObj[index].value;</pre>
+<pre>	context.fillStyle = fgColor;</pre>
+<pre>	context.font = "bold 1em sans-serif";</pre>
+<pre>	context.textAlign = "left";</pre>
+<pre>	context.fillText("I saw this tweet", 20, 40);</pre>
+							<br />
+<pre>	// Get the selected tweet from the tweets menu</pre>
+<pre>	// Draw the tweet</pre>
+							<br />
+<pre>	context.font = "bold 1em sans-serif";</pre>
+<pre>	context.textAlign = "right";</pre>
+<pre>	context.fillText("and all I got was this lousy t-shirt!", </pre>
+<pre>		canvas.width-20, canvas.height-40);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 346 -->
+				
+			<div class="pagebreak pageNumber">346</div>
+			
+			<div class="sidebar">
+				<figure class="left sidebarimg">
+					<img src="/contents/html5/figs/web/exercisesolution.png" />
+				</figure>
+				
+				<p>
+					See if you can piece together the drawBird function from all the pieces Judy gave us.
+					The drawBird function takes a canvas and context, and draws the bird
+					onto the canvas. You can assume that with this function we're placing "twitterBird.png" at
+					the location x=20, y=120, with a width and height of 70. We've written the method declaration and
+					the first line for you. Here's our solution.
+				</p>
+				
+				<figure class="center">
+					<img src="/contents/html5/figs/web/346fig01.png" />
+				</figure>
+			</div>
+					
+			<figure class="center">
+				<img src="/contents/html5/figs/web/html5crosssolution.png" />
+			</figure>
+		
+			<figure class="center clear">
+				<img src="/contents/html5/figs/web/346fig02.png" />
+			</figure>	
+
+<!-- Page 347 -->
+				
+			<div class="pagebreak pageNumber">347</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/347fig01.png" />
+			</figure>
+			
+			<h2>TweetShirt Easter egg</h2>
+			
+			<p>
+				So, you've made the perfect TweetShirt preview-now what? Well, if you really want to make a
+				t-shirt out of your design, you can! How? Here's a little extra bonus to add to your code-a 
+				weetShirt "easter egg" if you will-that will make an image out of your design, all ready for
+				you to upload to a site that will print an image on a t-shirt for you (there are plenty of them on the Web).
+			</p>
+			
+			<p>
+				How can we do this? It's simple! We can use the <code class="literal">toDataURL</code> method of
+				the <strong>canvas</strong> object. Check it out:
+			</p>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/347fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function makeImage() {</pre>
+<pre>	var canvas = document.getElementById("tshirtCanvas");</pre>
+<pre>	canvas.onclick = function () {</pre>
+<pre>		window.location = canvas.toDataURL("image/png");</pre>
+<pre>	};</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<p>
+				Now, just add a call to <code class="literal">makeImage</code> in the window onload function
+				and your canvas is now enabled to make an image when you click on it. Give it a try. And let us know
+				if you make a tshirt!
+			</p>
+			
+			<div class="hiddencode">
+				<figure class="center">
+					<img class="codeimage" src="/contents/html5/figs/web/347fig03.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>window.onload = function() {</pre>
+<pre>	var button = document.getElementById("previewButton");</pre>
+<pre>	button.onclick = previewHandler;</pre>
+<pre>	makeImage();</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<figure class="right">
+					<img src="/contents/html5/figs/web/347fig04.png" />
+			</figure>
+			
+			<div class="sidebar-left">
+				<figure class="left sidebarimg">
+					<img src="/contents/html5/figs/web/watchit.png" />
+				</figure>
+				
+				<p>
+					<strong>Some browsers won't let you grab an image from the canvas if you're running the code from file://.</strong>
+				</p>
+				
+				<p>
+					<em>Run this code from localhost:// or a hosted server if you want it to work across all browsers.</em>
+				</p>
+			
+			</div> <!-- sidebar -->
+		
+		</section> <!-- Section 38 -->
+		
+	</div> <!-- /container -->
+
+</body>
+</html>

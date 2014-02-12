@@ -1,0 +1,863 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Introducing Regular Expressions</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="regexp">
+		<div class="container">
+				
+			<h3>CHAPTER 2</h3>
+			<div class="border"></div>
+			
+			<section class="intro" data-number="0" data-name="Chapter 2 Introduction">
+
+				<h1>Simple Pattern Matching</h1>
+
+				<p><span class="first-sentence">Regular expressions are all about matching and finding patterns in text, from simple
+				patterns to the very complex.</span> This chapter takes you on a tour of some of the simpler
+				ways to match patterns using:</p>
+
+				<ul>
+					<li>String literals</li>
+					<li>Digits</li>
+					<li>Letters</li>
+					<li>Characters of any kind</li>
+				</ul>
+
+				<p>In the first chapter, we used Steven Levithan’s RegexPal to demonstrate regular expressions.
+				In this chapter, we’ll use Grant Skinner’s RegExr site, found at <span class="url">http://gskinner
+				.com/regexr</span> (see <strong>Figure 2-1</strong>).</p>
+
+				<div class="pawprints"> 
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>Each page of this book will take you deeper into the regular expression
+					jungle. Feel free, however, to stop and smell the syntax. What I mean
+					is, start trying out new things as soon as you discover them. Try. Fail
+					fast. Get a grip. Move on. Nothing makes learning sink in like <em>doing</em>
+					something with it.</p>
+				</div>
+
+				<p>Before we go any further, I want to point out the helps that RegExr provides. Over on
+				the right side of RegExr, you’ll see three tabs. Take note of the Samples and Community
+				tabs. The Samples tab provides helps for a lot of regular expression syntax, and the
+				Community tab shows you a large number of contributed regular expressions that have
+				been rated. You’ll find a lot of good information in these tabs that may be useful to
+				you. In addition, pop-ups appear when you hover over the regular expression or target
+				text in RegExr, giving you helpful information. These resources are one of the reasons
+				why RegExr is among my favorite online regex checkers.</p>
+
+				<p>This chapter introduces you to our main text, “The Rime of the Ancient Mariner,” by
+				Samuel Taylor Coleridge, first published in <em>Lyrical Ballads</em> (London, J. & A. Arch,
+				1798). We’ll work with this poem in chapters that follow, starting with a plain-text</p>
+
+				<div class="pagebreak pageNumber right">13</div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure2-1.png">
+					<figcaption>Figure 2-1. Grant Skinner’s RegExr in Firefox</figcaption>
+				</figure>
+
+				<p>version of the original and winding up with a version marked up in HTML5. The text
+				for the whole poem is stored in a file called <em>rime.txt</em>; this chapter uses the file <em>rimeintro.
+				txt</em> that contains only the first few lines.</p>
+
+				<p>The following lines are from <em>rime-intro.txt:</em></p>
+
+				<p class="indented"><code>THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.<br/><br/>ARGUMENT.<br/><br/>How a Ship having passed the Line was driven by Storms to the cold
+				Country towards the South Pole; and how from thence she made her course
+				to the tropical Latitude of the Great Pacific Ocean; and of the strange
+				things that befell; and in what manner the Ancyent Marinere came back to
+				his own Country.<br/><br/>I.<br/><br/>1&nbsp;&nbsp;&nbsp;&nbsp;It is an ancyent Marinere,<br/>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;And he stoppeth one of three:<br/>3&nbsp;&nbsp;&nbsp;&nbsp;"By thy long grey beard and thy glittering eye<br/>4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Now wherefore stoppest me?</code></p>
+
+				<p>Copy and paste the lines shown here into the lower text box in RegExr. You’ll find the
+				file <em>rime-intro.txt</em> at Github at <span class="url">https://github.com/michaeljamesfitzgerald/Introducing
+				-Regular-Expressions</span>. You’ll also find the same file in the download archive found at</p>
+
+				<div class="pagebreak left"><span class="pageNumber">14</span> | Chapter 2: Simple Pattern Matching</div>
+
+				<p><span class="url">http://examples.oreilly.com/9781449392680/examples.zip.</span> You can also find the text
+				online at Project Gutenberg, but without the numbered lines (see <span class="url">http://www.gutenberg
+				.org/ebooks/9622</span>).</p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Matching String Literals">
+
+				<h2>Matching String Literals</h2>
+
+				<p><span class="first-sentence">The most outright, obvious feature of regular expressions is matching strings with one
+				or more literal characters, called <em>string literals</em> or just <em>literals</em>.</span></p>
+
+				<p>The way to match literal strings is with normal, literal characters. Sounds familiar,
+				doesn’t it? This is similar to the way you might do a search in a word processing program
+				or when submitting a keyword to a search engine. When you search for a string of text,
+				character for character, you are searching with a string literal.</p>
+
+				<p>If you want to match the word <em>Ship</em>, for example, which is a word (string of characters)
+				you’ll find early in the poem, just type the word <em>Ship</em> in the box at the top of Regexpal,
+				and then the word will be highlighted in the lower text box. (Be sure to capitalize the
+				word.)</p>
+
+				<p>Did light blue highlighting show up below? You should be able to see the highlighting
+				in the lower box. If you can’t see it, check what you typed again.</p>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>By default, string matching is case-sensitive in Regexpal. If you want to
+					match both lower- and uppercase, click the checkbox next to the words
+					<em>Case insensitive</em> at the top left of Regexpal. If you click this box, both
+					<em>Ship</em> and <em>ship</em> would match if either was present in the target text.</p>
+				</div>
+
+			</section>
+
+			<section class="section" data-number="2" data-name="Matching Digits">
+
+				<h2>Matching Digits</h2>
+
+				<p><span class="first-sentence">In the top-left text box in RegExr, enter this character shorthand to match the digits:</span></p>
+
+				<p class="indented"><code>\d</code></p>
+
+				<p>This matches all the Arabic digits in the text area below because the <em>global</em> checkbox
+				is selected. Uncheck that checkbox, and <code>\d</code> will match only the first occurrence of a
+				digit. (See <strong>Figure 2-2</strong>.)</p>
+
+				<p>Now in place of <code>\d</code> use a character class that matches the same thing. Enter the following
+				range of digits in the top text box of RegExr:</p>
+
+				<p class="indented"><code>[0-9]</code></p>
+
+				<p>As you can see in <strong>Figure 2-3</strong>, though the syntax is different, using <code>\d</code> does the same
+				thing as <code>[0-9]</code>.</p>
+
+				<div class="pagebreak right">Matching Digits | <span class="pageNumber">15</span></div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure2-2.png">
+					<figcaption>Figure 2-2. Matching all digits in RegExr with \d</figcaption>
+				</figure>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>You’ll learn more about character classes in <strong>Chapter 5</strong>.</p>
+				</div>
+
+				<p>The character class <code>[0-9]</code> is a range, meaning that it will match the range of digits 0
+				through 9. You could also match digits 0 through 9 by listing all the digits:</p>
+
+				<p class="indented"><code>[0123456789]</code></p>
+
+				<p>If you want to match only the binary digits 0 and 1, you would use this character class:</p>
+
+				<p class="indented"><code>[01]</code></p>
+
+				<p>Try <code>[12]</code> in RegExr and look at the result. With a character class, you can pick the exact
+				digits you want to match. The character shorthand for digits (<code>\d</code>) is shorter and simpler,
+				but it doesn’t have the power or flexibility of the character class. I use character classes
+				when I can’t use <code>\d</code> (it’s not always supported) and when I need to get very specific
+				about what digits I need to match; otherwise, I use <code>\d</code> because it’s a simpler, more
+				convenient syntax.</p>
+
+				<div class="pagebreak left"><span class="pageNumber">16</span> | Chapter 2: Simple Pattern Matching</div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure2-3.png">
+					<figcaption>Figure 2-3. Matching all digits in RegExr with [0-9]</figcaption>
+				</figure>
+
+			</section>
+
+			<section class="section" data-number="3" data-name="Matching Non-Digits">
+
+				<h2>Matching Non-Digits</h2>
+
+				<p><span class="first-sentence">As is often the case with shorthands, you can flip-flop—that is, you can go the other
+				way.</span> For example, if you want to match characters that are not digits, use this shorthand
+				with an uppercase <em>D</em>:</p>
+
+				<p class="indented"><code>\D</code></p>
+
+				<p>Try this shorthand in RegExr now. An uppercase <em>D</em>, rather than a lowercase, matches
+				non-digit characters (check <strong>Figure 2-4</strong>). This shorthand is the same as the following
+				character class, a negated class (a negated class says in essence, “don’t match these” or
+				“match all but these”):</p>
+
+				<p class="indented"><code>[^0-9]</code></p>
+
+				<p>which is the same as</p>
+
+				<p class="indented"><code>[^\d]</code></p>
+
+				<div class="pagebreak right">Matching Non-Digits | <span class="pageNumber">17</span></div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure2-4.png">
+					<figcaption>Figure 2-4. Matching non-digits in RegExr with \D</figcaption>
+				</figure>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="Matching Word and Non-Word Characters">
+
+				<h2>Matching Word and Non-Word Characters</h2>
+
+				<p><span class="first-sentence">In RegExr, now swap <code>\D</code> with:</span></p>
+
+				<p class="indented"><code>\w</code></p>
+
+				<p>This shorthand will match all word characters (if the <em>global</em> option is still checked). The
+				difference between <code>\D</code> and <code>\w</code> is that <code>\D</code> matches whitespace, punctuation, quotation
+				marks, hyphens, forward slashes, square brackets, and other similar characters, while
+				<code>\w</code> does not—it matches letters and numbers.</p>
+
+				<p>In English, <code>\w</code> matches essentially the same thing as the character class:</p>
+
+				<p class="indented"><code>[a-zA-Z0-9]</code></p>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>You’ll learn how to match characters beyond the set of English letters
+					in <strong>Chapter 6</strong>.</p>
+				</div>
+
+				<div class="pagebreak left"><span class="pageNumber">18</span> | Chapter 2: Simple Pattern Matching</div>
+
+				<p>Now to match a non-word character, use an uppercase <em>W</em>:</p>
+
+				<p class="indented"><code>\W</code></p>
+
+				<p>This shorthand matches whitespace, punctuation, and other kinds of characters that
+				aren’t used in words in this example. It is the same as using the following character class:</p>
+
+				<p class="indented"><code>[^a-zA-Z0-9]</code></p>
+
+				<p>Character classes, granted, allow you more control over what you match, but sometimes
+				you don’t want or need to type out all those characters. This is known as the
+				“fewest keystrokes win” principle. But sometimes you must type all that stuff out to
+				get precisely what you want. It is your choice.</p>
+
+				<p>Just for fun, in RegExr try both:</p>
+
+				<p class="indented"><code>[^\w]</code></p>
+
+				<p>and</p>
+
+				<p class="indented"><code>[^\W]</code></p>
+
+				<p>Do you see the differences in what they match?</p>
+
+				<p><strong>Table 2-1</strong> provides an extended list of character shorthands. Not all of these work in
+				every regex processor.</p>
+
+				<table class="no-border">
+					<caption>Table 2-1. Character shorthands</caption>
+					<tr>
+						<th>Character Shorthand</th>
+						<th>Description</th>
+					</tr>
+					<tr>
+						<td>\a</td>
+						<td>Alert</td>
+					</tr>
+					<tr>
+						<td>\b</td>
+						<td>Word boundary</td>
+					</tr>
+					<tr>
+						<td>[\b]</td>
+						<td>Backspace character</td>
+					</tr>
+					<tr>
+						<td>\B</td>
+						<td>Non-word boundary</td>
+					</tr>
+					<tr>
+						<td>\c x</td>
+						<td>Control character</td>
+					</tr>
+					<tr>
+						<td>\d</td>
+						<td>Digit character</td>
+					</tr>
+					<tr>
+						<td>\D</td>
+						<td>Non-digit character</td>
+					</tr>
+					<tr>
+						<td>\d xxx</td>
+						<td>Decimal value for a character</td>
+					</tr>
+					<tr>
+						<td>\f</td>
+						<td>Form feed character</td>
+					</tr>
+					<tr>
+						<td>\r</td>
+						<td>Carriage return</td>
+					</tr>
+					<tr>
+						<td>\n</td>
+						<td>Newline character</td>
+					</tr>
+					<tr>
+						<td>pass:[&lt;literal&gt;\o&lt;/literal&gt;</td>
+						<td>Octal value for a character</td>
+					</tr>
+					<tr>
+						<td>&lt;replaceable&gt;\xxx&lt;/replaceable&gt;]</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>\s</td>
+						<td>Space character</td>
+					</tr>
+					<tr>
+						<td>\S</td>
+						<td>Non-space character</td>
+					</tr>
+					<tr>
+						<td>\t</td>
+						<td>Horizontal tab character</td>
+					</tr>
+					<tr>
+						<td>\v</td>
+						<td>Vertical tab character</td>
+					</tr>
+				</table>
+
+				<div class="pagebreak right">Matching Word and Non-Word Characters | <span class="pageNumber">19</span></div>
+
+				<table>
+					<tr>
+						<th>Character Shorthand</th>
+						<th>Description</th>
+					</tr>
+					<tr>
+						<td>\w</td>
+						<td>Word character</td>
+					</tr>
+					<tr>
+						<td>\W</td>
+						<td>Non-word character</td>
+					</tr>
+					<tr>
+						<td>\0</td>
+						<td>Nul character</td>
+					</tr>
+					<tr>
+						<td>\ xxx</td>
+						<td>Hexadecimal value for a character</td>
+					</tr>
+					<tr>
+						<td>\u xxx</td>
+						<td>Unicode value for a character</td>
+					</tr>
+				</table>
+
+			</section>
+
+			<section class="section" data-number="5" data-name="Matching Whitespace">
+
+				<h2>Matching Whitespace</h2>
+
+				<p><span class="first-sentence">To match whitespace, you can use this shorthand:</span></p>
+
+				<p class="indented"><code>\s</code></p>
+
+				<p>Try this in RegExr and see what lights up (see Figure 2-5). The following character class
+				matches the same thing as <code>\s</code>:</p>
+
+				<p class="indented"><code>[ \t\n\r]</code></p>
+
+				<p>In other words, it matches:</p>
+
+				<ul>
+					<li>Spaces</li>
+					<li>Tabs (<code>\t</code>)</li>
+					<li>Line feeds (<code>\n</code>)</li>
+					<li>Carriage retuns (<code>\r</code>)</li>
+				</ul>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>Spaces and tabs are highlighted in RegExr, but not line feeds or carriage
+					returns.</p>
+				</div>
+
+				<p>As you can imagine, <code>\s</code> has its <em>compañero</em>. To match a non-whitespace character, use:</p>
+
+				<p class="indented"><code>\S</code></p>
+
+				<p>This matches everything except whitespace. It matches the character class:</p>
+
+				<p class="indented"><code>[^ \t\n\r]</code></p>
+
+				<p>Or:</p>
+
+				<p class="indented"><code>[^\s]</code></p>
+
+				<p>Test these out in RegExr to see what happens.</p>
+
+				<p>In addition to those characters matched by <code>\s</code>, there are other, less common whitespace
+				characters. <strong>Table 2-2</strong> lists character shorthands for common whitespace characters and
+				a few that are more rare.</p>
+
+				<div class="pagebreak left"><span class="pageNumber">20</span> | Chapter 2: Simple Pattern Matching</div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure2-5.png">
+					<figcaption>Figure 2-5. Matching whitespace in RegExr with \s</figcaption>
+				</figure>
+
+				<table>
+					<caption>Table 2-2. Character shorthands for whitespace characters</caption>
+					<tr>
+						<th>Character Shorthand</th>
+						<th>Description</th>
+					</tr>
+					<tr>
+						<td>\f</td>
+						<td>Form feed</td>
+					</tr>
+					<tr>
+						<td>\h</td>
+						<td>Horizontal whitespace</td>
+					</tr>
+					<tr>
+						<td>\H</td>
+						<td>Not horizontal whitespace</td>
+					</tr>
+					<tr>
+						<td>\n</td>
+						<td>Newline</td>
+					</tr>
+					<tr>
+						<td>\r</td>
+						<td>Carriage return</td>
+					</tr>
+					<tr>
+						<td>\t</td>
+						<td>Horizontal tab</td>
+					</tr>
+					<tr>
+						<td>\v</td>
+						<td>Vertical tab (whitespace)</td>
+					</tr>
+					<tr>
+						<td>\V</td>
+						<td>Not vertical whitespace</td>
+					</tr>
+				</table>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>If you try <code>\h</code>, <code>\H</code>, or <code>\V</code> in RegExr, you will see results, but not with <code>\v</code>.
+					Not all whitespace shorthands work with all regex processors.</p>
+				</div>
+
+				<div class="pagebreak right">Matching Whitespace | <span class="pageNumber">21</span></div>
+
+			</section>
+
+			<section class="section" data-number="6" data-name="Matching Any Character, Once Again">
+
+				<h2>Matching Any Character, Once Again</h2>
+
+				<p><span class="first-sentence">There is a way to match <em>any</em> character with regular expressions and that is with the dot,
+				also known as a period or a full stop (U+002E).</span> The dot matches all characters but line
+				ending characters, except under certain circumstances.</p>
+
+				<p>In RegExr, turn off the <em>global</em> setting by clicking the checkbox next to it. Now any
+				regular expression will match on the first match it finds in the target.</p>
+
+				<p>Now to match a single character, any character, just enter a single dot in the top text
+				box of RegExr.</p>
+
+				<p>In <strong>Figure 2-6</strong>, you see that the dot matches the first character in the target, namely, the
+				letter T.</p>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure2-6.png">
+					<figcaption>Figure 2-6. Matching a single character in RegExr with "."</figcaption>
+				</figure>
+
+				<p>If you wanted to match the entire phrase <em>THE RIME</em>, you could use eight dots:</p>
+
+				<p class="indented"><code>........</code></p>
+
+				<p>But this isn’t very practical, so I don’t recommend using a series of dots like this often,
+				if ever. Instead of eight dots, use a quantifier:</p>
+
+				<div class="pagebreak left"><span class="pageNumber">22</span> | Chapter 2: Simple Pattern Matching</div>
+
+				<p class="indented"><code>.{8}</code></p>
+
+				<p>and it would match the first two words and the space in between, but crudely so. To
+				see what I mean by <em>crudely</em>, click the checkbox next to <em>global</em> and see how useless this
+				really is. It matches sequences of eight characters, end on end, all but the last few
+				characters of the target.</p>
+
+				<p>Let’s try a different tack with word boundaries and starting and ending letters. Type
+				the following in the upper text box of RegExr to see a slight difference:</p>
+
+				<p class="indented"><code>\bA.{5}T\b</code></p>
+
+				<p>This expression has a bit more specificity. (Try saying <em>specificity</em> three times, out loud.)
+				It matches the word <em>ANCYENT</em>, an archaic spelling of <em>ancient</em>. How?</p>
+
+				<ul>
+					<li>The shorthand <code>\b</code> matches a word boundary, without consuming any characters.</li>
+					<li>The characters <em>A</em> and <em>T</em> also bound the sequence of characters.</li>
+					<li><code>.{5}</code> matches any five characters.</li>
+					<li>Match another word boundary with <code>\b</code>.</li>
+				</ul>
+
+				<p>This regular expression would actually match both <em>ANCYENT</em> or <em>ANCIENT</em>.</p>
+
+				<p>Now try it with a shorthand:</p>
+
+				<p class="indented"><code>\b\w{7}\b</code></p>
+
+				<p>Finally, I’ll talk about matching zero or more characters:</p>
+
+				<p class="indented"><code>.*</code></p>
+
+				<p>which is the same as:</p>
+
+				<p class="indented"><code>[^\n]</code></p>
+
+				<p>or</p>
+
+				<p class="indented"><code>[^\n\r]</code></p>
+
+				<p>Similar to this is the dot used with the one or more quantifier (+):</p>
+
+				<p class="indented"><code>.+,</code></p>
+
+				<p>Try these in RegExr and they will, either of them, match the first line (uncheck
+				<em>global</em>). The reason why is that, normally, the dot does not match newline characters,
+				such as a line feed (U+000A) or a carriage return (U+000D). Click the checkbox next
+				to <em>dotall</em> in RegExr, and then <code>.*</code> or <code>.+</code> will match <em>all</em> the text in the lower box. (<em>dotall</em>
+				means a dot will match all characters, including newlines.)</p>
+
+				<p>The reason why it does this is because these quantifiers are <em>greedy</em>; in other words, they
+				match all the characters they can. But don’t worry about that quite yet. <strong>Chapter 7</strong>
+				explains quantifiers and greediness in more detail.</p>
+
+				<div class="pagebreak right">Matching Any Character, Once Again | <span class="pageNumber">23</span></div>
+
+			</section>
+
+			<section class="section" data-number="7" data-name="Marking Up the Text">
+
+				<h2>Marking Up the Text</h2>
+
+				<p><span class="first-sentence">“The Rime of the Ancient Mariner” is just plain text.</span> What if you wanted to display it
+				on the Web? What if you wanted to mark it up as HTML5 using regular expressions,
+				rather than by hand? How would you do that?</p>
+
+				<p>In some of the following chapters, I'll show you ways to do this. I'll start out small in
+				this chapter and then add more and more markup as you go along.</p>
+
+				<p>In RegExr, click the Replace tab, check <em>multiline</em>, and then, in the first text box, enter:</p>
+
+				<p class="indented"><code>(^T.*$)</code></p>
+
+				<p>Beginning at the top of the file, this will match the first line of the poem and then capture
+				that text in a group using parentheses. In the next box, enter:</p>
+
+				<p class="indented"><code>&lt;h1&gt;$1&lt;/h1&gt;</code></p>
+
+				<p>The replacement regex surrounds the captured group, represented by <code>$1</code>, in an <em>h1</em> element.
+				You can see the result in the lowest text area. The <code>$1</code> is a backreference, in Perl
+				style. In most implementations, including Perl, you use this style: <code>\1</code>; but RegExr supports
+				only <code>$1, $2, $3</code> and so forth. You’ll learn more about groups and backreferences
+				in <strong>Chapter 4</strong>.</p>
+
+			</section>
+
+			<section class="section" data-number="8" data-name="Using sed to Mark Up Text">
+
+				<h2>Using <em>sed</em> to Mark Up Text</h2>
+
+				<p><span class="first-sentence">On a command line, you could also do this with <em>sed</em>. <em>sed</em> is a Unix streaming editor that
+				accepts regular expressions and allows you to transform text.</span> It was first developed in
+				the early 1970s by Lee McMahon at Bell Labs. If you are on the Mac or have a Linux
+				box, you already have it.</p>
+
+				<p>Test out <em>sed</em> at a shell prompt (such as in a Terminal window on a Mac) with this line:</p>
+
+				<p class="indented"><code>echo Hello | sed s/Hello/Goodbye/</code></p>
+
+				<p>This is what should have happened:</p>
+
+				<ul>
+
+					<li>The <em>echo</em> command prints the word <em>Hello</em> to standard output (which is usually just
+					your screen), but the vertical bar (|) pipes it to the <em>sed</em> command that follows.</li>
+
+					<li>This pipe directs the output of <em>echo</em> to the input of <em>sed</em>.</li>
+
+					<li>The <em>s</em> (substitute) command of <em>sed</em> then changes the word <em>Hello</em> to <em>Goodbye</em>, and
+					<em>Goodbye</em> is displayed on your screen.</li>
+
+				</ul>
+
+				<p>If you don’t have <em>sed</em> on your platform already, at the end of this chapter you’ll find
+				some technical notes with some pointers to installation information. You’ll find discussed
+				there two versions of <em>sed</em>: BSD and GNU.</p>
+
+				<p>Now try this: At a command or shell prompt, enter:</p>
+
+				<p class="indented"><code>sed -n 's/^/&lt;h1&gt;/;s/$/&lt;\/h1&gt;/p;q' rime.txt</code></p>
+
+				<div class="pagebreak left"><span class="pageNumber">24</span> | Chapter 2: Simple Pattern Matching</div>
+
+				<p>And the output will be:</p>
+
+				<p class="indented"><code>&lt;h1&gt;THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.&lt;/h1&gt;</code></p>
+
+				<p>Here is what the regex did, broken down into parts:</p>
+
+				<ul>
+
+					<li>The line starts by invoking the <em>sed</em> program.</li>
+
+					<li>The <code>-n</code> option suppresses <em>sed</em>’s default behavior of echoing each line of input to the
+					output. This is because you want to see only the line effected by the regex, that is,
+					line 1.</li>
+
+					<li><code>s/^/&lt;h1&gt;/</code> places an <em>h1</em> start-tag at the beginning (<code>^</code>) of the line.
+					
+					<li>The semicolon (<code>;</code>) separates commands.</li>
+
+					<li><code>s/$/&lt;\/h1&gt;/</code> places an h1 end-tag at the end (<code>$</code>) of the line.</li>
+
+					<li>The <em>p</em> command prints the affected line (line 1). This is in contrast to <code>-n</code>, which
+					echoes every line, regardless.</li>
+
+					<li>Lastly, the <em>q</em> command quits the program so that <em>sed</em> processes only the first line.</li>
+
+					<li>All these operations are performed against the file <em>rime.txt</em>.</li>
+
+				</ul>
+
+				<p>Another way of writing this line is with the <code>-e</code> option. The <code>-e</code> option appends the editing
+				commands, one after another. I prefer the method with semicolons, of course, because
+				it’s shorter.</p>
+
+				<p class="indented"><code>sed -ne 's/^/&lt;h1&gt;/' -e 's/$/&lt;\/h1&gt;/p' -e 'q' rime.txt</code></p>
+
+				<p>You could also collect these commands in a file, as with <em>h1.sed</em> shown here (this file is
+				in the code repository mentioned earlier):</p>
+
+				<p class="indented"><code>#!/usr/bin/sed</code></p>
+
+				<p class="indented"><code>	s/^/&lt;h1&gt;/<br/>
+							s/$/&lt;\/h1&gt;/<br/>
+							q</code></p>
+
+				<p>To run it, type:</p>
+
+				<p class="indented"><code>sed -f h1.sed rime.txt</code></p>
+
+				<p>at a prompt in the same directory or folder as <em>rime.txt</em>.</p>
+
+			</section>
+
+			<section class="section" data-number="9" data-name="Using Perl to Mark Up Text">
+
+				<h2>Using Perl to Mark Up Text</h2>
+
+				<p><span class="first-sentence">Finally, I’ll show you how to do a similar process with Perl.</span> Perl is a general purpose
+				programming language created by Larry Wall back in 1987. It’s known for its strong
+				support of regular expressions and its text processing capabilities.</p>
+
+				<p>Find out if Perl is already on your system by typing this at a command prompt, followed
+				by Return or Enter:</p>
+
+				<p class="indented"><code>perl -v</code></p>
+
+				<div class="pagebreak right">Marking Up the Text | <span class="pageNumber">25</span></div>
+
+				<p>This should return the version of Perl on your system or an error (see <strong>“Technical
+				Notes” on page 27</strong>).</p>
+
+				<p>To accomplish the same output as shown in the <em>sed</em> example, enter this line at a prompt:</p>
+
+				<p class="indented"><code>perl -ne 'if ($. == 1) { s/^/&lt;h1&gt;/; s/$/&lt;\/h1&gt;/m; print; }' rime.txt</code></p>
+
+				<p>and, as with the <em>sed</em> example, you will get this result:</p>
+
+				<p class="indented"><code>&lt;h1&gt;THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.&lt;/h1&gt;</code></p>
+
+				<p>Here is what happened in the Perl command, broken down again into pieces:</p>
+
+				<ul>
+
+					<li><em>perl</em> invokes the Perl program.</li>
+
+					<li>The <code>-n</code> option loops through the input (the file <em>rime.txt</em>).</li>
+
+					<li>The <code>-e</code> option allows you to submit program code on the command line, rather
+					than from a file (like <em>sed</em>).</li>
+
+					<li>The <em>if</em> statement checks to see if you are on line 1. <code>$.</code> is a special variable in Perl
+					that matches the current line.</li>
+
+					<li>The first substitute command s finds the beginning of the first line (^) and inserts
+					an <em>h1</em> start-tag there.</li>
+
+					<li>The second substitute command searches for the end of the line ($), and then inserts
+					an <em>h1</em> end-tag.</li>
+
+					<li>The <em>m</em> or <em>multiline</em> modifier or flag at the end of the substitute command indicates
+					that you are treating this line distinctly and separately; consequently, the <em>$</em> matches
+					the end of line 1, not the end of the file.</li>
+
+					<li>At last, it prints the result to standard output (the screen).</li>
+
+					<li>All these operations are performed again the file <em>rime.txt</em>.</li>
+
+				</ul>
+
+				<p>You could also hold all these commands in a program file, such as this file, <em>h1.pl</em>, found
+				in the example archive.</p>
+
+				<p class="indented"><code>#!/usr/bin/perl -n</code></p>
+
+				<p class="indented"><code>if ($. == 1) {<br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;s/^/&lt;h1&gt;/;<br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;s/$/&lt;\/h1&gt;/m;<br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;print;<br/>
+				}</code></p>
+
+				<p>And then, in the same directory as <em>rime.txt</em>, run the program like this:</p>
+
+				<p class="indented"><code>perl h1.pl rime.txt</code></p>
+
+				<p>There are a lot of ways you can do things in Perl. I am not saying this is the most efficient
+				way to add these tags. It is simply one way. Chances are, by the time this book is in
+				print, I’ll think of other, more efficient ways to do things with Perl (and other tools). I
+				hope you will, too.</p>
+
+				<div class="pagebreak left"><span class="pageNumber">26</span> | Chapter 2: Simple Pattern Matching</div>
+
+				<p>In the next chapter, we’ll talk about boundaries and what are known as <em>zero-width
+				assertions</em>.</p>
+
+			</section>
+
+			<section class="section" data-number="10" data-name="What You Learned in Chapter 2">
+
+				<h2><span class="first-sentence">What You Learned in Chapter 2</span></h2>
+
+				<ul>
+
+					<li>How to match string literals</li>
+
+					<li>How to match digits and non-digits</li>
+
+					<li>What the <em>global</em> mode is</li>
+
+					<li>How character shorthands compare with character classes</li>
+
+					<li>How to match word and non-word characters</li>
+
+					<li>How to match whitespace</li>
+
+					<li>How to match any character with the dot</li>
+
+					<li>What the <em>dotall</em> mode is</li>
+
+					<li>How to insert HTML markup to a line of text using RegExr, <em>sed</em>, and Perl</li>
+
+				</ul>
+
+			</section>
+
+			<section class="section" data-number="11" data-name="Technical Notes">
+
+				<h2>Technical Notes</h2>
+
+				<ul>
+
+				<li><span class="first-sentence">RegExr is found at <span class="url">http://www.gskinner.com/RegExr</span> and also has a desktop version
+				(<span class="url">http://www.gskinner.com/RegExr/desktop/</span>).</span> RegExr was built in Flex 3 (<span class="url">http://
+				www.adobe.com/products/flex.html</span>) and relies on the ActionScript regular expression
+				engine (<span class="url">http://www.adobe.com/devnet/actionscript.html</span>). Its regular expressions
+				are similar to those used by JavaScript (see <span class="url">https://developer.mozilla.org/en/
+				JavaScript/Reference/Global_Objects/RegExp</span>).</li>
+
+				<li>Git is a fast version control system (<span class="url">http://git-scm.com</span>). GitHub is a web-based
+				repository for projects using Git (<span class="url">http://github.com</span>). I suggest using the GitHub
+				repository for samples in this book only if you feel comfortable with Git or with
+				other modern version control systems, like Subversion or Mercurial.</li>
+
+				<li>HTML5 (<span class="url">http://www.w3.org/TR/html5/</span>) is the fifth major revision of the W3C’s
+				HTML, the markup language for publishing on the World Wide Web. It has been
+				in draft for several years and changes regularly, but it is widely accepted as the heir
+				apparent of HTML 4.01 and XHTML.</li>
+
+				<li><em>sed</em> is readily available on Unix/Linux systems, including the Mac (Darwin or BSD
+				version). It is also available on Windows through distributions like Cygwin (<span class="url">http:
+				//www.cygwin.com</span>) or individually at <span class="url">http://gnuwin32.sourceforge.net/packages/
+				sed.htm</span> (currently at version 4.2.1, see <span class="url">http://www.gnu.org/software/sed/manual/
+				sed.html</span>).</li>
+
+				<li>To use the Perl examples in this chapter, you may have to install Perl on your
+				system. It comes by default with Mac OS X Lion and often is on Linux systems. If
+				you are on Windows, you can get Perl by installing the appropriate Cygwin</li>
+
+			</ul>
+
+			<div class="pagebreak right">Technical Notes | <span class="pageNumber">27</span></div>
+
+			<p>packages (see <span class="url">http://www.cygwin.com</span>) or by downloading the latest package from
+			the ActiveState website (go to <span class="url">http://www.activestate.com/activeperl/downloads</span>).
+			For detailed information on installing Perl, visit <span class="url">http://learn.perl.org/installing/ or
+			http://www.perl.org/get.html</span>.</p>
+
+			<p>To find out if you already have Perl, enter the command below at a shell prompt.
+			To do this, open a command or shell window on your system, such as a Terminal
+			window (under Applications/Utilities) on the Mac or a Windows command line
+			window (open Start, and then enter cmd in the text box at the bottom of the menu).
+			At the prompt, type:</p>
+
+			<p class="indented"><code>perl -v</code></p>
+
+			<p>If Perl is alive and well on your system, then this command will return version
+			information for Perl. On my Mac running Lion, I’ve installed the latest version of
+			Perl (5.16.0 at the time of this writing) from source and compiled it (see <span class="url">http://www
+			.cpan.org/src/5.0/perl-5.16.0.tar.gz</span>). I get the following information back when I
+			enter the command above:</p>
+
+			<p class="indented"><code>This is perl 5, version 16, subversion 0 (v5.16.0) built for darwin-2level</code></p>
+
+			<p class="indented"><code>Copyright 1987-2012, Larry Wall</code></p>
+
+			<p class="indented"><code>Perl may be copied only under the terms of either the Artistic License or the
+			GNU General Public License, which may be found in the Perl 5 source kit.</code></p>
+
+			<p class="indented"><code>Complete documentation for Perl, including FAQ lists, should be found on
+			this system using "man perl" or "perldoc perl". If you have access to the
+			Internet, point your browser at http://www.perl.org/, the Perl Home Page.</code></p>
+
+			<p>Both <code>perl</code> and <code>perldoc</code> are installed at <code>/usr/local/bin</code> when compiled and built
+			from source, which you can add to your path. For information on setting your path
+			variable, see <span class="url">http://java.com/en/download/help/path.xml</span>.</p>
+
+		</section>
+
+		</div> <!-- /container -->
+
+	</div> <!-- /regexp -->
+	
+</body>
+</html>

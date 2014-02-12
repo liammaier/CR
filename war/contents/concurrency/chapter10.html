@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h1>10</h1>
+				<h2>Message Passing</h2>
+				<div class="border"></div>
+
+				<p>In previous chapters, we have seen that when threads interact through shared variables, these variables must be encapsulated in monitor objects to ensure correct behavior. An alternative way of organizing concurrent programs which does not require shared variables is to use message passing. In message-passing programs, processes interact by sending and receiving messages. Processes that interact solely by message exchange do not need to access shared memory and consequently can be located on different computers connected by a communication network. However, message passing is also frequently used when processes are intended to run within a single computer.</p>
+
+				<p class="i">Fundamental to message passing are the operations to <em>send</em> and <em>receive</em> a message. There are a surprising number of different definitions for these operations in message-passing systems. We examine the two basic models for message passing: <em>synchronous</em> message passing, in which the sender of a message waits until it has been received; and <em>asynchronous</em> message passing, in which the sender does not wait and messages which have been sent but not yet received are buffered. These are both one-way forms of communication: the messages are transmitted in one direction only, from sender to receiver. In addition, we examine the <em>rendezvous</em>, a two-way message-passing protocol used for client-server interaction.</p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Synchronous Message Passing">
+
+				<h3>10.1 Synchronous Message Passing</h3>
+
+				<p>An important design decision in a message-passing scheme is how to designate the sources and destinations of messages. Messages can be addressed directly to the destination process or indirectly to some intermediate entity. In discussing synchronous message passing, we adopt the scheme used in OCCAM (INMOS Ltd., 1988a), in which messages are sent to and received from <em>channels</em>. We will see that it is possible, in some message-passing schemes, for many senders to</p>
+
+				<div class="pagebreak pageNumber">210</div>
+
+				<p>communicate with a receiver through a single communication entity. However, as in OCCAM, we specify that a channel connects two and only two processes. A single process can send to the channel and a single process can receive from the channel as shown in Figure 10.1. Communication is said to be <em>one-to-one</em>.</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure10-1.png">
+					<figcaption><strong>Figure 10.1</strong> Synchronous message-passing channel.</figcaption>
+				</figure>
+
+				<p>The send and receive operations on channels are:</p>
+
+				<div class="definition"><strong>send</strong>(<em>e, c</em>) - send the value of the expression <em>e</em> to channel <em>c</em>. The process calling the send operation is blocked until the message is received from the channel.<br/>
+				<em>v</em> = <strong>receive</strong>(<em>c</em>) - receive a value into local variable <em>v</em> from channel <em>c</em>. The calling process is blocked waiting until a message is sent to the channel.</div>
+
+				<p>The first process, whether sender or receiver, to perform a channel operation is blocked until its partner performs the complementary action. After a communication occurs, sender and receiver can proceed independently. This form of message passing is termed synchronous, since the sender and receiver must be exactly synchronized for communication to occur. Another way of thinking of synchronous communication is that it implements a distributed assignment in which the sender's expression is assigned to the receiver's local variable (<em>v</em> = <em>e</em>). In the language OCCAM and the CSP formalism (Hoare, 1985) which inspired it, the notation for send is <em>c</em>!<em>e</em> and for receive is <em>c</em>?<em>v</em>.</p>
+
+				<p class="i">Synchronous message operations do not require messages to be buffered. If the sender process is running on the same computer as the receiver then the message can be copied directly from the sender into the receiver's local variable. This simplicity enabled the OCCAM send and receive operations to be implemented directly as Transputer (INMOS Ltd., 1988b) machine instructions.</p>
+
+				<div class="pagebreak pageNumber">211</div>
+
+				<section class="subsection" data-number="2" data-name="Selective Receive">
+
+					<h4>10.1.1 Selective Receive</h4>
+
+					<p>We have seen that choice between actions is important in both modeling and implementing concurrent programs. In Java, choice is implemented within a monitor. The monitor lock effectively selects a single synchronized method activation to execute from the set of possible activations. The synchronous, message receive operation blocks waiting on a single channel. How do we choose between receiving messages from a set of channels? The solution provided by languages such as OCCAM and Ada is to use a <strong>select</strong> statement. The general form of a select statement is as shown below:</p>
+
+					<pre class="times">
+<strong>select</strong>
+  <strong>when</strong> G<sub>1</sub> and <em>v</em><sub>1</sub> =<strong>receive</strong>(<em>chan</em><sub>1</sub>) => <em>S</em><sub>1</sub>;
+<strong>or</strong>
+  <strong>when</strong> G<sub>1</sub> and <em>v</em><sub>2</sub> =<strong>receive</strong>(<em>chan</em><sub>2</sub>) => <em>S</em><sub>2</sub>;
+<strong>or</strong>
+  . . .
+<strong>or</strong>
+  <strong>when</strong> G<sub>n</sub> <strong>and</strong> <em>v</em><sub>n</sub> =<strong>receive</strong>(<em>chan</em><sub>n</sub>) => <em>S</em><sub>n</sub>;
+<strong>end</strong>
+					</pre>
+
+					<p>G<sub>1</sub> .. G<sub><em>n</em></sub> are boolean expressions known as guards. A receive is eligible if the guard associated with it evaluates to true. The select statement chooses an eligible receive operation for which there is a sender waiting to send. The statement <em>S<sub>i</sub></em> is executed after a successful receive on a channel <em>chan<sub>i</sub></em>. The select statement then terminates. If none of the channels have waiting sends then the select statement blocks. The reader should immediately see the correspondence between this select construct and choice over guarded actions in <em>FSP</em>. Indeed, we will see later that this is exactly the way selective receive is modeled in <em>FSP</em>. As in <em>FSP</em>, guards are usually optional in select statements such that an omitted guard is equivalent to <strong>when</strong> <em>true</em> and. Some select statements allow <em>non-blocking</em> semantics by providing an <strong>else</strong> alternative as follows:</p>
+
+					<pre class="times">
+<strong>select</strong>
+  <em>v</em>=<strong>receive</strong>(<em>chan</em>) => <em>S</em>;
+<strong>else</strong> 
+  <em>S<sub>elsepart</sub></em>;
+<strong>end</strong>
+					</pre>
+
+					<p>If a sender is not waiting on the channel then the else part is immediately chosen. Another variation is to permit a timeout as an alternative. If no message arrives within the timeout period then the statements associated with the timeout part are executed and the select terminates.</p>
+
+					<p class="i">The send and receive operations are symmetrical in synchronous message passing in that the send blocks if there is no corresponding receive and vice</p>
+
+					<div class="pagebreak pageNumber">212</div>
+
+					<p>versa. Consequently, it is reasonable to suggest that send operations should be allowed as select alternatives in addition to receive operations. However, because of the resulting implementation complexity, only experimental message-passing languages have included both send and receive select alternatives.</p>
+
+				</section>
+
+				<section class="subsection" data-number="3" data-name="Synchronous Message Passing in Java">
+
+					<h4>10.1.2 Synchronous Message Passing in Java</h4>
+
+					<p>We have seen in the preceding chapters that Java supports thread interaction through monitors. How do we write message-passing programs in Java? The answer is to use Java's object-oriented programming facilities to implement and encapsulate message-passing abstractions. We can implement the synchronous message-passing channel as a class. The outline of the Java class that implements the channel abstraction is defined in Program 10.1.</p>
+
+					<pre class="program">
+<strong>public class</strong> Channel&lt;T&gt; <strong>extends</strong> Selectable{
+  <strong>public synchronized</strong> void send(T v)
+        <strong>throws</strong> InterruptedException {. . .}
+  <strong>public synchronized</strong> T receive()
+        <strong>throws</strong> InterruptedException {. . .}
+
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 10.1</strong> <code>Channel</code> class.</p>
+
+					<p>The implementation of <code>Channel</code> is a monitor that has synchronized access methods for send and receive. (The code may be found on the website that accompanies this book.) The class extends the <code>Selectable</code> base class to support the Java selective receive implementation, described later.</p>
+
+					<p class="i">To demonstrate the operation of the Channel implemented in Java, we develop a simple program in which a sender thread communicates with a receiver thread using a single channel. The display for this program is depicted in Figure 10.2. The display depicts the situation where the sender thread is blocked waiting to send the value in e. The receiver has not yet executed the receive operation to copy the value into its local variable v. The sender simply transmits a sequence of integer values from 0 to 9 and then restarts at 0 again.</p>
+
+					<p class="i">The code for both <code>Sender</code> and <code>Receiver</code> threads is given in Program 10.2. The threads use the display class that we defined in Chapter 9, <code>SlotCanvas</code>. The threads and channel are created by the following Java code:</p>
+
+					<div class="pagebreak pageNumber">213</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure10-2.png">
+						<figcaption><strong>Figure 10.2</strong> Synchronous message-passing applet display.</figcaption>
+					</figure>
+
+					<pre class="program">
+<strong>class</strong> Sender <strong>implements</strong> Runnable {
+  <strong>private</strong> Channel&lt;Integer&gt; chan;
+  <strong>private</strong> SlotCanvas display;
+
+  Sender(Channel&lt;Integer&gt; c, SlotCanvas d)
+    {chan=c; display=d;}
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      int ei = 0;
+      <strong>while</strong>(true) {
+        display.enter(String.valueOf(ei));
+        ThreadPanel.rotate(12);
+        <strong>chan.send(new Integer(ei));</strong>
+        display.leave(String.valueOf(ei));
+        ei=(ei+1)%10; ThreadPanel.rotate(348);
+      }
+    } <strong>catch</strong> (InterruptedException e){}
+  }
+}
+
+<strong>class</strong> Receiver <strong>implements</strong> Runnable {
+  <strong>private</strong> Channel&lt;Integer&gt; chan;
+  <strong>private</strong> SlotCanvas display;
+
+  Receiver(Channel&lt;Integer&gt; c, SlotCanvas d)
+    {chan=c; display=d;}
+
+    				</pre>
+
+    				<p class="program-caption"><strong>Program 10.2</strong> <code>Sender</code> and <code>Receiver</code> threads.</p>
+
+    				<div class="pagebreak pageNumber">214</div>
+
+    				<pre class="program">
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      Integer v=null;
+      <strong>while</strong>(true) {
+        ThreadPanel.rotate(180);
+        <strong>if</strong> (v!=null) display.leave(v.toString());
+        <strong>v = chan.receive();</strong>
+        display.enter(v.toString());
+        ThreadPanel.rotate(180);
+      }
+    } <strong>catch</strong> (InterruptedException e) {}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 10.2</strong> (<em>Continued</em>.)</p>
+
+					<pre>
+Channel&lt;Integer&gt; chan = <strong>new</strong> Channel&lt;Integer&gt;(); 
+tx.start(<strong>new</strong> Sender(chan,senddisp)); 
+rx.start(<strong>new</strong> Receiver(chan,recvdisp));
+					</pre>
+
+					<p>where <code>tx</code> and <code>rx</code> are instances of the thread display class, <code>ThreadPanel</code>, and <code>senddisp</code> and <code>recvdisp</code> are instances of <code>SlotCanvas</code>.</p>
+
+					<p class="i">While the code of Program 10.2 is straightforward, a subtlety can lead to problems if the programmer is not aware of it. Our implementation of channels in Java simply copies the reference to an object from sender to receiver, it does not make a copy of the referenced object. Consequently, it is possible for the receiver to modify an object held by the sender. When messages are passed by reference, the safest discipline to adopt is that a sender should not access an object if it has sent its reference to another thread. If a thread needs to reference the object in the future, it should copy it before sending it. With this discipline, a thread is guaranteed mutually exclusive access to the objects it has received but not sent. The sample program obeys this discipline even though the receiver does not modify the messages it receives.</p>
+
+				</section>
+
+				<section class="subsection" data-number="4" data-name="Modeling Synchronous Message Passing">
+
+					<h4>10.1.3 Modeling Synchronous Message Passing</h4>
+
+					<p>To illustrate how message-passing programs are modeled, we start with the simple Sender-Receiver example of the previous section. The model of the <code>Sender</code> thread is:</p>
+
+					<div class="pagebreak pageNumber">215</div>
+
+					<pre>
+<strong>range</strong> M = 0..9
+SENDER = SENDER[0],
+SENDER[e:M] =(chan.send[e]->SENDER[(e+1)%10]).
+					</pre>
+
+					<p>where <code>chan.send[e]</code> models the action of sending a value <em>e</em> to a channel <em>chan</em>. The model of the <code>Receiver</code> thread is:</p>
+
+					<pre>
+RECEIVER = (chan.receive[v:M]->RECEIVER).
+					</pre>
+
+					<p>where <code>chan.receive[v:M]</code> models the action of receiving a value into a local variable <em>v</em> of type <em>M</em> from channel <em>chan</em>. The remaining question is how to model the channel entity. In fact, as sending and receiving are synchronous, they become the same action in the model. Consequently, we do not need a separate process to model a channel; we simply rename send and receive to be the same action. We can thus rename both the action <code>chan.send</code> and <code>chan.receive</code> to be the action chan shown in the structure diagram of Figure 10.3.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure10-3.png">
+						<figcaption><strong>Figure 10.3</strong> Modeling synchronous message passing.</figcaption>
+					</figure>
+
+					<p>To avoid the relabeling, we could have modeled the send action directly as <code>chan[e]</code> and the receive action as <code>chan[v:M]</code>. In the following, we model synchronous message passing by:</p>
+
+					<table>
+						<tr>
+							<th>Message Operation</th>
+							<th>FSP Model</th>
+						</tr>
+
+						<tr>
+							<td><strong>Send</strong>(<em>e, chan</em>)</td>
+							<td>chan[e]</td>
+						</tr>
+
+						<tr>
+							<td><em>v</em>=<strong>receive</strong>(<em>chan</em>)</td>
+							<td>chan[e:M]</td>
+						</tr>
+					</table>
+
+					<p>The only difference between the model for send and receive actions is that <strong>receive</strong> is modeled as a choice between a set of values <em>M</em> which can be sent over a channel whereas <strong>send</strong> specifies a specific value <em>e</em>. In the example, the values are in the range 0..9. The composite behavior for the example is given by the <em>LTS</em> of Figure 10.4.</p>
+
+					<div class="pagebreak pageNumber">216</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure10-4.png">
+						<figcaption><strong>Figure 10.4</strong> <code>SyncMsg</code> labeled transition system.</figcaption>
+					</figure>
+
+				</section>
+
+				<section class="subsection" data-number="5" data-name="Modeling and Implementing Selective Receive">
+
+					<h4>10.1.4 Modeling and Implementing Selective Receive</h4>
+
+					<p>To explain how to model and implement selective message reception, we use the car park example from Chapter 5. In this example, an arrivals gate signals the arrival of a car at the car park and the departures gate signals the departure of a car from the car park. The model for the car park is repeated in Figure 10.5.</p>
+
+					<p class="i">Instead of implementing the <code>CARPARKCONTROL</code> process as a monitor with <code>arrive</code> and <code>depart</code> access methods, we implement the process as a thread which receives signals from channels called <code>arrive</code> and <code>depart</code>. The behaviors of the <code>ARRIVALS</code> and <code>DEPARTURES</code> processes are implemented by a common <code>MsgGate</code> class as shown in Program 10.3. A thread created from <code>MsgGate</code> sends messages to the channel with which it is initialized. Messages in this example contain no</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure10-5.png">
+						<figcaption><strong>Figure 10.5</strong> Car park modeL</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">217</div>
+
+					<pre class="program">
+<strong>class</strong> MsgGate <strong>implements</strong> Runnable {
+  <strong>private</strong> Channel&lt;Signal&gt; chan;
+  <strong>private</strong> Signal signal = <strong>new</strong> Signal();
+
+  <strong>public</strong> MsgGate (Channel&lt;Signal&gt; c) {chan=c;}
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      <strong>while</strong>(true) {
+        ThreadPanel.rotate(12);
+        <strong>chan.send(signal);</strong>
+        ThreadPanel.rotate(348);
+      }
+    } <strong>catch</strong> (InterruptedException e) {}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 10.3</strong> <code>MsgGate</code> class.</p>
+
+					<p>information, and are implemented by a <code>Signal</code> class. They signal the arrival or departure of a car from the car park.</p>
+
+					<p class="i">The transformation of the <code>CARPARKCONTROL</code> process into a thread using message passing is straightforward since, as we noted earlier, choice and guarded actions express the behavior of selective receive. An outline implementation for the <code>CARPARKCONTROL</code> process using a selective receive is shown below:</p>
+
+					<p class="i">MsgCarPark:</p>
+
+					<pre>
+  <strong>while(true)</strong>
+    <strong>select</strong>
+      <strong>when</strong> <span>spaces&gt;0</span> <strong>and receive</strong>(<span>arrive</span>) =&gt; ++<span>spaces;</span>
+    <strong>or</strong>
+      <strong>when</strong> <span>spaces&lt;N</span> <strong>and receive</strong>(<span>depart</span>) =&gt; --<span>spaces;</span>
+    <strong>end</strong>
+    				</pre>
+
+    				<p>We use the object-oriented facilities of Java to implement the selective receive abstraction in the same way that we packaged channels as a class. Channels are derived from the <code>Selectable</code> base class, which provides the public method, <code>guard</code>. A selective receive is constructed using the <code>Select</code> class, which provides the <code>add</code> public method to include a <code>Selectable</code> object into a selective receive. Using these classes, the outline of the message version of car park control can be translated into Java, as shown in the <code>MsgCarPark</code> class of Program 10.4.</p>
+
+    				<p class="i">A selective receive is executed by invoking the <code>choose()</code> method on a <code>Select</code> object. This returns the index of a <code>Selectable</code> object which is <em>ready</em>. A selectable</p>
+
+    				<div class="pagebreak pageNumber">218</div>
+
+    				<pre class="program">
+<strong>class</strong> MsgCarPark <strong>implements</strong> Runnable {
+  <strong>private</strong> Channel&lt;Signal&gt; arrive, depart;
+  <strong>private</strong> int spaces,N;
+  <strong>private</strong> StringCanvas disp;
+
+  <strong>public</strong> MsgCarPark(Channel&lt;Signal&gt; a, Channel&lt;Signal&gt; 1,
+          StringCanvas d, int capacity) {
+    depart=1; arrive=a; N=spaces=capacity; disp=d;
+    disp.setString("Cars: "+0+" Spaces: "+spaces);
+  }
+
+  <strong>private</strong> void display(int s) <strong>throws</strong> InterruptedException {
+    disp.setString("Cars: "+(N-s)+" Spaces: "+s);
+    ThreadPanel.rotate(348);
+  }
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      Select sel = <strong>new</strong> Select();
+      sel.add(depart);
+      sel.add(arrive);
+      <strong>while</strong>(true) {
+        ThreadPanel.rotate(12);
+        arrive.guard(spaces&gt;0);
+        depart.guard(spaces&lt;N);
+        <strong>switch</strong> (sel.choose()) {
+        <strong>case</strong> 1:<strong>depart.receive()</strong>;display(++spaces);
+               <strong>break</strong>;
+        <strong>case</strong> 2:<strong>arrive.receive()</strong>;display(--spaces);
+               break;
+        }
+      }
+    } <strong>catch</strong> (InterruptedException e) {}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 10.4</strong> <code>MsgCarPark</code> class.</p>
+
+					<p>channel is <em>ready</em> if the sender has performed a send operation. The index is allocated to a selectable object based on the order that the object was added to the select object. Thus, in the example, the <code>depart</code> channel is allocated index 1 and the <code>arrive</code> channel index 2. When receive on the chosen channel is executed, it does not block since the channel is <em>ready</em>. If no selectable objects are ready then choose () blocks the calling thread waiting, in the example case, for a send on either the leave or the arrive channel.</p>
+
+					<div class="pagebreak pageNumber">219</div>
+
+					<p class="i">This rather clumsy coding of a selective receive in Java would normally be done by a compiler if we had used a message-passing language. However, we have used Java so that readers can run message-passing programs in the same environment as the rest of the example programs in the book.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="6" data-name="Asynchronous Message Passing">
+
+				<h3>10.2 Asynchronous Message Passing</h3>
+
+				<p>In asynchronous message passing, the send operation does not block, as in the synchronous scheme, but continues. Messages which have been sent but not received are held in a message queue. Senders add messages to the tail of the queue and a receiver removes messages from the head. The abstraction we use for asynchronous message communication is termed a port. As shown in Figure 10.6, many senders may send to a <em>port</em> but only a single receiver may receive messages from it. Communication is said to be <em>many-to-one</em>.</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure10-6.png">
+					<figcaption><strong>Figure 10.6</strong> Asynchronous message-passing port.</figcaption>
+				</figure>
+
+				<p>A port is a (conceptually) unbounded first-in-first-out (FIFO) queue of messages. The send and receive operations on ports are defined as follows:</p>
+
+				<div class="definition">
+					<strong>send</strong>(<em>e, p</em>) - send the value of the expression <em>e</em> to port <em>p</em>. The process calling the send operation is not blocked. The message <em>e</em> is queued at the port if the receiver is not waiting.<br/><br/>
+					<em>v</em>=<strong>receive</strong>(<em>p</em>) - receive a value into local variable <em>v</em> from port <em>p</em>. The calling process is blocked if there are no messages queued to the port.
+				</div>
+
+				<div class="pagebreak pageNumber">220</div>
+
+				<p class="i">This form of communication is termed asynchronous since the sender proceeds independently of the receiver. Synchronization only occurs when the receiver waits for a sender if the queue of messages at the port is empty. If send operations can occur more frequently than receive, then there is no upper bound on the length of queue required and consequently no upper bound on the amount of store required to buffer messages. Obviously, in a real computer system there is a fixed bound on the buffer space available. It is the responsibility of the designer to ensure that a message-passing program does not exceed this bound.</p>
+
+				<p class="i">A process may selectively wait for messages from a set of ports using exactly the same select construct described earlier for synchronous message passing.</p>
+
+				<section class="section" data-number="7" data-name="Asynchronous Message Passing in Java">
+
+					<h4>10.2.1 Asynchronous Message Passing in Java</h4>
+
+					<p>We can implement asynchronous message passing in Java in the same way as
+					we implemented channels. The outline of the Java class that implements the port
+					abstraction is described in Program 10.5.</p>
+
+					<pre class="program">
+<strong>class</strong> Port&lt;T&gt; <strong>extends</strong> Selectable{
+  . . .
+  <strong>public synchronized</strong> void send(T v) {. . .}
+  <strong>public synchronized</strong> T receive()
+        <strong>throws</strong> InterruptedException {. . .}
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 10.5</strong> <code>Port</code> class.</p>
+
+					<p>The <code>Port</code> class extends the <code>Selectable</code> base class so that receive operations on ports can be combined in selective receive operations as described in section 10.1.4 for channel receives. In fact, the implementation permits channels and ports to be combined in the same <code>Select</code> object since they are both derived from the same <code>Selectable</code> base class.</p>
+
+					<p class="i">The operation of asynchronous message communication can be observed using the applet depicted in Figure 10.7. The demonstration program has two sender threads which each send a sequence of messages with values 0..9 to the receiver thread via a port. The receiver thread receives a sequence of values, which is a merge of the two sequences sent. The display depicts the situation in which</p>
+
+					<div class="pagebreak pageNumber">221</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure10-7.png">
+						<figcaption><strong>Figure 10.7</strong> Asynchronous message-passing applet display.</figcaption>
+					</figure>
+
+					<p><code>Sender1</code> is about to send the value 9 and <code>Sender2</code> is about to send the value 8. The port is currently empty and the receiver blocked. The receiver thread performs four receive operations on every revolution of its display while the senders perform a single send on each revolution. Consequently, if all three threads are running, the port will have a maximum of two messages queued and for most of the time it will be empty. However, if the receiver thread is suspended using the <code><strong>Pause</strong></code> button then the senders continue to run queuing messages in the port. In this situation, the applet will eventually terminate with a Java <code>OutOfMemory</code> runtime error. The code for sender and receiver threads is given in Program 10.6.</p>
+
+					<p class="i">The threads and port are created by the Java code:</p>
+
+					<pre>
+Port&lt;Integer&gt; port = <strong>new</strong> Port&lt;Integer&gt;();
+tx1.start(<strong>new</strong> Asender(port,send1disp));
+tx2.start(<strong>new</strong> Asender(port,send2disp));
+rx.start(<strong>new</strong> Areceiver(port,recvdisp));
+					</pre>
+
+					<p>where <code>tx1, tx2</code> and <code>rx</code> are instances of <code>ThreadPanel</code> and <code>send1disp</code>, <code>send2disp</code> and <code>recvdisp</code> are instances of <code>SlotCanvas</code>.</p>
+
+				</section>
+
+				<section class="section" data-number="8" data-name="Modeling Asynchronous Message Passing">
+
+					<h4>10.2.2 Modeling Asynchronous Message Passing</h4>
+
+					<p>We modeled synchronous communication directly as actions shared between two processes. A channel was modeled as the name of a shared action. Modeling</p>
+
+					<div class="pagebreak pageNumber">222</div>
+
+					<pre class="program">
+<strong>class</strong> Asender <strong>implements</strong> Runnable {
+  <strong>private</strong> Port&lt;Integer&gt; port;
+  <strong>private</strong> SlotCanvas display;
+
+  Asender(Port&lt;Integer&gt; p, SlotCanvas d)
+  {port=p; display=d;}
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      int ei = 0;
+      <strong>while</strong>(true) {
+        display.enter(String.valueOf(ei));
+        ThreadPanel.rotate(90);
+        <strong>port.send(new Integer(ei));</strong>
+        display.leave(String.valueOf(ei));
+        ei=(ei+1)%10; ThreadPanel.rotate(270);
+      }
+    } <strong>catch</strong> (InterruptedException e){}
+  }
+}
+
+<strong>class</strong> Areceiver <strong>implements</strong> Runnable {
+  <strong>private</strong> Port&lt;Integer&gt; port;
+  <strong>private</strong> SlotCanvas display;
+
+  Areceiver(Port&lt;Integer&gt; p, SlotCanvas d)
+    {port=p; display=d;}
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      Integer v=null;
+      <strong>while</strong>(true) {
+        ThreadPanel.rotate(45);
+        <strong>if</strong> (v!=null) display.leave(v.toString());
+        ThreadPanel.rotate(45);
+        <strong>v = port.receive();</strong>
+        display.enter(v.toString());
+      }
+    } <strong>catch</strong> (InterruptedException e){}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 10.6</strong> <code>Asender</code> and <code>Areceiver</code> classes.</p>
+
+					<div class="pagebreak pageNumber">223</div>
+
+					<p>asynchronous communication is considerably more difficult. The first difficulty arises because of the potentially unbounded size of port queues. As discussed earlier, models must be finite so that we can carry out analysis. Consequently, we cannot model a port with an unbounded queue. Instead, we use the solution we adopted in modeling semaphores in Chapter 5 and model a finite entity that causes an error when it overflows. The model for a port that can queue up to three messages is:</p>
+
+					<pre>
+<strong>range</strong> M = 0..9
+<strong>set</strong>   S = {[M],[M][M]}
+
+PORT            <span>// empty state, only send permitted</span>
+  = (send[x:M] ->PORT[x]),
+PORT[h:M]       <span>// one message queued to port</span>
+  = (send[x:M] ->PORT[x][h]
+    |receive[h]->PORT[t]
+    ).
+    				</pre>
+
+    				<p>The set <code>S</code> defines the set of values that can be taken by the tail of the queue when the queue contains two or more messages. However, care must be taken when modeling queues since the port described above, for a queue of up to three messages, generates a labeled transition system with 1111 states. A port to queue up to four messages can be produced by redefining the set <code>S</code> to be <code>{[M],[M][M],[M][M][M]}</code>. Extending the model to queue up to four messages would generate an <em>LTS</em> with 11111 states. In general, the model of a queue with <em>n</em> places for messages which can take up to <em>x</em> distinct values requires (<em>x</em><sup>n+1</sup>-1)/(<em>x</em>-1) states. In modeling asynchronous message-passing programs, care must be taken to restrict both the range of data values that a message can take and the size of queues. Otherwise, intractably large models are produced. The port model with 1111 states is clearly too large to view as a graph. To check that the model describes the correct behavior, we can abstract from the value of messages and examine only send and receive actions. To do this, we relabel the send and receive actions as shown below:</p>
+
+    				<pre>
+||APORT = PORT
+          /{send/send[M],receive/receive[M]}.
+          			</pre>
+
+          			<p>The minimized <em>LTS</em> for this abstracted port, called <code>APORT</code>, consists of only four states and is depicted in Figure 10.8.</p>
+
+          			<div class="pagebreak pageNumber">224</div>
+
+          			<figure>
+          				<img src="/contents/concurrency/images/figure10-8.png">
+          				<figcaption><strong>Figure 10.8</strong> <code>APORT</code> labeled transition system.</figcaption>
+          			</figure>
+
+          			<p>Figure 10.8 clearly shows that the port accepts up to three consecutive sends. A fourth send causes the port queue to overflow and the port to move to the <code>ERROR</code> state.</p>
+
+          			<p class="i">With the model for a port, we can now provide a complete model for the example program of the previous section. The <code>Sender</code> and <code>Receiver</code> threads are modeled as:</p>
+
+          			<pre>
+ASENDER      = ASENDER[0],
+ASENDER[e:M] = (port.send[e]->ASENDER[(e+1)%10]).
+
+ARECEIVER    = (port.receive[v:M]->ARECEIVER).
+					</pre>
+
+					<p>The composition of two <code>SENDER</code> processes and a <code>RECEIVER</code> process communicating by a port is described in Figure 10.9.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure10-9.png">
+						<figcaption><strong>Figure 10.9</strong> Asynchronous message applet model.</figcaption>
+					</figure>
+
+					<p>A safety analysis of <code>AsyncMsg</code> produces the following output:</p>
+
+					<pre>
+Trace to property violation in port:PORT:
+     s.1.port.send.0
+     				</pre>
+
+     				<div class="pagebreak pageNumber">225</div>
+
+     				<pre>
+     s.1.port.send.1
+     s.1.port.send.2
+     s.1.port.send.3
+     				</pre>
+
+     				<p>This is the situation where a fourth consecutive send causes the port queue to overflow. Since the model abstracts from time, it takes no account of the fact that in the implementation, we have made the receiver run faster than the senders. However, queue overflow (or rather memory overflow) can occur in the implementation if we slow the receiver by suspending it. The demonstration applet is inherently unsafe since, no matter how large the port queue, it can eventually overflow.</p>
+
+     			</section>
+
+     		</section>
+
+     		<section class="section" data-number="9" data-name="Rendezvous">
+
+     			<h3>10.3 Rendezvous</h3>
+
+     			<p><em>Rendezvous</em>, sometimes called <em>request-reply</em>, is a message-passing protocol used to support client-server interaction. Client processes send request messages to a server process requesting the server to perform some service. These request messages are queued to an <em>entry</em> in FIFO order. The server accepts requests from the <em>entry</em> and on completion of the requested service sends a reply message to the client that made the request. The client blocks waiting for the reply message. Rendezvous involves <em>many-to-one</em> communication in that many clients may request
+     			service from a single server. The reply to a request is a <em>one-to-one</em> communication from the server process to the client that requested the service. The protocol is depicted in Figure 10.10.</p>
+
+     			<p class="i">The abstraction that supports rendezvous is termed an <em>entry</em>. The operations on entries are defined as follows:</p>
+
+     			<figure>
+     				<img src="/contents/concurrency/images/figure10-10.png">
+     				<figcaption><strong>Figure 10.10</strong> Rendezvous message-passing protocol.</figcaption>
+     			</figure>
+
+     			<div class="pagebreak pageNumber">226</div>
+
+     			<div class="definition">
+				<em>res</em> = <strong>call</strong>(<em>e, req</em>) - send the value <em>req</em> as a request message which is queued to the entry <em>e</em>. The calling process is blocked until a reply message is received into the local variable <em>res</em>. <br/>
+				<em>req</em> = <strong>accept</strong>(<em>e</em>) - receive the value of the request message from the entry <em>e</em> into the local variable <em>req</em>. If there are no request messages queued to the entry, then the server process is blocked. <br/>
+				<strong>reply</strong>(<em>e,res</em>) - send the value <em>res</em> as a reply message to entry <em>e</em>.
+				</div>
+
+				<p>The term "rendezvous" for this form of interaction was coined by the designers of the Ada programming language (Department of Defense, 1983) in which it is the main process interaction mechanism. <em>Rendezvous</em> captures the essence of the interaction since client and server meet and synchronize when the server performs a service for the client.</p>
+
+				<p class="i">As with channels and ports, a server process may selectively wait for messages from a set of entries using the select construct described in section 10.1.1.</p>
+
+				<section class="subsection" data-number="10" data-name="Rendezvous in Java">
+
+					<h4>10.3.1 Rendezvous in Java</h4>
+
+					<p>We implement the rendezvous entry abstraction using the port and channel abstractions defined in the previous sections. Remembering that request communication is many-to-one, we use a port to implement it. Since reply communication is one-to-one, we can use a channel. Each client that communicates with a server via an entry requires its own channel to receive replies. The entry implementation is depicted in Program 10.7.</p>
+
+					<p class="i">The Entry class extends Port, which in turn extends Selectable. Consequently, Entry objects can be added to a Select object in the same way as Channels and Ports. The call method creates a channel object on which to receive the reply message. It then constructs a message, using the CallMsg<code></code> class, consisting of a reference to this channel and a reference to the <code>req</code> object. After the <code>Client</code> thread has queued this message using <code>send</code>, it is suspended by a <code>receive</code> on the channel. The server calls <code>accept</code> to get a message from the entry. The <code>accept</code> method keeps a copy of the channel reference on which to reply in the local variable <code>cm</code>. The <code>reply</code> method sends the reply message to this channel. Note that although the <code>reply</code> method performs a synchronous <code>send</code> operation, this does not suspend the server since the client must always be blocked waiting on the reply channel. <code>Call</code>, <code>accept</code> and <code>reply</code> are not <strong>synchronized</strong> methods since <code>Client</code> and <code>Server</code> threads do not share any variables within <code>Entry</code>. The</p>
+
+					<div class="pagebreak pageNumber">227</div>
+
+					<pre class="program">
+<strong>class</strong> Entry&lt;R,P&gt; <strong>extends</strong> Port&lt;R&gt; {
+  <strong>private</strong> CallMsg&lt;R,P&gt; cm;
+  <strong>private</strong> Port&lt;CallMsg&lt;R,P&gt;&gt; cp = <strong>new</strong> Port&lt;CallMsg&lt;R,P&gt;&gt;();
+
+  <strong>public</strong> P call(R req) <strong>throws</strong> InterruptedException {
+    Channel&lt;P&gt; clientChan = <strong>new</strong> Channel&lt;P&gt;();
+    c<strong></strong>p.send(<strong>new</strong> CallMsg&lt;R,P&gt;(req,clientChan));
+    <strong>return</strong> clientChan.receive();
+  }
+
+  <strong>public</strong> R accept() <strong>throws</strong> InterruptedException {
+    cm = cp.receive();
+    <strong>return</strong> cm.request;
+  }
+
+  <strong>public</strong> void reply(P res) <strong>throws</strong> InterruptedException {
+    cm.replychan.send(res);
+  }
+
+  <strong>private class</strong> CallMsg&lt;R,P&gt; {
+    R request;
+    Channel&lt;P&gt; replychan;
+    CallMsg(R m, Channel&lt;P&gt; c)
+      {request=m; replychan=c;}
+  }
+
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 10.7</strong> <code>Entry</code> class.</p>
+
+					<p><code>cm</code> variable is only accessed by the <code>Server</code> thread. <code>Client</code> and <code>Server</code> threads interact via <code>Port</code> and <code>Channel</code> objects, which are thread-safe.</p>
+
+					<p class="i">Runtime systems for Ada have much more efficient implementations of rendezvous than the implementation described here. They exploit the fact that, since the client is blocked during a rendezvous, when client and server are on the same computer messages can be copied directly between client memory and server memory without buffering.</p>
+
+					<p class="i">The applet display of Figure 10.11 demonstrates the operation of rendezvous using the <code>Entry</code> class. The display depicts the situation where both clients have called the server and are waiting for a reply. The server is currently servicing the request from Client A. The color of the rotating segment of the server is set to the same color as the client it is servicing.</p>
+
+					<div class="pagebreak pageNumber">228</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure10-11.png">
+						<figcaption><strong>Figure 10.11</strong> Rendezvous message-passing applet display.</figcaption>
+					</figure>
+
+					<p>The code for <code>Client</code> and <code>Server</code> threads is given in Program 10.S. The threads and entry for the demonstration program are created by the following Java code:</p>
+
+					<pre>
+Entry&lt;String, String&gt; entry = <strong>new</strong> Entry&lt;String, String&gt;(); 
+c1A.start(<strong>new</strong> Client(entry, clientAdisp, "A")); 
+c1B.start(<strong>new</strong> Client(entry,clientBdisp, "B")); 
+sv.start(<strong>new</strong> Server(entry,serverdisp));
+					</pre>
+
+					<p>where <code>c1A</code>, <code>c1B</code> and <code>sv</code> are instances of <code>ThreadPanel</code>, and <code>clientAdisp</code>, <code>clientBdisp</code> and <code>serverdisp</code> are instances of <code>SlotCanvas</code>.</p>
+
+				</section>
+
+				<section class="subsection" data-number="11" data-name="Modeling Rendezvous">
+
+					<h4>10.3.2 Modeling Rendezvous</h4>
+
+					<p>To model rendezvous communication, we can reuse the models for ports and channels in the same way as we reused the implementation classes <code>Port</code> and <code>Channel</code> in implementing the <code>Entry</code> class. In modeling the demonstration program, we ignore the message data values and concentrate on interaction. Consequently, the message that is sent by a client to the server consists of only the reply channel. This message is defined by:</p>
+
+					<pre>
+<strong>set</strong> M = {replyA,replyB}
+					</pre>
+
+					<div class="pagebreak pageNumber">229</div>
+
+					<pre class="program">
+<strong>class</strong> Client <strong>implements</strong> Runnable {
+  <strong>private</strong> Entry&lt;String,String&gt; entry;
+  <strong>private</strong> SlotCanvas display;
+  <strong>private</strong> String id;
+  Client(Entry&lt;String,String&gt; e, SlotCanvas d, String s)
+    {entry=e; display=d; id=s;}
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      <strong>while</strong>(true) {
+        ThreadPanel.rotate(90);
+        display.enter(id);
+        <strong>String result = entry.call(id);</strong>
+        display.leave(id); display.enter(result);
+        ThreadPanel.rotate(90);
+        display.leave(result);
+        ThreadPanel.rotate(180);
+      }
+    } <strong>catch</strong> (InterruptedException e) {}
+  }
+}
+<strong>class</strong> Server <strong>implements</strong> Runnable {
+  <strong>private</strong> Entry&lt;String,String&gt; entry;
+  <strong>private</strong> SlotCanvas display;
+  Server(Entry&lt;String,String&gt; e, SlotCanvas d)
+    {entry=e; display=d;}
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      <strong>while</strong>(true) {
+        <strong>while</strong>(!ThreadPanel.rotate());
+        <strong>String request = entry.accept();</strong>
+        display.enter(request);
+        <strong>if</strong> (request.equals("A"))
+           ThreadPanel.setSegmentColor(Color.magenta);
+        <strong>else</strong>
+           ThreadPanel.setSegmentColor(Color.yellow);
+        <strong>while</strong>(ThreadPanel.rotate());
+        display.leave(request);
+        entry.reply("R");
+      }
+    } <strong>catch</strong> (InterruptedException e) {}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 10.8</strong> <code>Client</code> and <code>Server</code> threads.</p>
+
+					<div class="pagebreak pageNumber">230</div>
+
+					<p>The <code>PORT</code> process queues messages of this type. An entry is modeled by:</p>
+
+					<pre>
+||ENTRY = PORT/{call/send, accept/receive}.
+					</pre>
+
+					<p>This reuses the <code>PORT</code> definition from the previous section and relabels <code>send</code> to be <code>call</code> and <code>receive</code> to be <code>accept</code>. The <code>Server</code> thread is modeled by:</p>
+
+					<pre>
+SERVER = (entry.accept[ch:M]->[ch]->SERVER).
+					</pre>
+
+					<p>The server accepts a message from the entry consisting of the name of the reply channel and then replies using this channel name. Remember that we model synchronous communication by a single shared action which is the name of the channel. The client is modeled by:</p>
+
+					<pre>
+CLIENT(CH='reply) = (entry.call[CH]
+                     ->[CH]->CLIENT).
+					</pre>
+
+					<p>where <code>CH</code> is a parameter initialized to the action label <code>reply</code>. In <em>FSP</em>, action labels used as parameter values or in expressions must be prefixed with a single quote to distinguish them from variables. The <code>CLIENT</code> process sends this parameter, which names the reply channel, to the entry and then waits for the reply. The composite model describing the demonstration program is shown in Figure 10.12.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure10-12.png">
+						<figcaption><strong>Figure 10.12</strong> Rendezvous applet model.</figcaption>
+					</figure>
+
+					<p>We do not need to prefix the <code>CLIENT</code> processes since their parameter values lead to each having a distinct alphabet. For example, the alphabet of <code>CLIENT('replyA)</code> is <code>{entry.call.replyA, replyA}</code>. The following trace is the scenario in which both clients request service and the server has accepted the request for client A and replied:</p>
+
+					<div class="pagebreak pageNumber">231</div>
+
+					<pre>
+entry.call.replyA
+entry.call.replyB
+entry.accept.replyA
+replyA
+					</pre>
+
+					<p>A safety analysis of <code>EntryDemo</code> reveals no deadlocks or errors. Rendezvous communication means that each client can only have one outstanding request queued to the server entry at any one time. Consequently, in our demonstration program with two clients, the maximum entry queue length is two. In the model, we have used a port capable of queuing three messages. We can redefine this to be a queue with maximum capacity two by redefining the set <code>S</code> to be <code>{[M]}</code>. A safety analysis of this system reveals that the entry queue does not overflow.</p>
+
+				</section>
+
+				<section class="subsection" data-number="12" data-name="Rendezvous and Monitor Method Invocation">
+
+					<h4>10.3.3 Rendezvous and Monitor Method Invocation</h4>
+
+					<p>From the viewpoint of a client, apart from syntactic differences, a call on an entry is the same as calling a monitor access method. The difference between rendezvous and monitor method invocation is to do with how the call from the client is handled. In the case of a rendezvous, the call is handled by a server thread that accepts the call from an entry. In the case of method invocation, the call is serviced by execution of the body of the method. The method body is executed by the client thread when it acquires the monitor lock. We saw how a bounded buffer can be implemented by a monitor in Chapter 5. The same buffer semantics from the viewpoint of the client can be implemented using rendezvous communication as sketched in outline below:</p>
+
+					<pre class="times">
+Buffer::
+  <strong>entry</strong> <em>put</em>, <em>get</em>;
+  <strong>int</strong> <em>count</em>=0;    //number of items in buffer
+
+  <strong>while(true)</strong>
+    <strong>select</strong>
+    <strong>when</strong> (<em>count</em>&lt;<em>size</em>) <strong>and</strong> <em>o</em>=<strong>accept</strong>(<em>put</em>)=>
+      ++<em>count</em>;     //insert item o into buffer
+
+  <strong>reply</strong>(<em>put</em>,<strong>signal</strong>)
+  <strong>or</strong>
+  <strong>when</strong> (<em>count</em>>0) <strong>and accept</strong>(<em>get</em>)=>
+    --<em>count</em>;       //get item o from buffer
+
+  <strong>reply</strong>(<em>put</em>,o);
+  <strong>end</strong>
+					</pre>
+
+					<div class="pagebreak pageNumber">232</div>
+
+					<p>Mutual exclusion is ensured by the fact that the buffer state is encapsulated in the server thread. Since the server thread processes only one request at a time, mutual exclusion is guaranteed. Which implementation is more efficient, monitor or rendezvous? In considering this question, we should compare rendezvous as implemented in Ada rather than the example implementation presented in this chapter. However, even with an efficient implementation, in a local context, where the client is located on the same computer as the server, the monitor implementation is more efficient since the rendezvous implementation always involves two context switches. For each rendezvous, there is a switch from client thread to server thread and then back from server to client. A methqd call to a monitor may require no context switch: for example, a get from a non-empty buffer when the producer does not currently have the monitor lock. However, the situation is not so clear-cut when the client is located on a different computer to the server. In this situation, the rendezvous may be better for the following reasons. If the client is remote from the monitor, then a protocol such as Java's Remote Method Invocation (RMI) must be used to transfer the client's invocation to the remote computer on which the monitor is located. At this location, RMI creates a new thread to perform the invocation on the monitor on behalf of the client. This thread creation is not required by a remote rendezvous.</p>
+
+					<p class="i">We have used the issue of efficiency to focus on the differences in implementation between rendezvous and monitor method invocation. However, we can model programs at a sufficiently abstract level that the model can be implemented by either mechanism. For example, the model for the bounded buffer presented in Chapter 5 captures the behavior of both the monitor implementation and the rendezvous implementation we have outlined in this section. This illustrates a more general point. The modeling techniques we are using to describe and analyze concurrent programs are not restricted to programs implemented in Java. They can be used to model message-passing programs with equal facility.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="13" data-name="Summary">
+
+				<h3>Summary</h3>
+
+				<p>This chapter has described three different kinds of message-passing mechanism. In <em>synchronous</em> message passing, the sender of a message is blocked until it is received. In <em>asynchronous</em> message passing, the sender continues after sending. Messages that have been sent and not received must be buffered. The buffering requirement of asynchronous message communication is potentially unbounded. In <em>rendezvous</em>, a two-way message-passing protocol provides for client-server interaction. Selective receive provides a way of implementing guarded actions in message-passing systems.</p>
+
+				<p class="i">To illustrate message-passing programs, we developed three different abstractions: the <code>Channel</code> for synchronous message passing, the <code>Port</code> for asynchronous</p>
+
+				<div class="pagebreak pageNumber">233</div>
+
+				<p>message passing and the <code>Entry</code> for rendezvous communication. The implementation relationship between these classes is summarized in the class diagram of Figure 10.13. In constructing <code>Entry</code> directly from <code>Port</code> we have deliberately ignored good object-oriented programming practice in the interests of simplicity. The problem we have ignored is that it is possible to invoke both <code>send()</code> and <code>receive()</code> methods on <code>Entry </code>objects. A more robust implementation would introduce a port implementation class with protected send and receive methods which would be used by both <code>Port</code> and <code>Entry</code> to implement their public interfaces.</p>
+
+			</section>
+
+			<section class="section" data-number="14" data-name="Notes and Further Reading">
+
+				<h3>Notes and Further Reading</h3>
+
+				<p>Synchronous communication was introduced by CA.R. Hoare (1978) in his paper on communicating sequential processes. The ideas in this paper led both to the CSP formalism (Hoare, 1985) and to the OCCAM programming language (INMOS Ltd., 1988a) designed by David May. OCCAM was used to program the Transputer (INMOS Ltd., 1988b), which supported both intra-and inter-processor synchronous communication in hardware.</p>
+
+				<p class="i">Asynchronous message passing originated in operating systems in the late 1960s. Brinch-Hansen (1970) describes a set of message-passing primitives for the Danish RC4000 computer. Bob Balzer (1971) introduced the notion of a communication port. Asynchronous message-passing operations can now be found in all operating systems which allow processes to communicate with other machines on</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure10-13.png">
+					<figcaption><strong>Figure 10.13</strong> Message-passing classes.</figcaption>
+				</figure>
+
+				<div class="pagebreak pageNumber">234</div>
+
+				<p>a network. For example, UNIX provides a port-like abstraction called a socket and a variety of calls for sending and receiving messages. Asynchronous message passing has been included in a number of experimental programming languages and in the telecommunications language CHILL (CCITT, 1993). However, neither synchronous nor asynchronous message-passing primitives have found their way into a widely accepted general-purpose programming language. Consequently, message passing in concurrent programs remains at the level of operating system calls.</p>
+
+				<p class="i">The name "rendezvous" is primarily associated with the Ada programming language (Department of Defense, 1983). We have described only the basic Ada rendezvous scheme in this chapter and omitted details concerned with timeouts on calls and accepts, conditional call and conditional accept, terminate alternative in a select, and so on. These additions make the semantics of Ada inter-process communication quite complex. In particular, they make extending the Ada rendezvous from a local interaction mechanism to a remote interaction mechanism difficult. The use of rendezvous-style communication is, of course, not restricted to Ada. Many operating system message-passing primitives support request-reply message passing reasonably directly. For example, recvf rom () on a UNIX datagram socket returns an address which can be used to send a reply message. In conclusion, the use of request-reply message protocols for client-server interaction is pervasive.</p>
+
+				<p class="i">In his book, Vijay Garg (2004) provides further information on message passing and implementation of a number of distributed algorithms in Java.</p>
+
+			</section>
+
+			<section class="section" data-number="15" data-name="Exercises">
+
+				<h3>Exercises</h3>
+
+				<ol id="ten">
+
+					<li>
+						Ignoring the feature that allows objects of the <code>Channel</code> class to be used in a select, program a monitor in Java that implements the send and receive operations on channels (Le. consider that <code>Channel</code> is not derived from <code>Selectable</code>).
+						<p class="i"><em>Optional</em>: Test your implementation by using it, instead of the provided <code>Channel</code> class, in the synchronous message-passing demonstration applet.</p>
+					</li>
+
+					<li>
+						Modify your implementation of the previous exercise such that the receive operation can time out. The receive becomes:
+						<pre>
+<strong>synchronized</strong> Object receive(int timeout);
+						</pre>
+						If the timeout period expires before a message is sent to the channel, the receive operation returns the value <code>null</code>.
+					</li>
+
+					<li>
+						Design a message-passing protocol which allows a producer process communicating with a consumer process by <em>asynchronous</em> messaging to send only a bounded number of messages, <em>N</em>, before it is blocked waiting for the consumer to receive a message. Construct a model which can be used to verify that your protocol prevents queue overflow if ports are correctly dimensioned.
+						<p class="i"><em>Optional</em>: Design and implement an applet which demonstrates the operation of your protocol.</p>
+					</li>
+
+					<div class="pagebreak pageNumber">235</div>
+
+					<li>
+						Translate the bounded buffer outline of section 10.3.3 into Java using the <code>Entry</code> and <code>Select</code> classes.
+						<p class="i"><em>Optional</em>: Modify the bounded buffer applet of Chapter 5 to use this implementation rather than the monitor.</p>
+					</li>
+
+				</ol>
+
+			</section>
+
+		</div>
+
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,452 @@
+<html lang='en'>
+<head>
+	<title>Introducing Regular Expressions</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="regexp">
+
+		<div class="container">
+
+			<h3>CHAPTER 7</h3>
+			<div class="border"></div>
+
+			<section class="intro" data-number="0" data-name="Chapter 7 Introduction">
+
+				<h1>Quantifiers</h1>
+
+				<p><span class="first-sentence">You have already seen some quantifiers at work earlier in this book, but here I’ll talk
+				about them in more detail.</span></p>
+
+				<p>For our example this time, we’ll use a Mac desktop application called Reggy (<strong>Figure
+				7-1</strong>), as we did in <strong>Chapter 5</strong>. Uncheck <em>Match All</em> at the bottom to start.</p>
+
+				<p>If you are not on a Mac, you can try these examples in one of the applications you’ve
+				seen earlier in the book. Paste the right triangle of digits from the <em>triangle.txt</em>. The file
+				is in the archive of examples.</p>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure7-1.png">
+					<figcaption>Figure 7-1. Reggy application</figcaption>
+				</figure>
+
+				<div class="pagebreak pageNumber right">73</div>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Greedy, Lazy, and Possessive">
+
+				<h2>Greedy, Lazy, and Possessive</h2>
+
+				<p><span class="first-sentence">I’m not talking about your teenager here.</span> I’m talking about quantifiers. These adjectives
+				may not sound like good character qualities, but they are interesting features of quantifiers
+				that you need to understand if you want to use regular expressions with skill.</p>
+
+				<p>Quantifiers are, by themselves, greedy. A greedy quantifier first tries to match the whole
+				string. It grabs as much as it can, the whole input, trying to make a match. If the first
+				attempt to match the whole string goes awry, it backs up one character and tries again.
+				This is called <em>backtracking</em>. It keeps backing up one character at a time until it finds a
+				match or runs out of characters to try. It also keeps track of what it is doing, so it puts
+				the most load on resources compared with the next two approaches. It takes a mouthful,
+				then spits back a little at a time, chewing on what it just ate. You get the idea.</p>
+
+				<p>A lazy (sometimes called <em>reluctant</em>) quantifier takes a different tack. It starts at the
+				beginning of the target, trying to find a match. It looks at the string one character at a
+				time, trying to find what it is looking for. At last, it will attempt to match the whole
+				string. To get a quantifier to be lazy, you have to append a question mark (?) to the
+				regular quantifier. It chews one nibble at a time.</p>
+
+				<p>A possessive quantifier grabs the whole target and then tries to find a match, but it
+				makes only one attempt. It does not do any backtracking. A possessive quantifier appends
+				a plus sign (+) to the regular quantifier. It doesn’t chew; it just swallows, then
+				wonders what it just ate. I’ll demonstrate each of these in the pages that follow.</p>
+
+			</section>
+
+			<section class="section" data-number="2" data-name="Matching with *, +, and ?">
+
+				<h2>Matching with *, +, and ?</h2>
+
+				<p><span class="first-sentence">If you have the triangle of digits in Reggy, you can now begin testing.</span> First we’ll use the
+				Kleene star, named for the man credited as the inventor of regular expressions, Stephen
+				Kleene. If you use the star or asterisk following a dot like this:</p>
+
+				<p class="indented"><code>.*</code></p>
+
+				<p>it would match, being greedy, all the characters (digits) in the subject text. As you know
+				from earlier reading, <code>.*</code> matches any character zero or more times. All the digits in the
+				lower box should be highlighted by changing color. Of the Kleene star, an early manual
+				said:</p>
+
+				<blockquote>A regular expression followed by “*” [Kleene star] is a regular expression which matches
+				any number (including zero) of adjacent occurrences of the text matched by the regular
+				expression.</blockquote>
+
+				<p>Now try:</p>
+
+				<p class="indented"><code>9*</code></p>
+
+				<p>and the row of nines near the bottom should be highlighted. Now:</p>
+
+				<p class="indented"><code>9.*</code></p>
+
+				<div class="pagebreak left"><span class="pageNumber">74</span> | Chapter 7: Quantifiers</div>
+
+				<p>lights up the row of nines and the row of zeros below it. Because <em>Multiline</em> is checked
+				(at the bottom of the application window), the dot will match the newline character
+				between the rows; normally, it would not.</p>
+
+				<p>To match one or more 9s, try:</p>
+
+				<p class="indented"><code>9+</code></p>
+
+				<p>How is that different? You can’t really tell because there are nine 9s in the subject
+				text. The main difference is that + is looking for at least one 9, but * is looking for zero
+				or more.</p>
+
+				<p>To match zero or one time (optional), use:</p>
+
+				<p class="indented"><code>9?</code></p>
+
+				<p>This will match the first occurrence of 9 only. That 9 is considered optional, so because
+				it does exist in the subject text, it is matched and highlighted. If you do this:</p>
+
+				<p class="indented"><code>99?</code></p>
+
+				<p>then both the first and second 9 are matched.</p>
+
+				<p><strong>Table 7-1</strong> lists the basic quantifiers and some of the possibilities that they have. These
+				quantifiers are by default <em>greedy</em>, meaning that they match as many characters as they
+				possibly can on the first attempt.</p>
+
+				<table>
+
+					<caption>Table 7-1. Basic quantifiers</caption>
+
+					<tr>
+						<th>Syntax</th>
+						<th>Description</th>
+					</tr>
+
+					<tr>
+						<td>?</td>
+						<td>Zero or one (optional)</td>
+					</tr>
+
+					<tr>
+						<td>+</td>
+						<td>One or more</td>
+					</tr>
+
+					<tr>
+						<td>*</td>
+						<td>Zero or more</td>
+					</tr>
+
+				</table>
+
+			</section>
+
+			<section class="section" data-number="3" data-name="Matching a Specific Number of Times">
+
+				<h2>Matching a Specific Number of Times</h2>
+
+				<p><span class="first-sentence">When you use braces or squiggly brackets, you can match a pattern a specific number
+				of times in a range.</span> Unmodified, these are greedy quantifiers. For example:</p>
+
+				<p class="indented"><code>7{1}</code></p>
+
+				<p>will match the first occurrence of 7. If you wanted to match one or <em>more</em> occurrences
+				of the number 7, all you have to do is add a comma:</p>
+
+				<p class="indented"><code>7{1,}</code></p>
+
+				<p>You've probably realized that both:</p>
+
+				<p class="indented"><code>7+</code></p>
+
+				<p>and</p>
+
+				<p class="indented"><code>7{1,}</code></p>
+
+				<div class="pagebreak right">Matching a Specific Number of Times | <span class="pageNumber">75</span></div>
+
+				<p>are essentially the same thing, and that:</p>
+
+				<p class="indented"><code>7*</code></p>
+
+				<p>and</p>
+
+				<p class="indented"><code>7{0,}</code></p>
+
+				<p>are likewise the same. In addition:</p>
+
+				<p class="indented"><code>7?</code></p>
+
+				<p>is the same as:</p>
+
+				<p class="indented"><code>7{0,1}</code></p>
+
+				<p>To find a range of matches, that is, to match <em>m</em> to <em>n</em> times:</p>
+
+				<p class="indented"><code>7{3,5}</code></p>
+
+				<p>This will match three, four, or five occurrences of 7.</p>
+
+				<p>So to review, the squiggly bracket or range syntax is the most flexible and precise
+				quantifier. <strong>Table 7-2</strong> summarizes these features.</p>
+
+				<table>
+
+					<caption>Table 7-2. Summary of range syntax</caption>
+
+					<tr>
+						<th>Syntax</th>
+						<th>Description</th>
+					</tr>
+
+					<tr>
+						<td>{<em>n</em>}</td>
+						<td>Match <em>n</em> times exactly</td>
+					</tr>
+
+					<tr>
+						<td>{<em>n</em>,}</td>
+						<td>Match <em>n</em> or more times</td>
+					</tr>
+
+					<tr>
+						<td>{<em>m,n</em>}</td>
+						<td>Match <em>m</em> to <em>n</em> times</td>
+					</tr>
+
+					<tr>
+						<td>{0,1}</td>
+						<td>Same as ? (zero or one)</td>
+					</tr>
+
+					<tr>
+						<td>{1,0}</td>
+						<td>Same as + (one or more)</td>
+					</tr>
+
+					<tr>
+						<td>{0,}</td>
+						<td>Same as * (zero or more)</td>
+					</tr>
+
+				</table>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="Lazy Quantifiers">
+
+				<h2>Lazy Quantifiers</h2>
+
+				<p><span class="first-sentence">Now let’s set aside greediness and get lazy.</span> The easiest way for you to understand this
+				is by seeing it in action. In Reggy (making sure <em>Match All</em> is unchecked), try to match
+				zero or one 5 using a single question mark (?):</p>
+
+				<p class="indented"><code>5?</code></p>
+
+				<p>The first 5 is highlighted. Add an additional ? to make the quantifier lazy:</p>
+
+				<p class="indented"><code>5??</code></p>
+
+				<p>Now it doesn’t appear to match anything. The reason why is that the pattern is being
+				lazy, that is, it’s not even forced to match that first 5. By nature, the <em>lazy</em> match matches
+				as few characters as it can get away with. It’s a slacker.</p>
+
+				<p>Try this zero or more times:</p>
+
+				<p class="indented"><code>5*?</code></p>
+
+				<div class="pagebreak left"><span class="pageNumber">76</span> | Chapter 7: Quantifiers</div>
+
+				<p>and it won’t match anything either, because you gave it the option to match a minimum
+				of zero times, and that’s what it does.</p>
+
+				<p>Try it again matching one or more times, &#225; la lazy:</p>
+
+				<p class="indented"><code>5+?</code></p>
+
+				<p>And there you go. Lazy just got off the couch and matched one 5. That’s all it had to
+				do to keep its day job.</p>
+
+				<p>Things get a bit more interesting as you apply <em>m,n</em> matching. Try this:</p>
+
+				<p class="indented"><code>5{2,5}?</code></p>
+
+				<p>Only two 5s are matched, not all five of them, as a greedy match would.</p>
+
+				<p><strong>Table 7-3</strong> lists the lazy quantifiers. When is lazy matching useful? You can use lazy
+				matching when you want to match the bare minimum of characters, not the maximum
+				possible.</p>
+
+				<table>
+
+					<caption>Table 7-3. Lazy quantifiers</caption>
+
+					<tr>
+						<th>Syntax</th>
+						<th>Description</th>
+					</tr>
+
+					<tr>
+						<td>??</td>
+						<td>Lazy zero or one (opetional)</td>
+					</tr>
+
+					<tr>
+						<td>+?</td>
+						<td>Lazy one or more</td>
+					</tr>
+
+					<tr>
+						<td>*?</td>
+						<td>Lazy zero or more</td>
+					</tr>
+
+					<tr>
+						<td>{<em>n</em>}?</td>
+						<td>Lazy <em>n</em></td>
+					</tr>
+
+					<tr>
+						<td>{<em>n</em>,}?</td>
+						<td>Lazy <em>n</em> or more</td>
+					</tr>
+
+					<tr>
+						<td>{<em>m, n</em>}?</td>
+						<td>Lazy <em>m, n</em></td>
+					</tr>
+
+				</table>
+
+			</section>
+
+			<section class="section" data-number="5" data-name="Possessive Quantifiers">
+
+				<h2>Possessive Quantifiers</h2>
+
+				<p><span class="first-sentence">A possessive match is like a greedy match, it grabs as much as it can get away with.</span> But
+				unlike a greedy match: It does not backtrack. It does not give up anything it finds. It is
+				selfish. That is why it is called <em>possessive</em>. Arms folded firmly, it doesn’t give up any
+				ground. But the good thing about possessive quantifiers is that they are faster, because
+				they don’t do any backtracking, and they also fail in a hurry.</p>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>The truth is, you can hardly tell the difference between greedy, lazy, and
+					possessive matches with the examples in this book. But as you gain more
+					experience, and performance tuning becomes important, you’ll want to
+					be aware of these differences.</p>
+				</div>
+
+				<p>To make sense of this, first we’ll try matching the zeroes with a leading zero, then with
+				a trailing zero. In Reggy, make sure <em>Match All</em> is checked, and enter this expression with
+				a leading zero:</p>
+
+				<div class="pagebreak right">Possessive Quantifiers | <span class="pageNumber">77</span></div>
+
+				<p class="indented"><code>0.*+</code></p>
+
+				<p>What happened? All the zeroes are highlighted. There was a match. The possessive
+				match appears to do the same thing as a greedy match, with one subtle difference: There
+				is no backtracking. You can now prove it. Enter this with a trailing zero:</p>
+
+				<p class="indented"><code>.*+0</code></p>
+
+				<p>No match. The reason why is there was no backtracking. It gobbled up the entire input
+				and never looked back. It wasted its inheritance with riotous living. It can’t find the
+				trailing zero. It doesn’t know where to look. If you remove the plus sign, it would find
+				all the zeroes as it goes back to a greedy match.</p>
+
+				<p class="indented"><code>.*0</code></p>
+
+				<p>You might want to use a possessive quantifier when you are aware of what is in your
+				text, you know where you will find matches. You don’t care if it grabs with gusto. A
+				possessive match can help you match with improved performance. <strong>Table 7-4</strong> shows
+				the possessive quantifiers.</p>
+
+				<table>
+
+					<caption>Table 7-4. Possessive quantifiers</caption>
+
+					<tr>
+						<th>Syntax</th>
+						<th>Description</th>
+					</tr>
+
+					<tr>
+						<td>?+</td>
+						<td>Possessive zero or one (optional)</td>
+					</tr>
+
+					<tr>
+						<td>++</td>
+						<td>Possessive one or more</td>
+					</tr>
+
+					<tr>
+						<td>*+</td>
+						<td>Possessive zero or more</td>
+					</tr>
+
+					<tr>
+						<td>{<em>n</em>}+</td>
+						<td>Possessive <em>n</em></td>
+					</tr>
+
+					<tr>
+						<td>{n,}+</td>
+						<td>Possessive <em>n</em> or more</td>
+					</tr>
+
+					<tr>
+						<td>{<em>m,n</em>}+</td>
+						<td>Possessive <em>m,n</em></td>
+					</tr>
+
+				</table>
+
+				<p>You’ll be introduced to lookarounds in the next chapter.</p>
+
+			</section>
+
+			<section class="section" data-number="6" data-name="What You Learned in Chapter 7">
+
+				<h2>What You Learned in Chapter 7</h2>
+
+				<ul>
+
+					<li><span class="first-sentence">The differences between greedy, lazy, and possessive matching</span></li>
+					<li>How to match one or more (+)</li>
+					<li>How to match optionally (zero or one, ?)</li>
+					<li>How to match zero or one (*)</li>
+					<li>How to use {m,n} quantifiers</li>
+					<li>How to use greedy, lazy (reluctant), and possessive quantifiers.</li>
+
+				</ul>
+
+				<div class="pagebreak left"><span class="pageNumber">78</span> | Chapter 7: Quantifiers</div>
+
+			</section>
+
+			<section class="section" data-number="7" data-name="Technical Notes">
+
+				<h2>Technical Notes</h2>
+
+				<p><span class="first-sentence">The quote comes from Dennis Ritchie and Ken Thompson, <em>QED Text Editor</em> (Murray
+				Hill, NJ, Bell Labs, 1970) p. 3</span> (see <span class="url">http://cm.bell-labs.com/cm/cs/who/dmr/qedman.pdf</span>).</p>
+
+			</section>
+
+		</div> <!--container-->
+
+	</div> <!--regexp-->
+</body>
+</html>

@@ -1,0 +1,109 @@
+.docHTML {
+	max-width:1000px;
+}
+
+.docHTML figure{
+	margin: 0px;
+}
+.docHTML .section{
+	clear:both;
+}
+.docHTML .figureId{
+	font-size: 0.9em;
+	line-height: 1.223em;
+	text-align: right;
+	color: #909090;
+	margin-bottom: 3px;
+}
+.docHTML div.pagebreak p:first-child {
+	float: left;
+	margin-left: 2em;
+}
+
+.docHTML div.pagebreak p:nth-child(2) {
+	float:right;
+	margin-right: 2em;
+}
+.docHTML div.pagebreak {
+	height:22px;
+	margin: 1em;
+	border-bottom: 3px grey dashed;
+	text-align: center;
+	font-family: Arial;
+	font-size: 75%;
+}
+.docHTML .pagenumber {
+	font-size: 13pt;
+	font-weight: bold;
+}
+
+/*NY TIMES STUFF*/
+.docHTML .byline,.dateline {
+  font-size: 1em;
+  line-height: 1.2em;
+  color: #808080;
+}
+
+.docHTML .byline {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+.docHTML .caption,.smallCaption {
+  color: #666;
+  margin-bottom: 0;
+}
+
+.docHTML .caption {
+  font-size: 1.1em;
+  line-height: 1.2727em; /* 14px*/ 
+}
+
+.docHTML .smallCaption {
+  font-size: 0.9em;
+  line-height: 1.223em; /*11px*/
+}
+.docHTML .articleInline {
+  margin: 6px 15px 10px 0 !important;
+  width: 190px;
+}
+.docHTML .runaroundRight {
+  float: right;
+  clear: right;
+  display: inline;
+}
+
+.docHTML .runaroundRight {
+  margin: 2px 0 6px 6px;
+}
+
+.docHTML .runaroundLeft {
+  float: left;
+  clear: left;
+  display: inline;
+  margin: 2px 6px 6px 0;
+}
+.docHTML #content .section{
+	margin-right: 7px;
+	margin-left: 10px;
+}
+.docHTML .playOverlay {
+	position: relative;
+	background: url(http://www.nytimes.com/images/global/icons/Play_34.png) left bottom no-repeat;
+	display: block;
+	width: 34px;
+	height: 31px;
+	z-index: 10;
+	margin: 5px 0 -37px 10px;
+	top: -45px;
+}
+.docHTML .playOverlay:hover {
+	position: relative;
+	background: url(http://www.nytimes.com/images/global/icons/Button_Play_Highlighted_100.png) left bottom no-repeat;
+	display: block;
+	width: 100px;
+	height: 31px;
+	z-index: 10;
+	margin: 5px 0 -37px 10px;
+	top: -45px;
+}
+

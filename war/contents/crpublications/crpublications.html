@@ -1,0 +1,2986 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<head>
+
+	<title>CR Publications</title>
+	<link rel="stylesheet" type="text/css" href="crpublications.css" />
+	
+</head>
+
+<body>
+
+	<div class="crpublications container">
+
+		<section class="section" data-number="0" data-name="Abstract">
+
+			<p class="credits">
+				Requirements Eng (2006)<br />
+				DOI 10.1007/s00766-006-0030-0
+			</p>
+
+			<div class="topBorder">
+				<p class="borderedIntro">
+					ORIGINAL ARTICLE
+				</p>
+			</div>
+
+			<p>
+				<strong>Alistair Sutcliffe &bull; Stephen Fickas</strong>
+			</p>
+
+			<p>
+				<strong>McKay Moore Sohlberg</strong>
+			</p>
+
+			<h1>
+				PC-RE: a method for personal and contextual requirements engineering with some experience
+			</h1>
+
+			<p class="publication">
+				Received: 10 October 2005 / Accepted: 30 January 2006<br />
+				&copy; Springer-Verlag London Limited 2006
+			</p>
+
+			<p>
+				<strong>Abstract</strong> A method for requirements analysis is proposed
+				that accounts for individual and personal goals, and the
+				effect of time and context on personal requirements. First
+				a framework to analyse the issues inherent in requirements
+				that change over time and location is proposed.
+				The implications of the framework on system architecture are
+				considered as three implementation pathways:
+				functional specifications, development of customisable
+				features and automatic adaptation by the system. These
+				pathways imply the need to analyse system architecture
+				requirements. A scenario-based analysis method is described for
+				specifying requirements goals and their potential change. The method
+				addresses goal setting for
+				measurement and monitoring, and conflict resolution
+				when requirements at different layers (group, individual)
+				and from different sources (personal, advice from an
+				external authority) conflict. The method links requirements analysis
+				to design by modelling alternative solution pathways. Different
+				implementation pathways have
+				cost–benefit implications for stakeholders, so cost–benefit analysis
+				techniques are proposed to assess trade-offs
+				between goals and implementation strategies. The use of
+				the framework is illustrated with two case studies in assistive
+				technology domains: e-mail and a personalised
+				navigation system. The first case study illustrates personal
+				requirements to help cognitively disabled users
+				communicate via e-mail, while the second addresses
+				personal and mobile requirements to help disabled users
+				make journeys on their own, assisted by a mobile PDA
+				guide. In both case studies the experience from requirements analysis
+				to implementation, requirements monitoring, and requirements evolution is reported.
+			</p>
+
+		</section> <!-- Section 0 -->
+
+		<section class="section" data-number="1" data-name="Introduction">
+
+			<h2>
+				1 Introduction
+			</h2>
+
+			<p>
+				Functional requirements have traditionally been considered as
+				specifications that satisfy the goals of the
+				majority of users. Although the concept of establishing
+				sub-sets of requirements matched to different stakeholder groups
+				has been advocated in the viewpoint tradition of requirements engineering, e.g.
+				[<span class="cite-use" data-ref"1">1<span>] (VORD) and
+				[<span class="cite-use" data-ref"2">2<span>], the concept of specifying requirements for individual
+				users has not been explored. However, in human computer interaction,
+				requirements are seen as an individual
+				concern for customising the user interface and matching
+				the mix of functional requirements to individuals [<span class="cite-use" data-ref"3">3<span>].
+			</p>
+
+			<p class="indent">
+				Variability and specialisation of generic requirements
+				to fit more specialised usage domains have been investigated in
+				the product-line literature [<span class="cite-use" data-ref"4">4<span>] as variation
+				points that specify where generic requirements may be
+				tailored. The individual dimension of requirements has
+				been partially addressed in the i* modelling language
+				where the capability and abilities of agents can be
+				specialised to model the skills and preferences of individuals [<span class="cite-use" data-ref"5">5<span>],
+				so the requirements for individual users
+				could be matched to ability profiles. Recognition that
+				requirements may change over time because the system
+				environment or context changes has been explored in
+				requirements monitoring [<span class="cite-use" data-ref"6">6<span>], where monitors track a
+				requirement over time to evaluate the match or mismatch between
+				system operation and particular goals.
+			</p>
+
+			<p class="indent">
+				In spite of these initiatives, no comprehensive method
+				for analysing individual or contextual requirements has
+				been proposed. We argue that a framework for individual requirements
+				is necessary as technology products
+			</p>
+		
+			<div class="lineBreak"></div>
+
+			<p class="credits">
+				A. Sutcliffe<br />
+				Centre for HCI Design, School of Informatics,<br />
+				University of Manchester, P.O.Box 88,<br />
+				M60 1QD, Manchester, UK<br />
+				E-mail: a.g.sutcliffe@man.ac.uk
+			</p>
+
+			<p class="credits">
+				S. Fickas<br />
+				Department of Computer & Information Science,<br />
+				University of Oregon, Eugene, OR 97403-1202, USA<br />
+				E-mail: fickas@cs.uoregon.edu
+			</p>
+
+			<p class="credits">
+				McKay M. Sohlberg<br />
+				Communication Disorders & Sciences,<br />
+				College of Education, 5251 University Of Oregon,<br />
+				Eugene, OR 97403-1202, USA<br />
+				E-mail: mckay@oregon.uoregon.edu
+			</p>
+
+			
+
+			<div class="pagebreak">
+				<span class="pageNumber">1</span>
+			</div>
+
+<!-- Page 2 -->
+
+			<p>
+				become personalised. Furthermore, with the growth in
+				ubiquitous computing, requirements may not only vary
+				by individuals but may also change over space and time
+				in location-aware systems [<span class="cite-use" data-ref"7">7<span>], [<span class="cite-use" data-ref"8">8<span>]. In this paper we propose
+				a framework for Personal and Contextual
+				Requirements, a method for their capture incorporating
+				a trade-off analysis to decide how personal requirements
+				should be implemented. The following section describes
+				related work; Sect.3 discusses the framework and
+				implications for architectural requirements; Sect. 4
+				develops the PC-RE (Personal and Contextual Requirements
+				Engineering) method which is applied to two assistive technology
+				case studies in Sect.5. This is followed
+				by a description of the cost–benefit trade-off analysis in
+				Sect.6. The paper concludes with a brief discussion.
+			</p>
+
+		</section> <!-- Section 1 -->
+
+		<section class="section" data-number="2" data-name="Related work">
+
+			<h2>
+				2 Related Work
+			</h2>
+
+			<p>
+				Several requirements taxonomies have been proposed
+				that classify requirements into different categories of
+				non-functional requirements (NFRs) [<span class="cite-use" data-ref"9">9<span>], [<span class="cite-use" data-ref"10">10<span>], functional
+				requirements and services [<span class="cite-use" data-ref"11">11<span>], [<span class="cite-use" data-ref"12">12<span>]; indeed, taxonomy is
+				an accepted means of managing requirements in RE
+				tools. However, previous taxonomies have classified
+				requirements according to their subject matter rather
+				than to the agents to which they pertain. Monitoring the
+				implemented system against requirements so it can
+				adapt to evolving requirements over time was proposed
+				by [<span class="cite-use" data-ref"6">6<span>], while the impact of location on requirements was
+				partially explored in the Inquiry Cycle [<span class="cite-use" data-ref"13">13<span>], where the
+				location could influence the acceptability of system
+				output. However, there has been no systematic treatment of
+				contextual influences on requirements.
+			</p>
+
+			<p class="indent">
+				Requirements for stakeholder groups are familiar in
+				RE methods (e.g. ScenIC [<span class="cite-use" data-ref"14">14<span>]; Volere [<span class="cite-use" data-ref"2">2<span>]); however,
+				change over time is not explicitly modelled apart from
+				concerns over requirements creep and evolution. Change
+				in location is rarely specified, even though globalisation
+				and cultural effects on products are known to be
+				important [<span class="cite-use" data-ref"15">15<span>], [<span class="cite-use" data-ref"16">16<span>]. Understanding cultural impact on
+				requirements is still in its infancy, although ethnographic
+				studies suggest that very different requirements
+				arise in situ; for instance, privacy requirements for
+				automatic teller machines are very different between
+				eastern and western societies [<span class="cite-use" data-ref"17">17<span>].
+			</p>
+
+			<p class="indent">
+				The mutability of requirements to suit individual
+				users has been accepted in human computer interaction,
+				where a distinction is drawn between generic task support
+				requirements (i.e. functional requirements) and
+				system features which can be customised for individual
+				user needs [<span class="cite-use" data-ref"16">16<span>], [<span class="cite-use" data-ref"18">18<span>]. Two architectural approaches to
+				handling personal requirements are adaptive systems, in
+				which the system monitors the user’s behaviour and then
+				changes services or the interface look and feel to match
+				the user’s needs; and adaptable systems, where customisation
+				is user-controlled at design time [<span class="cite-use" data-ref"19">19<span>]. Enduser programming
+				applications often employ mixed
+				initiative dialogues and fusion of these two strategies
+			</p>
+
+			<p>
+				[<span class="cite-use" data-ref"20">20<span>]. Temporal and spatial change in requirements has
+				implications for requirements capture and system
+				architecture which have yet to be fully explored in the
+				RE community.
+			</p>
+
+		</section> <!-- Section 2 -->
+
+		<section class="section" data-number="3" data-name="A framework for personal, contextual RE">
+
+			<h2>
+				3 A framework for personal, contextual RE
+			</h2>
+
+			<p>
+				The motivation for the framework is to describe not
+				only functions that meet people’s goals but also
+				characteristics of the users, and how they would like computer systems to achieve their personal goals. The
+				framework accommodates matching requirements to
+				individual needs, how individual needs change over
+				time, how requirements evolve as people learn and their
+				ambitions grow, and finally the needs for universal
+				accessibility and the ageing user population [<span class="cite-use" data-ref"3">3<span>].
+			</p>
+
+			<p class="indent">
+				We propose a three-layer framework for personal and
+				contextual requirements, with two change dimensions of
+				location and time which act on each layer, as summarised
+				in Fig. 1. The layers progress from general requirements
+				at the user group layer, to individual user characteristics,
+				and to personal goals. Within each layer requirements
+				vary over space and time to encourage not only analysis
+				for evolving requirements but also contextual influences.
+				Contextual influences may vary from the cultural and
+				social system environment to effects of specific locations.
+			</p>
+
+			<br />
+
+			<p>
+				<em>Stakeholder group</em>  In this layer, the change context
+				affects requirements in cultural adaptation of products,
+				e.g. language localisation, change in business processes
+				between European and American models; while time
+				influences how requirements change as business processes
+				evolve and product functionality becomes more
+				complex [<span class="cite-use" data-ref"21">21<span>]. Contextual enquiry by surveys and
+				prototype evaluations in different cultures are necessary
+				to specify product versions for different cultural
+				markets. The architectural considerations are design of
+				products with variation points so they can be configured
+				for different cultures, although the extent and
+				nature of cultural adaptations are still poorly understood.
+				Other architectural implications are design for
+				customisation to accommodate context effects (language
+				localisation); design of monitors and adaptive
+				functions for mobility; customisable or adaptive user
+				interfaces to deal with user skills change; and a flexible
+				adaptable architecture to evolve as business processes
+				change.
+			</p>
+
+			<br />
+
+			<p>
+				<em>User characteristics</em>  This layer models the needs of
+				the individuals who share a common profile of skills
+				and abilities that influence how they interact with
+				technology. User characteristics are an individual user
+				ability profile, which can be used to customise the
+				means of human computer communication for the
+				elderly, disabled, people with different learning
+				styles, etc. Location affects user characteristics as
+				people’s abilities change with place, such as the need
+				for adapting communication modalities in noisy
+			</p>
+
+			<div class="pagebreak">
+				<span class="pageNumber">2</span>
+			</div>
+
+<!-- Page 3 -->
+
+			<p>
+				environments, while people’s skills and abilities change
+				over time as they adapt, for example, to computerbased
+				training. Architectural implications are for
+				choice and adaptive communication modalities. In the
+				general user population, baseline knowledge will
+				influence content in website and CAL applications,
+				while in assistive technology this layer is key. The user
+				characteristics layer describes the users’ physical and
+				mental abilities, so this affects requirements for interaction
+				directly as well as functional requirements
+				indirectly. User characteristics requirements imply the
+				need to develop individually tailored versions of
+				applications that are either configured for the user at
+				design time or automatically adapt to the user’s needs.
+				Change over time occurs as people learn system
+				functions and need new styles of dialogue as they
+				become more skilled; while slower change, e.g.
+				age-related decline in cognitive and motor abilities,
+				necessitates change in magnified visual displays and
+				slower response times. The range of individual user
+				abilities needs to be analysed against inventories of
+				modality abilities, knowledge and capabilities, and
+				general cognitive abilities. User characteristics are assessed
+				by psychology-based questionnaires and tests to
+				measure cognitive, physical and perceptual abilities
+				(e.g. [<span class="cite-use" data-ref"22">22<span>]) or by interviewing users to gather information
+				on general abilities, experience and skills [<span class="cite-use" data-ref"23">23<span>].
+				Assessing the user’s characteristics also produces an
+				inventory of specific skills that we assume the user
+				possesses to successfully operate the system given the
+				user interface requirements for communication and
+				interaction. These user characteristics are a complementary
+				specification of what we can reasonably expect of the user
+				(individually and collectively) and
+				what needs to be implemented to enable effective use
+				of the system.
+			</p>
+
+			<p>
+				<em>Personal goals</em>  We argue it is important to analyse
+				requirements from an individual viewpoint, especially in
+				domains where customisation is important. In this layer,
+				change over time depends on the stability of people’s
+				wishes, while the contextual interaction may be influenced
+				by how their goals affect location and social setting (e.g.
+				social settings may influence privacy and hence
+				display of personal information). Personal goals are held
+				by individuals and become important in applications
+				where customisation of individual service is a prime
+				objective, e.g. learning and training applications,
+				entertainment and games, personal knowledge management
+				and assistive technology. Models of individual users
+				have always been important for educational applications
+				where the abilities of each individual are matched to
+				content and pedagogical delivery.
+			</p>
+
+			<p class="indent">
+				The type of requirements in each layer and their
+				interaction with the change and context dimension are
+				summarised in Table1. It should be noted that the
+				layers do not imply a hierarchy of requirements; rather,
+				the layers represent concerns that pertain to stakeholder
+				groups or individuals.
+			</p>
+
+			<p class="indent">
+				Personal goals can be realised either by design or
+				customisation, e.g. by configuring the toolbar in drawing
+				applications, or by automatically adapting solutions to
+				the individual’s needs. Personal requirements may be
+				contextual and location sensitive; for example, NFRs
+				such as privacy, security and information accuracy can
+				interact with functional requirements such as information
+				display, according to location. Some personal goals
+				may be implemented as preference settings under user
+				control, e.g. the presentation of information (graphs
+				and/or tables), and aesthetic details such as screen savers
+				and ring tones on mobile phones. Personal goals are
+				assigned attainment levels on a 1–5 scale so we can assess
+				how well the system and user have approached the
+			</p>
+
+			<img src="/contents/crpublications/images/figure1.png">
+
+			<div class="pagebreak">
+				<span class="pageNumber">3</span>
+			</div>
+
+<!-- Page 4 -->
+
+			<p>
+				<strong>Table 1</strong>  Requirements framework and effect of time and location
+			</p>
+
+			<table class="basicTable fourColumns">
+				<thead>
+					<tr>
+						<th>
+							Requirements layer
+						</th>
+
+						<th>
+							Examples
+						</th>
+
+						<th>
+							Change over time
+						</th>
+
+						<th>
+							Context/location change
+						</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr>
+						<td>
+							General stakeholder
+							requirements
+						</td>
+
+						<td>
+							Stakeholder-tailored versions of
+							products, product lines
+						</td>
+
+						<td>
+							Expert users need power
+							functionality, product lines
+						</td>
+
+						<td>
+							Globalisation: requirements
+							tailored for countries, cultures, language
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							User characteristics
+							requirements (interaction
+							and communication)
+						</td>
+
+						<td>
+							Modalities and capabilities:
+							accessibility, ageing, but also
+							learning, cognitive and social
+							abilities; individual ways of
+							working, task requirements
+						</td>
+
+						<td>
+							Individuals learn and become
+							skilled, adapt to new ways
+							of working, individual styles
+							of interaction
+						</td>
+
+						<td>
+							Needs change with context in
+							mobile applications
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							Personal goals may be
+							functional or non-functional requirements
+						</td>
+
+						<td>
+							Personal needs for services, task
+							support, attainment goals for
+							self, linked to motivations
+						</td>
+
+						<td>
+							Personal goals have different
+							attainment time-scales
+						</td>
+
+						<td>
+							Personal goals can be sensitive to physical and social
+							setting, e.g. privacy and social setting in group/alone
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>
+				ideal achievement of each goal. The attainment levels
+				also specify the assumptions associated with each goal,
+				such as the necessary customisation of the software,
+				modification to requirements (i.e. re-design) and user
+				training.
+			</p>
+
+			<p class="indent">
+				Consideration of personal and contextual requirements
+				produces a new set of meta- requirements: the
+				need to develop user models, monitors and mechanisms
+				for adaptive systems or customisation editing/design
+				facilities. The implications of personal requirements on
+				architecture are summarised in Fig.2.
+			</p>
+
+			<p class="indent">
+				Three implementation paths are suggested for user
+				characteristics requirements and personal goals. First,
+				development as conventional system functions; secondly,
+				implementation as user-customisable features; and
+				thirdly as automatic system adaptations. Figure 2
+				illustrates the architectural considerations of the second and
+				third paths, which also necessitate specification of
+				architectural requirements according to the chosen
+				development pathway. Monitors capture information on
+				the users’ behaviours, errors, location and environmental
+				context. Intelligent interpreters have to infer higher-level
+				states from monitored data either using knowledge
+				of the domain and user to make inferences, or via
+				learning mechanisms. The use of such inferences then
+				depends on the choice of automated adaptive mechanisms or
+				providing information to help the users make
+				customisation decisions supported by editing and configuration
+				facilities. The system architecture has to be
+				configurable following product-line specification to enable
+				change via either route. Acquisition dialogues may
+				also be necessary to capture personal goals and help
+				user-driven customisation from a toolkit of services;
+				alternatively, the system selects services to fit the user’s
+				goals. The implementation pathways have different cost–
+				benefit trade-offs for designers and user stakeholders; for
+			</p>
+
+			<img src="/contents/crpublications/images/figure2.png">
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					4
+				</span>
+			</div>
+
+<!-- Page 5 -->
+
+			<p>
+				instance, customisation imposes a learning burden on the
+				user who has to learn how to customise the application.
+				Cost–benefit analysis techniques are described in Sect. 6.
+			</p>
+
+		</section> <!-- Section 3 -->
+
+		<section class="section" data-number="4" data-name="Scenario-based personal contextual requirements analysis">
+
+			<h2>
+				4 Scenario-based personal contextual requirements analysis
+			</h2>
+
+			<p>
+				In this section we develop the PC-RE framework into a
+				scenario-based requirements analysis method, based on
+				our previous work with CORE and SCRAM [<span class="cite-use" data-ref"24">24<span>], [<span class="cite-use" data-ref"25">25<span>].
+				CORE used ethnographic techniques to investigate
+				users’ requirements in context, and then employed
+				prototyping or Wizard of Oz techniques to evaluate initial
+				designs with users and hence refine the requirements.
+				CORE was motivated by assistive technology applications,
+				so it emphasises a clinical profile of individual
+				users’ abilities and attainment levels which are taken
+				forward in the PC-RE method. PC-RE also follows the
+				scenario-driven approach of SCRAM with mock-ups
+				and early prototypes analysed in combination with design
+				rationale to drive the requirements dialogue with
+				users. PC-RE adds more guidance on the use of scenarios
+				and developing requirements for individual user
+				profiles. The method contains four sequences of investigation
+				that can be deployed sequentially, although in
+				practice requirements investigation tends to interleave
+				issues from the four threads. Two threads—<em>analyse
+				cultural context and analyse spatial context</em>—are motivated
+				by the spatial dimension in the framework. The
+				two threads <em>analyse temporal implications</em> and
+				<em>analyse evolving requirements</em> correspond to the time dimension
+				in the framework. The framework layers can apply to
+				any of these threads, although the user characteristics
+				and personal goals layers are covered in a fifth thread.
+				Group stakeholder requirements analysis is not made
+				explicit as these are an assumed default. Within each
+				thread the specification/refine stages are motivated by
+				the generic architecture for adaptive applications, as
+				shown in Fig.2, and hence point to monitoring and
+				adaptation issues. PC-RE is not intended to be a complete
+				RE method so many issues such as modelling
+				requirements specifications are not covered. Instead it is
+				intended to supplement other methods (e.g. Volere [<span class="cite-use" data-ref"2">2<span>])
+				with individual and contextual perspectives. Contextual
+				requirements analysis deals with the issues of mobile
+				applications, while the personal RE addresses the
+				requirements for applications that focus on individual
+				users, i.e. education, training, assistive technology,
+				clinical medical systems and entertainment.
+			</p>
+
+			<section class="subsection" data-number="5" data-name="4.1 Method overview">
+
+				<h3>
+					4.1 Method overview
+				</h3>
+
+				<p>
+					The road map for the PC-RE method is illustrated in
+					Fig.3. The first step entails considering the type of
+					application to determine requirements relating to individual
+					users and/or changing requirements of a temporal or spatial nature. The results of this assessment
+					will invoke one or more of the pathways that advise on
+					capture and analysis for personal and contextual
+					requirements. Many applications will concern more
+					than one pathway, hence the method is applied iteratively.
+					Most context-aware applications will invoke
+					several pathways to address requirements for the five
+					Ws [<span class="cite-use" data-ref"8">8<span>]: <em>Who</em>, the identity of an individual user; <em>What</em>
+					the users are doing, interpreting their activity; <em>Where</em>
+					they are located; <em>When</em> in time are certain services
+					requirements, and when in a history of activity; and
+					finally <em>Why</em>, capturing the users’ intent by deeper
+					analysis of What. The first pathway deals with international
+					applications, where the advice is given on
+					analysing the effects of culture and then defining
+					requirements for localising the systems and specifying
+					how it will be configured or tailored for different versions.
+					The second pathway addresses analysis of
+					requirements for mobile and context-aware applications.
+					The third and fourth pathways distinguish between predictable
+					and less predictable change of
+					requirements over time. Predictable change is implied in
+					applications where time drives adaptation of functionality,
+					for example, patient monitoring system in
+					healthcare, or environmental control system in home
+					use or industrial process control. The essence of predictable
+					temporal change is that functional requirements are known,
+					and the dependency between time
+					and those requirements can be defined. Actual time
+					periods may vary from seconds to days or months.
+				</p>
+
+				<p class="indent">
+					Temporally unpredictable changes occur in systems
+					where evolution of requirements can be expected, but
+					the nature of change cannot be anticipated in detail;
+					when change might occur is also uncertain. In this case
+					requirements analysis is similar to product-line architectures,
+					where variation points are created for loci of
+					potential change and requirements are made as adaptable as
+					possible by generalisations. Finally, for applications in
+					assistive technology, healthcare training and
+					education, personal requirements are likely to be
+					important. Advice on this pathway is given on defining
+					personal goals and user profiles. This is followed by
+					setting achievement levels and monitoring progress towards
+					those goals. Several pathways share common
+					process and advice on specifying the requirements for
+					monitoring devices and requirements for adaptation to
+					change over time or location. Finally, the pathways
+					converge on common tasks that appear in all requirements
+					engineering processes such as negotiation and
+					requirements validation; these tasks are not described
+					further in this paper.
+				</p>
+
+			</section> <!-- Section 5 -->
+
+			<section class="subsection" data-number="6" data-name="4.2 Contextual requirements analysis">
+
+				<h3>
+					4.2 Contextual requirements analysis
+				</h3>
+
+				<p>
+					Following the framework, contextual analysis involves
+					considering the requirements implications of change in
+					location at the global as well as the local context.
+					Creating contextual scenarios for applications that are
+					intended for an international market requires sensitivity to
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						5
+					</span>
+				</div>
+
+<!-- Page 6 -->
+
+				<img src="/contents/crpublications/images/figure3.png">
+
+				<p>
+					local cultural conditions. Ultimately, there is no substitute for sourcing scenarios from users who belong to
+					the cultures, nationalities and linguistic groups in the
+					intended market place. However, if culture-located users
+					are not available, then the following guidelines can be
+					used to challenge scenarios sourced in one culture (i.e.
+					usually Europe or the USA), to consider requirements
+					implications in other cultures. The inspiration for the
+					guidelines comes from reports of requirements investigations and ethnographic studies in the RE and HCI
+					literature [<span class="cite-use" data-ref"15">15<span>], [<span class="cite-use" data-ref"17">17<span>],
+					[<span class="cite-use" data-ref"26">26<span>], [<span class="cite-use" data-ref"27">27<span>].
+				</p>
+
+				<ol start="1">
+					<li>
+						Consider the <em>cultural impact</em> on the social context on
+						the user. Cultural impact has been assessed in most
+						studies using a combination of Hofstede’s [<span class="cite-use" data-ref"28">28<span>] and
+						Hall’s [<span class="cite-use" data-ref"29">29<span>] dimensions, of which the important ones
+						are:
+					</li>
+				</ol>
+
+				<ul>
+					<li>
+						<em>Uncertainty avoidance.</em> Cultures with high uncertainty avoidance do not like ambiguity, and hence
+						prefer precise instructions and fewer options.
+					</li>
+
+					<li>
+						<em>Power-distances.</em> High power-distance cultures have
+						a more marked hierarchical division of roles in
+						society which is reflected in different attitudes to
+						authority, initiative and responsibility. The
+						requirement implications are to align the requirements closely to stakeholder roles and their perceived power.
+					</li>
+
+					<li>
+						<em>Individualism/collectivism.</em> More individualistic cultures place more emphasis on personal goals, which
+						has consequences for that aspect of the PC-RE
+						framework; in contrast, collectivist cultures are
+						more receptive to shared goals, and collective
+						decision making.
+					</li>
+
+					<li>
+						<em>Context.</em> High-context cultures tend to prefer more
+						visual and symbolic representations of content
+						whereas low-context cultures prefer hard facts, detail and statistical evidence. This aspect has obvious
+						implications for selecting and presenting information with different media.
+					</li>
+
+					<li>
+						<em>Time.</em> Cultures sub-divide into single-threaded,
+						those who prefer doing one task at a time, and
+						multitasking. This dimension has implications for
+						requirements in decision support, agenda management and work organisation.
+					</li>
+				</ul>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						6
+					</span>
+				</div>
+
+<!-- Page 7 -->
+
+				<p>
+					Some NFRs are culturally sensitive; for example, in a
+					study on ATM usage in India users needed more privacy
+					than was afforded by the standard western ATM
+					design; not only does the western model have financial
+					transactions conducted in public places, but also high
+					power-distance which excludes many users who did not
+					consider ATMs were intended for use by lower status
+					individuals [<span class="cite-use" data-ref"17">17<span>]. Cultural impacts can be analysed using
+					scenarios with the above dimensions to assess the
+					implications for privacy, security, usability and other
+					NFRs that may be related to the location of use.
+				</p>
+
+				<ol start="2">
+					<li>
+						Beware of the impact of <em>authority relationships</em> on
+						users’ goals. Consider the effect of different levels of
+						authority and responsibility as obstacles for the
+						acceptance of goals on users, particularly where the
+						goals are owned by manager stakeholders.
+					</li>
+				</ol>
+					
+				<p class="indent">
+					This is illustrated by a study of outsourcing development in India, with requirements implications for use
+					of creativity tools and CSCW coordination tools to link
+					UK and Indian software developers. The UK software
+					house made false assumptions about personal relationships in the Indian software house and expected the
+					Indian team to develop informal specifications creatively
+					following their UK practice. The Indian perspective was
+					that development was governed by more authoritarian
+					relationships of delivering to detailed specifications.
+				</p>
+
+				<ol start="3">
+					<li>
+						Assess the impact of culture on the users’ <em>work patterns</em>. Consider the effect of culture on how work is
+						organised by the system. Cultures with a higher
+						power-distance tend to expect and accept more rigid
+						procedures, whereas low power-distance cultures require more flexibility and ability to adapt working
+						practices to local conditions.
+					</li>
+				</ol>
+
+				<p>
+					This is illustrated by the problem encountered when
+					implementing Enterprise Resource Plans which can impose an inflexible pattern of work dictated by western
+					business practices. In other low power-distance cultures
+					such top-down imposition of working practices is resented [<span class="cite-use" data-ref"27">27<span>].
+				</p>
+
+				<ol start="4">
+					<li>
+						Assess the <em>literacy</em> of the local user population.
+						Challenge any assumptions in scenarios made about
+						the knowledge and skills of users. Users may not have
+						the knowledge or literacy skills to operate complicated functions with western style dialogues.
+					</li>
+				</ol>
+
+				<p class="indent">					
+					The Indian ATM study illustrates this problem,
+					where many users had low levels of literacy even when
+					the user dialogue had been translated into their language. Another illustration highlights requirements for
+					public health systems in which the assumption that
+					simplified English dialogues and translation into local
+					language would be sufficient for communication with a
+					Somali immigrant community. The eventual solution
+					was to use an iconic pictorial language to communicate
+					health issues in a medical consultation support system
+					[<span class="cite-use" data-ref"30">30<span>].
+				</p>
+
+				<ol start="5">
+					<li>
+						Evaluate requirements for <em>local languages</em>. Challenge
+						any requirements that depend on the user understanding English and beware of simple machine
+						translation solutions to localisation.
+					</li>
+				</ol>
+
+				<p class="indent">
+					Studies of language localisation have demonstrated
+					that machine translation approaches are prone to
+					many errors caused by different interpretation of
+					words, local dialects and idioms [<span class="cite-use" data-ref"30">30<span>]. Requirements for
+					language localisation have to be tested by implementation of language tailored user interfaces, which can
+					then be tested by native speakers either directly or by
+					posting the application on a website and inviting
+					comments from local users, ideally in their own language.
+				</p>
+
+			</section> <!-- Section 6 -->
+
+			<section class="subsection" data-number="7" data-name="Requirements for mobile and context-aware applications">
+
+				<h3>
+					4.3 Requirements for mobile and context-aware applications
+				</h3>
+
+				<p>
+					The requirement problems in this pathway are first to
+					define the number and type of spatial contexts that will
+					change the requirements. In some cases requirements are
+					closely coupled to the location; for instance, in a mobile
+					tourist or museum guide the information content and
+					user system dialogue have to be geared to the user’s
+					location. Other requirements demand more complex
+					interpretation of location so the system functions can be
+					adapted to the users’ social or work context. An example
+					is the use of notifier systems and dual task displays
+					which will change according to whether the user is in a
+					location that demands no interruption (e.g. public lecture) or in a more private space. A useful conceptual
+					framework for considering the implications of space on
+					requirements is the ‘‘locales’’ model [<span class="cite-use" data-ref"31">31<span>] which divides
+					space into different categories according to social needs
+					for NFRs of privacy, security, accuracy, etc. However,
+					determining the nature of a social space is a non-trivial
+					problem of sense-making from data about the user’s
+					environment.
+				</p>
+
+				<p class="indent">	
+					Monitoring requirements for mobile applications
+					need to be specified for:
+				</p>
+
+				<ul>
+					<li>
+						The devices and sensors that capture environmental
+						input, e.g. video, GPS, audio, light, movement
+						detectors. Sensors may be active transmitters such
+						as RFID tags in instrumented environments or
+						passive devices that can work in non-instrumented
+						environments, e.g. video, audio capture.
+					</li>
+
+					<li>
+						Functions and processes to interpret low-level data
+						streams into meaningful data, e.g. from a sensor
+						voltage output to a temperature reading.
+					</li>
+
+					<li>
+						Interpreters that make sense of the data using a
+						model of the domain, e.g. body temperature above
+						a certain threshold is dangerous for a patient and
+						hence an alarm should be signalled.
+					</li>
+
+					<li>
+						Models of the domain, either static or preferably
+						dynamic, and updatable to reflect changes in the
+						environment.
+					</li>
+				</ul>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						7
+					</span>
+				</div>
+
+<!-- Page 8 -->
+
+				<p>
+					Interpreters invariably rely on data fusion from several
+					sensory inputs, so the requirements for handling several
+					datastreams need to be investigated. A useful framework
+					for considering the requirements for interpreters [<span class="cite-use" data-ref"32">32<span>]is
+					to decide the level of change which needs to be inferred,
+					ranging from the semaphore level (an event has happened);
+					identity (the event or agent can be identified);
+					attributes (properties of the event/object can be inferred);
+					to causality of the event (intent of the agent can
+					be explained). In a spatial context location might be
+					Cartesian coordinates in a space, approximate location
+					in a topology (near to) or exact location within a topographic model. The results of interpreters are frequently
+					ambiguous so further requirements need to be considered for the mediation dialogues to help the user make
+					effective use of context-aware applications [<span class="cite-use" data-ref"33">33<span>].
+				</p>
+
+				<ul>
+					<li>
+						Feedback functions are necessary to make the user
+						aware of the system’s interpretations (or guesses)
+						about the state of its environment. Confidence-level
+						indications help people decide whether to accept the
+						system’s decision.
+					</li>
+
+					<li>
+						Default interpretations need to be defined when
+						input data is not available, or is inadequate.
+					</li>
+
+					<li>
+						Mediation dialogues should be planned so users can
+						override the systems’ decision.
+					</li>
+				</ul>
+
+				<p>
+					Once the output from the monitoring process has been
+					defined, a further set of requirements are necessary to
+					specify the system’s adaptation to change in location.
+					The nature of adaptation will depend on the domain; in
+					many cases it will be a change to users’ services to deal
+					with change in NFRs such as privacy in different locales.
+					In embedded systems, change may need to adapt to the
+					environmental properties of the location, for instance a
+					computerised automated braking system in a vehicle
+					needs to adapt according to the location being a wet or a
+					dry road.
+				</p>
+
+			</section> <!-- Section 7 -->
+
+			<section class="subsection" data-number="8" data-name="Predictable temporally variable requirements">
+
+				<h3>
+					4.4 Predictable temporally variable requirements
+				</h3>
+
+				<p>
+					This pathway covers applications where the system has
+					to adapt its response over time, which might be at a
+					specific point in time or periods in scales ranging from
+					nanoseconds to years. Typical examples of systems in
+					this class are environmental and process control systems
+					in home use or industry (thermostats, time-based controllers of
+					devices, time-based controllers of manufacturing process, chemical process control, etc.).
+					Requirements for temporal monitoring are reasonably
+					simple since a system clock will usually suffice, although
+					interpretation of significant temporal events may not be
+					non-trivial. Temporal logics as found in some requirements languages
+					(e.g. KAOS [<span class="cite-use" data-ref"34">34<span>]) may be necessary to
+					specify complex temporal dependencies, e.g. synchronisation,
+					overlapping time intervals, less predictable temporal dependencies (until, eventually, etc.).
+				</p>
+
+				<p class="indent">
+					Once temporally significant events have been specified, in common with other pathways, the next task is to
+					specify how the system should adapt either at a point in
+					time or for a duration. Some examples of predictable
+					temporal change in requirements for user-centred systems are changing services during the day. In a notifier
+					system, stock market updates may be sent between
+					9 a.m. and 5 p.m. but after 5 p.m. schedules of TV
+					shows or local entertainment would be more appropriate. This class of requirements and the following less
+					predictable requirements are both deferred [<span class="cite-use" data-ref"35">35<span>], in the
+					sense that they are analysed when the system is designed,
+					but implementation is delayed until the context is
+					appropriate, either at a point in time or when the system
+					environment has evolved.
+				</p>
+
+			</section> <!-- Section 8 -->
+
+			<section class="subsection" data-number="9" data-name="Unpredictable but evolving requirements">
+
+				<h3>
+					4.5 Unpredictable but evolving requirements
+				</h3>
+
+				<p>
+					Many applications potentially fall into this class, as
+					requirements need to evolve as business changes. Product-line engineering is a response that attempts to
+					anticipate evolving requirements by carrying out an
+					exhaustive domain analysis, and then specify systems
+					with stable core functionality and variation points where
+					requirements change can be anticipated. Requirements
+					can also be generalised to make them more adaptable for
+					future implementations [<span class="cite-use" data-ref"36">36<span>]. Some guidelines for making
+					requirements more generic are to:
+				</p>
+
+				<ul>
+					<li>
+						Parameterise processes and procedures so the
+						behaviour of a system can be changed by adjusting
+						parameters on an initialisation file. In a computeraided learning application, parameterisation could
+						be used to change the pedagogical strategy (explanation, demonstration, learning by example) used
+						by the system according to the sophistication of the
+						learner.
+					</li>
+
+					<li>
+						Enable run-time binding of procedures and data
+						structures, so the system can adapt by changing
+						component libraries.
+					</li>
+
+					<li>
+						Provide facilities for adding new functions at variation points.
+					</li>
+
+					<li>
+						Make system architectures loosely coupled, so new
+						modules can be added without upsetting too many
+						dependencies.
+					</li>
+				</ul>
+
+				<p>
+					Requirements for evolving systems become a process of
+					design for reuse (see [<span class="cite-use" data-ref"18">18<span>]) in which as many functional
+					requirements as can be anticipated in the future are
+					specified; the system architecture is then designed to be
+					sufficiently flexible for new components to be added and
+					redundant ones deleted.
+				</p>
+
+			</section> <!-- Section 9 -->
+
+			<section class="subsection" data-number="10" data-name="Personal user requirements">
+
+				<h3>
+					4.6 Personal user requirements
+				</h3>
+
+				<p>
+					In this pathway the individual user rather than change is
+					the focus. However, many connotations of requirements
+					may be shared with other pathways. A central dilemma
+					in user interface design is to specify user interfaces that
+					suit the requirements of individual users, while delivering
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						8
+					</span>
+				</div>
+
+<!-- Page 9 -->
+
+				<p>
+					a general product that can be used by many (individually
+					different) users. Requirements for adaptation and monitoring processes are therefore necessary, for instance as
+					users’ experience with a system grows they require less
+					help and supportive dialogues, and access to more
+					sophisticated power functions. System functionality
+					should therefore be revealed gradually so users can learn
+					without becoming overwhelmed by complexity [<span class="cite-use" data-ref"37">37<span>].
+				</p>
+
+				<p class="indent">
+					The processes in this pathway are first to define an
+					individual user profile. These requirements are frequently set by
+					another, expert stakeholder, e.g. the designer of a computer system defines user stereotypes, a
+					clinician specifies an ability profile of an individual for a
+					healthcare system, a teacher defines a profile for a student’s learning style and abilities. Personal goals are
+					elicited directly from individuals and owned by them.
+					For both personal goals and user profiles, attainment
+					targets can be sets which become benchmarks for
+					monitoring processes. Trade-off analysis is particularly
+					important in this pathway because user profile goals set
+					by an expert stakeholder may conflict with personal
+					ambitions; furthermore, because goals are personal there
+					are different costs and benefits that may be accrued in
+					achieving them. In common with other pathways,
+					requirements for adaptation are defined to complete the
+					process.
+				</p>
+
+			</section> <!-- section 10 -->
+
+		</section> <!-- Section 4 -->
+
+		<section class="section" data-number="11" data-name="Case studies">
+
+			<h2>
+				5 Case studies
+			</h2>
+
+			<p>
+				The case studies form part of a long-term investigation
+				into developing assistive technology for people who have
+				suffered traumatic brain injury (TBI) in Eugene, Oregon,
+				USA [<span class="cite-use" data-ref"24">24<span>], [<span class="cite-use" data-ref"38">38<span>]. The users live either in sheltered
+				accommodation or on their own with supporting care
+				providers, but have limited social interaction. The
+				objective of the Think And Link (TAL) project is to
+				increase the user’s independence and mobility by use of
+				technology. The challenge is to match the technology to
+				individual users’ requirements when each person has
+				unique requirements resulting from the nature of their
+				injury. The CORE method was developed on preliminary initial study of the e-mail application [<span class="cite-use" data-ref"24">24<span>]; this
+				paper reports application of PC-RE to more recent
+				investigations.
+			</p>
+
+			<section class="subsection" data-number="12" data-name="E-mail for cognitively disabled users">
+
+				<h3>
+					5.1 E-mail for cognitively disabled users
+				</h3>
+
+				<p>					
+					We applied the PC-RE method to two projects: an
+					e-mail system and a navigation support system for
+					cognitively disabled users. An action research diary recorded our experiences in applying the method during
+					the case studies, supplemented with debriefing sessions
+					among the developers. The top-level goals in both projects were to empower these users socially and personally
+					so they can communicate with one another and use
+					public transport to meet others, etc.
+				</p>
+
+				<p>
+					The requirements for the TAL e-mail case study are
+					illustrated in Table 2. The first layer gives the grouplevel view of an e-mail system for cognitively disabled
+					users, which is a simplified version of standard e-mail
+					functions. The subsequent layers focus on two individuals, as space precludes describing the breadth of
+					requirements for the six individuals in the study in this
+					paper, although the diversity of requirements encountered will be discussed.
+				</p>
+
+				<br />
+
+				<p>
+					<em>Group requirements</em>  Requirements were gathered by
+					interviewing and focus group techniques with reference to
+					the functions provided by existing e-mail products.
+					Requirements have to take account of the diversity in
+					cognitive disability, which include language problems
+					(aphasia, dyslexia), working memory and wandering
+					attention, planning and executive function disorders,
+					poor learning and problem-solving abilities. These lead to
+					requirements which supplement the e-mail application
+					requirements, with communication and support needs for
+					this user population, e.g. task completion lists, help and
+					tutorial wizards, etc. Note that these requirements
+					are present for all users, in particular to support learning
+					and help systems; however, in assistive technology,
+				</p>
+
+				<br />
+
+				<p>
+					<strong>Table 2</strong> Requirements framework for the TAL e-mail application illustrating one personal profile out of six users
+				</p>
+
+				<table class="basicTable fourColumns">
+					<thead>
+						<tr>
+							<th>
+								Requirements layer and goals
+							</th>
+
+							<th>
+								Functional requirements
+							</th>
+
+							<th>
+								Temporal change
+							</th>
+
+							<th>
+								Spatial context
+							</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr>
+							<td>
+								Group: cognitively disabled
+								users
+							</td>
+
+							<td>
+								Compose, send, read, delete,
+								reply to message, incoming
+								message summary, identity
+								of sender
+							</td>
+
+							<td>
+								More sophisticated functions
+								may be needed as confidence
+								grows, e.g. save, print message,
+								folders, copy, forward, add address
+							</td>
+
+							<td>
+								Privacy requirements: use in
+								public place may be inhibited
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								User characteristics: Michael’s
+								problems are attention, initiation, short-term memory
+							</td>
+
+							<td>
+								Reminders, hints, simple
+								commands and displays
+							</td>
+
+							<td>
+								Some improvement learning
+								more commands
+							</td>
+
+							<td>
+								None
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								Personal goals: learn new skill
+								(e-mail); communicate with
+								friends and family; improve
+								social skills; expand range of
+								social partners
+							</td>
+
+							<td>
+								Supportive learning environment, training. Controlled
+								address list, e-mail filters.
+								Style checkers on message,
+								review function. Solicit new
+								partners
+							</td>
+
+							<td>
+								As skills improve may need to
+								add:
+									<ul>
+										<li>
+											New functions
+										</li>
+
+										<li>
+											More partners in list
+										</li>
+
+										<li>
+											Improve style checkers
+										</li>
+									</ul>
+								</td>
+
+								<td>
+								Failure anxiety in public use
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						9
+					</span>
+				</div>
+
+<!-- Page 10 -->
+
+				<p>
+					communication and learning support, requirements assume a more prominent role. We have not illustrated
+					requirements in detail for other stakeholder groups, but
+					care providers and family respondents are two key groups
+					who have requirements for e-mail communication and
+					abilities to monitor the cognitively impaired users.
+				</p>
+
+				<br />
+
+				<p>
+					<em>Temporal and spatial implications</em>  For the whole group
+					requirements were expected to change over time as the
+					users might respond to the e-mail system with better
+					social communication; however, analysis was more logically applied in the user characteristics and personal
+					goal layers.
+				</p>
+
+				<br />
+
+				<p>
+					<em>Monitoring and adaptation implications</em>  Change over
+					time suggested the need for monitors to keep users on
+					task with reminders and task-completion lists, as well as
+					tracking their performance to detect improvement in
+					e-mail use. However, these concerns were refined in the
+					following layers.
+				</p>
+
+				<br />
+
+				<p>
+					<em>Individual characteristics</em>  Requirements were gathered
+					by the CORE method [<span class="cite-use" data-ref"24">24<span>], [<span class="cite-use" data-ref"39">39<span>]
+					which uses a combination of focus groups, user interviews, scenario-based
+					exploration with prototypes, coupled with expert
+					judgement and performance tests for application and
+					computer operation tasks. This creates a capability
+					profile which is employed to select a sub-set of the group
+					communication and learning support requirements to
+					match the individual, as ‘‘prescription’’ for his/her profile. The requirements have to be inferred from the
+					clinical profile, so user characteristics are similar to
+					NFRs in that they have to be satisfied by computer
+					support functions or training. In the e-mail domain we
+					developed a 50-item skill inventory that complemented
+					user characteristic requirements, rating each skill on a
+					1–3 scale as missing/sporadic/possessed [<span class="cite-use" data-ref"24">24<span>].
+					In Michael’s case (not his real name) attention focus and
+					short-term memory problems indicated requirements for
+					reminder agents to help with task initiation, with an
+					agenda of task steps. Some examples of his skills profile
+					were assumed (possessed) skills for motor coordination
+					using the keyboard and mouse, and visual acuity suitable for standard VDU technology. Mary’s profile notes
+					problems of social impulsiveness, and language and
+					learning problems that indicate the need for a supportive
+					system that also vets her messages to check for inappropriate sentences and words.
+				</p>
+
+				<br />
+
+				<p>
+					<em>Temporal and spatial implications</em>  For both Michael
+					and Mary their performance was expected to improve
+					over time as they learned the e-mail system and as their
+					motor coordination skills improved with practice. There
+					were no particular spatial considerations.
+				</p>
+
+				<br />
+
+				<p>
+					<em>Monitoring and adaptation implications</em> Change over
+					time suggested the need to monitor users’ time and frequency of sessions, as well as tracking response times to
+					detect improved motor coordination. Since monitoring
+					had privacy implications, these were discussed with the
+					users and monitoring only proceeded with their permission. No requirements for automatic adaptation
+					were planned because the data had to be interpreted in
+					light of the users’ clinical profiles by a skilled medical
+					expert.
+				</p>
+
+				<br />
+
+				<p>
+					<em>Personal goals</em>  These are refined into specific requirements. In some cases the goals are attainment targets for
+					group requirements; however, others need design suggestions from the requirements engineer. Furthermore,
+					some solutions may be manually implemented in the
+					social system, such as soliciting new e-mail partners who
+					will then be registered by adding them to Michael’s recipient list. Personal goals can be non-functional in
+					nature in the sense that they set aspirations which Michael wants to achieve. The attainment scale for
+					achieving the overall personal goal ‘‘to use e-mail’’ was
+					set in consultation with the user, to produce the following list, with level 1 representing ‘‘not attained’’ and
+					level 5 ‘‘fully attained’’:
+				</p>
+
+				<table class="levelTable">
+					<tbody>
+						<tr>
+							<td>
+								Level 1
+							</td>
+
+							<td>
+								not able to learn how to use e-mail even after
+								3 months of training and practice.
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								Level 2
+							</td>
+
+							<td>
+								can e-mail, but only with continuing
+								prompting and help by a co-present helper.
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								Level 3
+							</td>
+
+							<td>
+								can e-mail with some prompting and help
+								(machine-based, and care provider on call).
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								Level 4
+							</td>
+
+							<td>
+							 will can e-mail with no prompting or help.
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								Level 5
+							</td>
+
+							<td>
+								can teach others how to e-mail.
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p class="indent">
+					Mary’s personal goals were motivated by the desire to
+					use e-mail to contribute to a newsletter circulated among
+					her community. Her goals are illustrated within the
+					attainment level framework as follows:
+				</p>
+
+				<table class="levelTable">
+					<tbody>
+						<tr>
+							<td>
+								Level 1
+							</td>
+
+							<td>
+								not able to learn how to use e-mail.
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								Level 2
+							</td>
+
+							<td>
+								will be able to write and e-mail an opinion on
+								a topic to friends.
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								Level 3
+							</td>
+
+							<td>
+								will be able to write an e-mail opinion that
+								meets style constraints and submit it to the
+								editor.
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								Level 4
+							</td>
+
+							<td>
+								will have her (e-mail) letter published in the
+								newsletter.
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								Level 5
+							</td>
+
+							<td>
+								will be invited to write a letter or opinion.
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p class="indent">
+					Mary’s goals need to be refined by the requirements
+					engineer into functions that support her needs, for instance style advisor and checkers to help her improve the
+					quality of her opinions.
+				</p>
+
+				<br />
+
+				<p>
+					<em>Temporal and spatial implications</em>  For both Michael
+					and Mary the temporal implications were described in
+					the monitoring levels described above. There were no
+					particular spatial considerations, although the issue of
+					public use in the common room or more private use in
+					her own room was an issue for Mary. Space and availability of the computer in the common room settled this
+					issue.
+				</p>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						10
+					</span>
+				</div>
+
+<!-- Page 11 -->
+
+				<p>
+					<em>Monitoring and adaptation</em>  Change over time can be
+					anticipated as users acquire skills, although the exact
+					nature of change can only be measured at the individual level. The time-scale for attaining goals at the
+					personal level tends to be shorter term, but this is not
+					always so. Change in user characteristics can be rapid if
+					a treatment is effective. For this application there are
+					fewer implications for spatial change. However, two
+					contexts of use are anticipated: one in the user’s home,
+					while the other will be on a shared computer placed in
+					the common room of sheltered accommodation. The
+					latter scenario has implications for privacy since other
+					people could read personal messages being composed
+					by the user. There is no immediate technical solution
+					for this problem, although a pragmatic work-around is
+					to suggest e-mailing at quiet times in the day when few
+					other people will be in the common room.
+				</p>
+
+				<p class="indent">
+					Change over time can be tracked at the individual
+					level either by automated monitoring software, e.g. the
+					REQMON system [<span class="cite-use" data-ref"40">40<span>] which works in model-based
+					mode by tracking changes in user behaviour and performance linked to a personal goal; or in pattern-based
+					matching using data mining techniques to infer changes
+					over time and probable causes. We also monitor by
+					questionnaires and interview sessions with the users and
+					care providers. Automated monitoring is economical but
+					limited in the inferences that can be made from low-level
+					data streams, i.e. messages sent, distribution of message
+					by partners, words per message, latencies and time to
+					compose messages, etc. Currently we intend to use
+					latencies to drive a simple task list reminder function,
+					while other monitored data, e.g. errors, functions used,
+					frequencies and distribution of messages sent will be
+					collected for manual analysis. Interviews will be employed to monitor the change in personal goals over
+					time; for instance as Michael’s confidence grows, new
+					partners and functionality (print and save messages)
+					may be added to his configuration. In Mary’s case the
+					editor will be added to her mailing lists once she has
+					attained sufficient competence for her level 3 personal
+					goal. Adaptations over a longer time period are anticipated in the individual’s e-mail recipient lists and the
+					e-mail functions as their confidence grows. In the shorter
+					time-scale the system needs to adapt its reminding
+					function to help the individual users to complete messages, while not becoming annoying and intrusive.
+					Getting the level of system initiative right is a difficult
+					judgement which we believe has to be tuned with advice
+					from the users. Given the simplified e-mail system we are
+					using, most adaptation can be anticipated at design time;
+					however, we do not claim perfect foresight so the
+					architecture of the e-mail system has been constructed to
+					enable new functions (e.g. forward message, multiple
+					replies) to be added without major redesign.
+				</p>
+
+			</section> <!-- Section 12 -->
+
+			<section class="subsection" data-number="13" data-name="Navigation support system">
+
+				<h3>
+					5.2 Navigation support system
+				</h3>
+
+				<p>
+					The requirements for the second application are summarised in Table3. In this case the top-level goal was to
+					help individuals make more unassisted journeys by all
+					modes of transport: bus, taxi, walking, or community
+					mini-van. The personal goals for six users in this case
+					study were to increase their independent mobility for
+					social meetings with friends, shopping, recreation (cinema, bike rides) and volunteer work.
+				</p>
+
+				<br />
+
+				<p>
+					<em>Group requirements</em>  Possible requirements for the
+					whole group are for navigation support, e.g. in vehicle
+					route finding, providing maps, route-following instructions, location of self, re-orienting help when lost, and
+					progress indicators, pathway history, frequently
+					followed routes, highlighted key landmarks, and viewpoint controls in advanced systems. Navigation is a
+					demanding task for most people. For our users only a
+					sub-set of this functionality would be appropriate to
+					keep the system simple and easy to learn.
+				</p>
+
+				<br />
+
+				<p>
+					<em>Temporal and spatial implications</em>  For the whole group,
+					requirements were expected to change over time as the
+					users learned to navigate more effectively.
+				</p>
+
+				<br />
+
+				<p>
+					<em>Monitoring and adaptation implications</em>  Change over
+					time suggested the need to monitor the number of
+					journeys, their duration, successful completion, etc., as
+					well as tracking different types of journeys. However,
+					these concerns were refined in the following layers:
+				</p>
+
+				<br />
+
+				<p>
+					<em>Individual characteristics</em>  Requirements for individual
+					users were captured using an adaptation of the CORE
+				</p>
+
+				<br />
+
+				<p>
+					<strong>Table 3</strong> Requirements for the GO navigation support application
+				</p>
+
+				<table class="basicTable fourColumns">
+					<thead>
+						<tr>
+							<th>
+								Requirements layer and goals
+							</th>
+
+							<th>
+								Functional requirements
+							</th>
+
+							<th>
+								Temporal change
+							</th>
+
+							<th>
+								Spatial context
+							</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr>
+							<td>
+								Group: enhance independent
+								mobility
+							</td>
+
+							<td>
+								Schedule reminder, route
+								instructions, route map, bus
+								transport guide
+							</td>
+
+							<td>
+								Learning effects: add new
+								routes, select route
+							</td>
+
+							<td>
+								Appropriate instructions, map display,
+								re-orientation help
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								User characteristics: short-term
+								memory loss, forgets purpose,
+								location, time and destination
+							</td>
+
+							<td>
+								Schedule reminders, route
+								following walking, bus
+								journey instructions, destination reminder
+							</td>
+
+							<td>
+								Add new routes, instructions
+								for new modes of transport
+							</td>
+
+							<td>
+								On route tracking for appropriate
+								instructions, destination reminders, off
+								route re-orientation
+							</td>
+						</tr>
+
+						<tr>
+							<td>
+								Personal goals: social meeting;
+								recreational trips; journeys to
+								job
+							</td>
+
+							<td>
+								Fixed route support,
+								reminders for regular journeys, new routes
+							</td>
+
+							<td>
+								As above. Add new routes
+							</td>
+
+							<td>
+								As for user characteristics plus privacy
+								of instructions in public places
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div class="pagebreak">
+					<span class="pageNumber">
+						11
+					</span>
+				</div>
+
+<!-- Page 12 -->
+
+				<p>
+					method with Wizard of Oz simulation of the route-following task. Normal and TBI users were asked to follow
+					the navigation instructions given on a Personal Digital
+					Assistant (PDA) display with speech in an earpiece. Two
+					observers followed the user, one simulating the navigation instructions and
+					dialogue using wireless communication between PDAs, with the other acting as an
+					ethnographer recording user behaviour, problems and
+					carrying out problem diagnosis interviews. This produced individual
+					requirements profiles as well as contributing to the group requirements gathering. The
+					individual user focus is illustrated with requirements for
+					John, whose clinical characteristics are severe short-term
+					memory loss leading to attention failure, forgetting to
+					turn up for regular trips, the purpose of a journey and
+					the destination.
+				</p>
+
+				<br />
+
+				<p>
+					<em>Temporal and spatial implications</em>  The spatial and
+					temporal implications for John within each journey were
+					deviations from the desired route. In the longer term
+					more complicated and longer journeys were expected to
+					be undertaken as John became familiar with the technology as well as learning the local geography.
+				</p>
+
+				<br />
+
+				<p>
+					<em>Monitoring and adaptation implications</em>  Change over
+					time suggested the need to monitor the pathway on each
+					journey, and the duration of stages, so reminders of the
+					route could be given and directions for regaining the
+					route if John lost his way.
+				</p>
+
+				<br />
+
+				<p>
+					<em>Personal goals</em>  Requirements to fulfil John’s personal
+					goals are clear instructions for a limited set of routes, a
+					bus journey guide, reminders for timetabled journeys
+					and monitors with reminders when the destination is
+					close. John’s personal goals are increased independent
+					mobility for meeting his family and for recreation
+					(sightseeing, cinema, festivals and undertaking his volunteer job at the YMCA). These goals specify the
+					instructions and information content (route maps,
+					landmark cues); however, while some routes are fixed
+					(family, job) the recreation trips are time- and locationvariable, so there is a need for his care provider to
+					configure new routes.
+				</p>
+
+				<br />
+
+				<p>
+					<em>Temporal and spatial implications</em>  The spatial and
+					temporal implications for John’s personal requirements
+					were set by his attainment levels which set out targets for
+					successful journey completion and the types of journeys
+					which could be undertaken. Over time John wished to
+					make journeys for an increasing variety of different
+					purposes as described above. More adventurous journeys involved navigating in more complex spaces (public
+					festivals, cinemas).
+				</p>
+
+				<br />
+
+				<p>
+					<em>Monitoring and adaptation</em>  Time-sensitive requirements are task initiation reminders since subjects often
+					forget to make regular scheduled journeys and mistake
+					their destination. Temporal change also has to account
+					for learning effects, adding new routes, and more
+					importantly the dynamic change of instructions
+					according to the subjects’ location. Location is vital for
+					delivering appropriate instructions, and triggering reorientation help if users deviate from the expected route.
+					Requirements for the navigation system were several
+					monitors for location and progress tracking using GPS,
+					progress tracking with a pedometer when walking and
+					simple location awareness by light intensity and noise
+					levels to improve reasoning about location when offtrack (e.g. noisy or quiet streets, in building or outside).
+					Use of multiple sensors creates a further requirement for
+					an interpreter function which integrates all the sensor
+					inputs checks with the route model and outputs an ‘‘on
+					path/near path/not on path’’ message with a confidence
+					rating. The more difficult task is to infer the user’s
+					location in the near path/not on path conditions. The
+					adaptive sub-system is a key component because of the
+					need for re-orientation and error correcting dialogue, so
+					system initiative will be used to help the user to regain
+					the route, with instructions on looking for local landmarks and re-orientation. This will be backed up with a
+					simple ‘‘find me’’ button for emergencies, connected
+					directly to a care provider who can locate the user’s
+					approximate position with GPS. We are also considering
+					voice communication to the care provider to help reassure the user.
+				</p>
+
+				<p class="indent">
+					For user characteristics and personal goal, temporal
+					change in skills is anticipated. John is relatively young so
+					there is a reasonable chance that he may improve with
+					experience, hence the system may need to be adapted
+					with more advanced facilities and more routes.
+					Requirements for a route editor were added so care
+					providers can adapt the system with additional routes.
+					The system architecture is designed to allow new monitors to be added, although the interpreter will need to
+					be changed to adapt a multisensor integration algorithm. Spatial context implications are similar for all
+					users, namely the need for tracking to make sure the
+					individual is on the route; re-orienting help is given if
+					not. When we proposed technical solutions to personal
+					requirements, it became clear that these solutions had
+					different impacts on individual users, and on other
+					stakeholders. This led us to consider how the costs and
+					benefits of different technical solutions might be
+					assessed.
+				</p>
+
+			</section> <!-- Section 13 -->
+
+		</section> <!-- Section 11 -->
+
+		<section class="section" data-number="14" data-name="Cost–benefit analysis">
+
+			<h2>
+				6 Cost–benefit analysis
+			</h2>
+
+			<p>
+				Personal requirements at all levels imply a cost to individuals, either in customising the system themselves or in
+				adapting their behaviour to a system that has changed
+				automatically. For example, the costs of learning and
+				using a computer system can outweigh the benefits for
+				our TBI users even though the social and personal selfesteem rewards for many individuals are very important.
+				The chosen implementation pathway also influences the
+				distribution of costs and benefits between users and
+				designers; for instance, configurable applications
+			</p>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					12
+				</span>
+			</div>
+
+<!-- Page 13 -->
+
+			<p>
+				outsource design effort to the user. Furthermore, tradeoff between the user’s costs and benefits influence other
+				stakeholders, particularly the care providers in our case
+				studies. A conventional RE approach would be to use
+				design rationale or goal modelling to investigate
+				such trade-offs; however, such approaches do not afford comparison.
+				To address this problem we propose a simple cost–benefit modelling technique that
+				supplements design rationale or goal modelling. The
+				technique consists of the following:
+			</p>
+				
+			<ul>
+				<li>
+					Estimated benefits of achieving the desired goal. In
+					our personal RE framework this will be assessed as
+					a collective group or individual benefit according to
+					the type of goal.
+				</li>
+
+				<li>
+					Costs of each design alternative (sub-goal/functional requirement) proposed to achieve the goal.
+					We distinguish between costs of learning to use the
+					system, operational costs imposed on the user, and
+					costs imposed on other stakeholders by that solution.
+				</li>
+
+				<li>
+					Cost penalties if the solution alternative in question
+					does not achieve the goal. This is a measure of
+					reliability, as a composite assessment of the probability of failure, the severity of impact of failure,
+					and the cost of recovery.
+				</li>
+
+				<li>
+					Other NFRs can be added as potential costs if they
+					are infringed. Alternatively, the achievement of
+					NFRs may be considered to be part of the benefit of
+					achieving the overall goal.
+				</li>
+			</ul>			
+
+			<p>	
+				Benefits are assessed by first asking users to estimate the
+				potential satisfiability of the goal by the proposed
+				technical solution (on a 1–10 scale). Benefits may also be
+				assessed for user characteristics by expert judgement of
+				value to the individual and how the system’s functions
+				might fulfil their motivations, e.g. self-esteem, learning,
+				social inclusion, etc. User costs are learning to use the
+				system, operational effort, and cost of error recovery,
+				which are added to indirect costs of customisation effort,
+				and learning how to use customisation facilities. Costs
+				may be estimated by requirements engineers, based on
+				observations of user problems, or by interviews with
+				users to acquire their perception of learning and operational cost.
+			</p>
+
+			<p class="indent">
+				Benefits estimate the potential for a given design
+				option achieving the goal. A simple percentage-satisfaction metric is calculated using the benefit estimated
+				on a 1–100 scale, depending on the probable contribution of the solution alternative to achieving
+				the higherlevel goal, minus the sum of all the costs:
+			</p>
+
+			<p class="formula">
+				% Satisfaction = Benefits - sum(costs <span class="superscript">1-n</span>)
+			</p>
+
+			<p class="formula">
+				where sum max (costs <span class="superscript">1-n</span>) = 100
+			</p>
+
+			<p class="indent">				
+				The analysis also guides functional allocation decisions, i.e. whether to automate
+				a requirement; implement it partially and supplement the computer system by
+				training the user; or allocate the duty to another stakeholder.
+			</p>
+
+			<img src="/contents/crpublications/images/figure4.png">
+
+			<p class="indent">
+				For example in Fig.4 the options for achieving the
+				Improve Social Skills goal for Michael are to implement
+				filters to trap any anti-social words and phrases with a
+				stop list and style checker, or to add an enforce-reviewbefore-send, so Michael has to read and check his
+				message before sending, or to send his message to his
+				care provider so he/she can check it for any offensive
+				words or phrases. The NFRs or argument criteria that
+				assess the trade-off are the costs of implementation, the
+				reliability of attaining the goal, and avoiding infringing
+				Michael’s privacy.
+			</p>
+
+			<p class="indent">
+				A sample of the cost–benefit analysis for the Improve
+				Social Skills goal is given in Table4. Benefits are estimated on a 0–100 scale, while costs are scored on 100/
+				cost variables x <em>n</em>, so in Table 4each cost is rated on a
+				1–20 scale, yielding a potential net benefit of zero with
+				maximal costs and maximum benefit, and a negative
+				trade-off if costs are high and benefits small. Operation
+				and learning costs map to the design rationale diagram,
+				as do reliability of the option being effective, and privacy. The care provider vetting outgoing e-mails has the
+				highest probability of achieving the goal, compared to
+				filters which have a 50% chance of preventing unwanted
+				e-mails, while the review-before-send relies on Michael’s
+				diligence in checking his messages before sending. This
+				was judged to be more risky. For Michael the costs of
+				operation and learning were small for the filters option,
+			</p>
+
+			<br />
+
+			<p>				
+				<strong>Table 4</strong>  Cost–benefit analysis for the Improve Social Skills personal goal
+			</p>
+
+			<table class="basicTable fiveColumns">
+				<thead>
+					<tr>
+						<th>
+							Alternative solutions
+						</th>
+
+						<th>
+						</th>
+
+						<th>
+							Filters
+						</th>
+
+						<th>
+							Carer vets
+						</th>
+
+						<th>
+							Review
+							before send
+						</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr>
+						<td>
+							Benefits
+						</td>
+
+						<td>
+						</td>
+
+						<td>
+							50
+						</td>
+
+						<td>
+							80
+						</td>
+
+						<td>
+							30
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							Criteria: costs
+						</td>
+
+						<td>
+							Operation
+						</td>
+
+						<td>
+							5
+						</td>
+
+						<td>
+							0
+						</td>
+
+						<td>
+							6
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+						</td>
+
+						<td>
+							Learning
+						</td>
+
+						<td>
+							2
+						</td>
+
+						<td>
+							0
+						</td>
+
+						<td>
+							7
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+						</td>
+
+						<td>
+							Reliability
+						</td>
+
+						<td>
+							9
+						</td>
+
+						<td>
+							5
+						</td>
+
+						<td>
+							10
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+						</td>
+
+						<td>
+							Other
+							stakeholders
+						</td>
+
+						<td>
+							0
+						</td>
+
+						<td>
+							20
+						</td>
+
+						<td>
+							0
+						</td>
+					</tr>
+					<tr>
+						<td>
+						</td>
+
+						<td>
+							Privacy
+						</td>
+
+						<td>
+							0
+						</td>
+
+						<td>
+							20
+						</td>
+
+						<td>
+							0
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Net cost–benefit
+						</td>
+
+						<td>
+						</td>
+
+						<td>
+							34
+						</td>
+
+						<td>
+							35
+						</td>
+
+						<td>
+							7
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					13
+				</span>
+			</div>
+
+<!-- Page 14 -->
+
+			<p>
+				but more effort would be required for reviewing messages. The care provider option was cost-free for him,
+				but a burden for the care provider. The potential impact
+				of errors reflected the cost of not achieving the goal and
+				the costs of recovery, i.e. apologising to offended friends
+				and family. The downside of the care provider option
+				becomes clear when Michael’s privacy is considered,
+				since all his e-mails would be available to the care provider. Furthermore, this option imposes a considerable
+				workload on the care provider who has to check all
+				outgoing e-mails and edit them. These penalties reduce
+				the net benefit of this option to nearly the same as the
+				filters option even though it has a higher initial benefit.
+				While the estimates are subjective judgements, the value
+				of the cost–benefit analysis is in using it as a sensitivity
+				analysis tool to explore requirements trade-offs. A similar trade-off analysis occurred for Mary’s improve letter
+				quality personal goal. In this case the design options
+				were to screen output with automated style checkers,
+				provide an online wizard to suggest topics and provide
+				template letters, or to ask her friends to help as tutors.
+				The last option was selected with the style checker, because these provided the better benefits, even though
+				incurring more costs for the friend stakeholders. Help
+				from her friends improved her motivation and confidence, in a manner that no computer wizard could
+				achieve. Privacy was less of an issue with friends than it
+				would have been with a professional care provider.
+			</p>
+
+			<p class="indent">
+				The design rationale for a second goal, Keeping the
+				User on Track so their attention does not wander, is
+				shown in Fig.5. The issue in this case is helping the user
+				to complete the e-mail composition task, when users’
+				attention frequently wanders. Design alternatives are to
+				display a task-completion agenda, similar to reminders in
+				standard office products, to make the system actively
+				monitor and remind the users if no action had been taken
+				after a set time period. Finally the care provider could
+				monitor the user via a video link. The criteria or costs by
+				which the alternatives can be judged follow the pattern
+				we describe earlier. The cost–benefit analysis for this user
+				goal is given in Table5. The benefits of the active reminder and the care provider monitoring performance
+				were judged to be similar, since the care provider would
+				have to monitor the users continuously to achieve the
+				goal, and this was open to some doubt. Operation and
+				learning costs were minimal for the agenda and reminder
+				options; however, reliability impact of reminders was
+				often in doubt since setting the frequency and latency for
+				system intervention was not easy to specify. Privacy was
+				an issue for the reminder and care provider options since
+				both would disrupt the user’s task or thought processes.
+				The net balance was similar for the care provider and
+				reminder options for this goal, but the reason why they
+				differ becomes transparent. In this case the technical
+				solution for an automatic reminder was chosen, while the
+				care provider-vets option had already been chosen for
+				the Improve Social Skills goal.
+			</p>
+
+			<img src="/contents/crpublications/images/figure5.png">
+
+			<p>
+				<strong>Table 5</strong>  Cost–benefit trade-off analysis for the Keep on Track goal
+			</p>
+
+			<table class="basicTable fiveColumns">
+				<thead>
+					<tr>
+						<th>
+							Alternative solutions
+						</th>
+
+						<th>
+						</th>
+
+						<th>
+							Agenda
+						</th>
+
+						<th>
+							Active reminder
+						</th>
+
+						<th>
+							Carer moniter
+						</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr>
+						<td>
+							Benefits
+						</td>
+
+						<td>
+						</td>
+
+						<td>
+							30
+						</td>
+
+						<td>
+							70
+						</td>
+
+						<td>
+							80
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							Criteria: costs
+						</td>
+
+						<td>
+							Operation
+						</td>
+
+						<td>
+							2
+						</td>
+
+						<td>
+							1
+						</td>
+
+						<td>
+							0
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+						</td>
+
+						<td>
+							Learning
+						</td>
+
+						<td>
+							3
+						</td>
+
+						<td>
+							1
+						</td>
+
+						<td>
+							0
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+						</td>
+
+						<td>
+							Reliability
+						</td>
+
+						<td>
+							4
+						</td>
+
+						<td>
+							10
+						</td>
+
+						<td>
+							2
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+						</td>
+
+						<td>
+							Other
+							stakeholders
+						</td>
+
+						<td>
+							0
+						</td>
+
+						<td>
+							0
+						</td>
+
+						<td>
+							20
+						</td>
+					</tr>
+					<tr>
+						<td>
+						</td>
+
+						<td>
+							Privacy
+						</td>
+
+						<td>
+							0
+						</td>
+
+						<td>
+							3
+						</td>
+
+						<td>
+							5
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Net cost–benefit
+						</td>
+
+						<td>
+						</td>
+
+						<td>
+							21
+						</td>
+
+						<td>
+							55
+						</td>
+
+						<td>
+							53
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p class="indent">
+				Space precludes reporting further analysis of individual goals. For group requirements the technique
+				clarified the trade-offs between different design solutions
+				and costs imposed on primary users and other stakeholders (i.e. care providers). Customisation (e.g. add
+				new filters or e-mail correspondents) by the users was
+				ruled out because the additional learning and operating
+				costs reduced the percentage-satisfaction to zero.
+			</p>
+
+			<p class="indent">
+				Considerable help would have to be available from
+				the designers or care providers (thereby increasing their
+				costs) to make customisation effective, so the overall
+				balance was not favourable even though it was still
+				desirable to increase the fit between system functions
+				and the user’s characteristics. However, some set-up
+				configuration costs would be necessary for the solution
+				to scale beyond the immediate locality where the
+				designers can provide support. The cost–benefit analysis
+				can be applied to the care provider stakeholders,
+				assuming a large benefit will be altruistic motivation to
+				overcome their costs of learning and setting up the system. While this assumption might be true for family and
+				very dedicated professional care providers, it is doubtful
+				for other less committed care providers. This outcome
+				led to the investment to reduce learning and configuration burden as far as possible by CD-ROM advisors and
+				training programmes and trying to distribute the support costs among a large stakeholder group.
+			</p>
+
+		</section> <!-- Section 14 -->
+
+		<section class="section" data-number="15" data-name="Reflections on method use">
+
+			<h2>
+				7 Reflections on method use
+			</h2>
+
+			<p>
+				Since the case studies focused on the individual user
+				most of the experience, not surprisingly, involved user
+				characteristics and personal goals. The method provided a framework of questions that drove the
+			</p>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					14
+				</span>
+			</div>
+
+<!-- Page 15 -->
+
+			<p>
+				requirements investigation to consider spatial, temporal
+				and individual concerns, followed by requirements for
+				monitoring and adaptation. As such it functioned more
+				as a checklist of issues rather than a prescriptive ‘‘cook
+				book’’ of steps to follow. However, the setting of
+				attainment levels, monitoring against them and the use
+				of design rationale for trade-off analysis were specific
+				techniques which guided requirements investigation
+				more precisely. Some reflections on our experience with
+				the trade-off analysis are that goals between different
+				layers can conflict, e.g. the user can set a personal goal
+				that is unrealistic in terms of their user characteristics,
+				derived from expert clinical judgement. The cost–benefit estimation was very subjective so the numbers were
+				not particularly trustworthy; however, the process did
+				lead to useful debate for comparing trade-offs in the
+				design rationale diagrams. We did consider ranking
+				costs and benefits but this obscured the overall cost–
+				benefit assessment. Finally, the method added a different perspective to conventional RE goal analysis by
+				focusing on quantification of individual achievement,
+				rather than collective functional requirements.
+			</p>
+
+		</section> <!-- Section 15 -->
+
+		<section class="section" data-number="16" data-name="Discussion">
+
+			<h2>
+				8 Discussion
+			</h2>
+
+			<p>
+				This paper has proposed a new framework which introduces the concept of the individual user and context as a
+				focus for requirements engineering. The method has
+				synthesised and developed our previous research on
+				requirements monitoring [<span class="cite-use" data-ref"6">6<span>], [<span class="cite-use" data-ref"39">39<span>], socio-technical
+				requirements and functional allocation [<span class="cite-use" data-ref"18">18<span>]. The PC-RE
+				method extends current RE methods, such as Volere [<span class="cite-use" data-ref"2">2<span>]
+				and ScenIC [<span class="cite-use" data-ref"14">14<span>], by introducing requirements for individuals
+				and providing guidance for requirements analysis
+				that accounts for variation in requirements over space
+				and time. PC-RE has drawn on influences from domain
+				analysis methods for the concept of variation points
+				familiar in product-line requirement methods and
+				extends the stakeholder concepts present in most RE
+				methods [<span class="cite-use" data-ref"2">2<span>], [<span class="cite-use" data-ref"41">41<span>]
+				to individual users. In assistive technology
+				applications, the focus on individuals is a necessary consequence of the wide range of abilities which
+				affect not only human computer interaction but also
+				matching functional requirements to individual capabilities. We argue that this approach generalises beyond
+				assistive technology applications. Educational technology is one area where individual characteristics are
+				important influences on design as learner profiles; another area is groupware applications where individual
+				profiles often determine security and privacy requirements. However, with the growth in customised products,
+				personal RE is becoming generally applicable to a wide
+				range of office and home/entertainment applications.
+			</p>
+
+			<p class="indent">
+				Personal RE has extended the boundaries of skillspreference analysis [<span class="cite-use" data-ref"42">42<span>]
+				by connecting requirements to
+				architecture, introducing cost–benefit analysis, and
+				drawing the distinction between expert assessment of
+				user characteristics and individually held goals. Hui
+				et al.’s [<span class="cite-use" data-ref"42">42<span>] framework, based on i* and goal modelling,
+				accounts for the skills profiles using a similar ontology
+				to ours, and their preferences are similar to personal
+				goals although they treat them only as soft goals (nonfunctional
+				requirements) whereas we distinguish between the functional goal and quality in the levels of
+				attainment. We have integrated advice from studies in
+				human computer interaction where requirements-related
+				issues of culture, localisation and context-aware systems
+				have received considerable study. However, further
+				work is required to explore the implications of context
+				requirements in different types of mobile and contextaware applications. For instance, mobile applications
+				with safety and security NFRs will require more high
+				fidelity monitoring, and the nature of adaptation will be
+				more challenging compared with notifier systems for
+				general business tasks. The implications of requirements
+				on system architecture has only started to be explored in
+				security [<span class="cite-use" data-ref"43">43<span>]. The PC-RE framework and method draws
+				attention to the need to analyse latent requirements for
+				monitoring processes, interpreters and design for adaptation.
+				As requirements are increasingly seen to be deferred over time or mutable over space, architectural
+				design will become a foreground requirements concern,
+				to specify context-aware and adaptable systems. Architectural trade-offs will need to be assessed to judge the
+				mix of adaptable components (e.g. changed at design
+				time) versus adaptable systems [<span class="cite-use" data-ref"19">19<span>] in which the change
+				process is automated with monitors and interpreters
+				executing adaptations. Another debate is between system initiative leaving the user in control of adaptation,
+				or a combination in mixed initiative systems [<span class="cite-use" data-ref"20">20<span>].
+			</p>
+
+			<p class="indent">
+				The scenario-based approach in PC-RE extends
+				methods such as ScenIC [<span class="cite-use" data-ref"14">14<span>] in which obstacles are
+				posited in the system environment as a stimulus for
+				validating requirements. By varying scenarios over time
+				and space, new obstacles and challenges can be identified. More
+				formal reasoning could be applied to temporary deferment requirements, and our work with the
+				KAOS method [<span class="cite-use" data-ref"34">34<span>] has taken some initial steps in this
+				direction by exploring specification with temporal
+				operators: always, in the future, unless, eventually, etc.
+				However, formal reasoning over space and time is more
+				complex due to the state-space explosion when multiple
+				spatial contexts need to be considered, so formalisation
+				of such requirements may not be productive.
+			</p>
+
+			<p class="indent">
+				Our technique augments trade-offs between NFRs
+				using decision table-style representation by specifically
+				considering costs imposed on users and other stakeholders, which can then be integrated into more general
+				NFR trade-offs. It also focuses on the evolution of
+				requirements where personal goals tend to be shorter
+				term than generic requirements and user characteristics,
+				although in some cases personal goals may take a long
+				time to achieve. Setting attainment levels for personal
+				goals was prompted by the GQM framework [<span class="cite-use" data-ref"44">44<span>], although we have extended the metrics to include
+				assumptions necessary for level of attainment. These
+				dependencies could be further formalised in goal-oriented
+			</p>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					15
+				</span>
+			</div>
+
+<!-- Page 15 -->
+
+			<p>
+				modelling methods such as KAOS [<span class="cite-use" data-ref"34">34<span>].
+				Another contribution of the trade-off analysis proposed in PC-RE is
+				explicit consideration of socio-technical solutions, which
+				challenges the notion that software automation is the
+				default answer to a problem. PC-RE therefore reinforces
+				the systems view of requirements [<span class="cite-use" data-ref"43">43<span>].
+			</p>
+
+			<p class="indent">
+				In conclusion, personal and contextual requirements
+				engineering has extended RE methods to account for the
+				individual user and the context in mobile communication and global user interfaces. In many applications
+				where the computer’s role is to influence the user’s
+				behaviour and knowledge (e.g. training, education,
+				augmented communication, mediating collaboration,
+				games, entertainment, environmental control), personal
+				goals and user characteristics will assume considerable
+				importance. The application of our approach in the field
+				of assistive technology has produced not only more detailed
+				and better structured requirements but also insights into software and socio-technical systems design,
+				which need to be resolved early in the requirements
+				process. However, this work is a first step towards
+				development of a more widely applicable method, so our
+				next step is to test its generality in other domains, such
+				as educational and home applications.
+			</p>
+
+			<p class="credits">
+				<strong>Acknowledgements</strong>  This research was partially supported by the US
+				Department of Education and National Institute on Disability and
+				Rehabilitation ResearchThink and Linkproject: http://www.thinkand-link.org/
+			</p>
+
+		</section> <!-- Section 16 -->
+
+		<section class="section" data-number="17" data-name="References">
+
+			<h2>
+				References
+			</h2>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="1">1.</span> Sommerville I, Kotonya G (1998) Requirements engineering:
+				processes and techniques. Wiley, Chichester
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="2">2.</span> Robertson J, Robertson S (1999) Mastering the requirements
+				process. Addison Wesley, Harlow
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="3">3.</span> Newell AF, Gregor P (2000) User sensitive inclusive design: in
+				search of a new paradigm. ACM Conference on Universal
+				Usability. ACM Press, New York, pp 39–44
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="4">4.</span> Clements P, Northrop LM (2001) Software product lines:
+				practices and patterns. Addison-Wesley, Reading
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="5">5.</span> Yu Y, Leite J, Mylopoulos J (2004) ‘‘From goals to aspects:
+				discovering aspects from requirements goal models,’’ 12th
+				IEEE international requirements engineering conference. IEEE
+				Computer Society Press, Los Alamitos, pp 38–47
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="6">6.</span> Fickas S, Feather MS (1995) ‘‘Requirements monitoring in
+				dynamic environments,’’ 1995 IEEE international symposium
+				on requirements engineering (RE ‘95). IEEE Computer Society
+				Press, Los Alamitos, pp 140–147
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="7">7.</span> Cheverst K, Davies N, Mitchell K, Friday A, Efstratiou C
+				(2000) ‘‘Developing a context-aware electronic tourist guide:
+				some issues and experiences,’’ Conference on human factors in
+				computing systems, ACM Press, New York, pp 17–24
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="8">8.</span> Abowd GD, Mynatt ED (2000) charting past,
+				present and future research in ubiquitous computing. ACM Trans Comput
+				Hum Interact 7:29–58
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="9">9.</span> Chung L, Nixon BA (1995) ‘‘Dealing with non-functional
+				requirements: three experimental studies of a process-oriented
+				approach,’’ 17th international conference on systems engineering. Los Alamitos CA: IEEE Computer Society Press, pp 25–37
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="10">10.</span> Pohl K (1993) ‘‘The three dimensions of requirements
+				engineering,’’ CAiSE ‘93, Springer, Berlin Heidelberg New York
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="11">11.</span> Roman GC (1985) A taxonomy of current issues in requirements engineering. Computer 18:14–23
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="12">12.</span> Zave P (1995) ‘‘Classification of research efforts
+				in requirements engineering,’’ 1995 IEEE international symposium on
+				requirements engineering (RE ‘95). IEEE Computer Society
+				Press, Los Alamitos CA, pp 214–216
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="13">13.</span> Potts C, Takahashi K, Anton AI (1994) Inquiry-based
+				requirements analysis. IEEE Softw 11:21–32
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="14">14.</span> Potts C (1999) ‘‘ScenIC: a strategy
+				for inquiry-driven requirements determination,’’ 4th IEEE international symposium on
+				requirements engineering. IEEE Computer Society Press, Los
+				Alamitos CA, pp 58–65
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="15">15.</span> Marcus A (2000) Multimedia interface design studio. Random
+				House, New York
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="16">16.</span> Norman DA (2004) Emotional design: why we love (or hate)
+				everyday things. Basic Books, New York
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="17">17.</span> De Angeli A, Athavankar UA, Joshi A, Coventry L, Johnson
+				GI (2004) Introducing ATMs in India: a contextual enquiry.
+				Interact Comput 16:29–44
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="18">18.</span> Sutcliffe AG (2002) User-centred requirements engineering.
+				Springer, London
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="19">19.</span> Fischer G (2001) User modeling in human–computer
+				interaction. User Model User-Adapt Interact 11:65–86
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="20">20.</span> Lieberman H (2001) Your wish is my command: programming
+				by example. Morgan Kaufmann, San Francisco
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="21">21.</span> Fischer G (1993) ‘‘Beyond human computer interaction:
+				designing useful and usable computational environments,’’
+				Proceedings of the HCI 93 Conference. Cambridge University
+				Press, Cambridge, pp 17–31
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="22">22.</span> Folstein M, Folstein S, McHugh P (1975) Mini-mental state: a
+				practical method for grading the state of patients for the clinician. J Psychiatr Res 12:1889–198
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="23">23.</span> Sutcliffe AG (2003) Multimedia and virtual reality: designing
+				multisensory user interfaces. Lawrence Erlbaum Associates,
+				Mahwah
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="24">24.</span> Sohlberg MM, Ehlhardt LA, Fickas S, Sutcliffe AG (2003) A
+				pilot study exploring electronic mail in users with acquired
+				cognitive-linguistic impairments. Brain Injury 17:609–629
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="25">25.</span> Sutcliffe AG, Ryan M (1998) ‘‘Experience with SCRAM: a
+				scenario requirements analysis method,’’ IEEE international
+				symposium on requirements engineering: RE ’98. IEEE Computer Society Press, Los Alamitos, pp 164–171
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="26">26.</span> Choi B, Lee I, Kim J, Yunsuk J (2005) ‘‘A qualitative cross
+				national study of cultural influences on mobile data service
+				design,’’ 2005 Conference on human factors in computing
+				systems, CHI 2005. ACM Press, New York, pp 661–670
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="27">27.</span> Krumbholz M, Maiden NAM (2001) The Implementation of
+				ERP Packages in Different Organisational and National Cultures. Inf Syst 26:185–204
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="28">28.</span> Hofstede G (1980) Cultures consequences:
+				international differences in work related values. Sage, Thousand Oaks
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="29">29.</span> Hall ET (1976) Beyond culture. Anchor Doubleday, New York
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="30">30.</span> Somers H, Whyman EK (1999) Evaluation metrics for a
+				translation memory system. Softw Pract Exp 29:1265–1284
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="31">31.</span> Fitzpatrick G (2003) The locales framework: understanding
+				and designing for wicked problems. Kluwer Academic,
+				Dordrecht
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="32">32.</span> Dix A, Rhodden T, Davies N, Trevor J, Friday A, Palfreyman
+				K (2000) Exploiting space and time as a design framework for
+				interactive mobile systems. ACM Trans Comput Hum Interact
+				7:285–321
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="33">33.</span> Dey AK, Mankoff J (2005) Designing mediation for context
+				aware applications. ACMTrans Comput Hum Interact 12:53–80
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="34">34.</span> Van Lamsweerde A, Letier E (2000) Handling obstacles in
+				goal-oriented requirements engineering. IEEE Trans Softw Eng
+				26:978–1005
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="35">35.</span> Fickas S, Robinson W, Sohlberg MM (2005)
+				‘‘The role of deferred requirements in a longitudinal study of emailing,’’ 13th
+				IEEE international conference on requirements engineering.
+				Los Alamitos, pp 145–154
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="36">36.</span> Lam W, McDermid JA, Vickers AJ (1997) ‘‘Ten steps towards
+				systematic requirements reuse,’’ ISRE ‘97: 3rd IEEE international
+				symposium on requirements engineering. IEEE Computer Society Press, Los Alamitos, pp 6–15
+			</p>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					16
+				</span>
+			</div>
+
+<!-- Page 17 -->
+
+			<p class="reference">
+				<span class="full-cite" data-ref="37">37.</span> Carroll JM (1990) The Nurnberg funnel: designing minimalist
+				instruction for practical computer skill. MIT Press, Cambridge
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="38">38.</span> Sutcliffe AG, Fickas S, Sohlberg MM, Ehlhardt LA (2003)
+				Investigating the usability of assistive user interfaces. Interact
+				Comput 15:577–601
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="39">39.</span> Fickas S (2005) ‘‘Clinical requirements engineering,’’ ICSE
+				2005: 27th International conference of software engineering.
+				IEEE Computer Society Press, Los Alamitos
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="40">40.</span> Robinson W (2003) ‘‘Monitoring web service requirements,’’
+				11th IEEE international requirements engineering conference
+				(RE’03). IEEE Computer Society Press, Los Alamitos, pp 65–74
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="41">41.</span> Conklin J, Begeman ML (1988) gIBIS: a hypertext tool for
+				exploratory policy discussion. ACM Trans Office Inf Syst
+				64:303–331
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="42">42.</span> Hui B, Laiskos S, Mylopoulos J (2003) ‘‘Requirements analysis
+				for customisable software: a goals skills preferences framework,’’ IEEE joint international conference on requirements
+				engineering. IEEE Computer Society Press, Los Alamitos, pp
+				117–126
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="43">43.</span> Nuseibeh B, Easterbrook S (2000) ‘‘Requirements engineering:
+				a roadmap,’’ international conference on software engineering
+				(ICSE-2000). ACM Press, New York
+			</p>
+
+			<p class="reference">
+				<span class="full-cite" data-ref="44">44.</span> Basili VR, Rombach HD (1988) The TAME project: towards
+				improvement-orientated software environments. IEEE Trans
+				Softw Eng 14:758–773
+			</p>
+
+			<div class="pagebreak">
+				<span class="pageNumber">
+					17
+				</span>
+			</div>
+
+		</section> <!-- Section 17 -->
+
+	</div> <!-- /container -->
+
+</body>
+</html>

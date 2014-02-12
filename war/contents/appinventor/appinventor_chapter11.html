@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+	<head>
+		<title> App Inventor Chapter 11 </title>
+	</head>
+
+  <body>
+		
+	<div id="appinventor11" class="appinventor container"> 
+	
+	<div class="page">
+
+<!-- Page 169 -->
+
+		<div class="chapter_head">
+			CHAPTER 11
+		</div>
+
+		<section class="section" data-number="0" data-name="Broadcast Hub">
+
+			<h2>Broadcast Hub</h2>
+
+			<image class="rightImage" src="/contents/appinventor/images/ch11img01.png">
+
+			<div class="chapter_description">
+				<p>FrontlineSMS (http://www.frontlinesms.com) is a software tool used in developing countries to 
+					monitor elections, broadcast weather changes, and connect people who don’t have access to 
+					the Web but do have phones and mobile con-nectivity. It is the brainchild of Ken Banks, who 
+					has probably done more to help people using mobile technology than any other human alive.</p>
+				<p>FrontlineSMS runs on a computer with a phone plugged into it. The computer and plugged-in 
+					phone serve as a hub for SMS (short message service) text communication within a group. 
+					People who don’t have Internet access can send in a special code to join the group, after which 
+					they receive broadcast messages from the hub. For places with no Internet access, the broadcast
+					hub can serve as a vital connection to the outside world.</p>
+				<p>With App Inventor, you can create your own SMS-processing app. The cool thing is that the people
+					who use your app don’t need to have an Android phone. Your app will run on an Android device, but
+					your app users can interface with it through SMS using any phone, smart or not so smart. Your app will still 
+					have a graphical user interface (GUI) as well, but that GUI will be reserved for the administrator
+					who monitors the activity via the Android app you’re about to build.</p>
+			</div>
+
+			<p>In this chapter, you’ll create a hub that works similarly to FrontlineSMS but runs on 
+				an Android phone. Having the hub itself on a mobile device means the administrator 
+				can be on the move, something that is especially important in controversial situations 
+				like election monitoring and healthcare negotiations.</p>
+
+<!-- Page 170 -->
+
+			<div class="pagebreak">
+					<span class="pageNumber"> 170 </span> Chapter 11: Broadcast Hub
+			</div>
+
+			<p>Your broadcast hub will be for the fictitious FlashMob Dance Team (FMDT), a group 
+				that uses the hub to organize flash mob dances anywhere, anytime. People will reg-ister with
+				the group by texting “joinFMDT” to the hub, and anyone who is registered can broadcast messages
+				to everyone else in the group.</p>
+
+			<p>Your app will process received text messages in the following manner:</p>
+
+			<ol>
+				<li>If the text message is sent from someone not yet in the broadcast list, the app responds
+					with a text that invites him to join the broadcast list and lets him know the code.</li>
+				<li>If the text message “joinFMDT” is received, the app adds the sender to the broad-cast list.</li>
+				<li>If the text message is sent from a number already in the broadcast list, the mes-sage is
+					broadcast to all numbers in the list.</li>
+			</ol>
+
+			<p>You’ll build this app one piece of functionality at a time, starting with the first autoresponse
+				message that invites people to join. By the time you complete this app, you’ll have a pretty good
+				idea of how to write apps utilizing SMS text as the user interface.</p>
+
+		</section> <!-- Section 0, Broadcast Hub -->
+
+		<section class="section" data-number="1" data-name="What You'll Learn">
+
+			<h3>What You'll Learn</h3>
+
+			<p>The tutorial covers the following App Inventor concepts, some of which you’re likely familiar with by now:</p>
+
+			<ul>
+				<li>The <span class="python">Texting</span> component for sending texts and processing received texts.</li>
+				<li>List variables—in this case, to keep track of the list of phone numbers.</li>
+				<li>The <span class="pBlock">foreach</span> block to allow an app to repeat operations on a list of data.
+					In this case, you’ll use <span class="pBlock">foreach</span> to broadcast messages to the list
+					of phone numbers.</li>
+				<li>The <span class="python">TinyDB</span> component to store data persistently. This means that if
+					you close the app and then relaunch it, the list of phone numbers will still be there.</li>
+			</ul>
+
+		</section> <!-- Section 1, What You'll Learn -->
+
+		<section class="section" data-number="2" data-name="Getting Started">
+
+			<h3>Getting Started</h3>
+
+			<p>You’ll need a phone that can accept and send SMS texts to test this app, as the 
+				emulator that comes with App Inventor isn’t set up for this. You’ll also need to recruit 
+				some friends to send you texts in order to fully test the app.</p>
+			
+			<p>Connect to the App Inventor website and start a new project. Name it “BroadcastHub” 
+				and also set the screen’s title to “Broadcast Hub”. Open the Blocks Editor and connect to 
+				the phone.</p>
+
+		</section> <!-- Section 2, Getting Started -->
+
+		<section class="section" data-number="3" data-name="Designing the Components">
+
+<!-- Page 171 -->
+
+			<div class="pagebreak">
+					<span class="pageNumber"> 171 </span> Designing the Components
+			</div>
+
+			<h3>Designing the Components</h3>
+
+			<p>Broadcast Hub facilitates communication between mobile phones. Those phones do 
+				not need to have the app installed, or even be smartphones. So, in this case, you’re 
+				not building an interface for your app’s users, but instead for the group administrator.</p>
+			
+			<p>The user interface for the administrator is simple: it displays the current <em>broadcast list</em> — 
+				that is, the list of phone numbers that have registered for the service — and all of 
+				the texts it receives and broadcasts.</p>
+			
+			<p>To build the interface, add the components listed in Table 11-1.</p>
+
+			<p class="caption">Table 11-1.User interface components for Broadcast Hub</p>
+
+			<table>
+				<thead>
+					<tr>
+						<th>Component type</th>
+						<th>Palette group</th>
+						<th>What you'll name it</th>
+						<th>Purpose</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><span class="python">Label</span></td>
+						<td>Basic</td>
+						<td><span class="python">Label1</span></td>
+						<td>This is the header above the list of phone numbers.</td>
+					</tr>
+					<tr>
+						<td><span class="python">Label</span></td>
+						<td>Basic</td>
+						<td><span class="python">BroadcastListLabel</span></td>
+						<td>Display the phone numbers that are registered.</td>
+					</tr>
+					<tr>
+						<td><span class="python">Label</span></td>
+						<td>Basic</td>
+						<td><span class="python">Label2</span></td>
+						<td>This is the header above the log information.</td>
+					</tr>
+					<tr>
+						<td><span class="python">Label</span></td>
+						<td>Basic</td>
+						<td><span class="python">LogLabel</span></td>
+						<td>Display a log of the texts received and broadcast.</td>
+					</tr>
+					<tr>
+						<td><span class="python">Texting</span></td>
+						<td>Social</td>
+						<td><span class="python">Texting1</span></td>
+						<td>Process the texts.</td>
+					</tr>
+					<tr>
+						<td><span class="python">TinyDB</span></td>
+						<td>Basic</td>
+						<td><span class="python">TinyDB1</span></td>
+						<td>Store the list of registered phone numbers.</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>As you add the components, set the following properties:</p>
+
+			<ol>
+				<li>Set the <span class="python">Width</span> of each label to “Fill parent” so that it spans the
+					phone horizontally.</li>
+				<li>Set the <span class="python">FontSize</span> of the header labels (<span class="python">Label1</span> and
+					<span class="python">Label2</span>) to 18 and check their <span class="python">FontBold</span> boxes.</li>
+				<li>Set the <span class="python">Height</span> of <span class="python">BroadcastListLabel</span> and
+					<span class="python">LogLabel</span> to 200 pixels. They’ll show multiple lines.</li>
+				<li>Set the <span class="python">Text</span> property of <span class="python">BroadcastListLabel</span>
+					to “Broadcast List…”.</li>
+				<li>Set the <span class="python">Text</span> property of <span class="python">LogLabel</span> to blank.</li>
+			</ol>
+
+			<p>Figure 11-1 shows the app layout in the Component Designer.</p>
+
+<!-- Page 172 -->
+
+			<div class="pagebreak">
+					<span class="pageNumber"> 172 </span> Chapter 11: Broadcast Hub
+			</div>
+
+			<figure>
+				<div class="centeredImage">
+					<img src="/contents/appinventor/images/ch11img02.png">
+				</div>
+				<figcaption>Figure 11-1. Broadcast Hub in the Component Designer</figcaption>
+			</figure>
+
+		</section> <!-- Section 3, Designing the Components -->
+
+		<section class="section" data-number="4" data-name="Adding Behaviors to the Components">
+
+			<h3>Adding Behaviors to the Components</h3>
+
+			<p>The activity for Broadcast Hub is not triggered by the user entering information or 
+				clicking a button, but rather by texts coming in from other phones. To process these 
+				texts and store the phone numbers that sent them in a list, you’ll need the following 
+				behaviors:</p>
+
+			<ul>
+				<li>When the text message is sent from someone not already in the broadcast list, 
+					the app responds with a text that invites the sender to join.
+				<li>When the text message “joinFMDT” is received, register the sender as part of the 
+					broadcast list.
+				<li>When the text message is sent from a number already in the broadcast list, the 
+					message is broadcast to all numbers in the list.
+			</ul>
+
+			<p>Let’s start by creating the first behavior: when you receive a text, send a message 
+				back to the sender inviting her to register by texting “joinFMDT” back to you. You’ll 
+				need the blocks listed in Table 11-2.</p>
+
+<!-- Page 173 -->
+
+			<div class="pagebreak">
+					<span class="pageNumber"> 173 </span> Adding Behaviors to the Components
+			</div>
+
+			<p class="caption">Table 11-2.Blocks for adding the functionality to invite people to the group via text</p>
+
+			<table>
+				<thead>
+					<tr>
+						<th>Block type</th>
+						<th>Drawer</th>
+						<th>Purpose</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><span class="pBlock">Texting1.MessageReceived</span></td>
+						<td>Texting1</td>
+						<td>Triggered when the phone receives a text.</td>
+					</tr>						
+					<tr>
+						<td><span class="pBlock">set Texting1.PhoneNumber to</span></td>
+						<td>Texting1</td>
+						<td>Set the number for the return text.</td>
+					</tr>						
+					<tr>
+						<td><span class="pBlock">value number</span></td>
+						<td>My Definitions</td>
+						<td>The argument of <span class="python">MessageReceived</span>. This is the phone
+							number of the sender.</td>
+					</tr>						
+					<tr>
+						<td><span class="pBlock">set Texting1.Message</span></td>
+						<td>Text</td>
+						<td>The invite message.</td>
+					</tr>						
+					<tr>
+						<td><span class="pBlock">text</span> ("To join this broadcast list, text 'joinFMDT' to this number")</td>
+						<td>Text</td>
+						<td>The invite message.</td>
+					</tr>
+					<tr>
+						<td><span class="pBlock">Texting1.SendMessage</span></td>
+						<td>Texting1</td>
+						<td>Send it!</td>						
+					</tr>
+				</tbody>
+			</table>
+
+			<section class="subsection" data-number="5" data-name="How the Blocks Work">
+
+				<h4>How the Blocks Work</h4>
+
+				<p>Based on the work you did in the No Texting While Driving app in Chapter 4, these 
+					blocks should look familiar. <span class="pBlock">Texting1.MessageReceived</span> is triggered when the 
+					phone receives any text message. As shown in Figure 11-2, the blocks within the 
+					event handler set the <span class="python>PhoneNumber">PhoneNumber</span> and
+					<span class="python>Message">Message</span> of the <span class="python>Texting1">Texting1</span>
+					component and then send the message.</p>
+
+				<figure>
+					<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch11img03.png">
+					</div>
+				<figcaption>Figure 11-2. Sending the invite message back after receiving a text</figcaption>
+
+				<div class="test_your_app">
+					<img src="/contents/appinventor/images/test_phone.jpg">
+					
+					<p><span class="apptest_header">Test your app.</span>You’ll need a second phone to test this behavior; 
+						you don’t want to text yourself, as it could loop forever! If you don’t 
+						have another phone, you can register with Google Voice or a similar 
+						service and send SMS texts from that service to your phone. From 
+						the second phone, send the text “hello” to the phone running the 
+						app. The second phone should then receive a text that invites it to 
+						join the group.</p>
+				</div>
+			
+			</section> <!-- Section 5, How the Blocks Work -->
+
+			<section class="subsection" data-number="6" data-name="Adding Someone to the Broadcast List">
+
+<!-- Page 174 -->
+
+				<div class="pagebreak">
+						<span class="pageNumber"> 174 </span> Chapter 11: Broadcast Hub
+				</div>
+			
+				<h4>Adding Someone to the Broadcast List</h4>
+
+				<p>Now let’s create the blocks for the second behavior: when the text message “joinFMDT” 
+					is received, add the sender to the broadcast list. First, you’ll need to define a list variable,
+					<span class="python">BroadcastList</span>, to store the phone numbers that register. From Definitions,
+					drag out a <span class="pBlock">def var</span> block and name it “BroadcastList”. Initialize it to
+					an empty list with a <span class="pBlock">make a list</span> block from the Lists drawer,
+					as shown in Figure 11-3 (we’ll add the func-tionality to build this list shortly).</p>
+
+				<figure>
+					<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch11img04.png">
+					</div>
+					<figcaption>Figure 11-3. The BroadcastList variable for storing the list of registered numbers</figcaption>
+				</figure>
+
+				<p>Next, modify the <span class="pBlock">Texting1.MessageReceived</span> event handler so that it adds the 
+					sender’s phone number to the <span class="python">BroadcastList</span> if the message received is
+					“joinFMDT.” You’ll need an <span class="pBlock">ifelse</span> block—which you used in MakeQuiz in
+					Chapter 10—within your event handler, and an <span class="pBlock">add item to list</span> block to
+					add the new number to the list. The full set of blocks you’ll need is listed in Table 11-3. After
+					you add the number to the list, display the new list in the
+					<span class="python">BroadcastListLabel</span>.</p>
+
+				<p class="caption">Table 11-3.Blocks for checking a text message and adding the sender to
+					the broadcast list<p>
+
+				<table>
+					<thead>
+						<tr>
+							<th>Block type</th>
+							<th>Drawer</th>
+							<th>Purpose</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><span class="pBlock">ifelse</span></td>
+							<td>Control</td>
+							<td>Depending on the message received, do different things.</td>
+						</tr><tr>
+							<td><span class="pBlock">=</span></td>
+							<td>Math</td>
+							<td>Determine whether messageText is equal to “joinFMDT.”</td>
+						</tr><tr>
+							<td><span class="pBlock">value <span class="python">messageText</span></span></td>
+							<td>My Definitions</td>
+							<td>Plug this into the <span class="pBlock">=</span> block.</td>
+						</tr><tr>
+							<td><span class="pBlock">text</span> ("joinFMDT")</td>
+							<td>Text</td>
+							<td>Plug this into the <span class="pBlock">=</span> block.</td>
+						</tr><tr>
+							<td><span class="pBlock">add items to list</span></td>
+							<td>Lists</td>
+							<td>Add the sender’s <span class="python">number to BroadcastList</span>.</td>
+						</tr><tr>
+							<td><span class="pBlock">global BroadcastList</span></td>
+							<td>My Definitions</td>
+							<td>The list.</td>
+						</tr><tr>
+							<td><span class="pBlock">value number</span></td>
+							<td>My Definitions</td>
+							<td>Plug this in as an item of <span class="pBlock">add items to list</span>.</td>
+						</tr><tr>
+							<td><span class="pBlock">set BroadcastListLabel.Text to</span></td>
+							<td>BroadcastListLabel</td>
+							<td>Display the new list.</td>
+						</tr><tr>
+							<td><span class="pBlock">global BroadcastList</span></td>
+							<td>My Definition</td>
+							<td>Plug this in to set the <span class="pBlock">BroadcastListLabel.Text to</span> block.</td>
+						</tr><tr>
+							<td><span class="pBlock">set Texting1.Message to</span></td>
+							<td>Texting1</td>
+							<td>Prepare <span class="python">Texting1</span> to send a message back to the sender.</td>
+						</tr><tr>
+							<td><span class="pBlock">text</span> ("Congrats, you…")</td>
+							<td>Text</td>
+							<td>Congratulate the sender for joining the group.</td>
+						</tr>
+					</tbody>
+				</table>						
+
+				<section class="subsection" data-number="7" data-name="How the blocks work">
+
+					<h5>How the blocks work</h5>
+
+					<p>The first row of blocks shown in Figure 11-4 sets <span class="python">Texting1.PhoneNumber</span>
+						to the phone number of the message that was just received; we know we’re going to 
+						respond to the sender, so this sets that up. The app then asks if the
+						<span class="python">messageText</span> was the special code, “joinFMDT.” If so, the sender’s
+						phone number is added to the </p>
+
+<!-- Page 175 -->
+
+					<div class="pagebreak">
+							<span class="pageNumber"> 175 </span> Adding Behaviors to the Components
+					</div>
+
+					<p><span class="python">BroadcastList</span>, and a congratulations message is sent. If the
+						<span class="python">messageText</span> is something other than “joinFMDT,” the reply message
+						repeats the invitation message. After the <span class="pBlock">ifelse</span> block, the reply
+						message is sent (bottom row of the blocks).</p>
+
+						<figure>
+							<div class="centeredImage">
+								<img src="/contents/appinventor/images/ch11img05.png">
+							</div>
+							<figcaption>Figure 11-4. If the incoming message is “joinFMDT”, add the sender
+								to BroadcastList</figcaption>
+						</figure>
+
+					<div class="test_your_app">
+						<img src="/contents/appinventor/images/test_phone.jpg">
+						
+						<p><span class="apptest_header">Test your app.</span>From a second phone, send the text message 
+							“joinFMDT” to the phone running the app. You should see the phone number listed in the user interface
+							under “Registered Phone Numbers.” The second phone should also receive the Congrats mes-sage.
+							Try sending a message other than “joinFMDT” as well to check if the invite message is still
+							sent correctly.</p>
+					</div>
+
+				</section> <!-- Section 7, How the blocks work -->
+
+			</section> <!-- Section 6, Adding Someone to the Broadcast List -->
+
+			<section class="subsection" data-number="8" data-name="Braodcasting Messages">
+
+				<h4>Braodcasting Messages</h4>
+
+				<p>Next, you’ll add the behavior so that the app broadcasts received messages to the 
+					numbers in <span class="python">BroadcastList</span>, but only if the message arrives from a number
+					already stored in that list. This additional complexity will require more control blocks, including another
+					<span class="pBlock">ifelse</span> and a <span class="pBlock">foreach</span>. You’ll need an additional
+					<span class="pBlock">ifelse</span> block to check if the number is in the list, and a
+					<span class="pBlock">foreach</span> block to broadcast the message to each number
+
+<!-- Page 176 -->
+
+				<div class="pagebreak">
+						<span class="pageNumber"> 176 </span> Chapter 11: Braodcast Hub
+				</div>
+
+				<p>in the list. You’ll also need to move the <span class="pBlock">ifelse</span> blocks from the
+					previous behavior and slot them into the “else” part of the new <span class="pBlock">ifelse</span>.
+					All the additional blocks you’ll need are listed in Table 11-4.</p>
+
+				<p class="caption">Table 11-4.Blocks for checking if the sender is in the group already</p>
+
+				<table>
+					<thead>
+						<tr>
+							<th>Block type</th>
+							<th>Drawer</th>
+							<th>Purpose</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><span class="pBlock">ifelse</span></td>
+							<td>Control</td>
+							<td>Depending on whether the sender is already in the list, do differ-ent things.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">is in list?</span></td>
+							<td>Lists</td>
+							<td>Check to see if something is in a list.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">global BroadcastList</span></td>
+							<td>My Definitions</td>
+							<td>Plug this into the “list” slot of <span class="pBlock">is in list?</span>.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">value number</span></td>
+							<td>My Definitions</td>
+							<td>Plug this into the “thing” slot of <span class="pBlock">is in list?</span></td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">foreach</span></td>
+							<td>Control</td>
+							<td>Repeatedly send out a message to all members in the list.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">global BroadcastList</span></td>
+							<td>My Definitions</td>
+							<td>Plug this into the “list” slot of <span class="pBlock">foreach</span>.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">set Texting1.Message to</span></td>
+							<td>Texting1</td>
+							<td>Set the message.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">value messageText</span></td>
+							<td>My Definitions</td>
+							<td>The message that was received and will be broadcast.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">set Texting1.PhoneNumber to</span></td>
+							<td>Texting1</td>
+							<td>Set the phone number.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">value var</span></td>
+							<td>My Definitions</td>
+							<td>Hold the current item of the <span class="python">BroadcastList</span>; it’s a (phone) number.</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<section class="subsection" data-number="9" data-name="How the blocks work">
+
+					<h5>How the blocks work</h5>
+
+					<p>The app has become complex enough that it requires a nested <span class="pBlock">ifelse</span>
+						block, as shown in Figure 11-5. A nested <span class="pBlock">ifelse</span> block is one slotted
+						within the “if” or “else” part of another, outer <span class="pBlock">ifelse</span>. In this case,
+						the outer <span class="pBlock">ifelse</span> branch checks whether the phone 
+						number of the received message is already in the list. If it is, the message is relayed to 
+						everyone in the list. If the number is not in the list, then the <em>nested</em> test is performed: 
+						the blocks check if the <span class="python">messageText</span> is equal to “joinFMDT” and branches
+						one of two ways based on the answer.</p>
+					
+					<p>In general, <span class="pBlock">if</span> and <span class="pBlock">ifelse</span> blocks can be
+						nested to arbitrary levels, giving you the power to program increasingly complex behaviors
+						(see Chapter 18 for more information on conditional blocks).</p>
+					
+					<p>The message is broadcast using a <span class="pBlock">foreach</span> (within the outer
+						<span class="python">then</span> clause). The <span class="pBlock">foreach</span> loops through and
+						sends the message to each item in the <span class="python">BroadcastList</span>. As the
+						<span class="pBlock">foreach</span> repeats, each succeeding phone number from the
+						<span class="python">BroadcastList</span> is stored in <span class="python">var</span>
+						(<span class="python">var</span> is a variable placeholder for the current item being processed in 
+						the <span class="pBlock">foreach</span>). The blocks within the <span class="pBlock">foreach</span>
+						set <span class="python">Texting.PhoneNumber</span> to the current item
+						<span class="python">var</span> and then send the message. For more information on how
+						<span class="pBlock">foreach</span> works, see Chapter 20.</p>
+
+<!-- Page 177 -->
+
+				<div class="pagebreak">
+						<span class="pageNumber"> 177 </span> Adding Behaviors to the Components
+				</div>
+
+				<figure>
+					<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch11img06.png">
+					</div>
+					<figcaption>Figure 11-5. Now we check if the sender is already in the group and broadcast
+						the message if so</figcaption>
+				</figure>
+
+				<div class="test_your_app">
+					<img src="/contents/appinventor/images/test_phone.jpg">
+					
+					<p><span class="apptest_header">Test your app.</span>First, have two different phones register by texting 
+						“joinFMDT” to the phone running the app. Then, text another mes-sage from one of the phones. Both phones
+						should receive the text (including the one that sent it).</p>
+				</div>
+
+				</section> <!-- Section 9, How the blocks work -->
+
+			</section> <!-- Section 8, Braodcasting Messages -->
+
+			<section class="subsection" data-number="10" data-name="Cleaing Up Your List Display">
+
+<!-- Page 178 -->
+
+				<div class="pagebreak">
+						<span class="pageNumber"> 178 </span> Chapter 11: Broadcast Hub
+				</div>
+
+				<h4>Cleaning Up Your List Display</h4>
+
+				<p>The app can now broadcast messages, but the user interface for the app admin-istrator needs some work. First,
+					the list of phone numbers is displayed in an inel-egant way. Specifically, when you place a list variable
+					into a label, it displays the list with spaces between the items, fitting as much as possible on each line.
+					So the <span class="python">BroadcastListLabel</span> might show the <span class="python">BroadcastList</span>
+					like this:</p>
+
+				<p class="intendedText python">(+1415111-1111 +1415222-2222 +1415333-3333 +1415444-4444)</p>
+
+				<p>To improve this formatting, create a procedure <span class="python">displayBroadcastList</span> using the blocks 
+					listed in Table 11-5. This procedure displays the list with each phone number on a 
+					separate line. Be sure to call the procedure from below the <span class="pBlock">add items to list</span> block so 
+					that the updated list is displayed.</p>
+
+				<p class="caption">Table 11-5.Blocks to clean up the display of phone numbers in your list</p>
+
+				<table>
+					<thead>
+						<tr>
+							<th>Block type</th>
+							<th>Drawer</th>
+							<th>Purpose</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><span class="pBlock">to procedure</span> ("displayBroadcastList")</td>
+							<td>Definitions</td>
+							<td>Create the procedure (do not choose <span class="pBlock">procedureWithResult</span>).</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">set BroadcastListLabel.Text to</span></td>
+							<td>BroadcastListLabel</td>
+							<td>Display the list here.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">text</span> ("")</td>
+							<td>Text</td>
+							<td>Click <span class="pBlock">text</span> and then click Delete to create an empty text object.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">foreach</span></td>
+							<td>Control</td>
+							<td>Iterate through the numbers.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">name pnumber</span></td>
+							<td>in the <span class="pBlock">foreach</span></td>
+							<td>Name the <span class="pBlock">foreach</span> variable “pnumber”. This is the current item as
+								iteration proceeds.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">global BroadcastList</span></td>
+							<td>My Definitions</td>
+							<td>Plug this into the “in list” slot of <span class="pBlock">foreach</span>.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">set BroadcastListLabel.Text to</span></td>
+							<td>BroadcastListLabel</td>
+							<td>Modify this with each of the numbers.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">make text</span></td>
+							<td>Text</td>
+							<td>Build a text object from multiple parts.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">BroadcastListLabel.Text</span></td>
+							<td>BroadcastListLabel</td>
+							<td>Add this to the label on each iteration of <span class="pBlock">foreach</span>.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">text</span> ("\n")</td>
+							<td>Text</td>
+							<td>Add a newline character so that the next number is on the next line.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">value pnumber</span></td>
+							<td>My Definitions</td>
+							<td>The current number from the list.</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<section class="subsection" data-number="11" data-name="How the blocks work">
+
+					<h5>How the blocks work</h5>
+
+					<p>The <span class="pBlock">foreach</span> in <span class="python">displayBroadcastList</span>
+						successively adds a phone number to the end of the label, as shown in Figure 11-6, placing a newline
+						character (\n) between each item to place each number on a new line.</p>
+
+<!-- Page 179 -->
+
+					<div class="pagebreak">
+							<span class="pageNumber"> 179 </span> Adding Behaviors to the Components
+					</div>
+
+					<figure>
+						<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch11img07.png">
+						</div>
+						<figcaption>Figure 11-6. Displaying the phone numbers with a newline between each</figcaption>
+					</figure>
+
+					<p>Of course, this <span class="python">displayBroadcastList</span> procedure will not do anything unless you 
+						call it. Place a call to it in the <span class="pBlock">Texting1.MessageReceived</span> event handler, right below 
+						the call to <span class="pBlock">add item to list</span>. The call should replace the blocks that simply set the 
+						<span class="python">BroadcastListLabel.Text</span> to <span class="python">BroadcastList</span>.
+						The <span class="pBlock">call displayBroadcastList</span> block can be found in My Definitions.</p>
+					
+					<p>Figure 11-7 shows how the relevant blocks within the <span class="pBlock">Texting1.MessageReceived</span>
+						event handler should look.</p>
+
+					<figure>
+						<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch11img08.png">
+						</div>
+						<figcaption>Figure 11-7. Calling the displayBroadcastList procedure</figcaption>
+					</figure>
+
+					<p>For more information on using <span class="pBlock">foreach</span> to display a list, see Chapter 20. For more 
+						information about creating and calling procedures, see Chapter 21.</p>
+
+<!-- Page 180 -->
+
+					<div class="pagebreak">
+							<span class="pageNumber"> 180 </span> Chapter 11: Broadcast Hub
+					</div>
+
+					<div class="test_your_app">
+						<img src="/contents/appinventor/images/test_phone.jpg">
+						
+						<p><span class="apptest_header">Test your app.</span>Restart the app to clear the list and then have at 
+							least two different phones register (again). Do the phone numbers 
+							appear on separate lines?</p>
+
+						<div class="clear"></div>
+					</div>
+
+				</section> <!-- Section 11, How the blocks work -->
+
+			</section> <!-- Section 10, Cleaing Up Your Display -->
+
+			<section class="subsection" data-number="12" data-name="Logging the Broadcasted Texts">
+
+				<h4>Logging the Broadcasted Texts</h4>
+
+				<p>When a text is received and broadcast to the other phones, the app should log 
+					that occurrence so the administrator can monitor the activity. In the Component 
+					Designer, you added the label <span class="python">LogLabel</span> to the user interface for this purpose. Now, 
+					you’ll code some blocks that change <span class="python">LogLabel</span> each time a new text arrives.</p>
+
+				<p>You need to build a text that says something like “message from +1415111–2222 was 
+					broadcast.” The number +1415111–2222 is not fixed data — instead, it is the value of 
+					the argument <span class="python">number</span> that comes with the <span class="pBlock">MessageReceived</span>
+					event. So, to build the text, you’ll concatenate the first part, “message from”, with a
+					<span class="pBlock">value number</span> block and finally with the last part of the message, the text
+					“broadcast.”</p>
+
+				<p>As you’ve done in previous chapters, use <span class="pBlock">make text</span> to concatenate the parts using 
+					the blocks listed in Table 11-6.</p>
+
+				<p class="caption">Table 11-6.Blocks to build your log of broadcasted messages</p>
+
+				<table>
+					<thead>
+						<tr>
+							<th class="colExpand">Block type</th>
+							<th>Drawer</th>
+							<th>Purpose</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><span class="pBlock">set LogLabel.Text to</span></td>
+							<td>LogLabel</td>
+							<td>Display the log here.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">make text</span></td>
+							<td>Text</td>
+							<td>Build a text object out of multiple parts.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">text</span> ("message from")</td>
+							<td>Text</td>
+							<td>This is the report message.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">value number</span></td>
+							<td>My Definitions</td>
+							<td>The sender’s phone number.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">text</span> ("broadcast\n")</td>
+							<td>Text</td>
+							<td>Add the last part of “message from 111–2222 broadcast” and include newline.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">LogLabel.Text</span></td>
+							<td>LogLabel</td>
+							<td>Add a new log to the previous ones.</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<section class="subsection" data-number="13" data-name="How the blocks work">
+
+					<h5>How the blocks work</h5>
+
+					<p>After broadcasting the received message to all of the numbers in <span class="python">BroadcastList</span>, 
+						the app now modifies the <span class="python">LogLabel</span> to add a report of the just-broadcasted text, as 
+						shown in Figure 11-8. Note that now we add the message to the beginning of the list 
+						instead of the end, so the more recent message sent to the group shows up at the top.</p>
+
+<!-- Page 181 -->
+
+					<div class="pagebreak">
+							<span class="pageNumber"> 181 </span> Adding Behaviors to the Components
+					</div>
+
+					<figure>
+						<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch11img09.png">
+						</div>
+						<figcaption>Figure 11-8. Adding a new broadcast message to the log</figcaption>
+					</figure>
+
+					<p>The <span class="pBlock">make text</span> block creates new entries of the form:</p>
+						
+					<p class="intendedText python">message from: 111-2222 broadcast</p>
+						
+					<p>Each time a text is broadcast, the log entry is <em>prepended to</em> (added to the front of ) the 
+						<span class="python">LogLabel.Text</span> so that the most recent entries will appear on top. The way you
+						organize the <span class="pBlock">make text</span> block determines the ordering of the entries. In this case,
+						the new message is added with the top three slots of <span class="pBlock">make text</span>, and
+						<span class="python">LogLabel.Text</span> — which holds the existing entries—is plugged into the last slot.</p>
+
+					<p>The “\n” in the text “broadcast\n” is the newline character that displays each log entry 
+						on a separate line:</p>
+
+					<p class="intendedText python">message from: 1112222 broadcast</p>
+
+					<p class="intendedText python">message from: 555-6666 broadcast</p>
+
+					<p>For more information about using <span class="pBlock">foreach</span> to display a list, see Chapter 20.</p>
+
+				</section> <!-- Section 13, How the blocks work -->
+
+			</section> <!-- Section 12, Logging the Broadcasted Texts -->
+
+			<section class="subsection" data-number="14" data-name="Storing the BroadcastList in a Database">
+
+				<h4>Storing the BroadcastList in a Database</h4>
+
+				<p>The app works great so far, but if you’ve completed some of the earlier tutorials, 
+					you’ve probably guessed that there’s a problem: if the administrator closes the app 
+					and relaunches it, the broadcast list will be lost and everyone will have to reregister. 
+					To fix this, you’ll use the <span class="python">TinyDB</span> component to store and retrieve the
+					<span class="python">BroadcastList</span> to and from a database.</p>
+
+<!-- Page 182 -->
+
+				<div class="pagebreak">
+						<span class="pageNumber"> 182 </span> Chapter 11: Broadcast Hub
+				</div>
+
+				<p>You’ll use a similar scheme to the one we used in the MakeQuiz app (Chapter 10):
+
+				<ul>
+					<li>Store the list to the database each time a new item is added.</li>
+					<li>When the app launches, load the list from the database into a variable.</li>
+				</ul>
+
+				<p>Start by coding the blocks listed in Table 11-7 to store the list in the database. With 
+					the <span class="python">TinyDB</span> component, a tag is used to identify the data and distinguish it from 
+					other data stored in the database. In this case, you can tag the data as “broadcastList.” 
+					You’ll add the blocks in the <span class="pBlock">Texting1.MessageReceived</span> event, under the
+					<span class="pBlock">add items to list</span> block.</p>
+
+				<p class="caption">Table 11-7.Blocks to store the list with TinyDB</p>
+
+				<table>
+					<thead>
+						<tr>
+							<th>Block type</th>
+							<th>Drawer</th>
+							<th>Purpose</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><span class="pBlock">TinyDB1.StoreValue</span></td>
+							<td>TinyDB1</td>
+							<td>Store the data in the database.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">text</span> ("broadcastList")</td>
+							<td>Text</td>
+							<td>Plug this into the “tag” slot of <span class="pBlock">StoreValue</span>.</td>
+						</tr>
+						<tr>
+							<td><span class="pBlock">global BroadcastList</span></td>
+							<td>My Definitions</td>
+							<td>Plug this into the “value” slot of <span class="pBlock">StoreValue</span>.</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<section class="subsection" data-number="15" data-name="How the blocks work">
+
+					<h5>How the blocks work</h5>
+
+					<p>When a “joinFMDT” text comes in and the new member’s phone number is added to 
+						the list, <span class="pBlock">TinyDB1.StoreValue</span> is called to store the
+						<span class="python">BroadcastList</span> to the database. 
+						The tag (a text object named “broadcastList”) is used so that you can later retrieve 
+						the data. As shown in Figure 11-9, the value that gets called by <span class="pBlock">StoreValue</span> is the 
+						variable <span class="python">BroadcastList</span>.</p>
+
+					<figure>
+						<div class="centeredImage">
+							<img src="/contents/appinventor/images/ch11img10.png">
+						</div>
+						<figcaption>Figure 11-9. Calling TinyDB to store the BroadcastList</figcaption>
+					</figure>
+
+				</section> <!-- Section 15, How the blocks work -->
+
+			</section> <!-- Section 14, Storing the BroadcastList in a Database -->
+
+			<section class="subsection" data-number="16" data-name="Loading the BroadcastList from a Database">
+
+<!-- Page 183 -->
+
+				<div class="pagebreak">
+						<span class="pageNumber"> 183 </span> Adding Behaviors to the Components
+				</div>
+
+				<h4>Loading the BroadcastList from a Database</h4>
+
+				<p>Now add the blocks listed in Table 11-8 for loading the list back in each time the app 
+					launches. When the app begins, the <span class="pBlock">Screen1.Initialize</span> event is triggered, so your 
+					blocks will go in that event handler. You’ll call <span class="pBlock">TinyDB.GetValue</span>, using the same tag 
+					you used to store the list (“broadcastList”). At this point, as we’ve done in previous 
+					chapters that work with databases, we have to check if there is actually any data 
+					being returned. In this case, we’ll check if the returned value is a list, because it won’t 
+					be if there isn’t any data in the list yet.</p>
+
+				<section class="subsection" data-number="17" data-name="How the blocks work">
+
+					<h5>How the blocks work</h5>
+
+					<p>When the app begins, the <span class="pBlock">Screen1.Initialize</span> event is triggered. The blocks shown in 
+						Figure 11-10 first request the data from the database with <span class="pBlock">TinyDB1.GetValue</span>. The 
+						returned data is placed in the variable <span class="python">valueFromDB</span>, a variable defined to temporarily 
+						hold it.</p>
+
+					<p class="caption">Table 11-8.Blocks to load the broadcast list back into the app when it launches</p>
+
+					<table>
+						<thead>
+							<tr>
+								<th>Block type</th>
+								<th>Drawer</th>
+								<th>Purpose</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><span class="pBlock">def variable</span> ("value-FromDB")</td>
+								<td>Definition</td>
+								<td>A temporary variable for holding database data and checking it.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">text</span> ("text")</td>
+								<td>Text</td>
+								<td>An initial value for valueFromDB.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">Screen1.Initialize</span></td>
+								<td>Screen1</td>
+								<td>Triggered when the app launches.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">set global valueFromDB to</span></td>
+								<td>My Definitions</td>
+								<td>Put the returned value here temporarily.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">TinyDB1.GetValue</span></td>
+								<td>TinyDB1</td>
+								<td>Request the data from the database.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">text</span> ("broadcastList")</td>
+								<td>Text</td>
+								<td>Plug this into the “tag” slot of <span class="pBlock">GetValue</span>.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">if</span></td>
+								<td>Control</td>
+								<td>Check if the database had the data.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">is a list?</span></td>
+								<td>List</td>
+								<td>If the data returned is a list, we know it wasn’t empty.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">global valueFromDB</span></td>
+								<td>My Definitions</td>
+								<td>Plug this into <span class="pBlock">is a list?</span>.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">set global BroadcastList to</span></td>
+								<td>My Definitions</td>
+								<td>Set this to the value returned from the database.</td>
+							</tr>
+							<tr>
+								<td><span class="pBlock">call displayBroadcastList</span></td>
+								<td>My Definitions</td>
+								<td>After loading data, display it.</td>
+							</tr>
+						</tbody>
+					</table>
+
+<!-- Page 184 -->
+
+				<div class="pagebreak">
+						<span class="pageNumber"> 184 </span> Chapter 11: Broadcast Hub
+				</div>
+
+				<figure>
+					<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch11img11.png">
+					</div>
+					<figcaption>Figure 11-10. Loading the BroadcastList from the database</figcaption>
+
+					<p>We need the <span class="pBlock">if</span> block in the event handler because the database will return an empty 
+						text (“”) if it’s the first time the app has been used and there isn’t yet a broadcast list. 
+						By asking if the <span class="python">valueFromDB</span> is a list, you’re making sure there is some data
+						actually returned. If there isn’t, you’ll bypass the blocks that transfer the returned data 
+						(<span class="python">valueFromDB</span>) into the variable <span class="python">BroadcastList</span>
+						and the blocks to display that data.</p>
+
+					<div class="test_your_app">
+						<img src="/contents/appinventor/images/test_phone.jpg">
+						
+						<p><span class="apptest_header">Test your app.</span>You can’t use live testing for apps that modify the
+							database because each time you click “Connect to Device,” the database 
+							starts out empty. So, to test the database storage and the
+							<span class="pBlock">Screen.Initialize</span> event handler, you’ll need to package and download the 
+							app to a phone (you can download an app by choosing “Package 
+							for Phone”→“Download to Connected Phone” in the Component 
+							Designer). Once you’ve downloaded your app, use your second and 
+							third test phones to send a text to join the group and then close the 
+							app on your original phone. If the numbers are still listed when you 
+							relaunch the app, then the database part is working.</p>
+					</div>
+
+				</section> <!-- Section 17, How the blocks work -->
+
+			</section> <!-- Section 16, Loading the BroadcastList from a Database -->
+
+		</section> <!-- Section 4, Adding Behaviors to the Components -->
+
+		<section class="section" data-number="18" data-name="The Complete App: Broadcast Hub">
+
+			<h3>The Complete App: Broadcast Hub</h3>
+
+			<p>Figure 11-11 illustrates the blocks in the completed Broadcast Hub app.</p>
+
+<!-- Page 185 -->
+
+				<div class="pagebreak">
+						<span class="pageNumber"> 185 </span> The Complete App: Broadcast Hub
+				</div>
+
+				<figure>
+					<div class="centeredImage">
+						<img src="/contents/appinventor/images/ch11img12.png">
+					</div>
+					<figcaption>Figure 11-11. The complete app</figcaption>
+				</figure>
+
+		</section> <!-- Section 18, The Complete App: Broadcast Hub -->
+
+		<section class="section" data-number="19" data-name="Variations">
+
+<!-- Page 186 -->
+
+				<div class="pagebreak">
+						<span class="pageNumber"> 186 </span> Chapter 11: Broadcast Hub
+				</div>
+			<h3>Variations</h3>
+
+			<p>After you’ve celebrated building such a complex app, you might want to explore some variations. For example:</p>
+
+			<ul>
+				<li>The app broadcasts each message to everyone, including the phone that sent the message. Modify this so
+					that the message is broadcast to everyone but the sender.</li>
+				<li>Allow client phones to remove themselves from the list by texting “quitabc” to the app. You’ll need a
+					<span class="pBlock">remove from list</span> block.</li>
+				<li>Let the hub administrator add and remove numbers from the broadcast list through the user interface.</li>
+				<li>Let the hub administrator specify numbers that should not be allowed into the list.</li>
+				<li>Customize the app so that anyone can join to receive messages, but only the administrator can broadcast
+					messages.</li>
+				<li>Customize the app so that anyone can join to receive messages, but only a fixed list of phone numbers can
+					broadcast messages to the group (this is how the Helsinki event app worked; see
+					<em>http://appinventorblog.com/2010/08/25/success-story-from-helsinki/</em>).</li>
+				<li>The app stores the broadcast list persistently, but not the log. Each time you close the app and reopen it,
+					the log starts over. Change this so that the log is persistent.</li>
+			</ul>
+
+		</section> <!-- Section 19, Variations -->
+
+		<section class="section" data-number="20" data-name="Summary">
+
+			<h3>Summary</h3>
+
+			<p>Here are some of the concepts we’ve covered in this tutorial:
+
+			<ul>
+				<li>Apps can react to events that are not initiated by the app user, like a text being received. That means you can
+					build apps in which your users are on a different phone.</li>
+				<li>Nested <span class="pBlock">ifelse</span> and <span class="pBlock">foreach</span> blocks can be used to
+					code complex behaviors. For more information on conditionals
+					and <span class="pBlock">foreach</span> iteration, see Chapters 18 and 20, respectively.</li>
+				<li>The <span class="pBlock">make text</span> block can be used to build a text object out of multiple parts.</li>
+				<li><span class="python">TinyDB</span> can be used to store and retrieve data from a database.
+					A general scheme is to call <span class="pBlock">StoreValue</span> to update the database whenever
+					the data changes and call <span class="pBlock">GetValue</span> to retrieve the database data when
+					the app begins.</li>
+			</ul>
+
+		</section> <!-- Section 20, Summary -->
+
+	</body>
+</html>

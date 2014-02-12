@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<title>Chapter 3</title>
+	
+</head>
+
+<body>
+
+	<div id="FLU" class="container fit">
+	
+		<section class="intro section" data-number="0" data-name="Chapter 3 Introduction">
+			<img src="/contents/fluency/images/sidepic.png"/>
+			
+			<div class="content">
+				<h1><span class="first-sentence">The Basics of Networking</span></h1>
+				<h2>Making the Connection</h2>
+				<h3>learning objectives</h3>
+				<ul class="learning-objectives">
+					<li>Tell whether a communication technology (Internet, radio, LAN, etc.) is synchronous or asynchronous; broadcast or point-to-point</li>
+					<li>Explain the roles of Internet addresses, domain names, and DNS servers in networking</li>
+					<li>Distinguish between types of protocols (TCP/IP and Ethernet)</li>
+					<li>Describe how computers are interconnected by an ISP and by a LAN</li>
+					<li>Distinguish between the Internet and the World Wide Web</li>
+				</ul>
+			</div> <!-- /content -->
+		</section> <!-- / intro1 -->
+		
+		<div class="pagebreak pageNumber"></div>
+		
+		<div class="intro"> <!-- intro2 -->
+			
+			<div class="content">
+			
+				<blockquote>
+					The open society, the unrestricted access to knowledge, the unplanned and uninhibited association of men for its furtherance &mdash; these are what make a vast, complex, ever growing, ever changing, ever more specialized and expert technological world nevertheless a world of human community.
+					<p class="citation">- J Robert Oppenheimer, 1953</p>
+				</blockquote>
+				
+				<blockquote>
+					The presence of humans in a system containing high-speed electronic computers and high-speed accurate communications is quite inhibiting [to the system].<p class="citation">- Stuart Luman Seaton, 1958</p>
+				</blockquote>
+				
+				<div class="intro-text">
+					<p><strong>Computers alone are useful.</strong>  Computers connected together are even more useful. Dramatic proof of this occurred in the mid-1990s when the Internet, long available to researchers, became generally available to the public. The Internet is the totality of all wires, fibers, switches, routers, satellite links, and other hardware for transporting information between addressed computers, as shown in Figure 3.1. For the first time, people could conveniently and inexpensively connect their computers to the Internet and thereby connect to all other computers attached to the Internet. They could send email and surf the Web from home. This convenient access to volumes of information, eCommerce, blogs, and other capabilities greatly expanded the benefits people derived from computers.</p>
+					<p>We begin this chapter by defining fundamental communication terms. These will help you compare the Internet with other forms of communication. Some topics are designed to give you a sense of how the Internet works without the technical details: naming computers, packets, the TCP/IP and Ethernet protocols, and connecting your computer to the Internet. Finally, the World Wide Web and file structures are explained in preparation for our discussion of HTML in Chapter 4.</p>
+				</div>
+			</div> <!-- /content -->
+			
+			<img src="/contents/fluency/images/sidepic.png"/>
+		</div> <!-- /intro2 -->
+
+		<div class="clear"></div>
+		
+		<div class="pagebreak pageNumber">60</div>
+		
+		<section class="page section" data-number="1" data-name="Comparing Communication Types"> <!-- page1 -->
+		
+			<section class="section"> <!-- section1 -->
+				<figure>
+					<img src="/contents/fluency/images/figure3.1.png"/>
+					<figcaption>
+						<span class="figureId">Figure 3.1</span>A schematic diagram of the Internet.
+					</figcaption>
+				</figure>
+				
+				<h2>Comparing Communication Types</h2>
+				<p><span class="first-sentence">To understand the Internet, it's necessary to explain some basic communication vocabulary.</span></p>
+				
+				<section class="subsection" data-number="2" data-name="General Communication"> <!-- subsection1.1 -->
+					<h3>General Communication</h3>
+					<p><span class="first-sentence">Communication between two entities, whether they are people or computers, can be separated into two broad classes: synchronous and asynchronous.</span> <strong>Synchronous communication</strong> requires that both the sender and the receiver are active at the same time. A telephone conversation is an example of synchronous communication because both people in the conversation must perform one of the two parts of the communication &mdash; sending (talking) or receiving (listening)&mdash; simultaneously. In <strong>asynchronous communication</strong>, the sending and receiving occur at different times. A postcard and text messages are examples of asynchronous communication because they are written at one time and read later. Answering machines and voice mail make synchronous telephones asynchronous because the caller leaves a message that the receiver listens to later. Email is asynchronous; applications like Skype and iChat are synchronous computer communication.</p>
+					<p>Another property of communication concerns the number of receivers. <strong>Broadcast communication</strong> involves a single sender and many receivers. Radio and television are examples of broadcast communication. The term <strong>multicast</strong> is used when there are many receivers, but the intended recipients are not the whole population. Magazines, often covering specialized topics, are an example of multicast communication. The opposite of broadcasting and multicasting is <strong>point-to-point communication</strong>. Telephone communication is point-to-point. The property of broadcast <em>versus</em> point-to-point communication is separate from the property of synchronous <em>versus</em> asynchronous communication.</p>
+				
+					<div class="pagebreak pageNumber">61</div>
+				</section> <!-- /subsection1.1 -->
+				
+				<section class="subsection" data-number="3" data-name="The Internet's Communication Properties"> <!-- subsection1.2 -->
+					<h3>The Internet's Communication Properties</h3>
+					<p><span class="first-sentence">The Internet supports point-to-point asynchronous communication.</span> A fundamental feature of the Internet is that it provides a general communication "fabric" linking all computers connected to it (see Figure 3.1). That is, the computers and the network become a single medium that can be applied in many ways to produce alternatives to established forms of communication. For example, the Internet can act like the postal system, but at electronic speed. In fact, the Internet is fast enough to mimic synchronous communication, enabling chatting: Two or more people can have a conversation by the rapid exchange of asynchronous messages, allowing the Internet to be used like a phone. Also, multicasting is possible, enabling small- to modest-size groups to communicate via blogs or chat rooms. Finally, because it is possible to post a Web page or YouTube video that can be accessed by anyone, the Internet offers a form of broadcasting that compares with radio or television. The Internet is truly a universal communications medium.</p>
+					<p>The Internet also becomes more effective with each additional computer added to it. That is, if <em>x</em> computers are already attached to the Internet, adding one more computer results in <em>x</em> potential new connections&mdash;that computer with each of the original machines.</p>
+					<div class="fluency-bit">
+					<strong class="fluency-bit-title">Internet.</strong>The present-day Internet is the commercial descendant of the ARPANET, developed for the U.S. Department of Defense Advanced Research Projects Agency (DARPA). The ARPANET sent its first messages in 1969.
+					</div>
+				</section> <!-- /subsection1.2 -->
+				
+				<section class="subsection" data-number="4" data-name="The Client/Server Structure"> <!-- subsection1.3 -->
+					<h3>The Client/Server Structure</h3>
+					<p><span class="first-sentence">Most interactions over the Internet use a protocol known as <strong>client/server interaction</strong></span>. This simple idea is illustrated by following what happens when you browse the Web.</p>
+					<p><span class="paragraph-header">A brief encounter.</span> When you click on a Web link, your computer begins the process of accessing the page for you. At that moment, your computer enters into a client/server interaction. Yours is the client computer and the computer on which the Web page is stored is the server computer, which is why it's called a <strong>Web server</strong> (see Figure 3.2). The term "client" refers to any situation where one computer, the <em>client</em>, gets services from another computer, the <em>server</em>. As a result of your client request, the server sends the page back over the Internet, fulfilling the request. That completes the operation started with your click on the link, and it ends that client/server relationship.</p>
+					<div class="fluency-bit">
+					<strong class="fluency-bit-title">Moving in the Right Direction.</strong> When we get files like Web pages from a server, we are <strong>downloading</strong> them; when we put the files on a server, we are <strong>uploading</strong> them. Think of the client as "below" the server.					
+					</div>
+					
+					<div class="pagebreak pageNumber">62</div>
+					
+					<figure>
+						<img src="/contents/fluency/images/figure3.2.png"/>
+						<figcaption>
+							<span class="figureId">Figure 3.2</span> The basic client/server interaction, as illustrated by the browser (client) requesting Web pages provided by the Web server.
+						</figcaption>
+					</figure>
+					<p>The client/server structure is fundamental to Internet interactions. A key aspect of the idea is that, as shown in Figure 3.2, only a single service request and response are involved. It is a very brief relationship, lasting from the moment the request is sent to the moment the service is received. Unlike a telephone call, in which a connection is made and <em>held</em> for as long as the call lasts, and during which there are many alternating exchanges, the client/server relationship is very short. It only entails the client's single request for a service and the server's reply in response.</p>
+					<p><span class="paragraph-header">Many brief relationships.</span> An important advantage of this approach is that the server can handle many clients at a time. Typically between two consecutive client requests from your browser&mdash;between getting a Web page and asking for the next Web page from the same site&mdash;that server could have serviced hundreds or perhaps thousands of other clients. This is a very efficient system, because the server is busy with you only for as long as it takes to perform your request. Once it's fulfilled, the relationship is over from the server's viewpoint. But the relationship is over from your viewpoint, too. Your next click could be on a link for a different server. Between that click and the next time you visit the site, if ever, you and your browser could be clients to hundreds or perhaps thousands of other Web servers. Figure 3.3 shows the client/server relationship over an interval of time.</p>
+					<div class="fluency-bit">
+					<strong class="fluency-bit-title">Staying Connected.</strong> With conventional telephones, callers stay connected even if no one is talking. In a client/server interaction, there is no connection. There is a client-to-server transmission for requests and a server-to-client transmission for replies. But doesn't your computer stay connected to the Internet? Yes, but only to your ISP&mdash;that is, to the Internet&mdash;not to a Web server.
+					</div>
+				</section> <!-- /subsection1.3 -->
+			</section> <!-- /section1 -->
+			
+			<section class="section" data-number="5" data-name="The Medium of the Message"> <!-- section2 -->
+			<h2>The Medium of the Message</h2>
+			<p><span class="first-sentence">How does the Internet transmit information such as Web pages and email messages?</span> Complex and sophisticated technologies are used to make today's Internet work, but the basic idea is extremely simple.</p>
+			
+			<div class="pagebreak pageNumber">63</div>
+			
+				<section class="subsection" data-number="6" data-name="The Name Game of Computer Addresses"> <!-- subsection2.1 -->
+					<figure>
+						<img src="/contents/fluency/images/figure3.3.png"/>
+						<figcaption>
+							<span class="figureId">Figure 3.3</span> Client/server relationships as they might evolve over time.
+						</figcaption>
+					</figure>
+					<h3>The Name Game of Computer Addresses</h3>
+					<p><span class="first-sentence">To begin, remember that the Internet uses point-to-point communication.</span> When anything is sent point-to-point&mdash;a phone conversation, a letter, or furniture&mdash; the destination address is required.</p>
+					<p><span class="paragraph-header">IP addresses.</span> Each computer connected to the Internet is given a unique address called its <strong>IP address</strong>, short for <strong>Internet Protocol address</strong>. An IP address is a series of four numbers separated by dots, as shown in Figure 3.4. For example, the IP address of the computer on which I am typing this sentence</p>
+					<figure>
+						<img src="/contents/fluency/images/figure3.4.png"/>
+						<figcaption>
+							<span class="figureId">Figure 3.4</span> Computers connected to the Internet are given IP addresses.
+						</figcaption>
+					</figure>
+					
+					<div class="pagebreak pageNumber">64</div>
+					
+					<p>is <code>128.208.2.44</code>, and the machine to which my email is usually sent is <code>128.208.3.200</code>. Although the range of each of these numbers (0-255) allows for billions of Internet addresses, IP addresses are actually in short supply.</p>
+					<div class="fluency-bit">
+					<strong class="fluency-bit-title">Change of Address.</strong> Since the 1970s we have used Internet Protocol Version 4 (IPv4). It is IPv4 that specifies that IP addresses are four numbers long. Four was plenty for the days when only about 200 computers were networked. Now most of the 1.5 billion computer users have a personal computer, motivating the development of Internet Protocol Version 6 (IPv6). IPv6 specifies IP addresses will be sixteen numbers long in the future, solving the IP address problem for good.
+					</div>
+					<p><span class="paragraph-header">Domain names.</span> If we needed to know the four numbers of the IP addresses of our friends' computers to send them email, the process would be very annoying and uncivilized. Instead, the Internet uses human-readable symbolic names for computers that are based on a hierarchy of <em>domains</em>. A <strong>domain</strong> is a related group of networked computers. For example, the name of my computer is <code>spiff.cs.washington.edu</code>, which reveals its domain membership by its structure. Pulling apart the name, my computer (<code>spiff</code>) is a member of the Computer Science and Engineering Department domain (<code>cs</code>), which is part of the University of Washington domain (<code>washington</code>), which is part of the educational domain (<code>edu</code>), as shown in Figure 3.5(a) and (b). This is a hierarchy of domains because each is a member of the next larger domain. Another of my computers, <code>tracer.cs.washington.edu</code>, has a name with a similar structure, so it is apparently a member of the same domain. Other departments at the University of Washington, such as Astronomy (<code>astro.washington.edu</code>), have names that are peers of <code>cs</code> (on the same level) within the <code>washington</code> domain, and other schools (for example, <code>princeton.edu</code>) have names that are peers with <code>washington</code> within the <code>edu</code> domain. These names are symbolic and meaningful, making them easier to read than numbers, and arranged in a hierarchy that makes them easier to remember.</p>
+					<p><span class="paragraph-header">DNS servers.</span> How do the convenient domain names like <code>spiff.cs.washington.edu</code> get converted into the IP addresses like <code>128.208.2.44</code> that computers need? The <strong>Domain Name System (DNS)</strong> translates the hierarchical, human-readable names into the four-number IP addresses. This allows both people and computers to use their preferred scheme.</p>
+					<p>Every Internet host (a computer connected to the Internet) knows the IP address of its nearest <strong>DNS name server</strong>, a computer that keeps a list of the human-readable symbolic names and the corresponding IP addresses. Whenever you use the hierarchical symbolic name to send information to some destination, your computer asks the DNS server to look up the corresponding IP address. It then uses that IP address to send the information. Notice that when your computer asks a DNS name server to translate a name to the IP address, it is in another client/server relationship.</p>
+					
+					<div class="pagebreak pageNumber">65</div>
+					
+					<figure>
+						<img src="/contents/fluency/images/figure3.5.png"/>
+						<figcaption>
+							<span class="figureId">Figure 3.5</span> Two ways to think of the Internet domain hierarchy.
+						</figcaption>
+					</figure>
+					<p>Usually the DNS server knows the translation for the symbolic name to the IP address because it has processed the IP address before, and so replies immediately. But if it doesn't know, it goes looking for the IP address by asking an <strong>authoritative name server</strong>. <em>Authoritative</em> means the name server keeps <em>the</em> complete list of the IP addresses and corresponding domain names for all authoritative name servers and computers in its domain. It's the "go to" name server.</p>
+					<p>If your name server is looking for my IP address, for example, because you have used <code>spiff.cs.washington.edu</code>, the search begins&mdash;in principle&mdash;with one</p>
+					
+					<div class="pagebreak pageNumber">66</div>
+					
+					<p>of the 13 <strong>root name</strong> servers. Referring to Figure 3.5, the root name servers know the IP address for name servers for the <code>com</code> domain, name servers for the <code>edu</code> domain, and all the others. Getting the IP address of the <code>edu</code> name server, your name server asks it for the name server for the <code>washington</code> domain. Getting that IP address, your name server next asks the authoritative <code>cs</code> name server, which knows that <code>spiff</code> has been assigned <code>128.208.2.44</code>. Your name server then asks the authoritative <code>cs</code> name server, gets the IP address for my computer, returns the address to your computer, and remembers it for future reference. This is the process "in principle," but name servers usually have many opportunities for shortcuts.</p>
+					<p>Notice that computers change their client and server roles all the time. When your local DNS server asks the root name server for help, it changes from being a server, which it was to your (client) computer, to being a client of the root name server.</p>
+					<div class="try-it">
+						<p><strong>3.1 Asking for Help.</strong> The Web server for the National Air and Space Museum (www.nasm.si.edu) has the IP address <code><strong>160.111.252.58</strong></code>. In principle, what authoritative name servers will your computer's name server ask to find this IP address for you?</p>
+					</div>
+					<p><span class="paragraph-header">Top-level domains.</span> The <code>.edu</code> domain for educational institutions is one of several <strong>top-level domain</strong> names, often abbreviated <strong>TLDs</strong>. In addition to <code>.edu</code>, the original top-level domains include:</p>
+					<blockquote>
+						<p><code>.com</code> for commercial enterprises</p>
+						<p><code>.org</code> for organizations</p>
+						<p><code>.net</code> for networks</p>
+						<p><code>.mil</code> for the military</p>
+						<p><code>.gov</code> for government agencies</p>
+					</blockquote>
+					<p>The top-level domains were expanded in 2000 to include <code>.biz</code>, <code>.info</code>, <code>.name</code>, <code>.travel</code>, and others; the full list can be found at <code>www.icann.org</code>. The original domains all apply to organizations in the United States. There is also a set of mnemonic two-letter country designators, such as <code>.ca</code> (Canada), <code>.uk</code> (United Kingdom), <code>.fr</code> (France), <code>.de</code> (Germany, as in Deutschland), <code>.es</code> (Spain, as in Espania), <code>.us</code> (United States), and so on. (See Table 3.1 on the next page for a complete list.) These allow domain names to be grouped by their country of origin. More top-level domain names will be coming because ICANN is expanding to user-defined top-level domain names.</p>
+					<div class="fluency-bit">
+					<strong class="fluency-bit-title">Root Name Servers.</strong> If the 13 root name servers are scattered around the world, where are they? Because they are mirrored, that is, copies of the same information is stored in multiple sites, they are everywhere. See the map at <strong>www.root-servers.org</strong> for the root name server nearest you.					
+					</div>
+			
+					<div class="pagebreak pageNumber">67</div>
+					
+					<div id="country-domains">
+					
+						<div class="table-title"><span class="tableNum">Table 3.1</span> Top-level country domain abbreviations</div>
+						<table>
+					
+							<tr>
+								<td>Afghanistan</td>
+								<td>af</td>
+								<td>Dominica</td>
+								<td>dm</td>
+								<td>Lesotho</td>
+								<td>ls</td>
+								<td>Saint Lucia</td>
+								<td>lc</td>
+							</tr>
+		
+							<tr>
+								<td>Albania</td>
+								<td>al</td>
+								<td>Dominican Republic</td>
+								<td>do</td>
+								<td>Liberia</td>
+								<td>lr</td>
+								<td>St Vincent, Grenadines</td>
+								<td>vc</td>
+							</tr>
+		
+							<tr>
+								<td>Algeria</td>
+								<td>dz</td>
+								<td>East Timor</td>
+								<td>tp</td>
+								<td>Libya</td>
+								<td>ly</td>
+								<td>Samoa</td>
+								<td>ws</td>
+							</tr>
+		
+							<tr>
+								<td>American Samoa</td>
+								<td>as</td>
+								<td>Ecuador</td>
+								<td>ec</td>
+								<td>Liechtenstein</td>
+								<td>li</td>
+								<td>San Marino</td>
+								<td>sm</td>
+							</tr>
+								
+							<tr>
+								<td>Andorra</td>
+								<td>ad</td>
+								<td>Egypt</td>
+								<td>eg</td>
+								<td>Lithuania</td>
+								<td>lt</td>
+								<td>Sao Tome and Principe</td>
+								<td>st</td>
+							</tr>
+			
+							<tr>
+								<td>Angola</td>
+								<td>ao</td>
+								<td>El Salvador</td>
+								<td>sv</td>
+								<td>Luxembourg</td>
+								<td>lu</td>
+								<td>Saudi Arabia</td>
+								<td>sa</td>
+							</tr>
+			
+							<tr>
+								<td>Anguilla</td>
+								<td>ai</td>
+								<td>Equatorial Guinea</td>
+								<td>gq</td>
+								<td>Macao</td>
+								<td>mo</td>
+								<td>Senegal</td>
+								<td>sn</td>
+							</tr>
+							
+							<tr>
+								<td>Antarctica</td>
+								<td>aq</td>
+								<td>Eritrea</td>
+								<td>er</td>
+								<td>Macedonia</td>
+								<td>mk</td>
+								<td>Seychelles</td>
+								<td>sc</td>
+							</tr>
+							
+							<tr>
+								<td>Antigua and Barbuda</td>
+								<td>ag</td>
+								<td>Estonia</td>
+								<td>ee</td>
+								<td>Madagascar</td>
+								<td>mg</td>
+								<td>Sierra Leone</td>
+								<td>sl</td>
+							</tr>
+							
+							<tr>
+								<td>Argentina</td>
+								<td>ar</td>
+								<td>Ethiopia</td>
+								<td>et</td>
+								<td>Malawi</td>
+								<td>mw</td>
+								<td>Singapore</td>
+								<td>sg</td>
+							</tr>
+							
+							<tr>
+								<td>Armenia</td>
+								<td>am</td>
+								<td>Falkland Islands</td>
+								<td>fk</td>
+								<td>Malaysia</td>
+								<td>my</td>
+								<td>Slovakia</td>
+								<td>sk</td>
+							</tr>
+							
+							<tr>
+								<td>Aruba</td>
+								<td>aw</td>
+								<td>Faroe Islands</td>
+								<td>fo</td>
+								<td>Maldives</td>
+								<td>mv</td>
+								<td>Slovenia</td>
+								<td>si</td>
+							</tr>
+							
+							<tr>
+								<td>Ascension Island</td>
+								<td>ac</td>
+								<td>Fiji</td>
+								<td>fj</td>
+								<td>Mali</td>
+								<td>ml</td>
+								<td>Solomon Islands</td>
+								<td>sb</td>
+							</tr>
+							
+							<tr>
+								<td>Australia</td>
+								<td>au</td>
+								<td>Finland</td>
+								<td>fi</td>
+								<td>Malta</td>
+								<td>mt</td>
+								<td>Somalia</td>
+								<td>so</td>
+							</tr>
+			
+							<tr>
+								<td>Austria</td>
+								<td>at</td>
+								<td>France</td>
+								<td>fr</td>
+								<td>Marshall Islands</td>
+								<td>mh</td>
+								<td>South Africa</td>
+								<td>za</td>
+							</tr>
+							
+							<tr>
+								<td>Azerbaijan</td>
+								<td>az</td>
+								<td>French Guiana</td>
+								<td>gf</td>
+								<td>Martinique</td>
+								<td>mq</td>
+								<td>S Georgia,</td>
+								<td></td>
+							</tr>
+							
+							<tr>
+								<td>Bahrain</td>
+								<td>bh</td>
+								<td>French Polynesia</td>
+								<td>pf</td>
+								<td>Mauritania</td>
+								<td>mr</td>
+								<td>S Sandwich Islands</td>
+								<td>gs</td>
+							</tr>
+							
+							<tr>
+								<td>Bangladesh</td>
+								<td>bd</td>
+								<td>Gabon</td>
+								<td>ga</td>
+								<td>Mauritius</td>
+								<td>mu</td>
+								<td>Spain</td>
+								<td>es</td>
+							</tr>
+							
+							<tr>
+								<td>Barbados</td>
+								<td>bb</td>
+								<td>Gambia</td>
+								<td>gm</td>
+								<td>Mexico</td>
+								<td>mx</td>
+								<td>Sri Lanka</td>
+								<td>lk</td>
+							</tr>
+							
+							<tr>
+								<td>Belarus</td>
+								<td>by</td>
+								<td>Georgia</td>
+								<td>ge</td>
+								<td>Micronesia</td>
+								<td>fm</td>
+								<td>St. Helena</td>
+								<td>sh</td>
+							</tr>
+							
+							<tr>
+								<td>Belgium</td>
+								<td>be</td>
+								<td>Germany</td>
+								<td>de</td>
+								<td>Moldova</td>
+								<td>md</td>
+								<td>Sudan</td>
+								<td>sd</td>
+							</tr>
+							
+							<tr>
+								<td>Belize</td>
+								<td>bz</td>
+								<td>Ghana</td>
+								<td>gh</td>
+								<td>Monaco</td>
+								<td>mc</td>
+								<td>Suriname</td>
+								<td>sr</td>
+							</tr>
+							
+							<tr>
+								<td>Benin</td>
+								<td>bj</td>
+								<td>Gibraltar</td>
+								<td>gi</td>
+								<td>Mongolia</td>
+								<td>mn</td>
+								<td>Swaziland</td>
+								<td>sz</td>
+							</tr>
+							
+							<tr>
+								<td>Bermuda</td>
+								<td>bm</td>
+								<td>Greece</td>
+								<td>gr</td>
+								<td>Montserrat</td>
+								<td>ms</td>
+								<td>Sweden</td>
+								<td>se</td>
+							</tr>
+							
+							<tr>
+								<td>Bhutan</td>
+								<td>bt</td>
+								<td>Greenland</td>
+								<td>gl</td>
+								<td>Morocco</td>
+								<td>ma</td>
+								<td>Switzerland</td>
+								<td>ch</td>
+							</tr>
+							
+							<tr>
+								<td>Bolivia</td>
+								<td>bo</td>
+								<td>Grenada</td>
+								<td>gd</td>
+								<td>Mozambique</td>
+								<td>mz</td>
+								<td>Syria</td>
+								<td>sy</td>
+							</tr>
+							
+							<tr>
+								<td>Bosnia and</td>
+								<td></td>
+								<td>Guadeloupe</td>
+								<td>gp</td>
+								<td>Myanmar</td>
+								<td>mm</td>
+								<td>Taiwan</td>
+								<td>tw</td>
+							</tr>
+							
+							<tr>
+								<td>Herzegovina</td>
+								<td>ba</td>
+								<td>Guam</td>
+								<td>gu</td>
+								<td>Namibia</td>
+								<td>na</td>
+								<td>Tajikistan</td>
+								<td>tj</td>
+							</tr>
+							
+							<tr>
+								<td>Botswana</td>
+								<td>bw</td>
+								<td>Guatemala</td>
+								<td>gt</td>
+								<td>Nauru</td>
+								<td>nr</td>
+								<td>Tanzania</td>
+								<td>tz</td>
+							</tr>
+							
+							<tr>
+								<td>Brazil</td>
+								<td>br</td>
+								<td>Guinea</td>
+								<td>gn</td>
+								<td>Nepal</td>
+								<td>np</td>
+								<td>Thailand</td>
+								<td>th</td>
+							</tr>
+							
+							<tr>
+								<td>Brunei</td>
+								<td>bn</td>
+								<td>Guinea-Bissau</td>
+								<td>gw</td>
+								<td>Netherlands</td>
+								<td>nl</td>
+								<td>The Bahamas</td>
+								<td>bs</td>
+							</tr>
+							
+							<tr>
+								<td>Bulgaria</td>
+								<td>bg</td>
+								<td>Guyana</td>
+								<td>gy</td>
+								<td>Netherlands Antilles</td>
+								<td>an</td>
+								<td>The Cayman Islands</td>
+								<td>ky</td>
+							</tr>
+							
+							<tr>
+								<td>Burkina Faso</td>
+								<td>bf</td>
+								<td>Haiti</td>
+								<td>ht</td>
+								<td>New Caledonia</td>
+								<td>nc</td>
+								<td>Togo</td>
+								<td>tg</td>
+							</tr>
+							
+							<tr>
+								<td>Burundi</td>
+								<td>bi</td>
+								<td>Honduras</td>
+								<td>hn</td>
+								<td>New Zealand</td>
+								<td>nz</td>
+								<td>Tokelau</td>
+								<td>tk</td>
+							</tr>
+							
+							<tr>
+								<td>Cambodia</td>
+								<td>kh</td>
+								<td>Hong Kong</td>
+								<td>hk</td>
+								<td>Nicaragua</td>
+								<td>ni</td>
+								<td>Tonga</td>
+								<td>to</td>
+							</tr>
+							
+							<tr>
+								<td>Cameroon</td>
+								<td>cm</td>
+								<td>Hungary</td>
+								<td>hu</td>
+								<td>Niger</td>
+								<td>ne</td>
+								<td>Trinidad and Tobago</td>
+								<td>tt</td>
+							</tr>
+							
+							<tr>
+								<td>Canada</td>
+								<td>ca</td>
+								<td>Iceland</td>
+								<td>is</td>
+								<td>Nigeria</td>
+								<td>ng</td>
+								<td>Tunisia</td>
+								<td>tn</td>
+							</tr>
+							
+							<tr>
+								<td>Cape Verde</td>
+								<td>cv</td>
+								<td>India</td>
+								<td>in</td>
+								<td>Niue</td>
+								<td>nu</td>
+								<td>Turkey</td>
+								<td>tr</td>
+							</tr>
+							
+							<tr>
+								<td>Central African</td>
+								<td></td>
+								<td>Indonesia</td>
+								<td>id</td>
+								<td>N. Mariana Islands</td>
+								<td>mp</td>
+								<td>Turkmenistan</td>
+								<td>tm</td>
+							</tr>
+							
+							<tr>
+								<td>Republic</td>
+								<td>cf</td>
+								<td>Iran</td>
+								<td>ir</td>
+								<td>Norway</td>
+								<td>no</td>
+								<td>Tuvalu</td>
+								<td>tv</td>
+							</tr>
+							
+							<tr>
+								<td>Chad</td>
+								<td>td</td>
+								<td>Iraq</td>
+								<td>iq</td>
+								<td>Oman</td>
+								<td>om</td>
+								<td>Uganda</td>
+								<td>ug</td>
+							</tr>
+							
+							<tr>
+								<td>Chile</td>
+								<td>cl</td>
+								<td>Ireland</td>
+								<td>ie</td>
+								<td>Pakistan</td>
+								<td>pk</td>
+								<td>Ukraine</td>
+								<td>ua</td>
+							</tr>
+							
+							<tr>
+								<td>China</td>
+								<td>cn</td>
+								<td>Isle of Man</td>
+								<td>im</td>
+								<td>Palau</td>
+								<td>pw</td>
+								<td>United Arab Emirates</td>
+								<td>ae</td>
+							</tr>
+							
+							<tr>
+								<td>Christmas Island</td>
+								<td>cx</td>
+								<td>Israel</td>
+								<td>il</td>
+								<td>Panama</td>
+								<td>pa</td>
+								<td>United Kingdom</td>
+								<td>uk</td>
+							</tr>
+							
+							<tr>
+								<td>Cocos (Keeling) Islands</td>
+								<td>cc</td>
+								<td>Italy</td>
+								<td>it</td>
+								<td>Papua New Guinea</td>
+								<td>pg</td>
+								<td>United States</td>
+								<td>us</td>
+							</tr>
+							
+							<tr>
+								<td>Colombia</td>
+								<td>co</td>
+								<td>Jamaica</td>
+								<td>jm</td>
+								<td>Paraguay</td>
+								<td>py</td>
+								<td>Uruguay</td>
+								<td>uy</td>
+							</tr>
+							
+							<tr>
+								<td>Comoros</td>
+								<td>km</td>
+								<td>Japan</td>
+								<td>jp</td>
+								<td>Peru</td>
+								<td>pe</td>
+								<td>Uzbekistan</td>
+								<td>uz</td>
+							</tr>
+							
+							<tr>
+								<td>Congo</td>
+								<td>cg</td>
+								<td>Jordan</td>
+								<td>jo</td>
+								<td>Philippines</td>
+								<td>ph</td>
+								<td>Vanuata</td>
+								<td>vu</td>
+							</tr>
+							
+							<tr>
+								<td>Congo, DRC</td>
+								<td>cd</td>
+								<td>Kazakhstan</td>
+								<td>kz</td>
+								<td>Pitcairn</td>
+								<td>pn</td>
+								<td>Vatican City State</td>
+								<td>va</td>
+							</tr>
+							
+							<tr>
+								<td>Cook Islands</td>
+								<td>ck</td>
+								<td>Kenya</td>
+								<td>ke</td>
+								<td>Poland</td>
+								<td>pl</td>
+								<td>Venezuela</td>
+								<td>ve</td>
+							</tr>
+							
+							<tr>
+								<td>Costa Rica</td>
+								<td>cr</td>
+								<td>Kiribati</td>
+								<td>ki</td>
+								<td>Portugal</td>
+								<td>pt</td>
+								<td>Vietnam</td>
+								<td>vn</td>
+							</tr>
+							
+							<tr>
+								<td>Cote d'Ivoire</td>
+								<td>ci</td>
+								<td>Korea, DPRK</td>
+								<td>kp</td>
+								<td>Puerto Rico</td>
+								<td>pr</td>
+								<td>Virgin Islands (British)</td>
+								<td>vg</td>
+							</tr>
+							
+							<tr>
+								<td>Croatia</td>
+								<td>hr</td>
+								<td>Korea, Republic of</td>
+								<td>kr</td>
+								<td>Qatar</td>
+								<td>qa</td>
+								<td>Virgin Islands (US)</td>
+								<td>vi</td>
+							</tr>
+							
+							<tr>
+								<td>Cuba</td>
+								<td>cu</td>
+								<td>Kuwait</td>
+								<td>kw</td>
+								<td>Reunion</td>
+								<td>re</td>
+								<td>Western Sahara</td>
+								<td>eh</td>
+							</tr>
+						
+							<tr>
+								<td>Cyprus</td>
+								<td>cy</td>
+								<td>Kyrgyzstan</td>
+								<td>kg</td>
+								<td>Romania</td>
+								<td>ro</td>
+								<td>Yemen</td>
+								<td>ye</td>
+							</tr>
+							
+							<tr>
+								<td>Czech Republic</td>
+								<td>cz</td>
+								<td>Laos</td>
+								<td>la</td>
+								<td>Russia</td>
+								<td>ru</td>
+								<td>Yugoslavia</td>
+								<td>yu</td>
+							</tr>
+							
+							<tr>
+								<td>Denmark</td>
+								<td>dk</td>
+								<td>Latvia</td>
+								<td>lv</td>
+								<td>Rwanda</td>
+								<td>rw</td>
+								<td>Zambia</td>
+								<td>zm</td>
+							</tr>
+							
+							<tr>
+								<td>Djibouti</td>
+								<td>dj</td>
+								<td>Lebanon</td>
+								<td>lb</td>
+								<td>Saint Kitts and Nevis</td>
+								<td>kn</td>
+								<td>Zimbabwe</td>
+								<td>zw</td>
+							</tr>
+
+						</table> 
+						
+					</div> <!-- /country-domains -->
+					
+					<div class="pagebreak pageNumber">68</div>
+					
+				</section> <!-- /subsection2.1 -->
+					
+				<section class="subsection" data-number="7" data-name="Following Protocol"> <!-- subsection2.2 -->
+					<h3>Following Protocol</h3>
+					<p><span class="first-sentence">Having figured out how a computer addresses other computers to send them information, we still need to describe how the information is actually sent.</span> The sending process uses <strong>Transmission Control Protocol/Internet Protocol (TCP/IP)</strong>. It sounds technical&mdash;and is&mdash;but the concept is easy to understand.</p>
+					<p><span class="paragraph-header">TCP/IP postcard analogy.</span> To explain how TCP/IP works, we repeat an analogy used by Vinton Cerf, one of the pioneers of IP: Sending information over the Internet is like sending your novel from your home in Tahiti to your publisher in New York City using only postcards. How could you do that? You would begin by breaking up the novel into small units, only a few sentences long, so that each unit fits on a postcard. Then number each postcard to indicate where in the sequence of your novel the sentences belong, and write the publisher's address on each. As you complete the postcards, drop them into a mailbox. The postal service in Tahiti sends them to the publisher (eventually), but the cards are not kept together, nor do they all take the same route. Some postcards may go west, via Hong Kong; others may go east, via Los Angeles. From Hong Kong and Los Angeles, there are multiple routes to New York City. Eventually the postcards arrive at the publisher, who uses the numbers to put the postcards in order and reconstruct the novel, as shown in Figure 3.6.</p>
+					
+					<img id="margin-pic" src="/contents/fluency/images/postcard.png" />
+
+					<p id="margin-pic-text">Cerf's postcard analogy makes the concept of TCP/IP clear. Sending any amount of information, including a whole novel, is possible by breaking it into a sequence of small fixed-size units. An <strong>IP packet</strong>, like the postcard, has space for the unit, a destination IP address, and a sequence number. IP packets are filled in order and assigned sequence numbers. The packets are sent over the Internet one at a time using whatever route is available, as shown in Figure 3.7. At the destination, they are reordered by sequence number to assemble the information.</p>
+					
+					<p><span class="paragraph-header">Packets are independent.</span> Consider the advantages of TCP/IP. For example, it is natural to assume that IP packets would take a single path to their destinations, like conventional telephone calls, but they do not. Because each packet can take a different route, congestion and service interruptions do not delay</p>
+
+					<figure>
+						<img src="/contents/fluency/images/figure3.6.png"/>
+						<figcaption>
+							<span class="figureId">Figure 3.6</span> The TCP/IP postcard analogy.
+						</figcaption>
+					</figure>
+					
+					<div class="pagebreak pageNumber">69</div>
+					
+					<figure>
+						<img src="/contents/fluency/images/figure3.7.png"/>
+						<figcaption>
+							<span class="figureId">Figure 3.7</span> The Internet makes use of whatever routes are available to deliver packets.
+						</figcaption>
+					</figure>
+
+					<p>transmissions. If sending the first postcard via Hong Kong meant that all following postcards had to be sent via Hong Kong, then a typhoon preventing aircraft from flying between Tahiti and Hong Kong would delay the novel's transmission. But if the postcards can take any available route, the transmission can continue via Los Angeles. As a result, all of the novel might be delivered via LA before airline service is restored between Tahiti and Hong Kong. This concept motivated engineers to decide to make TCP/IP packets independent.</p>
+
+					<p><span class="paragraph-header">Moving packets: wires and more.</span> Although Cerf's analogy uses postcards and airplanes, the Internet uses electrical, electronic, and optical communication means. The original ARPANET used long-distance telephone lines, and the Internet continues to rely on telephone carriers for long-distance connections. However, as the Internet has grown and as new technologies such as fiber optics have matured, the Internet now uses separate dedicated lines as well. Because the TCP/IP protocol describes exactly how IP packets are structured and handled, the technology used to move the packets only concerns the carrier. The computers at each end of the communication do not know or care what medium is used because they simply send and receive IP packets. Indeed, transmissions often rely on multiple technologies as the packets move across the Internet.</p>
+					<p>Ironically, with the growth of Internet capacity, telephone companies are also sending telephone conversations over the Internet. Speech is digitized, stuffed into IP packets at the speaker's end, sent over the Internet, unpacked at the listener's end, and converted to the analog form acceptable to a phone set. This Voice over IP (VoIP) application suggests that the Internet is fast becoming the universal information carrier.</p>
+					<div class="fluency-bit">
+					<strong class="fluency-bit-title">Netting a Prize.</strong> Vint Cerf and Bob Kahn received the 2004 Turing Award from the Association of Computing Machinery, computing's Nobel Prize, for the development of TCP/IP.
+					</div>
+					
+					<div class="pagebreak pageNumber">70</div>
+					
+				</section> <!-- /subsection2.2 -->
+					
+				<section class="subsection" data-number="8" data-name="Far and Near: WAN and LAN"> <!-- subsection2.3 -->
+					<h3>Far and Near: WAN and LAN</h3>
+					<p><span class="first-sentence">The Internet is a collection of <strong>wide area networks (WAN)</strong>, meaning networks designed to send information between two locations widely separated and not directly connected.</span> In our postcard analogy, Tahiti and New York City are not directly connected; that is, we don't expect there to be a single airline flight between Tahiti and the Big Apple. So each postcard takes a sequence of connecting flights to reach New York City. In the same way, the Internet is a collection of point-to-point channels, and packets must visit a sequence of computers to reach their destination. In networking terms, packets take several hops to be delivered. The trace in Figure 3.8 shows that a ping&mdash;a "please reply" message&mdash;from my machine <code>spiff</code> to <code>eth.ch</code>, the Swiss Federal Technical University, takes 18 hops on its route from Seattle to Zurich.</p>
+					<p>When computers are close enough to be linked by a single cable or pair of wires, the interconnection is referred to as a <strong>local area network (LAN)</strong>. Ethernet is the main technology for local area networks, and is appropriate for connecting all the computers in a lab or building. An Ethernet network uses a radically different approach than the Internet, but it's equally easy to understand.</p>
+					<p><span class="paragraph-header">Ethernet party analogy.</span> Depending on the technology, the physical setup for an Ethernet network is a wire, wire pair, or optical fiber, called the <strong>channel</strong>, that winds past a set of computers. (Robert Metcalfe, the inventor of the Ethernet design, described the channel as the "The Ether," giving the technology its name; see Figure 3.9.) Engineers "tap" the channel to connect a computer, allowing it to send a signal (that is, drive an electronic pulse or light flash onto the channel). All computers connected to the channel can detect the signal, including the sender. Thus the channel supports broadcast communication.</p>
+					<figure>
+						<img src="/contents/fluency/images/figure3.8.png">
+						<figcaption>
+							<span class="figureId">Figure 3.8</span> A ping from the author's machine to <code>eth.ch</code>.
+						</figcaption>
+					</figure>
+					
+					<div class="pagebreak pageNumber">71</div>
+					
+					<figure>
+						<img src="/contents/fluency/images/figure3.9.png"/>
+						<figcaption>
+							<span class="figureId">Figure 3.9</span> Robert Metcalfe's original drawing of the Ethernet design; the unlabeled boxes (computers) "tap" onto the wire that Metcalfe labeled "The Ether".
+						</figcaption>
+					</figure>
+					<div class="fluency-bit">
+					<strong class="fluency-bit-title">Getting Ether.</strong> Robert Metcalfe described the Ethernet (in 1973) as a "multi-point data communication channel with collision detection." His first implementation connected the 100-node <em>Alto Aloha Network</em> at Xerox's Palo Alto Research Center.
+					</div>
+					<p>To understand how an Ethernet network works, consider another analogy. A group of friends is standing around at a party telling stories. While someone is telling a story, everyone is listening. The speaker is broadcasting to the group. When the story is over, how do the friends decide who tells the next story? There may be a momentary pause while the friends wait for someone to speak. Since there is no plan or agreement as to who should speak next, someone typically just begins talking. If no one else begins talking, that speaker continues telling the story to completion. At the end of the story, the same situation arises. There is a pause, and then someone else starts talking. If two or more people begin talking after the pause, they will notice that someone else is speaking and immediately stop. There is a pause while everyone waits for someone to go ahead. Assuming speakers tend to wait a random length of time, someone will begin talking. It's possible that two or more speakers will again start at the same time, notice the situation, stop, and wait a random length of time. Eventually one person will begin telling another story.</p>
+					<p>In this analogy we have assumed all the friends are equal; that is, there is no difference in status, nor does anyone have an especially loud or soft voice. Even so, the system isn't fair, because it favors the person who waits the shortest length of time at the end of a story. Of course, we all know such people!</p>
+					<p>Ethernet communication works like the party protocol. When the channel is in use, as when someone is telling a story, all of the computers listen to it. (Unlike storytelling, however, only one computer typically keeps the transmitted information; that is, this broadcast medium is being used for point-to-point communication.) A pause indicates the end of the transmission when no</p>
+					
+					<div class="pagebreak pageNumber">72</div>
+					
+					<p>computer is sending signals and the channel is quiet. A computer wanting to transmit starts sending signals and, at the same time, starts listening to the channel to detect what is being transmitted. If it is exactly the information the computer sent, the computer knows it's the only one sending, and it completes its transmission. If the computer's signals are mixed in with signals from one or more other computers, it notices the garbled message and stops transmitting immediately. The other computer(s) stop too. Each machine pauses for a random length of time. The computer that waits the shortest length of time begins sending, and if there are no conflicting computers, it continues. If not, the colliders repeat the process.</p>
+					<div class="fluency-bit">
+					<strong class="fluency-bit-title">Many Versus One.</strong> There is an important difference between the way the Internet works and the way an Ethernet works. The Internet uses a point-to-point network to implement point-to-point communication. An Ethernet uses a broadcast network for point-to-point communication. The difference is that with the Internet multiple communications can take place at once over different wires, but with the Ethernet only one communication can take place at a time. This limitation is usually not a problem, because Ethernets usually carry much less traffic.
+					</div>
+					<p>Notice that the Ethernet scheme is completely decentralized and requires no schedule or plan. Each computer listens to the channel, and if it's quiet, it's free. The computer transmits unless some other computer starts at the same moment. When that happens, both computers back off for a brief (random) amount of time and then try again.</p>
+					
+				</section> <!-- /subsection2.3 -->
+					
+				<section class="subsection" data-number="9" data-name="Connecting a Computer to the Internet"> <!-- subsection2.4 -->
+					<h3>Connecting a Computer to the Internet</h3>
+					<p><span class="first-sentence">How are computers actually connected to the Internet? Today there are two basic methods:</span></p>
+					<ul>
+						<li>By an Internet service provider (ISP)</li>
+						<li>By a campus or enterprise network</li>
+					</ul>
+					<p>Most of us use both kinds of connections daily, depending on where we study or work. Let's look at each approach.</p>
+					<p><span class="paragraph-header">Connections by ISP</span> As the name implies, Internet service providers sell connections to the Internet. Examples of ISPs are <code>Comcast.com</code> and <code>Earthlink.net</code>, but there are thousands of providers. Most home users connect to the Internet by ISPs. Here's how an ISP connection usually works.</p>
+					<p>Users plug their computer into the telephone system just as they would connect an extension telephone. (The plug, called an RJ-11, is universal in North America, but an adapter may be needed elsewhere.) Then the computer's modem, which is generally built into modern personal computers, can dial up the ISP and establish a connection. This operation is similar to a fax machine dialing another fax machine. A preferred alternative to dial-up, because it is much faster, is a dedicated connection to the ISP, such as a <strong>digital subscriber line (DSL)</strong>. DSL, which is provided by a phone company or through an</p>
+					
+					<div class="pagebreak pageNumber">73</div>
+					
+					<p>equivalent service provided by cable companies, connects "continuously" to the ISP. Either way, the modems&mdash;one at each end of the connection&mdash;enable the home computer to talk to the ISP's computer so that they can send and receive information. The ISP's computer is connected to the Internet, so it relays information for its customers. For example, when you surf the Web and click on a remote link (that is, a page stored on a distant computer), the request for the page is sent from your computer to the ISP's computer, across the Internet to the remote computer, which then sends the Web page back across the Internet to the computer at the ISP. From there, the page is sent over the ISP's connection to your computer and displayed on your screen.</p>
+					<p><span class="paragraph-header">Enterprise network connections (LAN).</span> The other way to connect to the Internet is as a user of a larger networked organization such as a school, business, or governmental unit. In this case, the organization's system administrators connect the computers and form a local area network (LAN). The Ethernet technology mentioned earlier is an example of a local area network. These local networks, known as <strong>intranets</strong>, support communication within the organization, but they also connect to the Internet by a gateway. Information from a distant Web computer is sent across the Internet, through the gateway to the organization's intranet, and across the LAN to the user's computer. With either method, ISP or LAN, you usually send and receive information across the Internet transparently&mdash;that is, without knowing or caring which method is used.</p>
+					<p><span class="paragraph-header">Wireless networks.</span> The two preceding examples cover the usual cases for fixed location computers, that is, those tethered by the phone or network cables (and power cables, too). Laptops, notebooks, hand-helds, and other mobile computers may be connected to network cables, but they are most convenient when they use wireless communication. <strong>Wireless networking</strong> is a variation on the LAN connection and is often referred to by its protocol name <strong>802.11</strong>, pronounced <em>eight-oh-two-eleven</em>; see Figure 3.10. A <strong>router</strong> is physically connected to the Internet and is capable of broadcasting and receiving signals, usually radio frequency (rf) signals, which the mobile computers can also send and receive. The router and any computers within signal range (with their wireless communication turned on) participate in a network based on the Ethernet principles described earlier. The router relays Internet requests for the participating computers.</p>
+					<div class="fluency-bit">
+					<strong class="fluency-bit-title">Should I know My Computer's IP Address?</strong> No. If you are dialing into the Internet via an ISP, your computer is assigned a temporary IP address when you log in and you use it until you log out. If you access the Internet via an intranet, one of two cases applies. Your network administrator may have assigned your computer an IP address when it was set up. Alternatively, no permanent address was assigned, and through the Dynamic Host Configuration Protocol (<strong>DHCP</strong>), your computer is assigned an address each time you turn it on. Wireless uses DCHP, too. In any case, the IP address is nothing you have to worry about.
+					</div>
+					
+					<div class="pagebreak pageNumber">74</div>
+					
+					<figure>
+						<img src="/contents/fluency/images/figure3.10.png">
+						<figcaption>
+							<span class="figureId">Figure 3.10</span> Standard Wi-Fi network configuration. A wireless router is connected via the modem to the ISP's Internet modem; laptops and other wireless-enabled devices connect by radio signals to the router.
+						</figcaption>
+					</figure>
+					
+				</section> <!-- /subsection2.4 -->
+			</section> <!-- /section2 -->
+				
+			<section class="section" data-number="10" data-name="The World Wide Web"> <!-- section3 -->
+				<h2>The World Wide Web</h2>
+				<p><span class="first-sentence">Some of the computers connected to the Internet are <strong>Web servers</strong>.</span> That is, they are computers programmed to send files to browsers running on other computers connected to the Internet. Together these Web servers and their files comprise the <strong>World Wide Web (WWW)</strong>. The files are Web pages, but Web servers store and send many other kinds of files, too. These files are often used to create the Web page (for example, images or animations) or to help with other Web services (for example, software used to play audio or video).</p>
+				<p>When described in these terms, the Web doesn't seem like much. And technically, it's not. What makes the World Wide Web significant is the information contained in the files and the ability of the client and server computers to process it.</p>
+				<div class="fluency-bit">
+				<strong class="fluency-bit-title">No Confusion.</strong> The World Wide Web and the Internet are different. The Internet is all of the wires and routers connecting named computers, that is, the hardware. The World Wide Web is a subset of those computers (Web servers) and their files.
+				</div>
+				
+				<section class="subsection" data-number="11" data-name="Requesting a Web Page"> <!-- subsection3.1 -->
+					<h3>Requesting a Web Page</h3>
+					<p><span class="first-sentence">As noted earlier, Web requests are processed in a client/server interaction.</span> When you request a Web page, such as my university Web page</p>
+					
+					<div class="pagebreak pageNumber">75</div>
+					
+					<p>(<code>http://www.cs.washington.edu/homes/snyder/index.html</code>), your browser is a client asking for a file from a Web server computer. The <strong>URL (Universal Resource Locator)</strong>, has three main parts:</p>	
+					<ul>
+						<li><strong>Protocol</strong>. The <code>http://</code> part, which stands for <strong>Hypertext Transfer Protocol</strong>, tells the computers how to handle the file. There are other ways to send files, such as <code>ftp</code>, File Transfer Protocol.</li>
+						<li><strong>Server computer's name</strong>. The name is the server's IP address given by the domain hierarchy, <code>www.cs.washington.edu</code>. Your computer uses the name to send a request to the server computer for the page.</li>
+						<li><strong>Page's pathname</strong>. The pathname is the sequence following the IP address: <code>/homes/snyder/index.html</code>. The pathname tells the server which file (page) is requested and where to find it.</li>	
+					</ul>
+					<p>All URLs have this structure, although you may not think so, because in some cases you can leave parts out and the software fills in the missing part. (This is further explained in the next section.) It is never a mistake to use the full form.</p>
+					<p>Summarizing, Web browsers and Web servers both "speak" HTTP. When you specify a URL in your browser's location window, you say where the information is to be found (server's name), what information you want (pathname), and what protocol the two computers will use to exchange the information (HTTP).</p>
+					<div class="try-it">
+					<p><strong>3.2 Take It to the Bank.</strong> Classify each part of this URL according to the three parts just described: <code>https://accts.lastbank.com/newdeposits/welcome/toaster.html</code>.</p>
+					</div>
+				</section> <!-- /subsection3.1 -->
+					
+				<section class="subsection" data-number="12" data-name="Describing a Web Page"> <!-- subsection3.2 -->
+					<h3>Describing a Web Page</h3>
+					<p><span class="first-sentence">As you know, servers do not store Web pages in the form seen on our screens.</span> Instead, the pages are stored as a <em>description</em> of how they should appear on the screen. When the Web browser receives the description file (<strong>source</strong> file), it creates the Web page image that it displays. There are two advantages to storing and sending the source rather than the image itself:</p>
+					<ul>
+						<li>A description file usually requires less information.</li>
+						<li>The browser can adapt the source image to your computer more easily than a literal pixel-by-pixel description.</li>
+					</ul>
+					<p>For example, it's easier to shrink or expand the page from its description than to use the image itself. Though browsers show the image, they always give you the option of seeing the description, too. Next time you are online, look under the <em>View</em> menu and choose the <em>Source</em> or <em>Page Source</em> option in your browser. Figure 3.11 shows a simple Web page and its source.</p>
+					
+					<div class="pagebreak pageNumber">76</div>
+					
+					<figure>
+						<img src="/contents/fluency/images/figure3.11.png">
+						<figcaption>
+							<span class="figureId">Figure 3.11</span> A Web page and the HTML source that produced it. Notice that an additional image file, <code>alto.jpg</code>, is also required to display the page.
+						</figcaption>
+					</figure>
+					
+					<div class="fluency-bit">
+						<strong class="fluency-bit-title">Stated Briefly.</strong> Tiny URLs, popular with SMS, Twitter, and other users, are not actually URLs at all, but simply short names for the true URL. For example, <code>TinyURL.com</code> gave me <code>d5r9kr</code> for this book's student resources Web page: <code>wps.aw.com/aw_snyder_fluency_3/79/20307/5198635.cw/index.html</code>. Sites supporting tiny URLs are simply Web applications that keep a list of the short names and corresponding URLs; when we use the short name (e.g., <code>http://tinyurl.com/d5r9kr</code>), they look it up in their list and open the page.
+					</div>
+				</section> <!-- /subsection3.2 -->
+					
+				<section class="subsection" data-number="13" data-name="Hypertext"> <!-- subsection3.3 -->
+					<h3>Hypertext</h3>
+					<p><span class="first-sentence">To describe how a Web page should look, many pages use <strong>Hypertext Markup Language (HTML)</strong>.</span> Markup languages, traditionally used in publishing and graphic design, describe the layout of a document, including margin width, font, text style, image placement, and such. Hypertext began as an experiment to break away from the straight sequence of normal text: first paragraph, sec-</p>
+					
+					<div class="pagebreak pageNumber">77</div>
+					
+					<p>ond paragraph, third paragraph, and so on. With hypertext, it's possible to jump from one point in the text to somewhere else in the text or to some other document and then return. This familiar feature, which breaks a document's linear sequence, gives it a more complex structure. The (usually blue) highlighted words&mdash;the <strong>hyperlinks</strong>&mdash;provide the point from which we can (optionally) jump and return. The term <em>hypertext</em> was coined in the late 1960s by Theodore Nelson, although in his <em>Literary Machines</em> he credits the original idea to computer pioneer Vannevar Bush. Combining the two ideas&mdash;markup languages and hypertext&mdash;was the contribution of Tim Berners-Lee. It lets us build nonlinear documents, which are ideal for the dynamic and highly interconnected Internet. The World Wide Web was born.</p>
+					<p>In Chapter 4 we study HTML to learn how Web pages are created and processed. In Chapters 5 and 6, we explore the content of the WWW.</p>
+				</section> <!-- /subsection3.3 -->
+			</section> <!-- /section3 -->
+				
+			<section class="section" data-number="14" data-name="The Internet and the Web"> <!-- section4 -->
+				<h2>The Internet and the Web</h2>
+				<p><span class="first-sentence">Some Web servers have <code>www</code> as part of their domain name, some don't.</span> Some Web servers, like <code>www.cs.washington.edu</code>, seem to add on the <code>www</code> if you leave it out, and some, like New York City's Museum of Modern Art (MoMA), work either way; both <code>www.moma.org</code> and <code>moma.org</code> display the same Web site. VVhen is the <code>www</code> required and when is it optional?</p>
+				<p>First, remember that names like <code>www.cs.washington.edu</code> are simply names. That is, like <code>spiff</code>, <code>www</code> is the name of a computer, the Web server, in the <code>cs.washington.edu</code> domain. And, like all computers connected to the Internet, Web servers have IP addresses. To refer to a Web server, you <em>must</em> give its name exactly, because your computer will ask the DNS server for the Web server's IP address using that name. If the name is wrong, either you will access the wrong IP address or, more typically, the DNS lookup will fail. Your browser will give you an error message (e.g., "404 Not Found") advising you to check the address. So, there is no option: You must give the name exactly.</p>
+				<p>No organization taking the trouble to put a Web server on the Internet wants visitors to fail to reach them, so their Web administrators try to save users from mistakes. For example, if you try to access my Web page but forget to include the <code>www</code>, your request <code>http://cs.washington.edu/...</code> will reach the wrong computer. However, that computer has been programmed to notice <code>http://</code> requests and to return to your computer, "You probably meant <code>www.cs.washington.edu</code>." Your computer tries it automatically. This is called a redirection.</p>
+				<div class="fluency-bit">
+				<strong class="fluency-bit-title">Punctuating the Internet.</strong> URLs use many slashes (/); that's the correct term. Backslashes (\) are also used in computing; that's also the correct term. The term "forward slash" is not correct, except perhaps with light sabers.
+				</div>
+				<p>Browsers are designed to try again with the recommended address. So, when you type <code>http://cs.washington.edu/homes/snyder</code>, your location window</p>
+				
+				<div class="pagebreak pageNumber">78</div>
+				
+				<p>quickly changes to <code>http://www.cs.washington.edu/homes/snyder</code>, making it seem that the <code>www</code> has been added. What you see is your browser trying the redirection address. The redirection could have been <code>http://www.aw.com/snyder/</code>, the URL for this book. In that case, the redirection looks like a replacement, which is what it really is in both cases. Redirection is used extensively at Web sites to avoid telling users that they made a mistake and to get them to where they want to be.</p>
+				<p>Rather than using redirection, some organizations, like the Museum of Modern Art, simply make several names work. That is, MoMA has registered both <code>moma.org</code> and <code>www.moma.org</code> to the IP address <code>12.172.4.131</code>, saving us from making a mistake no matter which choice we make and avoiding redirection. Both names produce the same result because they refer to the same computer.</p>
+				<p>Web servers don't have to be named <code>www</code>. It's just what people usually name their Web servers. Web servers are named <code>www</code> because as the Web got started, many domains added a separate computer as their Web server. The server needed a name that people could remember, because redirection was not yet widely used. Because the first groups named their servers <code>www</code>, later groups did, too. Now it seems like a requirement, but it is only a tradition.</p>
+				<div class="fluency-bit">
+				<strong class="fluency-bit-title">Universal Language.</strong> Most people are amazed at the Web's ability to provide access to information around the world. Few have observed, however, that it is the universal HTTP language that makes this communication possible. Every computer&mdash;regardless of who manufactured it, how it's configured, its operating system type and version, the applications it runs, the (native) language of its user, and so on&mdash;can communicate because the computers "know" this common language. Imagine the benefits if every person on the planet spoke a common language!
+				</div>
+				
+				<section class="subsection" data-number="15" data-name="File Structures"> <!-- subsection4.1 -->
+					<h3>File Structure</h3>
+					<p><span class="first-sentence">To use networks well, we need to understand file structures, although the topic is not technically part of networking.</span> Recall from your experience using a personal computer that a <strong>folder</strong>&mdash;also known as a <strong>directory</strong>&mdash;is a named collection of files or other folders or both.</p>
+				</section> <!-- /subsection4.1 -->
+				
+				<section class="subsection" data-number="16" data-name="Directory Hierarchy"> <!-- subsection4.2 -->
+					<h3>Directory Hierarchy</h3>
+					<p><span class="first-sentence">Because folders can contain folders, which can contain files and other folders, and on and on, the whole scheme&mdash;called the <strong>file structure</strong> of the computer&mdash;forms the <strong>directory hierarchy</strong>.</span> Think of any hierarchy as a tree; in the case of file structures, folders are the branch points and files are the leaves. Hierarchy trees are often drawn in odd ways, such as sideways or upside down, but in all cases two terms are standard:</p>
+					<ul>
+						<li><em>Down</em> or <em>lower</em> in the hierarchy means into subfolders; that is, toward the leaves.</li>
+					</ul>
+					
+						<div class="pagebreak pageNumber">79</div>
+					
+					<ul>
+						<li><em>Up</em> or <em>higher</em> in the hierarchy means into enclosing folders; that is, toward the root.</li>
+					</ul>
+					<p>To illustrate these terms, Figure 3.12 shows part of the hierarchy of this book formed from its parts, chapters, and sections; the "tree" of Figure 3.12 is drawn on its side with the root, Fluency, to the left. The path from the root (the whole book) to the leaf (this section) is highlighted. We move <em>up</em> or <em>higher</em> in the hierarchy when we move, say, from Chapter 3 to Part 1, since it is more inclusive. We move <em>down</em> or <em>lower</em> in the hierarchy when we move, say, from Chapter 3 to this Directory Hierarchy section, since it is more specific.</p>
+					<p>Learning the "directionality" of hierarchical references makes navigating the Web simpler.</p>
+					<div class="fluency-tip">
+						<strong class="fluency-tip-title">Pulling Rank.</strong> An easy way to remember the directions of "higher" and "lower" in a hierarchy is to think of the military hierarchy: general, colonel, major, captain, lieutenant, sergeant, corporal, private. Moving up or down in the hierarchy corresponds to moving up or down the chain of command, or to higher or lower rank.
+					</div>	
+					<p>Part of the directory hierarchy is shown in the pathnames of URLs. For
+example, the URL <code>http://www.nasm.si.edu/exhibitionsiga1100/pioneer.html</code> is a National Air and Space Museum's site describing Pioneer 10, the first man-made object to leave the solar system. The page is specified by a path-</p>
+					<figure>
+						<img src="/contents/fluency/images/figure3.12.png"/>
+						<figcaption>
+							<span class="figureId">Figure 3.12</span> The hierarchy of this book highlighting the path to this figure; down-pointing triangles are expanded; right-pointing triangles are not.
+						</figcaption>
+					</figure>
+				
+					<div class="pagebreak pageNumber">80</div>
+				
+					<p>name, <code>/exhibitionsigal100/pioneer.html</code>, that tells the computer how to navigate through the Air and Space Museum's directory hierarchy to the file, as shown in Figure 3.13. Each time we pass a slash (/), reading the pathname from left to right, we move into a subfolder or to the file. That is, we go down in the hierarchy. We start at a top-level folder called <code>exhibitions</code>. Within the <code>exhibitions</code> folder, there is a subfolder called <code>gal100</code>, which we might assume refers to Gallery 100, the room containing famous "firsts" in air and space exploration. And in the <code>gal100</code> folder, there is a file called <code>pioneer.html</code>, the Web page we want.</p>
+					<p>In general, the path in a URL tells the server computer how to navigate to the requested file in the server's file structure. The server computer follows down the hierarchical structure just as we did in the NASM example.</p>
+					<div class="fluency-tip">
+						<strong class="fluency-tip-title">Case in Point.</strong> Remember that case sensitivity means computers treat uppercase and lowercase letters as different characters. In URLs, domain names are not case sensitive, because they are standardized for DNS lookup. Pathnames can be case sensitive, because they tell how to navigate through the Web server's file structure, which may be case sensitive. Be careful when typing pathnames, and when in doubt, try lowercase first.
+					</div>
+				</section> <!-- /subsection4.2 -->
+				
+				<section class="subsection" data-number="17" data-name="Organizing the Folder"> <!-- subsection4.3 -->
+					<h3>Organizing the Folder</h3>
+					<p><span class="first-sentence">Normally, when we give a URL, we expect the last item in the sequence to be a file name, such as <code>homepage.html</code>, but it is not always necessary.</span> Other technologies besides HTML are used to produce Web pages. Also, when a URL ends in a slash (which means the last item on the path is a folder rather than a file name), the browser automatically looks for a file called <code>index.html</code> in that folder. So, a request for the URL <code>http://www.cs.washington.edu/homes/snyder/index.html</code> to my university Web page is the same as <code>http://www.cs</code></p>
+					<figure>
+						<img src="/contents/fluency/images/figure3.13.png"/>
+						<figcaption>
+							<span class="figureId">Figure 3.13</span> The pathname hierarchy ending in <code>pioneer.html</code>.
+						</figcaption>
+					</figure>
+				
+					<div class="pagebreak pageNumber">81</div>
+				
+					<p><code>.washington.edu/homes/snyder/</code> because a browser that finds the folder named <code>snyder</code> will automatically look for a file called <code>index.html</code> in it. Of course, the <code>index.html</code> file will exist only if the person who set up the Web pages and built the file hierarchy decided to organize it that way and provide the index pages. Some people do and some people don't, but the browser will look for <code>index.html</code> when necessary.</p>
+					<p>Why build a hierarchy at all? Why not dump all the files into one huge folder and save typing? Most people build hierarchies to organize their own thinking and work. Because directories cost nothing, there is no reason not to use them, and it is highly recommended. (In this book, when we create a Web page, for example, we will always use a subfolder for organizing the pictures on the page.)</p>
+					<div class="fluency-alert">
+						<strong class="fluency-alert-title">Look Before You Delete.</strong> The "blazing away" discussion in Chapter 2 claiming "nothing can break" applied to the computer on the desk or lap in front of you. When you are using Web services such as Gmail or Yahoo email accessed via a browser, you are using some other computer that may be less forgiving; certain operations may be irreversible. For example, mail downloaded to your computer and then deleted usually ends up in a Trash folder on your computer, from which you can usually retrieve it, but deleting email stored on a server usually deletes it for good. There is no <em>Undo</em> command. These systems always check to make sure you really want to delete something; when you answer "delete," it's gone.
+					</div>
+				</section> <!-- /subsection4.3 -->
+			</section> <!-- /section4 -->
+			
+			<section class="section" data-number="18" data-name="Summary"> <!-- section5 -->
+				<h2>Summary</h2>
+				<p>In this chapter we have discussed:</p>
+				<ul>
+					<li>Basic types of communication: point-to-point, multicast, broadcast, synchronous, and asynchronous.</li>
+					<li>Networking that included: IP addresses, domains, IP packets, IP protocol, WANS and LANS, Ethernet protocol, ISPs, enterprise networks, and wireless networks.</li>
+					<li>The difference between the Internet and the World Wide Web.</li>
+					<li>The history of HTML, and we reviewed file hierarchies in preparation for our further study of HTML.</li>
+				</ul>	
+			</section> <!-- /section5 -->
+		</section> <!-- /page1 -->
+		
+		<section id="conclusion" data-number="19" data-name="Try It Solutions"> <!-- conclusion -->
+			<div class="content">
+				<h2>Try It Solutions</h2>
+				
+				<ol id="try-it-solutions">
+					<li class="three-one"><span class="first-sentence">The authoritative name servers ask the A-name server for <code>.edu</code>, then <code>.si</code>, and then (possibly) <code>.nasm</code>.</span></li>
+					<li class="three-two">The parts of the URL are its protocol, <code>https://</code>, server computer's name, <code>acct.lastbank.com</code>, and page's pathname, <code>/newdeposits/welcome/toaster.html</code>.</li>
+				</ol>
+				
+				<h2>Review Questions</h2>
+				<section id="multiple-choice" data-number="20" data-name="Multiple Choice">
+					<h3>Multiple Choice</h3>	
+					
+					<ol>
+						<li><span class="first-sentence">What is the potential number of IPv4 addresses available?</span>
+							<ol>
+								<li>65,536</li>
+								<li>16,777,216</li>
+								<li>4,294,967,296</li>
+								<li>limitless</li>
+							</ol>
+						</li>
+						<li>The part of an email address to the right of the &#64; is most like a
+							<ol>
+								<li>mailbox</li>
+								<li>post office</li>
+								<li>letter</li>
+								<li>return address</li>
+							</ol>
+						</li>
+						<li>DNS stands for
+							<ol>
+								<li>Determined Name of Sender</li>
+								<li>Determined Not Spam</li>
+								<li>Domain Name System</li>
+								<li>Domain Number Sequence</li>
+							</ol>
+						</li>
+						<li>If the Internet consisted of four computers, there would be six possible connections. If it consisted of five computers, there would be 10 connections. How many connections are possible with ten computers?
+							<ol>
+								<li>10</li>
+								<li>30</li>
+								<li>45</li>
+								<li>infinite</li>
+							</ol>
+						</li>
+						<li>As an aspiring TV exec, the ideal country to locate the top-level domain for your new quiz show "What's My IP?" would be
+							<ol>
+								<li>Papua New Guinea</li>
+								<li>Cocos Islands</li>
+								<li>Tuvalu</li>
+								<li>Nauru</li>
+							</ol>
+						</li>
+						<li>Between client requests from a specific IP address, a Web server
+							<ol>
+								<li>cannot handle requests from another client</li>
+								<li>can handle requests up to the number of clients specified by the administrator</li>
+								<li>can handle up to 255 other requests</li>
+								<li>might handle hundreds or even thousands of requests</li>
+							</ol>
+						</li>
+						<li>Root name servers
+							<ol>
+								<li>maintain a list of all computer users</li>
+								<li>manage all emails sent</li>
+								<li>maintain the relationship between IP addresses and symbolic computer names</li>
+								<li>maintain a list of all Web pages</li>
+							</ol>
+						</li>
+						<li>To connect to the Internet with a wireless connection you'd need to communicate through a device that is physically connected to a network. This device is called a
+							<ol>
+								<li>port</li>
+								<li>Ethernet</li>
+								<li>switch</li>
+								<li>router</li>
+							</ol>
+						</li>
+					</ol>
+				</section> <!-- /multiple-choice -->
+				
+				<section id="short-answer" data-number="21" data-name="Short Answer">
+					<h3>Short Answer</h3>
+					
+					<ol>
+						<li class="review-question"><span class="first-sentence">eCommerce is the shortened term for _______.</span></li>
+						<li class="review-question">All IP addresses of authoritative name servers for TLDs are maintained and managed by 13 _______ servers scattered around the world.</li>
+						<li class="review-question">A communication that goes out to many people within a specific target audience is called a(n) _______.</li>
+						<li class="review-question">A hierarchy of related computers on a network is called a(n) _______.</li>
+						<li class="review-question">Computers on the same level of a domain are known as _______.</li>
+						<li class="review-question">A "please reply" message sent over the Internet is called a(n) _______.</li>
+						<li class="review-question">Computers on an Ethernet network "tap" into a cable called a(n) _______.</li>
+						<li class="review-question">A company that supplies connections to the Internet is called a(n) _______.</li>
+						<li class="review-question">Intranets connect to the Internet via _______.</li>
+						<li class="review-question">Local networks that support communications wholly within an organization are called _______.</li>
+						<li class="review-question">Special computers that send files to Web browsers elsewhere on the Internet are known as _______.</li>
+						<li class="review-question">The <code>http://</code> in a Web address is the _______.</li>
+						<li class="review-question">Files are often sent over the Internet via a process known by the acronym _______.</li>
+						<li class="review-question">The source file for a Web page contains the _______ of the page, not the actual image of the page.</li>
+						<li class="review-question">HTML stands for _______.</li>
+						<li class="review-question">In the client/server structure, the customer's computer is the _______ and the business' computer is the _______.</li>
+						<li class="review-question">A personal log posted on the Web for public viewing is called a _______.</li>
+					</ol>
+				</section> <!-- /short-answer -->
+				
+				<section id="exercises" data-number="22" data-name="Exercises">
+					<h3>Exercises</h3>
+					
+					<ol>
+						<li class="review-question"><span class="first-sentence">There's an adage: "Guns don't kill people. People kill people."</span> How does this relate to human nature and the Internet?</li>
+						<li class="review-question">Label the following with either an S to indicate synchronous communication or an A to indicate asynchronous communication.
+							<table>
+								<tr>
+									<td>_____ movie</td>
+									<td>_____ book</td>
+								</tr>
+								<tr>
+									<td>_____ chat session</td>
+									<td>_____ concert</td>
+								</tr>
+								<tr>
+									<td>_____ email</td>
+									<td>_____ text messaging</td>
+								</tr>
+								<tr>
+									<td>_____ video conference</td>
+									<td>_____ Web board</td>
+								</tr>
+								<tr>
+									<td>_____ Web page</td>
+									<td>_____ blog</td>
+								</tr>
+							</table>
+						</li>
+						<li class="review-question">Go to <code>http://wwvv.internettrafficreport.corn/namerica.htm</code> and check out
+the Internet traffic for North America. How does the time of the day affect the traffic? How would the time of the day affect overseas Internet traffic?</li>
+						<li class="review-question">Try the Web address above without the file name. What do you get?</li>
+						<li class="review-question">Describe how the Internet is like a bus route, a subway route, UPS, or Federal Express. How is it different from these? Go to <code>http://www.mta.nyc.ny.us/nyct/maps/submap.htm</code> to see a map of the NYC subway system. How does it compare? Compare the Internet to the Prague subway map by going to <code>http://www.myczechrepublic.corn/prague/prague_metro.html.</code></li>
+						<li class="review-question">What industries have prospered and which ones might have suffered because of the growth of the Internet? Why?</li>
+						<li class="review-question">Are there more client computers or more server computers on the Internet? Explain.</li>
+						<li class="review-question">Identify each part of the following URL:<code> http://www.cs.washington.edu/homes/snyder/index.html.</code>
+							<ol>
+								<li>Protocol</li>
+								<li>Domain</li>
+								<li>Top-level domain</li>
+								<li>Pathname</li>
+								<li>Web page</li>
+							</ol>
+						</li>
+						<li class="review-question">State what the following acronyms stand for, and briefly describe what they are.
+							<table>
+								<tr>
+									<td>a. TCP/IP</td>
+									<td>e. WWW</td>
+								</tr>
+								<tr>
+									<td>b. LAN</td>
+									<td>f. URL</td>
+								</tr>
+								<tr>
+									<td>c. WAN</td>
+									<td>g. HTML</td>
+								</tr>
+								<tr>
+									<td>d. DSL</td>
+									<td>h. ISP</td>
+								</tr>
+							</table>
+						</li>
+						<li class="review-question">Using Table 3.1, try to find a top-level country code matching your initials. Record the country and the country code. If your initials are not there, pretend you are Kelly Young.</li>
+						<li class="review-question">Visit <code>Yahoo.com</code>. Using the <em>Page Source</em> view, identify at least five different pairs of markup tags. For each pair, give the start tag, the content between the tags, and the end tag.</li>
+					</ol>
+				</section> <!-- /exercises -->
+													
+			</div> <!-- /content -->
+		</section> <!-- /conclusion -->
+		
+	</div> <!-- /#FLU .container -->
+								
+</body>
+
+</html>

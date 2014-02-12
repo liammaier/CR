@@ -1,0 +1,3257 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+
+	<title>Chapter 5. Making Your HTML Location Aware</title>
+	
+	<META name="javascript" javascript="/contents/html5/html5.js">
+	
+</head>
+
+<body>
+
+	<div id="html51" class="html5 container">
+
+		<section class="section" data-number="0" data-name="Making Your HTML Location Aware">
+
+			<div class="pagebreak pageNumber">165</div>
+
+			<h1>Chapter 5. Making Your HTML Location Aware: Geolocation</h1>
+
+			<div class="informalfigure" id="med_id00321a">
+				<div class="mediaobject" id="med_id00321">
+					<img src="/contents/html5/figs/web/165fig01.png" />
+				</div>
+			</div>
+
+			<p><a id="iddle1864" class="indexterm" /><strong>Wherever you go, there you are.</strong>
+				And sometimes knowing where you are makes
+				all the difference (especially to a web app). In this chapter we’re
+				going to show you how to create web pages that are
+				<strong>location aware</strong>—sometimes
+				you’ll be able to pinpoint your users down to the corner they’re
+				standing on, and sometimes you’ll only be able to determine the area
+				of town they’re in (but you’ll still know the town!). Heck, sometimes
+				you won’t be able to determine anything about their location, which
+				could be for technical reasons, or just because they don’t want you
+				being so nosy. Go figure. In any case, in this chapter we’re going to
+				explore a JavaScript API: Geolocation. Grab the best location-aware
+				device you have (even if it’s your desktop PC), and let’s get started.</p>
+
+		</section> <!-- Section 0 -->
+
+		<section class="section" data-number="1" data-name="Location, Location, Location">
+
+<!-- Page 166 -->
+
+			<div class="pagebreak pageNumber">166</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/166fig01.png" />
+			</figure>
+			
+			<h2 class="title center">Location, Location, Location</h2>
+
+			<p><a id="iddle2346" class="indexterm" />Knowing where your users are can
+				add a lot to a web experience: you can give
+				them directions, make suggestions about where they might go, you can
+				know it’s raining and suggest indoor activities, you can let your
+				users know who else in their area might be interested in some
+				activity. There’s really no end to the ways you can use location
+				information.</p>
+
+			<p>With HTML5 (and the Geolocation JavaScript-based API) you can
+				easily access location information in your pages. That’s said, there
+				are a few things to know about location before we get started. Let’s
+				check it out...</p>
+
+			<div class="clear" />
+
+			<div class="sidebar" id="there_are_no_dumb_questions-id00045">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+				</figure>
+
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<div class="qandaset" id="ch05qa1">
+							<table style="border: 0;">
+								<colgroup>
+									<col style="text-align: left; width: 1%;" />
+									<col />
+								</colgroup>
+								<tbody>
+									<tr class="question" id="id36195977">
+										<td style="text-align: left; vertical-align: top;" id="ch05qa1q1">
+											<p><strong>Q:</strong></p>
+										</td>
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: I heardGeolocation isn’t a real API?</strong></p>
+										</td>
+									</tr>
+
+									<tr class="answer" id="ch05qa1q1a1">
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Geolocation is not considered a first-class
+												member of the existing HTML5
+												standard, but that said, it is a standard of the W3C, widely
+												supported and pretty much everyone includes Geolocation in
+												the list of important HTML5 APIs. And it most certainly is a
+												<strong>real</strong> JavaScript API!</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36196006">
+										<td style="text-align: left; vertical-align: top;" id="ch05qa1q2">
+											<p><strong>Q:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: Is theGeolocation API the same as the Google Maps API?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch05qa1q2a2">
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> No. They are
+												completely different APIs. The Geolocation API is solely
+												focused on getting you information about your position on
+												the Earth. The Google Maps API is a JavaScript library
+												offered by Google that gives you access to all their Google
+												Maps functionality. So, if you need to display your user’s
+												location in a map, Google’s API gives you a convenient way
+												to implement that functionality.</p>
+											</td>
+									</tr>
+									
+									<tr class="question" id="id36196028">
+										<td style="text-align: left; vertical-align: top;" id="ch05qa1q3">
+											<p><strong>Q:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: Isn’t it a privacy concern to have my device reveal my location?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch05qa1q3a3">
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> The
+												Geolocation specification specifies that any browser must
+												have the express permission of the user to make use of their
+												location. So, if your code makes use of the Geolocation API,
+												the first thing the browser will do is make sure it is okay
+												with the user to share her location.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36196059">
+										<td style="text-align: left; vertical-align: top;" id="ch05qa1q4">
+											<p><strong>Q:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: How well supported is Geolocation?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch05qa1q4a4">
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Very well supported; in fact, it’s available
+												in almost every modern
+												browser including desktop and mobile. You’ll want to be sure
+												you’re using the latest version of your browser; if you are,
+												then you’re probably good to go.</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div> <!-- /quandaset -->
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+		</section> <!-- Section 1 -->
+
+		<section class="section" data-number="2" data-name="The Lat and Long of it...">
+
+<!-- Page 167 -->
+
+			<div class="pagebreak pageNumber">167</div>
+	
+			<h2 class="title">The Lat and Long of it...</h2>
+
+			<p><a id="iddle1444" class="indexterm" /><a id="iddle2244" class="indexterm" />
+				To know where you are, you need
+				a coordinate system, and you need one on the Earth’s surface.
+				Luckily we have such a thing, and it uses latitude and longitude
+				together as a coordinate system. Latitude specifies a north/south
+				point on the Earth, and longitude, an east/west point. Latitude is
+				measured from the equator, and longitude is measured from Greenwich,
+				England. The job of the geolocation API is to give us the
+				coordinates of where we are at any time, using these coordinates:</p>
+
+			<div class="note" id="ch05note01">
+				<p>The Royal Observatory in Greenwich, to be precise.</p>
+			</div>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/167fig01.png" />
+			</figure>
+			
+			<div class="sidebar" id="latitudesoliduslongitude_closeup">
+				<img src="/contents/html5/figs/web/latitudelongitudecloseup.png">
+				
+				<p>You’ve probably seen latitude and longitude specfied in both
+				degrees/minutes/seconds, such as (47°38’34’’, 122°32’32’’), and in
+				decimal values, such as (47.64, -122.54). With the Geolocation API
+				we always use decimal values. If you need to convert
+				degrees/minutes/seconds to decimal, you can use this function:</p>
+				
+<pre><strong>function degreesToDecimal(degrees, minutes, seconds) {</strong></pre>
+
+<pre>	<strong>return degrees + (minutes / 60.0) + (seconds / 3600.0);</strong></pre>
+
+<pre><strong>}</strong></pre>
+				
+				<aside>
+					Also notice that longitude West and latitude South are
+					represented by negative values.
+				</aside>
+			</div>
+			
+		</section> <!-- Section 2 -->
+
+		<section class="section" data-number="3" id="How the Geolocation API determines your location">
+
+<!-- Page 168 -->
+
+			<div class="pagebreak pageNumber">168</div>
+
+			<h2 class="title">How the Geolocation API determines your location</h2>
+
+			<p><a id="iddle2081" class="indexterm" />You don’t
+				have to have the newest smartphone to be location aware. Even
+				desktop browsers are joining the game. You might ask, how would a
+				desktop browser determine its location if it doesn’t have GPS or any
+				other fancy location technologies? Well, all browsers (in devices
+				and on your desktop) are using a few different ways to determine
+				where you are, some more accurate than others. Let’s take a look:</p>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/168fig01.png" />
+			</figure>
+
+			<p><strong>IP Address</strong></p>
+
+			<p>Location information based on your IP address uses an external
+				database to map the IP address to a physical location. The advantage
+				of this approach is that it can work anywhere; however, often IP
+				addresses are resolved to locations such as your ISP’s local office.
+				Think of this method as being reliable to the city or sometimes
+				neighborhood level.</p>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/168fig02.png" />
+			</figure>
+			
+			<p><strong>GPS</strong></p>
+
+			<p>Global Positioning System, supported by many newer mobile
+				devices, provides extremely accurate location information based on
+				satellites. Location data may include altitude, speed and heading
+				information. To use it, though, your device has to be able to see
+				the sky, and it can take a long time to get a location. GPS can also
+				be hard on your batteries.</p>
+
+<!-- Page 169 -->
+
+			<div class="pagebreak pageNumber">169</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/169fig02.png" />
+			</figure>
+
+			<p><a id="iddle3201" class="indexterm" /><strong>Cell Phone</strong></p>
+
+			<p>Cell phone triangulation figures out your location based on
+				your distance from one or more cell phone towers (obviously the more
+				towers, the more accurate your location will be). This method can be
+				fairly accurate and works indoors (unlike GPS); it also can be much
+				quicker than GPS. Then again, if you’re in the middle of nowhere
+				with only one cell tower, your accuracy is going to suffer.</p>
+
+			<div class="clear" />
+			
+			<figure class="left">
+				<img src="/contents/html5/figs/web/169fig01.png" />
+			</figure>
+			
+			<p>
+				<strong>WiFi</strong>
+			</p>
+			
+			<p>WiFi positioning uses one or more WiFi access points to triangulate
+				your location. This method can be very accurate, works indoors and
+				is fast. Obviously it requires you are <span class="emphasis"><em>somewhat</em></span>
+				stationary (perhaps drinking a venti iced tea at a coffee house).</p>
+
+			<div class="clear" />
+
+<!-- Page 170 -->
+
+			<div class="pagebreak pageNumber">170</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/170fig01.png" />
+			</figure>
+
+			<p><strong>You’re not.</strong></p>
+
+			<p>The short answer is “you’re not,” as the browser implementation is
+				going to determine how location is determined. But the good news is
+				the browser can use <em>any</em> of
+				these means to determine your location. In fact, a smart browser
+				might first use cell phone triangulation, if it is available, to
+				give you a rough idea of location, and then later give you a more
+				accurate location with WiFi or GPS.</p>
+
+			<p>We’ll see that you don’t need to worry about how the location
+				is being determined, and we’ll focus more on the accuracy of your
+				location instead. Based on the accuracy, you can determine how
+				useful the location is going to be for you. Stay tuned—we’ll get
+				back to accuracy a little bit later.</p>
+
+			<div class="clear" />
+
+<!-- Page 171 -->
+
+			<div class="pagebreak pageNumber">171</div>
+
+			<div class="sidebar" id="sharpen_your_pencil-id00046">
+				<img src="/contents/html5/figs/web/sharpenpencil.png">
+
+				<p>Think about your existing HTML pages and
+					applications (or ones that you want to create); how might you
+					incorporate location information into them?</p>
+
+				<div class="informaltable">
+					<table style="border-collapse: collapse;">
+						<colgroup>
+							<col class="c1" />
+							<col class="c2" />
+						</colgroup>
+						<tbody>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<span class="inlinemediaobject" id="inline_id00001">
+										<img src="/contents/html5/figs/web/squer.png" /></span>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>Allow my users to share with others that are nearby.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<span class="inlinemediaobject" id="inline_id00002">
+										<img src="/contents/html5/figs/web/squer.png" /></span>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>Let my users more easily find local resources or services.</p>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<span class="inlinemediaobject" id="inline_id00003">
+										<img src="/contents/html5/figs/web/squer.png" /></span>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>Keep track of where my user does something.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<span class="inlinemediaobject" id="inline_id00004">
+										<img src="/contents/html5/figs/web/squer.png" /></span>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>Give my users directions from where they are.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<span class="inlinemediaobject" id="inline_id00005">
+										<img src="/contents/html5/figs/web/squer.png" /></span>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>Use location to determine other demographics of my users.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<span class="inlinemediaobject" id="inline_id00006">
+										<img src="/contents/html5/figs/web/squer.png" /></span>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>__________________________________________________________</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<span class="inlinemediaobject" id="inline_id00007">
+										<img src="/contents/html5/figs/web/squer.png" /></span>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>__________________________________________________________</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<span class="inlinemediaobject" id="inline_id00008">
+										<img src="/contents/html5/figs/web/squer.png" /></span>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>__________________________________________________________</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid;">
+									<span class="inlinemediaobject" id="inline_id00009">
+										<img src="/contents/html5/figs/web/squer.png" /></span>
+								</td>
+								
+								<td style="vertical-align: top;"><p>__________________________________________________________</p></td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- /informaltable -->
+				
+				<aside>Your ideas here!</aside>
+			</div> <!-- /sidebar -->			
+
+		</section> <!-- Section 3 -->
+
+		<section class="section" data-number="4" data-name="Just where are you anyway?">
+
+<!-- Page 172 -->
+
+			<div class="pagebreak pageNumber">172</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/172fig03.png" />
+			</figure>
+			
+			<h2 class="title">Just where are you anyway?</h2>
+
+			<p>Well, of course <em>you</em> know where you are, but let’s
+				see where your <em>browser</em> thinks you are. To do that we’ll just create a little HTML:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/172fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>	&lt;meta charset="utf-8"&gt;</pre>
+<pre>	&lt;script src="myLoc.js"&gt;&lt;/script&gt;</pre>
+<pre>	&lt;link rel="stylesheet" href="myLoc.css"&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;div id="location"&gt;</pre>
+<pre>		Your location will go here.</pre>
+<pre>	&lt;/div&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p>Now let’s create <code class="literal">myLoc.js</code> and write a little code;
+				we’re going to do this quickly and then
+				come back and dissect it all. Add this to your
+				<code class="literal">myLoc.js</code> file:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/172fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>window.onload = getMyLocation;</pre>
+							<br />
+<pre>function getMyLocation() {</pre>
+<pre>	if (navigator.geolocation) {</pre>
+							<br />
+<pre>		navigator.geolocation.getCurrentPosition(</pre>
+<pre>	}	else {</pre>
+<pre>		alert("Oops, no geolocation support");</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 173 -->
+
+			<div class="pagebreak pageNumber">173</div>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/173fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function displayLocation(position) {</pre>
+<pre>	var latitude = position.coords.latitude;</pre>
+<pre>	var longitude = position.coords.longitude;</pre>
+							<br />
+<pre>	var div = document.getElementById("location");</pre>
+<pre>	div.innerHTML = "You are at Latitude: " + latitude + ", Longitude: " + longitude;</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 4 -->
+
+		<section class="section" data-number="5" data-name="Test drive your location">
+
+			<h2 class="title left">Test drive your location</h2>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/173fig02.png" />
+			</figure>
+
+			<br />
+
+			<p><a id="iddle1400" class="indexterm" />Get this code typed in and take
+				your new location-aware page for a test drive.</p>
+
+			<p>When you run a Geolocation web app for the first time, you’ll
+				notice a request in the browser asking for your permission to use
+				your location. This is a browser security check, and you’re free to
+				tell the browser no. But assuming you want to test this web app,
+				you’ll want to click Allow or Yes. When you do, the app should show
+				you your location, like this:</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/173fig03.png" />
+			</figure>
+
+		</section> <!-- Section 5 -->
+
+		<section class="section" data-number="6" data-name="What we just did...">
+
+<!-- Page 174 -->
+
+			<div class="pagebreak pageNumber">174</div>
+
+			<h2 class="title">What we just did...</h2>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/174fig01.png" />
+			</figure>
+
+			<p><a id="iddle1578" class="indexterm" /><a id="iddle1897" class="indexterm" />
+				<a id="iddle1904" class="indexterm" /><a id="iddle2461" class="indexterm" />
+				<a id="iddle2884" class="indexterm" />Now that we’ve got some geolocation code up and
+				running (and, again, if you’re not seeing a location yet, hold on,
+				we’re getting to some debugging techniques in just a sec), let’s
+				walk through the code in a little more detail:</p>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p>The first thing you need to know
+							if you’re going to write geolocation code is “does this browser
+							support it?” To do that we make use of the fact that browsers
+							have a geolocation property in their navigation object only if
+							geolocation is supported.</p>
+
+						<p>So we can test to see if the geolocation property exists,
+							and if so make use of it; otherwise, we’ll let the user know:</p>
+						
+						<figure>
+							<img src="/contents/html5/figs/web/174fig02.png" />
+						</figure>
+					</li>
+
+					<li class="listitem"><p>Now, if there is a
+							navigator.geolocation property, we’re going to make some more use
+							of it. In fact, the navigator.geolocation property is an object
+							that contains the entire geolocation API. The main method the API
+							supports is getCurrentPosition, which does the work of getting
+							the browser’s location. Let’s take a closer look at this method,
+							which has three parameters, the second two of which are optional:</p>
+					
+					<aside>
+						Remember, APIs are just objects with properties and
+						methods! Now aren’t you glad you did all the JavaScript training
+						up front!
+					</aside>
+
+						<figure>
+							<img src="/contents/html5/figs/web/174fig03.png" />
+						</figure>
+					</li>
+				</ol>
+			</div> <!-- /orderedlist -->
+
+
+<!-- Page 175 -->
+
+			<div class="pagebreak pageNumber">175</div>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1" start="3">
+					<li class="listitem">
+						<p><a id="iddle1394" class="indexterm" /><a id="iddle1455" class="indexterm" />
+							<a id="iddle1848" class="indexterm" /><a id="iddle2638" class="indexterm" />
+							<a id="iddle2885" class="indexterm" />Now let’s take a look at our call to the
+							getCurrentPosition method. For now, we’re supplying just the
+							successHandler argument to handle a successful attempt to get the
+							browser location. We’ll look at the case when the browser fails
+							to find a location in a bit.</p>
+
+						<figure>
+							<img src="/contents/html5/figs/web/175fig01.png" />
+						</figure>
+					</li>
+
+					<li class="listitem"><p>Now let’s look at the success
+							handler, displayLocation. When displayLocation is called, the
+							geolocation API passes it a position object that contains
+							information about the browser’s location, including a coordinates
+							object that holds the latitude and longitude (as well as a few
+							other values we’ll talk about later).</p>
+			
+						<figure>
+							<img src="/contents/html5/figs/web/175fig02.png" />
+						</figure>
+					</li>
+				</ol>
+			</div> <!-- /orderedlist -->
+		
+		</section> <!-- Section 6 -->
+
+		<section class="section" data-number="7" data-name="How it all fits together">
+
+<!-- Page 176 -->
+
+			<div class="pagebreak pageNumber">176</div>
+
+			<h2 class="title">How it all fits together</h2>
+
+			<p><a id="iddle1913" class="indexterm" /><strong>Now that we’ve gone through the
+				code, let’s see how it all works at runtime:</strong></p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/176fig01.png">
+			</figure>
+
+<!-- Page 177 -->
+
+			<div class="pagebreak pageNumber">177</div>
+
+			<div class="sidebar">
+				<img src="/contents/html5/figs/web/testdrivediagnostics.png">
+
+				<p>
+					<strong>When it comes to Geolocation, not every test drive is going to be
+					successful, and even if your first test was successful, down the
+					road something is going to go wrong. To help, we’ve created a
+					little diagnostic test for you that you can add right into your
+					code. So, if you’re having trouble, here’s your answer, and even
+					if you’re not, one of your users is going to have an issue and
+					you’re going to want to know how to handle that in your code. So,
+					add the code below, and if you’re having issues, kindly fill out
+					the diagnostic form at the end once you’ve diagnosed the problem:</strong>
+				</p>
+
+				<p>
+					To create the diagnostic test we’re going to add an error
+					handler to the getCurrentPosition method call. This handler is
+					going to get called anytime the Geolocation API encounters a
+					problem in determining your location. Here’s how we add it:
+				</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/177fig01.png">
+				</figure>
+
+				<p
+				>Now we need to write the error handler. To do that you need
+					to know that geolocation passes an error object to your handler
+					that contains a numeric code describing the reason it couldn’t
+					determine the location of your browser. Depending on the code, it
+					might also provide a message giving further information about the
+					error. Here’s how we can use the error object in the handler:
+				</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/177fig02.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>function displayError(error) {</pre>
+<pre>	var errorTypes = {</pre>
+<pre>		0: "Unknown error",</pre>
+<pre>		1: "Permission denied",</pre>
+<pre>		2: "Position is not available",</pre>
+<pre>		3: "Request timeout"</pre>
+<pre>	};</pre>
+<pre>	var errorMessage = errorTypes[error.code];</pre>
+<pre>	if (error.code == 0 || error.code == 2) {</pre>
+<pre>		errorMessage = errorMessage + " " + error.message;</pre>
+<pre>	}</pre>
+<pre>	var div = document.getElementById("location");</pre>
+<pre>	div.innerHTML = errorMessage;</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+			</div> <!-- /sidebar -->
+				
+<!-- Page 178 -->
+
+			<div class="pagebreak pageNumber">178</div>
+
+			<div class="sidebar">
+				<figure class="right">
+					<img src="/contents/html5/figs/web/brokencar.png">
+				</figure>
+
+				<p>
+					<strong>Before we run the test, let’s take a closer look at the types of errors
+					we can get.</strong>
+				</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/178fig01.png">
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>var errorTypes = {</pre>
+<pre>	0: "Unknown error",</pre>
+<pre>	1: "Permission denied",</pre>
+<pre>	2: "Position is not available",</pre>
+<pre>	3: "Request timeout"</pre>
+<pre>};</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+				<figure class="right">
+					<img src="/contents/html5/figs/web/178fig02.png">
+				</figure>
+
+				<p>
+					When you’ve got the diagnostic test typed in, go ahead and
+					give it a try. Obviously if you receive a location then everything
+					is working and you won’t see any of the errors. You can force an
+					error by denying the browser’s request to use your location. Or you
+					might get creative and, say, move indoors with your GPS phone while
+					turning off your network. In the worst case, if you wait for a long
+					time without getting a location or an error message, most likely
+					you’re waiting on a long timeout value to, well, time out. We’ll
+					see how to shorten that timeout duration a little later in the
+					chapter.
+				</p>
+
+				<div class="clear"></div>
+
+				<h3>Your DiagnosticResults Here</h3>
+
+				<div class="informaltable">
+					<table style="border-collapse: collapse;">
+						<colgroup>
+							<col class="c1" />
+							<col class="c2" />
+						</colgroup>
+				
+						<tbody>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<span class="inlinemediaobject" id="inline_id00010">
+										<img src="/contents/html5/figs/web/squer.png" /></span>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>I did not give permission for my location to be used.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<span class="inlinemediaobject" id="inline_id00011">
+										<img src="/contents/html5/figs/web/squer.png" /></span>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>My position wasn’t available.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<span class="inlinemediaobject" id="inline_id00012">
+										<img src="/contents/html5/figs/web/squer.png" /></span>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>After a few seconds, I got a message indicating there was a request timeout.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<span class="inlinemediaobject" id="inline_id00013">
+										<img src="/contents/html5/figs/web/squer.png" /></span>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>Nothing happened at all, no location and no error alert.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid;">
+									<span class="inlinemediaobject" id="inline_id00014">
+										<img src="/contents/html5/figs/web/squer.png" /></span>
+								</td>
+								
+								<td style="vertical-align: top;"><p>Something else _____________________________________</p></td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- /informaltable -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 179 -->
+
+			<div class="pagebreak pageNumber">179</div>
+
+			<div class="sidebar-left">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/watchit.png">
+				</figure>
+
+				<p><strong>To test your geolocation code on a mobile device, you’re going to want a server.</strong></p>
+
+				<p><em>Unless you have a means of
+							loading your HTML, JavaScript and CSS files directly onto your
+							mobile device, the easiest way to test them is to place them on a
+							server (take a peek at the next chapter to see how to set up your
+							own server if you want) and access them there. If you’ve got a
+							server and you want to do that, we encourage you to do so. On the
+							other hand, if that doesn’t work for you, we’ve made sure the
+							code is available on the Wickedly Smart servers so that you can
+							test on your mobile devices. That said, we encourage you to
+							follow along with the code on your desktop, and once you have it
+							working there, then test on your mobile device using the server
+							(your own or Wickedly Smart).</em></p>
+
+				<p><em>For the first Test Drive
+							(including the error diagnostic), point your device to
+							<a class="ulink"
+							href="http://wickedlysmart.com/hfhtml5/chapter5/latlong/myLoc.html"
+							target="_top">http://wickedlysmart.com/hfhtml5/chapter5/latlong/myLoc.html</a>.</em></p>
+			</div>
+
+			<div class="sidebar-right">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+				</figure>
+
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<div class="qandaset" id="ch05qa2">
+							<table style="border: 0;">
+								<colgroup>
+									<col style="text-align: left; width: 1%;" />
+									<col />
+								</colgroup>
+
+								<tbody>
+									<tr class="question" id="id36197956">
+										<td style="text-align: left; vertical-align: top;"
+											id="ch05qa2q1">
+											<p><strong>Q:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: The latitude and longitude returned by the app for my location aren’t
+														quite right, why is that?</strong></p>
+										</td>
+									</tr>
+
+									<tr class="answer" id="ch05qa2q1a1">
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> There are a
+												variety of ways that your device and the location service
+												provider calculate your position, and some are more accurate
+												than others. GPS is often the most accurate. We’re going to
+												look at a way to determine the accuracy estimate that the
+												location service gives back as part of the position object
+												so you can see how accurate to expect the location data to
+												be.</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div> <!-- /qandaset -->
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+			<div class="clear" />
+
+		</section> <!-- Section 7 -->
+
+		<section class="section" data-number="8" data-name="Revealing our secret location...">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/179fig01.png" />
+			</figure>
+			
+			<h2 class="title">Revealing our secret location...</h2>
+
+			<p>Now that you’ve got the basics out of the way, let’s do something
+				more interesting with location. How about we see how far you are
+				from our secret writing location at Wickedly Smart HQ? To do that we
+				need the HQ coordinates and we need to know how to calculate
+				distance between two coordinates. First, let’s add another
+				<code class="literal">&lt;div&gt;</code>to use in the HTML:</p>
+
+			<div class="hiddencode">			
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/179fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;div id="location"&gt;</pre>
+<pre>		Your location will go here.</pre>
+<pre>	&lt;/div&gt;</pre>
+<pre>	&lt;div id="distance"&gt;</pre>
+<pre>		Distance from WickedlySmart HQ will go here.</pre>
+<pre>	&lt;/div&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 180 -->
+
+			<div class="pagebreak pageNumber">180</div>
+
+			<div class="sidebar" id="some_ready_bake_code_computing_distance">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/oven.png">
+				</figure>
+
+				<h3>Some Ready Bake Code: computing distance</h3>
+
+				<p>Ever wanted to know how to
+					compute the distance between two points on a sphere? You’ll find
+					the details fascinating, but they’re a little outside the scope of
+					this chapter. So, we’re going to give you some <strong>Ready
+					Bake Code</strong> that does just that. To compute the distance between
+					two coordinates most everyone uses the Spherical Law of Cosines
+					equation; you’ll find it implemented below. Feel free to use it
+					anywhere you need to know the distance between two coordinates:</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/180fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>function computeDistance(startCoords, destCoords) {</pre>
+<pre>	var startLatRads = degreesToRadians(startCoords.latitude);</pre>
+<pre>	var startLongRads = degreesToRadians(startCoords.longitude);</pre>
+<pre>	var destLatRads = degreesToRadians(destCoords.latitude);</pre>
+<pre>	var destLongRads = degreesToRadians(destCoords.longitude);</pre>
+								<br />
+<pre>	var Radius = 6371; // radius of the Earth in km</pre>
+<pre>	var distance = Math.acos(Math.sin(startLatRads) * Math.sin(destLatRads) + </pre>
+<pre>					Math.cos(startLatRads) * Math.cos(destLatRads) *</pre>
+<pre>					Math.cos(startLongRads - destLongRads)) * Radius;</pre>
+								<br />
+<pre>	return distance;</pre>
+<pre>}</pre>
+								<br />
+<pre>function degreesToRadians(degrees) {</pre>
+<pre>	radians = (degrees * Math.PI)/180;</pre>
+<pre>	return radians;</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 8 -->
+
+		<section class="section" data-number="9" data-name="Writing the code to find the distance">
+
+<!-- Page 181 -->
+
+			<div class="pagebreak pageNumber">181</div>
+	
+			<figure class="right">
+				<img src="/contents/html5/figs/web/181fig02.png" />
+			</figure>
+
+			<h2 class="title">Writing the code to find the distance</h2>
+			
+			<p>Now that we’ve got a function
+				to compute the distance between two coordinates, let’s define our
+				(that is, the authors’) location here at the WickedlySmart HQ (go
+				ahead and type this in too):</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/181fig01.png" />
+			</figure>
+			
+			<p>And now let’s write the code: all we need to do is pass the
+				coordinates of your location and our location to the
+				<code class="literal">computeDistance</code>
+				function:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/181fig03.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function displayLocation(position) {</pre>
+<pre>	var latitude = position.coords.latitude;</pre>
+<pre>	var longitude = position.coords.longitude;</pre>
+							<br />
+<pre>	var div = document.getElementById("location");</pre>
+<pre>	div.innerHTML = "You are at Latitude: " + latitude + ", Longitude: " + longitude;</pre>
+							<br />
+<pre>	var km = computeDistance(position.coords, ourCoords);</pre>
+<pre>	var distance = document.getElementById("distance");</pre>
+<pre>	distance.innerHTML = "You are " + km + " km from the WickedlySmart HQ";</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 9 -->
+
+		<section class="section" data-number="10" data-name="Location-enabled test drive">
+
+			<h2 class="title left">Location-enabled test drive</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/181fig04.png" />
+			</figure>
+
+			<br />
+
+			<p>Now let’s give this new code a test drive. Go ahead and finish
+				adding the code to <code class="literal">myLoc.js</code>
+				and then reload <code class="literal">myLoc.html</code>
+				in your browser. You should see your location and also your distance
+				from us.</p>
+			
+			<aside>Try online: <a class="ulink" href="http://wickedlysmart.com/hfhtml5/chapter5/distance/myLoc.html"
+				target="_top">http://wickedlysmart.com/hfhtml5/chapter5/distance/myLoc.html</a>
+			</aside>
+
+<!-- Page 182 -->
+
+			<div class="pagebreak pageNumber">182</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/182fig01.png" />
+			</figure>
+
+			<div class="clear" />
+
+		</section> <!-- Section 10 -->
+
+		<section class="section" data-number="11" data-name="Mapping your position">
+
+			<h2 class="title">Mapping your position</h2>
+
+			<p><a id="iddle1942" class="indexterm" />As we told you up front, the Geolocation API is pretty simple—it gives you
+				a way to find (and as you’ll see, track, as well) where you are, but
+				it doesn’t provide you with any tools to visualize your location. To
+				do that we need to rely on a third-party tool, and as you might
+				guess, Google Maps is by far the most popular tool for doing that.
+				Obviously Google Maps isn’t part of the HTML5 spec, but it does
+				interoperate well with HTML5, and so we don’t mind a little
+				diversion here and there to show you how to integrate it with the
+				Geolocation API. If you want to be diverted, you can start by adding
+				this to the head of your HTML document and then we’ll work on adding
+				a map to your page:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/182fig02.png" />
+			</figure>
+
+		</section> <!-- Section 11 -->
+
+		<section class="section" data-number="12" data-name="How to add a Map to your Page">
+
+<!-- Page 183 -->
+
+			<div class="pagebreak pageNumber">183</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/offroaddiversion.png">
+			</figure>
+
+			<h2 class="title">How to add a Map to your Page</h2>
+
+			<p><a id="iddle1867" class="indexterm" /><a id="iddle2375" class="indexterm" />
+				Now that you’ve linked to the
+				Google Map API, all the functionality of Google Maps is available to
+				you through JavaScript. But, we need a place to put our Google Map,
+				and to do that we need to define an element that is going to hold
+				it.</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/183fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;div id="location"&gt;</pre>
+<pre>		Your location will go here.</pre>
+<pre>	&lt;/div&gt;</pre>
+<pre>	&lt;div id="distance"&gt;</pre>
+<pre>		Distance from WickedlySmart HQ will go here.</pre>
+<pre>	&lt;/div&gt;</pre>
+<pre>	&lt;div id="map"&gt;</pre>
+<pre>	&lt;/div&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+			
+			<section class="subsection" data-number="13" data-name="Getting ready to create a map...">
+
+				<div class="titlepage">
+					<h3 class="title">Getting ready to create a map...</h3>
+				</div>
+
+				<p>To create the map we need two things: a latitude and
+					longitude (and we know how to get those), and we need a set of
+					options that describe how we want the map created. Let’s start with
+					the latitude and longitude. We already know how to get them with
+					the Geolocation API, but the Google API likes them bundled up in
+					its own object. To create one of those objects we can use a
+					constructor supplied by Google:</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/183fig02.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>var googleLatAndLong = new google.maps.LatLng(Latitude, longitude) ;</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+				<p>Google gives us some options we can set to control how the
+					map is created. For instance, we can control how far zoomed in or
+					out the initial map view is, where the map is centered, and the
+					type of map, like a road-style map, a satellite view, or both.
+					Here’s how we create the options:</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/183fig03.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>var mapOptions = {</pre>
+<pre>	zoom: 10,</pre>
+<pre>	center: googleLatAndLong,</pre>
+<pre>	mapTypeId: google.maps.MapTypeId.ROADMAP</pre>
+<pre>};</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+			</section> <!-- Section 13 -->
+
+		</section> <!-- Section 12 -->
+
+		<section class="section" data-number="14" data-name="Displaying the Map">
+
+<!-- Page 184 -->
+
+			<div class="pagebreak pageNumber">184</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/offroaddiversion.png">
+			</figure>
+			
+			<h2 class="title">Displaying the Map</h2>
+
+			<p>Let’s put all this together in a new function, <code class="literal">showMap</code>,
+				that takes a set of coordinates and displays a map on your page:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/184fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>var map;</pre>
+							<br />
+<pre>function showMap(coords) {</pre>
+<pre>	var googleLatAndLong = new google.maps.LatLng(coords.latitude, </pre>
+<pre>												  coords.longitude);</pre>
+<pre>	var mapOptions = {</pre>
+<pre>		zoom: 10,</pre>
+<pre>		center: googleLatAndLong,</pre>
+<pre>		mapTypeId: google.maps.MapTypeId.ROADMAP</pre>
+<pre>	};</pre>
+<pre>	var mapDiv = document.getElementById("map");</pre>
+<pre>	map = new google.maps.Map(mapDiv, mapOptions);</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<p>Go ahead and add this code to your JavaScript file at the bottom.
+				And now we just need to tie it into our existing code. Let’s do that
+				by editing the <code class="literal">displayLocation</code> function:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/184fig02.png" />
+				</figure>
+			
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function displayLocation(position) {</pre>
+<pre>	var latitude = position.coords.latitude;</pre>
+<pre>	var longitude = position.coords.longitude;</pre>
+							<br />
+<pre>	var div = document.getElementById("location");</pre>
+<pre>	div.innerHTML = "You are at Latitude: " + latitude + ", Longitude: " + longitude;</pre>
+							<br />
+<pre>	var km = computeDistance(position.coords, ourCoords);</pre>
+<pre>	var distance = document.getElementById("distance");</pre>
+<pre>	distance.innerHTML = "You are " + km + " km from the WickedlySmart HQ";</pre>
+							<br />
+<pre>	showMap(position.coords);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 14 -->
+
+		<section class="section" data-number="15" data-name="Test drive your new heads-up display">
+
+<!-- Page 185 -->
+
+			<div class="pagebreak pageNumber">185</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/offroaddiversion.png">
+			</figure>
+
+			<div class="clear" />
+			
+			<h2 class="title left">Test drive your new heads-up display</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+
+			<br />
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/185fig01.png" />
+			</figure>
+
+			<p>Make sure you’ve added all the
+				new code on the previous page and also added the new map
+				<code class="literal">&lt;div&gt;</code>
+				to your HTML; then reload your page and, if the browser can
+				determine your location, you’ll see a map.</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/185fig02.png" />
+
+				<aside>
+					Try online: <a class="ulink" href="http://wickedlysmart.com/hfhtml5/chapter5/map/myLoc.html"
+					target="_top">http://wickedlysmart.com/hfhtml5/chapter5/map/myLoc.html</a>
+				</aside>
+			</figure>
+
+		</section> <!-- Section 15 -->
+
+		<section class="section" data-number="16" data-name="Sticking a Pin in it...">
+
+<!-- Page 186-->
+		
+			<div class="pagebreak pageNumber">186</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/offroaddiversion.png">
+			</figure>
+
+			<div class="clear" />
+
+			<h2 class="title">Sticking a Pin in it...</h2>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/186fig01.png" />
+			</figure>
+			
+			<p><a id="iddle1866" class="indexterm" /><a id="iddle2373" class="indexterm" />
+				<a id="iddle2379" class="indexterm" />It <em>would</em>
+				be more useful if you could see exactly where you’re located on the
+				map. If you’ve used Google Maps, then you’re probably familiar with
+				the push pins used to mark the location of items you search for. For
+				example, if you search for Space Needle in Seattle, WA, you’ll get a
+				map with a pin near the Space Needle area in the city, and if you
+				click on the pin, you’ll see an information window with more details
+				about the item. Well, push pins are called markers, and they are one
+				of the many things offered in the Google Maps API.</p>
+
+			<p>Adding a marker with a pop-up information window requires a
+				little code because you have to create the marker, the information
+				window, and a handler for the click event on the marker (which opens
+				the information window). Given we’re on a diversion, we’re going to
+				cover this fairly quickly, but at this point in the book, you’ve got
+				everything you need to keep up!</p>
+			
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1">
+					<li class="listitem">
+						<p>We’re going to start by creating a
+							new function, addMarker, and then use the Google API to create a
+							marker:</p>
+						
+						<div class="hiddencode">
+							<figure>
+								<img class="codeimage" src="/contents/html5/figs/web/186fig02.png" />
+							</figure>
+
+							<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  				<div class="modal-body">
+									<code>
+<pre>function addMarker(map, latlong, title, content) {</pre>
+<pre>	var markerOptions = {</pre>
+<pre>		position: latlong,</pre>
+<pre>		map: map,</pre>
+<pre>		title: title,</pre>
+<pre>		clickable: true</pre>
+<pre>	};</pre>
+<pre>	var marker = new google.maps.Marker(markerOptions);</pre>
+<pre>}</pre>
+									</code>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ol>
+				
+			</div>
+
+
+<!-- Page 187 -->
+
+			<div class="pagebreak pageNumber">187</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/offroaddiversion.png">
+			</figure>
+
+			<div class="orderedlist">
+				<ol class="orderedlist" type="1" start="2">
+					<li class="listitem"><p>Next we’re going to create the
+							info window by defining some options specific to it, and then
+							create a new InfoWindow object with the Google API. Add the code
+							below to your addMarker function:</p>
+						
+						<div class="hiddencode">
+							<figure>
+								<img class="codeimage" src="/contents/html5/figs/web/187fig01.png" />
+							</figure>
+
+							<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  				<div class="modal-body">
+									<code>
+<pre>var infoWindowOptions = {</pre>
+<pre>		content: content,</pre>
+<pre>		position: latlong</pre>
+<pre>};</pre>
+										<br />
+<pre>var infoWindow = new google.maps.InfoWindow(infoWindowOptions);</pre>
+										<br />
+<pre>google.maps.event.addListener(marker, 'click', function() {</pre>
+<pre>	infoWindow.open(map);</pre>
+<pre>});</pre>
+									</code>
+								</div>
+							</div>
+						</div>
+					</li>
+					
+					<li class="listitem"><p>Now all that’s left to do is call
+							the addMarker function from showMap, making sure we pass in all
+							the right arguments for the four parameters. Add this to the
+							bottom of your showMap function:</p>
+
+						<div class="hiddencode">				
+							<figure>
+								<img class="codeimage" src="/contents/html5/figs/web/187fig02.png" />
+							</figure>
+
+							<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  				<div class="modal-body">
+									<code>
+<pre>var title = "Your Location";</pre>
+<pre>var content = "You are here: " + coords.latitude + ", " + coords.longitude;</pre>
+<pre>addMarker(map, googleLatAndLong, title, content);</pre>
+									</code>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ol>
+			</figure>
+		
+		</section> <!-- Section 16 -->
+
+		<section class="section" data-number="17" data-name="Testing the marker">
+
+<!-- Page 188 -->
+
+			<div class="pagebreak pageNumber">188</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/offroaddiversion.png">
+			</figure>
+
+			<h2 class="title left">Testing the marker</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+
+			<br />
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/188fig01.png" />
+			</figure>
+		
+			<p><a id="iddle1945" class="indexterm" />Get all the code for
+				<code class="literal">addMarker</code> added, update
+				<code class="literal">showMap</code> to call
+				<code class="literal">addMarker</code> and reload the page. You’ll see a map with a marker with your
+				location on it.</p>
+			
+			<p>Try clicking on the marker. You’ll get a pop-up window with your latitude and longitude.</p>
+
+			<p>This is great, because now you know exactly where you are (just in case you were lost or something...)</p>
+			
+			<aside>Try online: <a class="ulink" href="http://wickedlysmart.com/hfhtml5/chapter5/marker/myLoc.html"
+				target="_top">http://wickedlysmart.com/hfhtml5/chapter5/marker/myLoc.html</a>
+			</aside>
+			
+			<div class="sidebar" id="other_cool_things_you_can_do_with_the_go">
+				<h3>The other cool things you can do with the Google Maps API</h3>
+
+				<figure class="right">
+					<img src="/contents/html5/figs/web/188fig02.png" />
+				</figure>
+
+				<p>We’ve only scratched the surface of what you can do with the
+					Google Maps API, and although this API is way beyond the scope of
+					this book, you’re well on your way to being able to tackle it on
+					your own. Here are some things you can consider using it for, and
+					some pointers to where to start.</p>
+
+				<p><strong>Controls:</strong> By default,
+					your Google map includes several controls, like the zoom control,
+					the pan control, a control to switch between Map and Satellite
+					view, and even the Street View control (the little pegman above the
+					zoom control). You can access these controls programmatically from
+					JavaScript to make use of them in your applications.</p>
+
+				<p><strong>Services:</strong> Ever looked
+					up directions in Google Maps? If so, then you’ve used the
+					Directions service. You have access to directions, as well as other
+					services, like distance and street view through the Google Maps
+					services APIs.</p>
+
+				<p><strong>Overlays:</strong> Overlays
+					provide another view on top of a Google map; say, a heat map
+					overlay. If you’re commuting, you can check traffic congestion with
+					the traffic overlay. You can create custom overlays, like custom
+					markers, your photos, and pretty much anything else you can
+					imagine, using the Google Maps overlay APIs.</p>
+
+				<p>All this is available through the Google Maps JavaScript API.
+					To take your experiments further, check out the documentation at:</p>
+				
+				<pre class="programlisting" id="pro_id00032">http://code.google.com/apis/maps/documentation/javascript/</pre>
+			</div> <!-- /sidebar -->
+
+<!-- Page 189 -->
+
+			<div class="pagebreak pageNumber">189</div>
+
+			<div class="sidebar" id="geolocation_exposed">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/geolocationexposed.png">
+				</figure>
+
+				<h3>This week’s interview: A conversation with a wannabe HTML5 API</h3>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>
+					Welcome Geolocation. I gotta say right up front, I’m a bit surprised to see you here.</p>
+
+				<p><span class="formalpara-title"><strong>Geolocation:</strong></span>Why’s that?</p>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>You’re not even
+					“officially” part of the HTML5 spec and
+					here you are, you’re the first API that’s been given a chapter!
+					What’s up with that?</p>
+
+				<p><span class="formalpara-title"><strong>Geolocation:</strong> </span>Well,
+					you’re right that I’m defined in a specification that’s separate
+					from the HTML5 specification, but I <em>am</em>
+					an official specification of the W3C. And, just look around, any
+					mobile device worth its salt has me already implemented in its
+					browser. I mean what good is a mobile web app without me?</p>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>
+					So what kind of web apps are making use of you?</p>
+
+				<p><span class="formalpara-title"><strong>Geolocation:</strong></span>Really,
+					it’s most of the apps people are using on the move; from apps that
+					let you update your status and include geo information, to camera
+					apps that record where pictures are taken, to social apps that find
+					local friends or allow you to “check in” at various locations.
+					Heck, people are even using me to record where they cycle or run or
+					eat or to get where they’re going.</p>
+
+				<p><span class="formalpara-title"><strong>Head
+					First:</strong> </span>Your API seems a bit simplistic, I mean you’ve got, what,
+					a couple of methods and properties total?</p>
+
+				<p><span class="formalpara-title"><strong>Geolocation:</strong></span>Small
+					and simple is powerful. Do you see many complaints about me out
+					there? Nope. I’ve got what every developer needs and location-aware
+					apps are getting cranked out by the dozen a day. Plus, small equals
+					quick and easy to learn, right? Maybe that’s why I’m the first API
+					with his very own chapter?</p>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>Let’s talk about support.</p>
+
+				<p><span class="formalpara-title"><strong>Geolocation:</strong></span>That’s
+					a short topic because I’m supported in almost every browser, on
+					desktop and mobile.</p>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>
+					Okay, so one thing I’ve always wanted to ask you: what
+					good are you on a device that doesn’t have GPS?</p>
+
+				<p><span class="formalpara-title"><strong>Geolocation:</strong></span>There’s
+					a big misconception that I’m somehow dependent on GPS. There are
+					other great ways to determine location today through cell phone
+					triangulation, using IP addresses, and so on. If you have GPS,
+					great, and in fact I can help you even more; but if not, there are
+					lots of ways to get location.</p>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>Help even more?</p>
+				
+				<p><span class="formalpara-title"><strong>Geolocation:</strong></span>If
+					you’ve got a good enough mobile device I can give you altitude,
+					direction, speed, all kinds of things.</p>
+
+				<p><span class="formalpara-title"><strong>Head First:</strong></span>
+					Say none of those methods work, that is, GPS, IP address,
+					triangulation, then what good are you?</p>
+
+				<p><span class="formalpara-title"><strong>Geolocation:</strong></span>Well,
+					I can’t always guarantee you’re going to get a location, but that’s
+					okay because I do give you a nice way to handle failures
+					gracefully. All you have to do is give me an error handler and I’ll
+					call it if I have a problem.</p>
+
+				<p><span class="formalpara-title"><strong>Head
+					First:</strong></span>Good to know. Well, that’s all we have time for. Thank
+					you, Geolocation, for being here and congrats for getting promoted
+					to a real W3C standard.</p>
+
+			</div> <!-- /sidebar -->
+
+		</section> <!-- Section 17 -->
+
+		<section class="section" data-number="18" data-name="Meanwhile back at the Geolocation API...">
+
+<!-- Page 190 -->
+
+			<div class="pagebreak pageNumber">190</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/190fig01.png" />
+			</figure>
+
+			<h2 class="title">Meanwhile back at the Geolocation API...</h2>
+
+			<p><a id="iddle1049" class="indexterm" /><a id="iddle1399" class="indexterm" />
+				<a id="iddle1401" class="indexterm" /><a id="iddle1896" class="indexterm" />
+				<a id="iddle1899" class="indexterm" /><a id="iddle1974" class="indexterm" />
+				<a id="iddle2640" class="indexterm" /><a id="iddle2676" class="indexterm" />
+				<a id="iddle2811" class="indexterm" /><a id="iddle2924" class="indexterm" />
+				<a id="iddle3102" class="indexterm" />We’ve already travelled a fair distance with
+				the Geolocation API: we’ve determined our location, computed
+				distances to other locations, handled the error states of the API
+				and even added a map using the Google Maps API. But it’s not time to
+				rest yet, we’re just to the point of getting into the interesting
+				parts of the API. We’re also at that point between knowing about the
+				API, and having mastery over it, so let’s keep moving!</p>
+
+			<p>One thing we need to do before going on is to take a closer look at
+				the API itself. We’ve talked about it enough, but we’ve never
+				actually <em>looked at it</em>. As we’ve been saying, the API is actually really simple, having just
+				three methods: <code class="literal">getCurrentPosition</code> (which you know something about),
+				<code class="literal">watchPosition</code> (which you’ll find out about soon enough), and
+				<code class="literal">clearWatch</code> (which, you guessed it, is related to
+				<code class="literal">watchPosition</code>). Before getting to these two new methods,
+				let’s take another look at <code class="literal">getCurrentPosition</code>
+				and at some related objects, like the <code class="literal">Position</code>
+				and <code class="literal">Coordinates</code> objects. You’re going to find a few
+				new things there you didn’t know about.</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/190fig02.png" />
+			</figure>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/190fig03.png" />
+			</figure>
+		
+		</section> <!-- Section 18 -->
+
+		<section class="section" data-number="19" data-name="Can we talk about your accuracy?">
+
+<!-- Page 191 -->
+
+			<div class="pagebreak pageNumber">191</div>
+
+			<h2 class="title">Can we talk about your accuracy?</h2>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/191fig01.png" />
+			</figure>
+			
+			<p><a id="iddle1865" class="indexterm" />Finding
+				your location isn’t an exact science. Depending on the method the
+				browser uses, you may know only the state, city, or city block
+				you’re on. Then again, with more advanced devices you might know
+				your location to within 10 meters, complete with your speed, heading
+				and altitude.</p>
+
+			<p>So how do we write code, given this situation? The designers
+				of the Geolocation API have made a nice little contract with us:
+				every time they give us a location they’ll also give us the
+				accuracy, in meters, of the location, to within a 95% confidence
+				level. So, for instance, we might know our location with 500 meters
+				accuracy, which means that we can be pretty darn sure we can count
+				on the location as long as we factor in a radius of 500 meters. And
+				for 500 meters, we’d be safe, for instance, giving city or
+				neighborhood recommendations, but we might not want to provide
+				street by street driving directions. In any case, it is obviously up
+				to your app to figure out how it wants to make use of the accuracy
+				data.</p>
+
+			<p>Enough talk, let’s find out what your accuracy looks like in your
+				current location. As you’ve just seen, the accuracy information is
+				part of the coordinates object. Let’s pull it out and use it in the
+				<code class="literal">displayLocation</code>
+				function.</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/191fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function displayLocation(position) {</pre>
+<pre>	var latitude = position.coords.latitude;</pre>
+<pre>	var longitude = position.coords.longitude;</pre>
+<pre>	var div = document.getElementById("location");</pre>
+							<br />
+<pre>	div.innerHTML = "You are at Latitude: " + latitude + ", Longitude: " + longitude;</pre>
+<pre>	div.intterHTML += " (with " + position.coords.accuracy + " meters accuracy)";</pre>
+							<br />
+<pre>	var km = computeDistance(position.coords, ourCoords);</pre>
+<pre>	var distance = document.getElementById("distance");</pre>
+<pre>	distance.innerHTML = "You are " + km + " km from the WickedlySmart HQ";</pre>
+<pre>	showMap(position.coords);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 19 -->
+
+		<section class="section" data-number="20" data-name="Accuracy Test">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/191fig03.png" />
+			</figure>
+			
+			<h2 class="title left">Accuracy Test</h2>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/common-10.png" />
+			</figure>
+			
+			<br />
+
+			<p>Make sure you’ve got this one liner added to your code, and
+				load the page. Now you can see how accurate your location is. Be
+				sure to try this on any device you have.</p>
+
+			<aside>
+				Try online: <a class="ulink" href="http://wickedlysmart.com/hfhtml5/chapter5/accuracy/myLoc.html"
+				target="_top">http://wickedlysmart.com/hfhtml5/chapter5/accuracy/myLoc.html</a>
+			</aside>
+
+			<div class="clear" />
+
+<!-- Page 192 -->
+
+			<div class="pagebreak pageNumber">192</div>
+
+		</section> <!-- Section 20 -->
+
+		<section class="section" data-number="21" data-name="Wherever you go, there you are">
+			<figure class="right">
+				<img src="/contents/html5/figs/web/192fig01.png" />
+			</figure>
+			
+			<h2 class="title">“Wherever you go, there you are”</h2>
+			
+			<p><a id="iddle1892" class="indexterm" /><a id="iddle2930" class="indexterm" />
+				<a id="iddle3103" class="indexterm" />The orgin
+				of this phrase has been hotly debated. Some claim the first real
+				mention of it was in the film <em>Buckaroo Banzai</em>,
+				others draw its origin from Zen Buddhist text, still
+				others cite various books, movies and popular songs. No matter the
+				source, it’s here to stay, and even more so after this chapter
+				because we’re going to turn it into a little web app named “Wherever
+				you go, there you are.” Yes, there is an app for that! But, we’re
+				going to need a little participation from you, the reader, because
+				for this one you’ll have to (excuse us for saying this) get off your
+				butt and move around a little.</p>
+
+			
+			
+			<p>What we’re going to do is extend our current code so that it
+				tracks your movements in real time. To do that we’re going to bring
+				everything together, including the last two methods in the
+				Geolocation API, and create an app that tracks you, in near real
+				time.</p>
+			
+			<section class="subsection" data-number="22" data-name="How we're going to track your movements">
+				<div class="titlepage">
+					<h3 class="title">How we’re going to track your movements</h3>
+				</div>
+
+				<p>You’ve already received a heads up that the Geolocation API has a
+					<code class="literal">watchPosition</code>
+					method. This method does what it says: it watches your movements
+					and reports your location back as your location changes. The
+					<code class="literal">watchPosition</code>
+					method actually looks just like the
+					<code class="literal">getCurrentPosition</code>
+					method, but behaves a little differently: it repeatedly calls your
+					success handler each time your position changes. Let’s see how</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/192fig02.png" />
+				</figure>
+
+			</section> <!-- Section 22 -->
+
+		</section> <!-- Section 21  -->
+
+		<section class="section" data-number="23" data-name="Getting the app started">
+
+<!-- Page 193 -->
+
+			<div class="pagebreak pageNumber">193</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/193fig01.png" />
+			</figure>
+			
+			<h2 class="title">Getting the app started</h2>
+
+			<p><a id="iddle1803" class="indexterm" /><a id="iddle2931" class="indexterm" />
+				We’re going to use our previous
+				code as a starting point; first we’re going to add a couple of
+				buttons to the HTML so that we can start and stop the tracking of
+				your location. Why do we need the buttons? Well, first of all, users
+				don’t want to be tracked all the time and they usually want some
+				control over that. But there’s another reason: constantly checking
+				your position is an energy-intensive operation on a mobile device
+				and if it’s left on all the time, it will cause your battery life to
+				suffer. So, first, we’ll update the HTML to add a form and two
+				buttons: one to start watching your position and one to stop.</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/193fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>&lt;!doctype html&gt;</pre>
+<pre>&lt;html&gt;</pre>
+<pre>&lt;head&gt;</pre>
+<pre>	&lt;meta charset="utf-8"&gt;</pre>
+<pre>	&lt;title&gt;Wherever you go, there you are&lt;/title&gt;</pre>
+<pre>	&lt;script src="myLoc.js"&gt;&lt;/script&gt;</pre>
+<pre>	&lt;link rel="stylesheet" href="myLoc.css"&gt;</pre>
+<pre>&lt;/head&gt;</pre>
+<pre>&lt;body&gt;</pre>
+<pre>	&lt;form&gt;</pre>
+<pre>		&lt;input type="button" id="watch" value="Watch me"&gt;</pre>
+<pre>		&lt;input type="button" id="clearWatch" value="Clear watch"&gt;</pre>
+<pre>	&lt;/form&gt;</pre>
+<pre>	&lt;div id="location"&gt;</pre>
+<pre>		Your location will go here.</pre>
+<pre>	&lt;/div&gt;</pre>
+<pre>	&lt;div id="distance"&gt;</pre>
+<pre>		Distance from WickedlySmart HQ will go here.</pre>
+<pre>	&lt;/div&gt;</pre>
+<pre>	&lt;div id="map"&gt;</pre>
+<pre>	&lt;/div&gt;</pre>
+<pre>&lt;/body&gt;</pre>
+<pre>&lt;/html&gt;</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+		
+		</section> <!-- Section 23 -->
+
+		<section class="section" data-number="24" data-name="Reworking our old code...">
+
+<!-- Page 194 -->
+
+			<div class="pagebreak pageNumber">194</div>
+
+			<h2 class="title">Reworking our old code...</h2>
+
+			<p><a id="iddle1580" class="indexterm" /><a id="iddle1903" class="indexterm" />
+				<a id="iddle3086" class="indexterm" /><a id="iddle3104" class="indexterm" />
+				So now we need to add button
+				click handlers for the two buttons. We’ll add them to the
+				<code class="literal">getMyLocation</code>
+				function only if there is geolocation support. And, since we’re
+				going to control all the geolocation tracking using the two buttons,
+				we’ll remove the existing call to <code class="literal">getCurrentPosition</code>
+				from <code class="literal">getMyLocation</code>. Let’s go ahead and remove
+				that code, and add two handlers: <code class="literal">watchLocation</code>
+				for the watch button, and <code class="literal">clearWatch</code> for the clear button:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/194fig01.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function getMyLocation() {</pre>
+<pre>	if (navigator.geolocation) {</pre>
+<pre>		navigator.geolocation.getCurrentPosition(displayLocation, displayError);</pre>
+<pre>		var watchButton = document.getElementById("watch");</pre>
+<pre>		watchButton.onclick = watchLocation;</pre>
+<pre>		var clearWatchButton = document.getElementById("clearWatch");</pre>
+<pre>		clearWatchButton.onclick = clearWatch;</pre>
+<pre>	}</pre>
+<pre>	else {</pre>
+<pre>		alert("Oops, no geolocation support");</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+			<section class="subsection" data-number="25" data-name="Writing the watchLocation handler">
+
+				<div class="titlepage">
+					<h3 class="title">Writing the watchLocation handler</h3>
+				</div>
+
+				<p>At this point, here’s what we’re trying to do: when the user clicks
+					on the watch button, they want to start tracking their position.
+					So, we’ll use the the <code class="literal">geolocation. watchPosition</code>
+					method to start watching their position. The <code class="literal">geolocation. watchPosition</code>
+					method has two parameters, a success handler and an error handler,
+					so we’ll reuse the ones we already have. It also returns a
+					<code class="literal">watchId</code>, which can be used at any time to cancel the watching behavior.
+					We’re going to stash the <code class="literal">watchId</code>
+					in a global variable, which we’ll use when we write the click
+					handler for the clear button. Here’s the code for the <code class="literal">watchLocation</code>
+					function and the <code class="literal">watchId</code>, go ahead and add this code to</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/194fig02.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>var watchId = null;</pre>
+								<br />
+<pre>function watchLocation() {</pre>
+<pre>	watchId = navigator.geolocation.watchPosition (displayLocation, displayError);</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+			</section> <!-- Section 25 -->
+
+			<section class="subsection" data-number="26" data-name="Writing the clearWatch handler">
+
+<!-- Page 195 -->
+
+				<div class="pagebreak pageNumber">195</div>
+
+				<div class="titlepage">
+					<h3 class="title">Writing the clearWatch handler</h3>
+				</div>
+
+				<p>Now let’s write the handler to clear the watching activity. To do that we need to take the
+					<code class="literal">watchId</code> and pass it to the
+					<code class="literal">geolocation.clearWatch</code> method.</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/195fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>function clearWatch() {</pre>
+<pre>	if (watchId) {</pre>
+<pre>		navigator.geolocation.clearWatch(watchId);</pre>
+<pre>		watchId = null;</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+			</section> <!-- Section 26 -->
+
+			<section class="subsection" data-number="27" data-name="we_still_need_to_make_a_small_update_to">
+
+				<div class="titlepage">
+					<h3 class="title">We still need to make a small update to displayLocation...</h3>
+				</div>
+
+				<p>There’s one small change we need to make and it involves the Google
+					Maps code we previously wrote. In this code we call
+					<code class="literal">showMap</code> to display the Google Map. Now,
+					<code class="literal">showMap</code> creates a new map in your page, and that is something you only want
+					to do one time. But remember, when you start watching your location
+					with <code class="literal">watchPosition</code>, <code class="literal">displayLocation</code>
+					is going to get called every time there is an update to your position.</p>
+
+				<p>To make sure we only call <code class="literal">showMap</code>once, we’ll first
+					test to see if the map exists and if it doesn’t, we’ll call <code class="literal">showMap</code>.
+					Otherwise, <code class="literal">showMap</code> has already been called (and has already
+					created the map) and we don’t need to call it again.</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/195fig02.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>function displayLocation(position) {</pre>
+<pre>	var latitude = position.coords.latitude;</pre>
+<pre>	var longitude = position.coords.longitude;</pre>
+								<br />
+<pre>	var div = document.getElementById("location");</pre>
+<pre>	div.innerHTML = "You are at Latitude: " + latitude + ", Longitude: " + longitude;</pre>
+<pre>	div.innerHTML += " (with " + position.coords.accuracy + " meters accuracy)";</pre>
+								<br />
+<pre>	var km = computeDistance(position.coords, ourCoords);</pre>
+<pre>	var distance = document.getElementById("distance");</pre>
+<pre>	distance.innerHTML = "You are " + km + " km from the WickedlySmart HQ";</pre>
+								<br />
+<pre>	if (map == null) {</pre>
+<pre>		showMap(position.coords);</pre>
+<pre>	}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+			</section> <!-- Section 27 -->
+
+		</section> <!-- Section 24 -->
+
+		<section class="section" data-number="28" data-name="Time to get moving!">
+
+<!-- Page 196 -->
+
+			<div class="pagebreak pageNumber">196</div>
+
+			<h2 class="title left">Time to get moving!</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/car.png" />
+			</figure>
+
+			<p>Make sure you’ve got all the new code typed in and reload your page,
+				<code class="literal">myLoc.html</code>. Now, to truly test this page you’re
+				going to need to “relocate” to
+				have your position updated. So take a walk, jump on your bike, get
+				in the car, or use whatever your favorite mode of transportation
+				might be.</p>
+
+			<p>It almost goes without saying that if you’re running this on
+				your desktop, this app is going to be pretty boring (since you can’t
+				take it with you), so you really need to use a mobile device for
+				this test. And, if you need help getting to a hosted version with
+				your mobile device, we’ve placed a copy of this code at:</p>
+
+			<pre class="programlisting" id="pro_id00033">http://wickedlysmart.com/hfhtml5/chapter5/watchme/myLoc.html.</pre>
+
+			<figure>
+				<img src="/contents/html5/figs/web/196fig01.png" />
+			</figure>
+
+			<aside>
+				Try online: <a class="ulink" href="http://wickedlysmart.com/hfhtml5/chapter5/watchme/myLoc.html"
+				target="_top">http://wickedlysmart.com/hfhtml5/chapter5/watchme/myLoc.html</a>
+			</aside>
+
+<!-- Page 197 -->
+
+			<div class="pagebreak pageNumber">197</div>
+
+			<div class="sidebar" id="there_are_no_dumb_questions-id00048">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/therearenodumbquestions.png">
+				</figure>
+
+				<div class="blockquote">
+					<blockquote class="blockquote">
+						<div class="qandaset" id="ch05qa3">
+							<table style="border: 0;">
+								<colgroup>
+									<col style="text-align: left; width: 1%;" />
+									<col />
+								</colgroup>
+								<tbody>
+									<tr class="question" id="id36200973">
+										<td style="text-align: left; vertical-align: top;" id="ch05qa3q1">
+											<p><strong>Q:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><a id="iddle1396"class="indexterm" /><a id="iddle1461" class="indexterm" />
+												<a id="iddle1705" class="indexterm" /><a id="iddle1882" class="indexterm" />
+												<a id="iddle1975" class="indexterm" /><a id="iddle2473" class="indexterm" />
+												<a id="iddle2812" class="indexterm" />
+												<strong>Q: How can I control the rate at which the browser is providing updates of my
+														location when using watchPosition?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch05qa3q1a1">
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> You can’t. The browser determines what the optimal update rate is and
+												decides when you’ve changed positions.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36201127">
+										<td style="text-align: left; vertical-align: top;" id="ch05qa3q2">
+											<p><strong>Q:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: Why does my location change a few times when I first load the page,
+												even though I’m sitting still?</strong></p>
+										</td>
+									</tr>
+								
+									<tr class="answer" id="ch05qa3q2a2">
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Remember we
+												said the browser may use a few methods to determine your
+												location? Depending on the method (or methods) the browser
+												is using to determine your location, the accuracy of the
+												location may change over time. In general the accuracy gets
+												better, but sometimes (say, you’ve just driven into a rural
+												area with only one cell tower) it may get worse. And you can
+												always use the accuracy property in the position.coords
+												object to keep an eye on accuracy.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36201148">
+										<td style="text-align: left; vertical-align: top;" id="ch05qa3q3">
+											<p><strong>Q:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: Can I use the altitude and altitudeAccuracy properties of the
+												coordinates object?</strong></p>
+										</td>
+									</tr>
+								
+									<tr class="answer" id="ch05qa3q3a3">
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> These properties are not guranteed to be supported (and obviously
+												are going to be supported on only high-end mobile devices),
+												so you’ll have to make sure your code handles the case where
+												they aren’t.</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36201182">
+										<td style="text-align: left; vertical-align: top;" id="ch05qa3q4">
+											<p><strong>Q:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: What are heading and speed?</strong></p>
+										</td>
+									</tr>
+									
+									<tr class="answer" id="ch05qa3q4a4">
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Heading is
+												the direction you’re traveling in and speed is how fast
+												you’re going. Think about if you’re in a car heading north
+												on Interstate 5 at 55mph. Your heading is north, and your
+												speed is 55mph. If you are in your car in the parking lot at
+												Starbuzz Coffee, then your speed is 0 and you have no
+												heading (because you’re not moving).</p>
+										</td>
+									</tr>
+									
+									<tr class="question" id="id36201208">
+										<td style="text-align: left; vertical-align: top;" id="ch05qa3q5">
+											<p><strong>Q:</strong></p>
+										</td>
+										
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>Q: When I map the distance from my location to your location, it’s a lot
+												longer than is being reported in the app, why?</strong></p>
+										</td>
+									</tr>
+								
+									<tr class="answer" id="ch05qa3q5a5">
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong></p>
+										</td>
+										<td style="text-align: left; vertical-align: top;">
+											<p><strong>A:</strong> Remember,
+												our distance function is computing the distance “as the crow
+												flies.” Your mapping tool is most likely giving you the
+												driving distance.</p>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div> <!-- /quandaset -->
+					</blockquote>
+				</div> <!-- /blockquote -->
+			</div> <!-- /sidebar -->
+
+			<div class="sidebar" id="sharpen_your_pencil-id00049">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/sharpenpencil.png">
+				</figure>
+
+				<p>Below you’ll find an alternative implementation for
+					displayLocation. Can you guess what it does? Take a look and write
+					your answer below. If you’re feeling adventurous, try it out!</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/197fig01.png" />
+				</figure>
+			</div>
+
+		</section> <!-- Section 28 -->
+
+		<section class="section" data-number="29" data-name="You've got some Options...">
+
+<!-- Page 198 -->
+
+			<div class="pagebreak pageNumber">198</div>
+
+			<h2 class="title">You’ve got some Options...</h2>
+
+			<p><a id="iddle1567" class="indexterm" /><a id="iddle2566" class="indexterm" />
+				<a id="iddle2642" class="indexterm" />
+				So far we’ve stayed away from the third parameter of
+				<code class="literal">getCurrentPosition</code> (and <code class="literal">watchPosition</code>
+				): the <code class="literal">positionOptions</code>
+				parameter. With this parameter we can control how geolocation
+				computes its values. Let’s look at the three parameters along with
+				their default values:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/198fig01.png" />
+			</figure>
+
+			<section class="subsection" data-number="30" data-name="Can we talk about your accuracy, again?">
+				<figure class="right">
+					<img src="/contents/html5/figs/web/198fig02.png" />
+				</figure>
+				
+				<div class="titlepage">
+					<h3 class="title">Can we talk about your accuracy, again?</h3>
+				</div>
+	
+				<p>We’ve already seen that each position handed to us by the
+					Geolocation API has an accuracy property. But, we can also tell the
+					Geolocation API that we’d like only the most accurate result it can
+					get. Now, this is only meant as a hint to the browser, and in fact,
+					different implementations may do different things with the hint.
+					And, while this option doesn’t sound like a big deal, it has lots
+					of implications. For instance, if you don’t care that your results
+					are super accurate—you might be just fine knowing that your user is
+					in Baltimore—the API might be able to tell you that very quickly
+					and very cheaply (in terms of power consumption). If, on the other
+					hand, you need to know the street your user is on, that’s fine, but
+					the API might then have to fire up GPS, and use lots of power to
+					get that information. With the
+					<code class="literal">enableHighAccuracy</code>
+					option, you’re telling the API you need the most accurate location
+					it can get, even if it is costly. Just keep in mind, using this
+					option doesn’t <span class="emphasis"><em>guarantee</em></span> the
+					browser can give you a more accurate location.</p>
+
+			</section> <!-- Section 30 -->
+
+		</section> <!-- Section 29  -->
+
+		<section class="section" data-number="31" data-name="The world of timeouts and maximum age...">
+
+<!-- Page 199 -->
+
+			<div class="pagebreak pageNumber">199</div>
+
+			<figure class="right">
+				<img src="/contents/html5/figs/web/199fig01.png" />
+			</figure>
+			
+			<h2 class="title">The world of timeouts and maximum age...</h2>
+
+			<p><a id="iddle2395" class="indexterm" />Let’s review once again what the <code class="literal">timeout</code>
+				and <code class="literal">maximumAge</code> options are:</p>
+
+			<div class="itemizedlist">
+				<ul class="itemizedlist">
+					<li class="listitem">
+						<p><strong>timeout:</strong> this option
+							tells the browser how <strong>long</strong>
+							it gets to determine the user’s location. Note that if the user
+							is prompted to approve the location request, the timeout doesn’t
+							start until they’ve accepted. If the browser can’t determine a
+							new location within the number of milliseconds specified in the
+							timeout, the error handler is called. <em>By
+							default, this option is set to Infinity.</em></p>
+					</li>
+					
+					<li class="listitem">
+						<p><strong>maximumAge:</strong> this
+							option tells the browser how <strong>old</strong>
+							the location can be. So, if the browser has a location that was
+							determined sixty seconds go, and maximumAge is set to 90000 (90
+							seconds), then a call to
+							<code class="literal">getCurrentPosition</code>
+							would return the existing, cached position (the browser would not
+							try to get a new one). But if the maximumAge was set to 30
+							seconds, the browser would be forced to determine a new position.</p>
+					</li>
+				</ul>
+			</div>
+
+			<figure class="left">
+				<img src="/contents/html5/figs/web/199fig02.png" />
+			</figure>
+
+			<p>You’re right on with your thinking on maximumAge. For timeout, think
+				about it like this: when you’re using maximumAge so you get an old
+				(cached) result, as long as that result is younger than the
+				maximumAge you specified, this works really well to optimize the
+				performance of your app. But what happens when the position’s age
+				exceeds the maximumAge? Well, the browser goes off and tries to get
+				a new one. But, what if you don’t care <em>that
+				much</em>—say you’ll take a new location if it has it, but otherwise,
+				you don’t need it right now. Well, you could set timeout to 0, and
+				if there is a result that passes the maximumAge test, great, here it
+				is, otherwise the call will fail immedately and call your error
+				handler (with an error code of <code class="literal">TIMEOUT</code>
+				). That’s just one example of the creative ways you can use
+				<code class="literal">timeout</code> and <code class="literal">maximumAge</code>
+				to tune the behavior of your application.</p>
+
+<!-- Page 200 -->
+
+			<div class="pagebreak pageNumber">200</div>
+
+			<div class="sidebar" id="who_does_whatquestion_mark-id00050">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/whodoeswhat.png">
+				</figure>
+
+				<p>Below you’ll see a few options for the geolocation API. For each option, match it to its behavior.</p>
+
+				<div class="informaltable">
+					<table style="border-collapse: collapse;">
+						<colgroup>
+							<col class="c1" />
+							<col class="c2" />
+						</colgroup>
+						<tbody>
+							<tr>
+								<td style="vertical-align: middle; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p><strong><codeclass="literal">{maximumAge:600000}</code></strong></p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>I want only cached positions less than 10 minutes old. If there
+										aren’t any cached positions less than 10 minutes old, I ask
+										for a new position, but only if I can get one in 1 second or
+										less.</p>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="vertical-align: middle; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p><strong><code class="literal">{timeout:1000, maximumAge:600000}</code></strong></p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>I’ll use a cached position if the browser has one that’s less than
+										10 minutes old, otherwise, I want a fresh position.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: middle; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p><strong><code class="literal">{timeout:0, maximumAge:Infinity}</code></strong></p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>I want only fresh positions. The browser can take as long it wants to get me one.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: middle; border-right: 0.5pt solid;">
+									<p><strong><code class="literal">{timeout:Infinity, maximumAge:0}</code></strong></p>
+								</td>
+								
+								<td style="vertical-align: top;"><p>I want only cached
+										positions. I’ll take one of any age. If there is no cached
+										position at all, then I call the error handler. No new
+										positions for me! I’m for offline use.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- /informaltable -->
+			</div> <!-- /sidebar -->
+
+		</section> <!-- Section 31 -->
+
+		<section class="section" data-number="32" data-name="How to specify options">
+
+<!-- Page 201 -->
+
+			<div class="pagebreak pageNumber">201</div>
+
+			<h2 class="title">How to specify options</h2>
+	
+			<p><a id="iddle1884" class="indexterm" /><a id="iddle2567" class="indexterm" />
+				<a id="iddle2923" class="indexterm" />One of the nice things about JavaScript is that
+				if we want to specify a set of options in an object, we can just
+				type in a literal object, right into the middle of our method call.
+				Here’s how you do that: let’s say we want to enable high accuracy
+				and also set the maximum age of the location to be 60 seconds (or
+				60,000 milliseconds). We could create options like this:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/201fig01.png" />
+			</figure>
+
+			<p>And then pass <code class="literal">options</code> to either <code class="literal">getCurrentPosition</code>
+				or <code class="literal">watchPosition</code>, like this:</p>
+
+			<figure>
+				<img src="/contents/html5/figs/web/201fig02.png" />
+			</figure>
+			
+			<p>Or, we could just write the options object inline, like this:</p>
+			
+			<figure>
+				<img src="/contents/html5/figs/web/201fig03.png" />
+			</figure>
+			
+			<p>Now that you know the options, what they do, and how to specify
+				them, we should use them. We’re going to do that, but remember,
+				these are meant to tune <em>your</em>
+				application, which will have its own unique requirements. These
+				options are also affected by your device, browser implementation and
+				network, so you’ll need to play on your own to fully explore them.</p>
+
+			<div class="sidebar" id="test_drive_diagnostics_checkup">
+				<h3 class="left">Test Drive Diagnostics Checkup</h3>
+
+				<figure>
+					<img src="/contents/html5/figs/web/brokencar.png">
+				</figure>
+
+				<p><strong>When you ran the diagnostics before, did you get the test case where you waited
+							and waited and nothing happened? That’s most likely because of
+							the infinite timeout. In other words the browser will wait
+							forever to get a location as long as it doesn’t encounter some
+							error condition. Well, now you know how to fix that, because we
+							can force the Geolocation API to be a little more expedient by
+							setting its timeout value. Here’s how:</strong></p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/201fig04.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>function watchLocation() {</pre>
+<pre>	watchId = navigator.geolocation.watchPosition(</pre>
+<pre>		displayLocation, </pre>
+<pre>		displayError,</pre>
+<pre>		{timeout:5000});</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 202, 203 -->
+
+			<div class="pagebreak pageNumber">202, 203</div>
+
+			<div class="sidebar" id="try_this_at_home_left_parenthesispushin">
+				<figure class="right">
+					<img src="/contents/html5/figs/web/202fig01.png">
+				</figure>
+
+				<h3><del>DON'T</del> TRY THIS AT HOME (PUSHING THE GEO TO THE LIMIT)</h3>
+
+				<p>Wouldn’t it be fun to see how fast your browser can find your location? We
+					could make it as hard for your browser as we can:</p>
+
+				<div class="itemizedlist">
+					<ul class="itemizedlist">
+						<li class="listitem"><p>let’s ask it to enable high accuracy,</p></li>
+						<li class="listitem"><p>let’s not allow it to use a cache (by setting maximumAge to 0)</p></li>
+						<li class="listitem"><p>let’s time it by setting the timeout option to 100,
+							and then increase the timeout every time it fails.</p>
+						</li>
+					</ul>
+				</div>
+
+				<p>Warning: we don’t know if all devices and their batteries are up to this, so use at your own risk!</p>
+
+				<p>Here’s what the intial options are going to look like:</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/202fig02.png" />
+				</figure>
+
+				<p>Now check out the code on the next page, you’ll find it quite
+					interesting. Go ahead and type it in—you can just add it to your
+					JavaScript in <code class="literal">myLoc.js</code>.
+					Try it on your various devices and record your results here:</p>
+
+				<figure class="left">
+					<img src="/contents/html5/figs/web/202fig03.png" />
+				</figure>
+
+				<figure>
+					<img src="/contents/html5/figs/web/202fig04.png" />
+				</figure>
+
+				<aside>
+					Try online: <a class="ulink" href="http://wickedlysmart.com/hfhtml5/chapter5/speedtest/speedtest.html"
+					target="_top">http://wickedlysmart.com/hfhtml5/chapter5/speedtest/speedtest.html</a></p>
+				</aside>
+
+				<div class="hiddencode">		
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/203fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>var options = { enableHighAccuracy: true, timeout:100, maximumAge: 0};</pre>
+<pre>window.onload = getMyLocation;</pre>
+<pre>function getMyLocation() {</pre>
+<pre>	if (navigator.geolocation) {</pre>
+<pre>		navigator.geolocation.getCurrentPosition(</pre>
+<pre>			displayLocation, </pre>
+<pre>			displayError,</pre>
+<pre>			options);</pre>
+<pre>	} else {</pre>
+<pre>		alert("Oops, no geolocation support");</pre>
+<pre>	}</pre>
+<pre>}</pre>
+<pre>function displayError(error) {</pre>
+<pre>	var errorTypes = {</pre>
+<pre>		0: "Unknown error",</pre>
+<pre>		1: "Permission denied",</pre>
+<pre>		2: "Position is not available",</pre>
+<pre>		3: "Request timeout"</pre>
+<pre>	};</pre>
+<pre>	var errorMessage = errorTypes[error.code];</pre>
+<pre>	if (error.code == 0 || error.code == 2) {</pre>
+<pre>		errorMessage = errorMessage + " " + error.message;</pre>
+<pre>	}</pre>
+<pre>	var div = document.getElementById("location");</pre>
+<pre>	div.innerHTML = errorMessage;</pre>
+<pre>options.innterHTML = errorMessage;</pre>
+<pre>options.timeout += 100;</pre>
+<pre>navigator.geolocation.getCurrentPosition (</pre>
+<pre>	displayLocation,</pre>
+<pre>	displayError,</pre>
+<pre>	options);</pre>
+<pre>div.innterHTML += " ... checking again with timeout=" + options.timeout;</pre>
+<pre>}</pre>
+<pre>function displayLocation(position) {</pre>
+<pre>	var latitude = position.coords.latitude;</pre>
+<pre>	var longitude = position.coords.longitude;</pre>
+<pre>	var div = document.getElementById("location");</pre>
+<pre>	div.innerHTML = "You are at Latitude: " + latitude + ", Longitude: " + longitude;</pre>
+<pre>	div.innerHTML += " (found in " + options.timeout + " milliseconds)";</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div> <!-- /sidebar -->
+
+		</section> <!-- Section 32 -->
+
+		<section class="section" data-number="33" data-name="Let's finish this app!">
+
+<!-- Page 204 -->
+
+			<div class="pagebreak pageNumber">204</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/204fig01.png" />
+			</figure>
+			
+			<h2 class="title">Let’s finish this app!</h2>
+
+			<p><a id="iddle2374" class="indexterm" /><a id="iddle2573" class="indexterm" />
+				<a id="iddle2748" class="indexterm" />When you sit back and think about it, with just
+				a little HTML and JavaScript you’ve created a web app that not only
+				can determine your location, but it can also track and display it in
+				<em>near real time</em>. Wow, HTML sure has grown up (and so have your skills!).</p>
+
+			<p>But, speaking of this app, don’t you think it needs just a
+				little bit of polish to finish it off? For instance, we could show
+				your position on the map as you move around, and we could even go
+				further and show where you’ve been too, to create a path through the
+				map.</p>
+
+			<p>Let’s write a function to keep the map centered on your
+				location as you move around, and drop a new marker each time we get
+				a new position:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/204fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function scrollMapToPosition(coords) {</pre>
+<pre>	var latitude = coords.latitude;</pre>
+<pre>	var longitude = coords.longitude;</pre>
+<pre>	var latlong = new google.maps.LatLng(latitude, longitude);</pre>
+							<br />
+<pre>	map.panTo(latlong);</pre>
+							<br />
+<pre>	addMarker(map, latlong, "Your new location", "You moved to: " +</pre>
+<pre>latitude + ", " + longitude);</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 33 -->
+
+		<section class="section" data-number="34" id="Integrating our new function">
+
+<!-- Page 205 -->
+
+			<div class="pagebreak pageNumber">205</div>
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/205fig01.png" />
+			</figure>
+			
+			<h2 class="title">Integrating our new function</h2>
+
+			<p><a id="iddle2798" class="indexterm" />Now, all we need to do is update the
+				<code class="literal">displayLocation</code> function to call
+				<code class="literal">scrollMapToPosition</code> each time your position changes. Remember that the first time
+				<code class="literal">displayLocation</code> is called, we’re calling
+				<code class="literal">showMap</code> to create the map and display a marker for your initial location.
+				Each time after that we just need to call <code class="literal">scrollMapToPosition</code>
+				to add a new marker and re-center the map. Here’s the code change:</p>
+
+			<div class="hiddencode">
+				<figure>
+					<img class="codeimage" src="/contents/html5/figs/web/205fig02.png" />
+				</figure>
+
+				<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  	<div class="modal-body">
+						<code>
+<pre>function displayLocation(position) {</pre>
+<pre>	var latitude = position.coords.latitude;</pre>
+<pre>	var longitude = position.coords.longitude;</pre>
+<pre>	var div = document.getElementById("location");</pre>
+<pre>	div.innerHTML = "You are at Latitude: " + latitude + ", Longitude: " + longitude;</pre>
+<pre>	div.innerHTML += " (found in " + options.timeout + " milliseconds)";</pre>
+<pre>	var km = computeDistance(position.coords, ourCoords);</pre>
+<pre>	var distance = document.getElementById("distance");</pre>
+<pre>	distance.innerHTML = "You are " + km + " km from the WickedlySmart HQ";</pre>
+							<br />
+<pre>	if (map == null) {</pre>
+<pre>		showMap(position.coords);</pre>
+<pre>	}	else {</pre>
+<pre>		scrollMapToPosition(position.coords);</pre>
+<pre>	}</pre>
+<pre>}</pre>
+						</code>
+					</div>
+				</div>
+			</div>
+
+		</section> <!-- Section 34 -->
+
+		<section class="section" data-number="35" data-name="And one more time...">
+			
+			<figure class="right">
+				<img src="/contents/html5/figs/web/205fig03.png" />
+			</figure>
+			
+			<h2 class="title left">And one more time...</h2>
+
+			<figure>
+				<img src="/contents/html5/figs/web/car.png" />
+			</figure>
+
+			<p>Reload your page and start moving around... is your map
+				following you? You should see a trail of markers being added to your
+				map as you move (unless you’re sitting at your desktop!).</p>
+
+			<p>So, we submit this application as solid proof that “wherever
+				you go, there you are.”</p>
+
+			<aside>
+				Try online: <a class="ulink" href="http://wickedlysmart.com/hfhtml5/chapter5/watchmepan/myLoc.html"
+				target="_top">http://wickedlysmart.com/hfhtml5/chapter5/watchmepan/myLoc.html</a>
+			</aside>
+
+<!-- Page 206 -->
+
+			<div class="pagebreak pageNumber">206</div>
+
+			<div class="sidebar" id="code_magnets-id00051">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/xxviifig00.png">
+				</figure>
+
+				<h3>Code Magnets</h3>
+				
+				<figure class="right">
+					<img src="/contents/html5/figs/web/206fig01.png" />
+				</figure>
+				
+				<p>Before we conclude this chapter, we thought you might want to really
+					polish up this app. You might have noticed (under some
+					circumstances) that there are just a few too many markers being
+					added to the map when you’re watching your position?</p>
+
+				<p>What’s happening is that watchPosition is detecting movement
+					frequently, so it’s calling the displayLocation success handler
+					every few steps or so. One way to fix that is to add some code so
+					we have to move some significant distance, say 20 meters for
+					testing purposes, before we create a new marker.</p>
+
+				<p>We already have a function that will compute the distance
+					between two coordinates (computeDistance), so all we need to do is
+					save our position each time displayLocation is called, and check to
+					see if the distance between the previous position and the new
+					position is greater than 20 meters before calling
+					scrollMapToPosition. You’ll find some of the code below to do that;
+					it’s your job to finish it. Watch out, you’ll have to use some
+					magnets more than once!</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/206fig02.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>var _____ ;</pre>
+<pre>function displayLocation(position) {</pre>
+<pre>	var latitude = position.coords.latitude;</pre>
+<pre>	var longitude = position.coords.longitude;</pre>
+<pre>	var div = document.getElementById("location");</pre>
+<pre>	div.innerHTML = "You are at Latitude: " + latitude + ", Longitude: " + longitude;</pre>
+<pre>	div.innerHTML += " (found in " + options.timeout + " milliseconds)";</pre>
+<pre>	var km = computeDistance(position.coords, ourCoords);</pre>
+<pre>	var distance = document.getElementById("distance");</pre>
+<pre>	distance.innerHTML = "You are " + km + " km from the WickedlySmart HQ";</pre>
+<pre>	if (map == null) {</pre>
+<pre>		showMap(position.coords);</pre>
+<pre>		prevCoords = _____;</pre>
+<pre>	}	else {</pre>
+<pre>		var meters = _____ (position.coords, prevCoords) * 1000;</pre>
+<pre>		if (_____ > _____) {</pre>
+<pre>			scrollMapToPosition(position.coords);</pre>
+<pre>			_____ = _____;</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<!-- Page 207 -->
+
+			<div class="pagebreak pageNumber">207</div>
+
+			<div class="sidebar" id="bullet_points-id00052">
+				<img src="/contents/html5/figs/web/xxvifig03.png">
+
+				<div class="itemizedlist">
+					<ul class="itemizedlist">
+						<li class="listitem">
+							<p><a id="iddle1577" class="indexterm" /><a id="iddle1900" class="indexterm" />
+								<a id="iddle1911" class="indexterm" /><a id="iddle2639" class="indexterm" />
+								<a id="iddle3105" class="indexterm" />Geolocation is not “officially” part of the
+								HTML5 specification, but it’s considered part of the “family” of HTML5 specs.</p>
+						</li>
+						
+						<li class="listitem"><p>There are a variety of ways to determine your location,
+							depending on the device you have.</p>
+						</li>
+						
+						<li class="listitem"><p>GPS is a more accurate method of getting your location than cell
+							tower triangulation or network IP.</p>
+						</li>
+						
+						<li class="listitem"><p>Mobile devices without GPS can
+							use cell tower triangulation to determine location.</p>
+						</li>
+						
+						<li class="listitem"><p>The Geolocation API has three
+							methods and a few properties.</p>
+						</li>
+						
+						<li class="listitem"><p>The primary method in the
+							Geolocation API is getCurrentPosition, a method of the
+							navigator.geolocation object.</p>
+						</li>
+						
+						<li class="listitem"><p>getCurrentPosition has one
+							required parameter, the success handler, and two optional
+							parameters, the error handler, and the options.</p>
+						</li>
+						
+						<li class="listitem"><p>A position object is passed to
+							the success handler with information about your location,
+							including your latitude and longitude.</p>
+						</li>
+						
+						<li class="listitem"><p>The position object contains a
+							coords property, which is a coordinates object.</p>
+						</li>
+						
+						<li class="listitem"><p>The coordinates object has
+							properties including latitude, longitude and accuracy.</p>
+						</li>
+						
+						<li class="listitem"><p>Some devices may support the
+							other coordinates properties: altitude, altitudeAccuracy,
+							heading, and speed.</p>
+						</li>
+						
+						<li class="listitem"><p>Use the accuracy property to
+							determine how accurate your location is in meters.</p>
+						</li>
+						
+						<li class="listitem"><p>When getCurrentPosition is
+							called, your browser must verify that you have given permission
+							to share your location.</p>
+						</li>
+						
+						<li class="listitem"><p>watchPosition is a method of the
+							geolocation object that monitors your location and calls a
+							success handler when your location changes.</p>
+						</li>
+						
+						<li class="listitem"><p>Like getCurrentPosition,
+							watchPosition has one required parameter, a success handler, and
+							two optional parameters, an error handler and options.</p>
+						</li>
+						
+						<li class="listitem"><p>Use clearWatch to stop monitoring your location.</p></li>
+						
+						<li class="listitem"><p>When watchPosition is used, your
+							device will require more energy, so your battery life may be
+							shortened.</p>
+						</li>
+						
+						<li class="listitem"><p>The third parameter, options, for
+							getCurrentPosition and watchPosition, is an object with
+							properties you set to control the behavior of the Geolocation API.</p>
+						</li>
+						
+						<li class="listitem"><p>The maximumAge property
+							determines whether getCurrentPosition will use a cached
+							position, and if so, how old that position can be before a fresh
+							position is required.</p>
+						</li>
+						
+						<li class="listitem"><p>The timeout property determines
+							how much time getCurrentPosition has to get a fresh position
+							before the error handler is called.</p>
+						</li>
+						
+						<li class="listitem"><p>The enableHighAccuracy property
+							gives a hint to devices to spend more effort getting a highly
+							accurate location if possible.</p>
+						</li>
+						
+						<li class="listitem"><p>You can use the Geolocation API
+							with the Google Maps API to place your location on a map.</p>
+						</li>
+					</ul>
+				</div> <!-- /itemizedlist -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 208 -->
+
+			<div class="pagebreak pageNumber">208</div>
+
+			<div class="sidebar" id="html5cross-id00053">
+				<img src="/contents/html5/figs/web/html5cross2.png">
+
+				<p>You’ve traveled quite far in this chapter with your first JavaScript API. Make it stick
+					with this crossword.</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/208fig01.png" />
+				</figure>
+
+				<div class="informaltable">
+					<table style="border-collapse: collapse;">
+						<colgroup>
+							<col class="c1" />
+							<col class="c2" />
+							<col class="c3" />
+							<col class="c4" />
+						</colgroup>
+						<thead>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;" colspan="2">
+									<p>Across</p>
+								</td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;" colspan="2"><p>Down</p></td>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>4.</p></td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>Longitude is measured from _____________, England.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>1.</p></td>
+
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;"><p>Re-center your map using
+									the___________ method.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>7.</p></td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>Accuracy has implications for your app because it can affect _________ life.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>2.</p></td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>Old Skool devices without GPS use cell tower _______________ to determine your location.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>8.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>If you say no when your browser asks you to share your location,
+										your error handler will be called with an _________ code of 1.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>3.</p></td>
+
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;">
+									<p>The latitude, longitude of ___________ is 40.77, -73.98.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>9.</p></td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>“Wherever you go, there you are” was mentioned in the movie_______________________.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>5.</p></td>
+
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;"><p>You’ll never get a cached
+									location if you set _____________ to 0.</p>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>10.</p></td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;">
+									<p>Don’t give driving directions to someone if your coordinates don’t
+										have a good ________________.</p>
+								</td>
+								
+								<td style="vertical-align: top; border-right: 0.5pt solid; border-bottom: 0.5pt solid;"><p>6.</p></td>
+								
+								<td style="vertical-align: top; border-bottom: 0.5pt solid;"><p>You can use the _______________
+									equation to find the distance between two coordinates.</p>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="vertical-align: top; border-right: 0.5pt solid;"><p>11.</p></td>
+
+								<td style="vertical-align: top; border-right: 0.5pt solid;">
+									<p>The secret location of the __________________ HQ is 47.62485,
+										-122.52099.</p>
+								</td>
+								
+								<td style="border-right: 0.5pt solid;"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div> <!-- /informaltable -->
+			</div> <!-- /sidebar -->
+
+<!-- Page 209 -->
+
+			<div class="pagebreak pageNumber">209</div>
+
+			<div class="sidebar" id="code_magnets-id00054">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/xxviifig00.png">
+				</figure>
+
+				<h3>Code Magnets</h3>
+
+				<p>It’s your job to finish the code below, so we
+					only display a new marker if we’ve traveled more than 20 meters
+					since the last marker was added. Use the fridge magnets to complete
+					the code. Watch out, you’ll have to use some of them more than
+					once! Here’s our solution.</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/209fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre>var prevCoords = null;</pre>
+<pre>function displayLocation(position) {</pre>
+<pre>	var latitude = position.coords.latitude;</pre>
+<pre>	var longitude = position.coords.longitude;</pre>
+<pre>	var div = document.getElementById("location");</pre>
+<pre>	div.innerHTML = "You are at Latitude: " + latitude + ", Longitude: " + longitude;</pre>
+<pre>	div.innerHTML += " (found in " + options.timeout + " milliseconds)";</pre>
+<pre>	var km = computeDistance(position.coords, ourCoords);</pre>
+<pre>	var distance = document.getElementById("distance");</pre>
+<pre>	distance.innerHTML = "You are " + km + " km from the WickedlySmart HQ";</pre>
+<pre>	if (map == null) {</pre>
+<pre>		showMap(position.coords);</pre>
+<pre>		prevCoords = position.coords;</pre>
+<pre>	}	else {</pre>
+<pre>		var meters = computeDistance (position.coords, prevCoords) * 1000;</pre>
+<pre>		if (meters > 20) {</pre>
+<pre>			scrollMapToPosition(position.coords);</pre>
+<pre>			prevCoords = position.coords;</pre>
+<pre>		}</pre>
+<pre>	}</pre>
+<pre>}</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+				<figure>
+					<img src="/contents/html5/figs/web/209fig02.png" />
+
+					<aside>
+						Try online: <a class="ulink" href="http://wickedlysmart.com/hfhtml5/chapter6/final/myLoc.html"
+						target="_top">http://wickedlysmart.com/hfhtml5/chapter6/final/myLoc.html</a></p>
+					</aside>
+				</figure>
+			</div> <!-- /sidebar -->
+
+<!-- Page 210 -->
+
+			<div class="pagebreak pageNumber">210</div>
+
+			<div class="sidebar" id="sharpen_your_pencil_solution-id00055">
+				<figure class="left">
+					<img src="/contents/html5/figs/web/sharpenyourpencilsolution.png">
+				</figure>
+
+				<p>Below you’ll find an alternative implementation for displayLocation. Can you guess what
+					it does? Take a look and write your answer below. If you’re feeling
+					adventurous, try it out! Here’s our solution.</p>
+
+				<div class="hiddencode">
+					<figure>
+						<img class="codeimage" src="/contents/html5/figs/web/210fig01.png" />
+					</figure>
+
+					<div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  		<div class="modal-body">
+							<code>
+<pre><del>distance.innerHTML = "You are " + km + " km from the WickedlySmart HQ";</del></pre>
+<pre>if (km < 0.1) {</pre>
+<pre>	distance.innterHTML = "You're on fire!";</pre>
+<pre>} else {</pre>
+<pre>	if (prevKm < km) {</pre>
+<pre>		distance.innerHTML = "You're getting hotter!";</pre>
+<pre>	} else {</pre>
+<pre>		distance.innerHTML = "You're getting colder...";</pre>
+<pre>	}</pre>
+<pre>}</pre>
+<pre>prevKm = km;</pre>
+							</code>
+						</div>
+					</div>
+				</div>
+
+				<figure>
+					<img src="/contents/html5/figs/web/210fig02.png" />
+				</figure>
+			</div>
+
+<!-- Page 211 -->
+
+			<div class="pagebreak pageNumber">211</div>
+
+			<div class="sidebar" id="who_does_whatquestion_mark_solut-id00056">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/whodoeswhatsolution.png">
+				</figure>
+
+				<p>Below you’ll see a few options for the geolocation API. For each option, match it to its behavior.</p>
+
+				<figure>
+					<img src="/contents/html5/figs/web/211fig01.png" />
+				</figure>
+			</div>
+
+<!-- Page 212 -->
+
+			<div class="pagebreak pageNumber">212</div>
+
+			<div class="sidebar" id="html5cross_solution-id00057">
+				<figure class="center">
+					<img src="/contents/html5/figs/web/html5crosssolution.png">
+				</figure>
+
+				<figure>
+					<img src="/contents/html5/figs/web/212fig01.png" />
+				</figure>
+			</div>
+
+		</section> <!-- Section 35 -->
+
+	</div> <!-- /container -->
+
+</body>
+</html>

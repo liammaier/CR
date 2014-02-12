@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h2>Preface</h2>
+				<div class="border"></div>
+
+				<p><span class="first-sentence">This book arose from concurrent programming courses taught by the authors at Imperial College London and from their experience with using concurrency in industrial applications.</span> It was motivated by dissatisfaction with the lack of practical and accessible techniques that aid reasoning about designs for concurrent software.</p>
+
+				<p class="i">Most courses and textbooks in this area are targeted at <em>either</em> the theory and formal methods aspects of concurrency <em>or</em> the practical aspects of concurrent programming and concurrency in operating systems. Due to the lack of a widely available concurrent programming language, textbooks had to resort to special purpose notations that could not easily be related by the reader to normal sequential programming practice. Two recent technical developments have made it possible to offer a practical and accessible approach to learning about concurrency and concurrent programming. First, model-checking tools have made the use of design models for concurrent behavior practical, informative and rewarding. Second, the availability and widespread use of Java has solved the problem of finding an accessible general purpose programming language with in-built concurrency constructs. As a result, this book offers a soundly-based systematic approach to the development of concurrent software which is supported by software tools, is interesting and fun to use, and can be used to develop practical concurrent programs.</p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="What Can Readers Expect from this Book?">
+
+				<h3>What Can Readers Expect from this Book?</h3>
+
+				<p><span class="first-sentence">The book provides a comprehensive description and explanation of the important <em>concepts</em> and <em>techniques</em> in concurrent programming, the problems that arise and the means for ensuring that desirable properties are achieved and undesirable ones avoided.</span> Readers will learn about concepts such as threads and interaction, gain an appreciation of how these lead to problems such as interference and deadlock,</p>
+
+				<div class="pagebreak pageNumber">xiv</div>
+
+				<p>and learn how to use techniques such as exclusion and synchronization to good effect.</p>
+
+				<p class="i">To ensure a thorough <em>understanding</em>, concurrency concepts, techniques and problems are presented in many forms: through informal descriptions and illustrative examples, abstractly in models and concretely in Java. The modeling techniques will enable readers to reason about the properties of their proposed designs and programs. As in other engineering disciplines, modeling is promoted as a means to gaining greater confidence in the proposed designs. Using Java, readers can turn their designs into programs.</p>
+
+				<p class="i">Together with a knowledge and understanding of the principles of concurrency, readers can expect to aquire <em>experience</em> in its application. The book uses examples to illustrate concepts and techniques, and exercises for learning by doing. Use of the associated analysis tool provides practical experience of concurrency modeling, model animation, model property checking and model correction. Similarly, use of Java provides practical experience of programming concurrency.</p>
+
+				<p class="i">Thus, the book provides:</p>
+
+				<ul>
+
+					<li>a systematic treatment of the concepts and issues in concurrency;</li>
+
+					<li>a rigorous technique to specify and model concurrent behavior, with analysis tools for animation and verification;</li>
+
+					<li>a wide range of Java examples to illustrate the concepts and issues in concurrent programming.</li>
+
+				</ul>
+
+				<p>We hope that this will leave readers with the ability to use concurrency with confidence and expertise, recognizing when problems might arise and knowing how to avoid or solve them. Concurrency is a fascinating and challenging area of software design. The combination of <em>learning</em> and <em>doing</em> should make acquiring design skills in this area an interesting and enjoyable process. We hope that readers will find that concurrency can be both challenging and fun!</p>
+
+			</section>
+
+			<section class="section" data-number="2" data-name="Intended Readership">
+
+				<h3>Intended Readership</h3>
+
+				<p><span class="first-sentence">The book is intended for students in Computer Science and for professional software engineers and programmers.</span> We believe that it has much to offer for anyone interested in the concepts of concurrency, interaction and synchronization.</p>
+
+				<p class="i">Readers are expected to have some background in sequential programming and an acquaintance with object-oriented concepts. Some knowledge of operating systems concepts is an advantage, but is not a prerequisite.</p>
+
+				<p class="i">The material has been used by a variety of students: undergraduate students in
+				the second year of three and four year computing, software engineering and combined
+				computing/electrical engineering degree courses; and graduate students</p>
+
+				<div class="pagebreak pageNumber">xv</div>
+
+				<p>taking conversion courses in computing. In all cases, the material represented the students' first introduction to concurrent programming.</p>
+
+				<p class="i">Chapters 1 to 8 are designed to provide a comprehensive and cohesive course on concurrency. They cover the main concepts of concurrency, including modeling, programming and the process of model-based design. Since each chapter builds on the preceding one, we recommend that these chapters be read sequentially from start to finish.</p>
+
+				<p class="i">Chapters 9 to 14 provide more advanced material on dynamic systems, message passing, concurrent software architectures, timed systems, program verification and logical properties. Readers may pick and choose from these according to their interests.</p>
+
+			</section>
+
+			<section class="section" data-number="3" data-name="Additional Resources">
+
+				<h3>Additional Resources</h3>
+
+				<p><span class="first-sentence">Accompanying this book are the following:</span></p>
+
+				<ul>
+
+					<li>Java examples and demonstration programs</li>
+
+					<li>state models for the examples</li>
+
+					<li>the Labeled Transition System Analyzer (<em>LTSA</em>) for concurrency modeling,
+					model animation, and model property checking</li>
+
+					<li>overhead slides for course presentation</li>
+
+				</ul>
+
+				<p>These are provided at the following URL: <span class="url">http://wileyeurope.com/college/magee</span>.</p>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="Second Edition">
+
+				<h3>Second Edition</h3>
+
+				<p><span class="first-sentence">This second edition of the book provides the following main additions:</span></p>
+
+				<ul>
+
+					<li>Dynamic Systems.<br/> A new model and implementation for bounded dynamic resource allocation is presented and discussed in Chapter 9.</li>
+
+					<li>A new chapter on Program Verification.<br/> The general approach used in the book is model-based design, where models are developed and analyzed before implementation. This chapter describes how concurrent implementations in Java can be modeled and verified. This is illustrated using examples from previous chapters.</li>
+
+					<li>Sequential process composition.<br/> Processes are generally composed using parallel composition to model interaction and concurrency. Composition is extended to include sequential composition as well, thereby extending the ways in which models can be specified and analyzed.</li>
+
+				</ul>
+
+				<div class="pagebreak pageNumber">xvi</div>
+
+				<ul>
+
+					<li>A new chapter on Logical Properties.<br/> The formalism used in the book is based on the identification and specification of events and actions rather than states. This chapter introduces the use of fluents and abstract states as a means of specifying logical, state-based properties in an event-based formalism. This extension supports property specification using Linear Temporal Logic (LTL). In addition to the provision of counterexamples in the case of property violations, witnesses can be provided to give examples of acceptable executions. This is illustrated using examples, both new and from previous chapters.</li>
+
+					<li>Extensions to LTSA.<br/> Tool support for model analysis using LTSA has been extended to provide a number of additional features. These include a revised user interface, on-the-fly safety and progress analysis allowing complete analysis of much larger state spaces, approximate safety analysis using Holtzmann's SuperTrace algorithm for larger state spaces, support for sequential composition, support for graphic animation, no limit on potential statespace (previously 2**63), and Partial Order Reduction during composition and analysis.</li>
+
+					<li>Java platform.<br/> The demonstration programs and examples have been updated to use the new Java version which includes generic classes.</li>
+
+				</ul>
+
+			</section>
+
+			<section class="section" data-number="5" data-name="Acknowledgements">
+
+				<h2>Acknowledgements</h2>
+
+				<div class="border"></div>
+
+				<p><span class="first-sentence">We wish to thank our colleagues in the Distributed Software Engineering research section for many helpful discussions over the years, and for their contributions to the work on software architecture.</span> In particular, we gratefully acknowledge the contributions of Shing Chi (SC) Cheung and Dimitra Giannakopoulou to the work on behavior analysis. SC had the insight to select LTS as an appropriate modeling formalism, provided much of the ground-work and was a prime contributor to our investigation of safety properties. Dimitra has contributed crucial work in the theory and analysis of safety, liveness and progress properties, and the semantics of FSP.</p>
+
+				<p class="i">Our thanks are due to Steve Crane, Nat Pryce, Wolfgang Emmerich and the anonymous reviewers for their useful comments and suggestion, on early drafts of the book. Their encouragement, and the enthusiasm of our students, is greatly appreciated. We would like to thank Storm Thorgerson, the cover designer, who worked beyond the call of duty and even friendship to produce a cover worthy of a trainspotter extraordinaire.</p>
+
+				<p class="i">We would like to thank our families for their tolerance during the writing of this book. Our children - Lisa, Alon, Thomas and John - were kind enough to feign enthusiam for the examples and demonstration applets. Let us hope that the delusion of future fortune, with which we placated our wives Nitza and Judith, is not revealed as such too soon.</p>
+
+				<p class="i">We take this opportunity to thank those many readers who have offered us their encouragement and suggestions. In particular, we are indebted to David Holmes who provided the motivation for Chapter 13 to address the problem of verifying the Java implementations. We also thank Alexander H6her for his comments on the bounded allocator of Chapter 9, and Paul Stroop for his many useful comments and suggestions. Finally we would like to express our thanks to the more recent members of the Distributed Software Engineering research group</p>
+
+				<div class="pagebreak pageNumber">xviii</div>
+
+				<p>for their comments and contributions. In particular, we gratefully acknowledge the further contribution of Dimitra Giannakopoulou on fluents, and of Sebastian Uchitel to the work on model synthesis.</p>
+
+				<br/>
+
+				<p>Jeff Magee &amp; Jeff Kramer<br/>January 2006</p>
+
+			</section>
+
+		</div> <!-- container -->
+
+	</div> <!-- concurrency -->
+
+</body>
+</html>

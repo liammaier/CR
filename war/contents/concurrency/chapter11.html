@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h1>11</h1>
+				<h2>Concurrent Architectures</h2>
+				<div class="border"></div>
+
+				<p><span class="first-sentence">The term <em>architecture</em> is used in this chapter to mean the process structure of a concurrent program together with the way in which the elements of the program interact.</span> For example, the client-server architecture of Chapter 10 is a structure consisting of one or more client processes interacting with a single server process. The interaction is bi-directional consisting of a request from a client to the server and a reply from the server to the client. This organization is at the heart of many distributed computing applications. The client-server architecture can be described independently of the detailed operation of client and server processes. We do not need to consider the service provided by the server or indeed the use the client makes of the result obtained from requesting the service. In describing the concurrent architecture of a program, we can ignore many of the details concerned with the application that the program is designed to implement. The advantage of studying architecture is that we can examine concurrent program structures that can be used in many different situations and applications. In the following, we look at some architectures that commonly occur in concurrent programs.</p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Filter Pipeline">
+
+				<h3>11.1 Filter Pipeline</h3>
+
+				<p><span class="first-sentence">A <em>filter</em> is a process that receives a stream of input values, performs some computation on these values and sends a stream of results as its output.</span> In general, a filter can have more than one input stream and produce results on more than one output stream. Filters can easily be combined into larger computations by connecting the output stream from one filter to the input stream of another. Where filters have more than one input and output, they can be arranged into networks with complex topologies. In this section, we restrict the discussion to filters that have a single input and a single output. Such filters can be combined into <em>pipeline</em></p>
+
+				<div class="pagebreak pageNumber">238</div>
+
+				<p>networks. Many of the user-level commands in the UNIX operating system are filter processes, for example the text formatting programs <em>tbl</em>, <em>eqn</em> and <em>troff</em>. In UNIX, filter processes can be combined using pipes. A UNIX <em>pipe</em> is essentially a bounded buffer that buffers bytes of data output by one filter until they are input to the next filter. We will see in the following that the pipes that interconnect filters do not always need to include buffering.</p>
+
+				<p class="i">To illustrate the use of filter pipelines, we develop a program with this architecture that computes prime numbers. The program is a concurrent implementation of a classic algorithm known as the Primes Sieve of Eratosthenes, after the Greek mathematician who developed it. The algorithm to determine all the primes between 2 and <em>n</em> proceeds as follows. First, write down a list of all the numbers between 2 and <em>n</em>:</p>
+
+				<p class="i">2 3 4 5 6 7 . . . <em>n</em></p>
+
+				<p>Then, starting with the first uncrossed-out number in the list, 2, cross out each number in the list which is a multiple of 2:</p>
+
+				<p class="i">2 3<del> 4 </del> 5<del> 6 </del> 7 . . . <em>n</em></p>
+
+				<p>Now move to the next uncrossed-out number, 3, and repeat the above by crossing out multiples of 3. Repeat the procedure until the end of the list is reached. When finished, all the uncrossed-out numbers are primes. The primes form a sieve which prevents their multiples falling through into the final list.</p>
+
+				<section class="subsection" data-number="2" data-name="Primes Sieve Model">
+
+					<h4>11.1.1 Primes Sieve Model</h4>
+
+					<p><span class="first-sentence">The concurrent version of the primes sieve algorithm operates by generating a stream of numbers.</span> The multiples are removed by filter processes. The outline architecture of the program is depicted in Figure 11.1. It is essentially a process structure diagram from which we have omitted the details of action and process labels.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-1.png">
+						<figcaption><strong>Figure 11.1</strong> Primes Sieve process architecture.</figcaption>
+					</figure>
+
+					<p>The diagram describes the high-level structure of the program. The process <code>GEN</code> generates the stream of numbers from which multiples are filtered by the <code>FILTER</code></p>
+
+					<div class="pagebreak pageNumber">239</div>
+
+					<p>processes. To fully capture the architecture of the program, we must also consider how the application-specific processes interact. Interaction between these elements in the example is described by the <code>PIPE</code> processes. In the terminology of Software Architecture, these processes are termed <em>connectors</em>. Connectors encapsulate the interaction between the components of the architecture. Connectors and components are both modeled as processes. The distinction with respect to modeling is thus essentially methodological. We model the pipe connectors in the example as one-slot buffers as shown below:</p>
+
+					<pre>
+const MAX = 9
+range NUM = 2..MAX
+set S = {[NUM],eos}
+PIPE = (put[x:S]->get[x]->PIPE).
+					</pre>
+
+					<p>The <code>PIPE</code> process buffers elements from the set S which consist of the numbers <code>2..MAX</code> and the label <code>eos</code>, which is used to signal the end of a stream of numbers. This end of stream signal is required to correctly terminate the program.</p>
+
+					<p class="i">To simplify modeling of the <code>GEN</code> and <code>FILTER</code> processes, we introduce an additional <em>FSP</em> construct - the conditional process. The construct can be used in the definition of both primitive and composite processes.</p>
+
+					<div class="definition">
+						The process <code>if B then P else Q</code> behaves as the process <code>P</code> if the condition <code>B</code> is true otherwise it behaves as <code>Q</code>. If the <code>else Q</code> is omitted and <code>B</code> is false, then the process behaves as <code>STOP</code>.
+					</div>
+
+					<p class="i">The definition of <code>GEN</code> using the conditional process construct is given below:</p>
+
+					<pre>
+GEN        = GEN[2],
+GEN[x:NUM] = (out.put[x] ->
+               <strong>if</strong> x&lt;MAX <strong>then</strong>
+               GEN[x+1]
+               <strong>else</strong>
+               (out.put.eos->end->GEN)
+             ).
+					</pre>
+
+					<p>The <code>GEN</code> process outputs the numbers 2 to <code>MAX</code>, followed by the signal <code>eos</code>. The action <code>end</code> is used to synchronize termination of the <code>GEN</code> process and the filters. After <code>end</code> occurs, the model re-initializes rather than terminates. This is done so that, if deadlock is detected during analysis, it will be an error and not because of correct termination. The <code>FILTER</code> process records the first value it gets and</p>
+
+					<div class="pagebreak pageNumber">240</div>
+
+					<p>subsequently filters out multiples of that value from the numbers it receives and forwards to the next filter in the pipeline.</p>
+
+					<pre>
+FILTER = (in.get[p:NUM]->prime[p]->FILTER[p]
+         |in.get.eos->ENDFILTER
+         ),
+FILTER[p:NUM] = (in.get[x:NUM] ->
+                  <strong>if</strong> x%p!=0 <strong>then</strong>
+                    (out.put[x]->FILTER[p])
+                  <strong>else</strong>
+                    FILTER[p]
+                |in.get.eos->ENDFILTER
+                ),
+ENDFILTER     = (out.put.eos->end->FILTER).
+					</pre>
+
+					<p>The composite process that conforms to the structure given in Figure 11.1 can now be defined as:</p>
+
+					<pre>
+||PRIMES(N=4) =
+   ( gen:GEN
+   ||pipe[0..N-1]:PIPE
+   ||filter[0..N-1]:FILTER
+   )/{ pipe[0]/gen.out,
+       pipe[i:0..N-1]/filter[i].in,
+       pipe[i:1..N-1]/filter[i-1].out,
+       end/{filter[0..N-1].end,gen.end}
+     }@{filter[0..N-1].prime,end}.
+					</pre>
+
+					<p>Safety analysis of this model detects no deadlocks or errors. The minimized <em>LTS</em> for the model is depicted in Figure 11.2. This confirms that the model computes the primes between 2 and 9 and that the program terminates correctly.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-2.png">
+						<figcaption><strong>Figure 11.2</strong> Minimized <code>PRIMES</code> <em>LTS</em>.</figcaption>
+					</figure>
+
+					<p>In fact, the concurrent version of the primes sieve algorithm does not ensure that all the primes between 2 and <code>MAX</code> are computed: it computes the first <em>N</em> primes</p>
+
+					<div class="pagebreak pageNumber">241</div>
+
+					<p>where N is the number of filters in the pipeline. This can easily be confirmed by changing <code>MAX</code> to 11 and re-computing the minimized <em>LTS</em>, which is the same as Figure 11.2. To compute all the primes in the range 2 to 11, five filters are required.</p>
+
+					<h5>Unbuffered Pipes</h5>
+
+					<p>We have modeled the filter pipeline using single-slot buffers as the pipes connecting filters. Would the behavior of the overall program change if we used unbuffered pipes? This question can easily be answered by constructing a model in which the <code>PIPE</code> processes are omitted and instead, filters communicate directly by shared actions. This model is listed below. The action <code>pipe[i]</code> relabels the <code>out.put</code> action of <code>filter[i-1]</code> and the <code>in.get</code> action of <code>filter[i]</code>.</p>
+
+					<pre>
+||PRIMESUNBUF(N=4) =
+  (gen:GEN || filter[0..N-1]:FILTER)
+    /{ pipe[0]/gen.out.put,
+       pipe[i:0..N-1]/filter[i].in.get,
+       pipe[i:1..N-1]/filter[i-1].out.put,
+       end/{filter[0..N-1].end,gen.end}
+     }@{filter[0..N-1].prime,end}.
+					</pre>
+
+					<p>The minimized <em>LTS</em> for the above model is depicted in Figure 11.3.
+					</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-3.png">
+						<figcaption><strong>Figure 11.3</strong> Minimized <code>PRIMESUNBUF</code> <em>LTS</em>.</figcaption>
+					</figure>
+
+					<p>The reader can see that the <em>LTS</em> of Figure 11.3 is identical to that of Figure 11.2. The behavior of the program with respect to generating primes and termination has not changed with the removal of buffers. Roscoe (1998) describes a program as being <em>buffer tolerant</em> if its required behavior does not change with the introduction of buffers. We have shown here that the primes sieve program is buffer tolerant to the introduction of a single buffer in each pipe. Buffer tolerance is an important property in the situation where we wish to distribute a concurrent program and, for example, locate filters on different machines. In this situation, buffering may be unavoidable if introduced by the communication system.</p>
+
+					<div class="pagebreak pageNumber">242</div>
+
+					<h5>Abstracting from Application Detail</h5>
+
+					<p>We showed above that the primes sieve program is tolerant to the introduction of a single buffer in each pipe. The usual problem of state space explosion arises if we try to analyze a model with more buffers. To overcome this problem, we can abstract from the detailed operation of the primes sieve program. Instead of modeling how primes are computed, we concentrate on how the components of the program interact, independently of the data values that they process. The abstract versions of components can be generated mechanically by relabeling the range of values NUM to be a single value. This is exactly the same technique that we used in section 10.2.2 to generate an abstract model of an asynchronous message port. The abstract versions of <code>GEN</code>, <code>FILTER</code> and <code>PIPE</code> are listed below.</p>
+
+					<pre>
+||AGEN    = GEN/{out.put/out.put[NUM]}.
+||AFILTER = FILTER/{out.put/out.put[NUM],
+                    in.get /in.get.[NUM],
+                    prime /prime[NUM]
+                   }.
+||APIPE   = PIPE/{put/put[NUM],get/get[NUM]}.
+					</pre>
+
+					<p>The <em>LTS</em> for the abstract version of a filter process is shown in Figure 11.4. In the detailed version of the filter, the decision to output a value depends on the computation as to whether the value is a multiple of the filter's prime. In the abstract version, this computation has been abstracted to the non-deterministic choice as to whether, in <em>state</em>(4), after an <code>in.get</code> action, the <em>LTS</em> moves to <em>state</em>(5) and does an <code>out.put</code> action or remains in <em>state</em>(4). This is a good example of how nondeterministic choice is used to abstract from computation. We could, of course, have written the abstract versions of the elements of the primes sieve program directly, rather than writing detailed versions and abstracting mechanically as we have done here. In fact, since <em>FSP</em>, as a design choice, has extremely limited facilities for describing and manipulating data, for complex programs abstraction is usually the best way to proceed.</p>
+
+					<p class="i">To analyze the primes sieve program with multi-slot pipes, we can use a pipeline of <code>APIPE</code> processes defined recursively as follows:</p>
+
+					<pre>
+||MPIPE(B=4) =
+  <strong>if</strong> B==1 <strong>then</strong>
+    APIPE
+  <strong>else</strong>
+    (APIPE/{mid/get} || MPIPE(B-1)/{mid/put})
+  @{put,get}.
+					</pre>
+
+					<div class="pagebreak pageNumber">243</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-4.png">
+						<figcaption><strong>Figure 11.4</strong> Minimized <code>AFILTER</code> <em>LTS</em>.</figcaption>
+					</figure>
+
+					<p>The abstract model for the primes program, with exactly the architecture of Figure 11.1, can now be defined as:</p>
+
+					<pre>
+||APRIMES(N=4,B=3) =
+   (gen:AGEN || PRIMEP(N)
+   || pipe[0..N-1]:MPIPE(B)
+   || filter[0..N-1]:AFILTER)
+   /{ pipe[0]/gen.out,
+      pipe[i:0..N-1]/filter[i].in,
+      pipe[i:1..N-1]/filter[i-1].out,
+      end/{filter[0..N-1].end,gen.end}
+    }.
+					</pre>
+
+					<p>where <code>PRIMEP</code> is a safety property which we define in the following discussion.</p>
+
+					<h5>Architectural Property Analysis</h5>
+
+					<p>We refer to the properties that we can assert for the abstract model of the primes sieve program as architectural properties since they are concerned with the concurrent architecture of the program -structure and interaction -rather than its detailed operation. The general properties we wish to assert at this level are absence of deadlock and eventual termination (absence of livelock). Eventual termination is checked by the progress property <code>END</code>, which asserts that, in all executions of the program, the terminating action end must always occur.</p>
+
+					<pre>
+<strong>progress</strong> END = {end}
+					</pre>
+
+					<div class="pagebreak pageNumber">244</div>
+
+					<p>The property specific to the application is that the prime from <code>filter[0]</code> should be produced before the prime from <code>filter[1]</code> and so on. The following safety property asserts this:</p>
+
+					<pre>
+<strong>property</strong>
+PRIMEP(N=4)   = PRIMEP[0],
+PRIMEP[i:0..N]= (<strong>when</strong> (i&lt;N)
+                  filter[i].prime->PRIMEP[i+1]
+                |end -> PRIMEP
+                ).
+					</pre>
+
+					<p>The property does not assert that all the filters must produce primes before end occurs since the model can no longer determine that there are four primes between 2 and 9.</p>
+
+					<p class="i">Analysis of <code>APRIME</code> using <em>LTSA</em> determines that there are no deadlocks, safety violations or progress violations for four filters and three slot pipes. The reader should verify that the safety and progress properties hold for other combinations of filters and buffering. When building this model, it is important that the <em>LTSA</em> option <strong><code>Minimize during composition</code></strong> is set, otherwise the minimized models for the abstracted elements are not built and consequently, the reduction in state space is not realized.</p>
+
+				</section>
+
+				<section class="subsection" data-number="3" data-name="Primes Sieve Implementation">
+
+					<h4>11.1.2 Primes Sieve Implementation</h4>
+
+					<p><span class="first-sentence">Figure 11.5 is a screen shot of the Primes Sieve applet display.</span> The implementation supports both a buffered and unbuffered implementation of the pipe connector. The figure depicts a run using unbuffered pipes. The box in the top left hand of the display depicts the latest number generated by the thread that implements <code>GEN</code>. The rest of the boxes, at the top, display the latest number received by a filter. The boxes below display the prime used by that filter to remove multiples.</p>
+
+					<p class="i">The implementation follows in a straightforward way from the model developed in the previous section. The number generator and filter processes are implemented as threads. As mentioned above, we have provided two implementations for the pipe connector. The classes involved in the program and their inter-relationships are depicted in the class diagram of Figure 11.6. The display is handled by a single class, <code>PrimesCanvas</code>. The methods provided by this class, together with a description of their functions, are listed in Program 11.1.</p>
+
+					<p class="i">The code for the <code>Generator</code> and <code>Filter</code> threads is listed in Programs 11.2 and 11.3. The implementation of these threads corresponds closely to the detailed models for <code>GEN</code> and <code>FILTER</code> developed in the previous section. Additional code has been added only to display the values generated and processed. To simplify</p>
+
+					<div class="pagebreak pageNumber">245</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-5.png">
+						<figcaption><strong>Figure 11.5</strong> Primes Sieve applet display.</figcaption>
+					</figure>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-6.png">
+						<figcaption><strong>Figure 11.6</strong> Primes class diagram.</figcaption>
+					</figure>
+
+					<p>the display and the pipe implementations, the end-of-stream signal is an integer value that does not occur in the set of generated numbers. The obvious values to use are <code>0</code>, <code>1</code>, <code>-1</code> or <code>MAX+1</code>. In the applet class, <code>Primes.EOS</code> is defined to be <code>-1</code>.</p>
+
+					<p class="i">Instead of implementing buffered and unbuffered pipes from scratch, we have reused classes developed in earlier chapters. The synchronous message-passing class, <code>Channel</code>, from Chapter 10 is used to implement an unbuffered pipe and the bounded buffer class, <code>BufferImpl</code>, from Chapter 5 is used to implement buffered pipes. The <code>Pipe</code> interface and its implementations are listed in Program 11.4.</p>
+
+					<div class="pagebreak pageNumber">246</div>
+
+					<pre class="program">
+<strong>class</strong> PrimesCanvas <strong>extends</strong> Canvas {
+  <em>// display</em> <strong>val</strong> <em>in an upper box numbered</em> <strong>index</strong>
+  <em>// boxes are numbered from the left</em>
+<strong>synchronized</strong> void print(int index, int val){...}
+
+  <em>// display </em><strong>val</strong> <em>in a lower box numbered</em> <strong>index</strong>
+  <em>// the lower box indexed by 0 is not displayed</em>
+<strong>synchronized</strong> void prime(int index, int val){...}
+
+  <em>// clear all boxes</em>
+<strong>synchronized </strong>void clear(){...}
+
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 11.1</strong> <code>PrimesCanvas</code> class.</p>
+
+					<pre class="program">
+<strong>class</strong> Generator <strong>extends</strong> Thread {
+  <strong>private</strong> PrimesCanvas display;
+  <strong>private</strong> Pipe&lt;Integer&gt; out;
+  <strong>static</strong> int MAX = 50;
+
+  Generator(Pipe&lt;Integer&gt; c, PrimesCanvas d)
+    {out=c; display = d;}
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      for (int i=2;i&lt;=MAX;++i) {
+        display.print(0,i);
+        out.put(i);
+        sleep(500);
+      }
+      display.print(0,Primes.EOS);
+      out.put(Primes.EOS);
+    } <strong>catch</strong> (InterruptedException e){}
+  }
+
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 11.2</strong> <code>Generator</code> class.</p>
+
+					<div class="pagebreak pageNumber">247</div>
+
+					<pre class="program">
+<strong>class</strong> Filter <strong>extends</strong> Thread {
+  <strong>private</strong> PrimesCanvas display;
+  <strong>private</strong> Pipe&lt;Integer> in,out;
+  <strong>private</strong> int index;
+
+  Filter(Pipe&lt;Integer> i, Pipe&lt;Integer> o,
+    int id, PrimesCanvas d)
+    {in = i; out=o;display = d; index = id;}
+
+  <strong>public</strong> void run() {
+    int i,p;
+    <strong>try</strong> {
+      p = in.get();
+      display.prime(index,p);
+      <strong>if</strong> (p==Primes.EOS &amp;&amp; out!=null) {
+        out.put(p); <strong>return</strong>;
+      }
+      <strong>while</strong>(true) {
+        i= in.get();
+        display.print(index,i);
+        sleep(1000);
+        <strong>if</strong> (i==Primes.EOS) {
+          <strong>if</strong> (out!=null) out.put(i); <strong>break</strong>;
+        } <strong>else</strong> if (i%p!=0 &amp;&amp; out!=null)
+          out.put(i);
+      }
+    } <strong>catch</strong> (InterruptedException e){}
+  }
+
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 11.3</strong> <code>Filter</code> class.</p>
+
+					<p class="i">The structure of a generator thread and <em>N</em> filter threads connected by pipes
+					is constructed by the <code>go()</code> method of the <code>Primes</code> applet class. The code is
+					listed below:</p>
+
+					<div class="pagebreak pageNumber">248</div>
+
+					<pre class="program">
+<strong>public</strong> interface Pipe&lt;T&gt; {
+
+  <strong>public </strong>void put(T o)
+    <strong>throws</strong> InterruptedException; <em>// put object into buffer</em>
+
+  <strong>public</strong> T get()
+    <strong>throws</strong> InterruptedException; <em>// get object from buffer</em>
+
+}
+
+<em>// Unbuffered pipe implementation</em>
+<strong>public class</strong> PipeImplUnBuf&lt;T> <strong>implements</strong> Pipe&lt;T> {
+  Channel&lt;T> chan = <strong>new</strong> Channel&lt;T>();
+
+  <strong>public</strong> void put(T o)
+    <strong>throws</strong> InterruptedException {
+    chan.send(o);
+  }
+
+  <strong>public</strong> T get()
+    throws InterruptedException {
+    <strong>return</strong> chan.receive();
+  }
+}
+
+<em>// Buffered pipe implementation</em>
+<strong>public class</strong> PipeImplBuf&lt;T> implements Pipe&lt;T> {
+  Buffer&lt;T> buf = <strong>new</strong> BufferImpl&lt;T>(10);
+
+  <strong>public</strong> void put(T o)
+    <strong>throws</strong> InterruptedException {
+    buf.put(o);
+  }
+
+  <strong>public</strong> T get()
+    <strong>throws</strong> InterruptedException {
+    <strong>return</strong> buf.get();
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 11.4</strong> <code>Pipe</code>, <code>PipeImplUnBuf</code> and <code>PipeImplBuf</code> classes.</p>
+
+					<pre>
+<strong>private</strong> void go(boolean buffered) {
+    display.clear();
+
+    <span>//create channels</span>
+    ArrayList&lt;Pipe&lt;Integer>> pipes =
+      <strong>new</strong> ArrayList&lt;Pipe&lt;Integer>>();
+					</pre>
+
+					<div class="pagebreak pageNumber">249</div>
+
+					<pre>
+<strong>for</strong> (int i=0; i&lt;N; ++i)
+  <strong>if</strong> (buffered)
+    pipes.add(new PipeImplBuf&lt;Integer>());
+  <strong>else</strong>
+    pipes.add(new PipeImplUnBuf&lt;Integer>());
+
+<span>//create threads</span>
+gen = <strong>new</strong> Generator(pipes.get(0),display);
+<strong>for</strong> (int i=0; i&lt;N; ++i)
+  filter[i] = <strong>new</strong> Filter(pipes.get(i),
+         i&lt;N-1?pipes.get(i+1):null,i+1,display);
+  gen.start();
+  <strong>for</strong> (int i=0; i&lt;N; ++i) filter[i].start();
+}
+					</pre>
+
+					<h5>Why Use Buffering?</h5>
+
+					<p>We saw from modeling the primes sieve program that it computed the correct
+					result, whether or not the pipes connecting filter processes were buffered. In line
+					with the model, the implementation also works correctly with andwithout buffers.
+					Why then should we ever use buffering in this sort of architecturewhen the logical
+					behavior is independent of buffering? The answer is concerned with the execution
+					efficiency of the program.</p>
+
+					<p class="i">When a process or thread suspends itself and another is scheduled, the operating system performs a context switch which, as discussed in Chapter 3, involves saving the registers of the suspended process and loading the registers for the newly scheduled process. Context switching consumes CPU cycles and, although the time for a thread switch is much less than that for an operating system process, it is nevertheless an overhead. A concurrent program runs faster if we can reduce the amount of context switching. With no buffering, the generator and filter threads are suspended every time they produce an item until that item is consumed by the next thread in the pipeline. With buffers, a thread can run until the buffer is full. Consequently, in a filter pipeline, buffering can reduce the amount of context switching. In our implementation, this benefit is not actually realized since we have introduced delays for display purposes. However, it is generally the case that a pipeline architecture performs better with buffered pipes.</p>
+
+					<p class="i">If filters are located on physically distributed processors, buffering has an additional advantage. When a message is sent over a communication link, there is a fixed processing and transmission overhead that is independent of message size. Consequently, when transmitting a lot of data, it is better to transmit a few large messages rather than many small messages. With buffering in the filter pipeline, it is easy to arrange that a sequence of items be sent in the same message.</p>
+
+					<div class="pagebreak pageNumber">250</div>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="Supervisor-Worker">
+
+				<h3>11.2 Supervisor-Worker</h3>
+
+				<p><span class="first-sentence">Supervisor-Worker is a concurrent architecture that can be used to speed up the execution of some computational problems by exploiting parallel execution on multiple processors.</span> The architecture applies when a computational problem can be split up into a number of independent sub-problems. These independent sub-problems are referred to as <em>tasks</em> in the following discussion. The process architecture of a Supervisor-Worker program is depicted in Figure 11.7.</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure11-7.png">
+					<figcaption>Figure 11.7 Supervisor-Worker process architecture.</figcaption>
+				</figure>
+
+				<p>Supervisor and worker processes interact by a connector that we refer to, for the moment, as a "bag". The supervisor process is responsible for generating an initial set of tasks and placing them in the bag. Additionally, the supervisor collects results from the bag and determines when the computation has finished. Each worker repetitively takes a task from the bag, computes the result for that task, and places the result in the bag. This process is repeated until the supervisor signals that the computation has finished. The architecture can be used to parallelize divide-and-conquer problems since workers can put new tasks into the bag as well as results. Another way of thinking of this is that the result computed by a worker can be a new set of tasks. Thus, in a divide-and-conquer computation, the supervisor places an initial task in the bag and this is split into two further problems by a worker and so on. We can use any number of worker processes in the Supervisor-Worker architecture. Usually, it is best to have one worker process per physical processor. First, we examine an interaction mechanism suitable for implementing the <em>bag</em> connector.</p>
+
+				<div class="pagebreak pageNumber">251</div>
+
+				<section class="subsection" data-number="5" data-name="Linda Tuple Space">
+
+					<h4>11.2.1 Linda Tuple Space</h4>
+
+					<p><span class="first-sentence">Linda is the collective name given by Carriero and Gelernter (1989a) to a set of primitive operations used to access a data structure called a <em>tuple space</em>.</span> A tuple space is a shared associative memory consisting of a collection of tagged data records called tuples. Each data tuple in a tuple space has the form:</p>
+
+					<pre class="times">
+("tag", <em>value</em><sub>1</sub>, . . . ,<em>value</em><sub>n</sub>)
+					</pre>
+
+					<p>The tag is a literal string used to distinguish between tuples representing different classes of data. <em>value</em><sub>i</sub> are zero or more data values: integers, floats and so on.</p>
+
+					<p class="i">There are three basic Linda operations for manipulating data tuples: <strong>out</strong>, <strong>in</strong> and <strong>rd</strong>. A process deposits a tuple in a tuple space using:</p>
+
+					<pre class="times">
+<strong>out</strong> ("tag", <em>expr</em><sub>1</sub>, . . . ,<em>expr</em><sub>n</sub>)
+					</pre>
+
+					<p>Execution of <strong>out</strong> completes when the expressions have been evaluated and the resulting tuple has been deposited in the tuple space. The operation is similar to an asynchronous message <strong>send</strong> except that the tuple is stored in an unordered tuple space rather than appended to the queue associated with a specific <strong>port</strong>. A process removes a tuple from the tuple space by executing:</p>
+
+					<pre class="times">
+<strong>in</strong> ("tag", <em>field</em><sub>1</sub>, . . . , <em>field</em><sub>n</sub>)
+					</pre>
+
+					<p>Each <em>field</em><sub>i</sub> is either an expression or a formal parameter of the form ?<em>var</em> where <em>var</em> is a local variable in the executing process. The arguments to <strong>in</strong> are called a template; the process executing <strong>in</strong> blocks until the tuple space contains a tuple that matches the template and then removes it. A template matches a data tuple in the following circumstances: the tags are identical, the template and tuple have the same number of fields, the expressions in the template are equal to the corresponding values in the tuple, and the variables in the template have the same type as the corresponding values in the tuple. When the matching tuple is removed from the tuple space, the formal parameters in the template are assigned the corresponding values from the tuple. The <strong>in</strong> operation is similar to a message <strong>receive</strong> operation with the tag and values in the template serving to identify the port.</p>
+
+					<p class="i">The third basic operation is <strong>rd</strong>, which functions in exactly the same way as in except that the tuple matching the template is not removed from the tuple space. The operation is used to examine the contents of a tuple space without modifying it. Linda also provides non-blocking versions of <strong>in</strong> and <strong>rd</strong> called inp and rdp which return true if a matching tuple is found and return false otherwise.</p>
+
+					<p class="i">Linda has a sixth operation called <strong>eval</strong> that creates an active or process tuple. The <strong>eval</strong> operation is similar to an <strong>out</strong> except that one of the arguments is a procedure that operates on the other arguments. A process is created to evaluate</p>
+
+					<div class="pagebreak pageNumber">252</div>
+
+					<p>the procedure and the process tuple becomes a passive data tuple when the procedure terminates. This <strong>eval</strong> operation is not necessary when a system has some other mechanism for creating new processes. It is not used in the following examples.</p>
+
+					<h5>Tuple Space Model</h5>
+
+					<p>Our modeling approach requires that we construct finite state models. Consequently, we must model a tuple space with a finite set of tuple values. In addition, since a tuple space can contain more than one tuple with the same value, we must fix the number of copies of each value that are allowed. We define this number to be the constant <em>N</em> and the allowed values to be the set <em>Tuples</em>.</p>
+
+					<pre>
+<strong>const</strong> N = ...
+<strong>set</strong> Tuples = {...}
+					</pre>
+
+					<p>The precise definition of <code>N</code> and <code>Tuples</code> depends on the context in which we use the tuple space model. Each tuple value is modeled by an <em>FSP</em> label of the form <em>tag.val</em><sub>1</sub> ... <em>val</em><sub>n</sub>. We define a process to manage each tuple value and the tuple space is then modeled by the parallel composition of these processes:</p>
+
+					<pre>
+<strong>const</strong> False = 0
+<strong>const</strong> True = 1
+<strong>range</strong> Bool = False..True
+
+TUPLE(T=’any) = TUPLE[0],
+TUPLE[i:0..N]
+   = (out[T]                   -> TUPLE[i+1]
+     |<strong>when</strong> (i>0) in[T]         -> TUPLE[i-1]
+     |<strong>when</strong> (i>0) inp[True][T]  -> TUPLE[i-1]
+     |<strong>when</strong> (i==0)inp[False][T] -> TUPLE[i]
+     |<strong>when</strong> (i>0) rd[T]         -> TUPLE[i]
+     |rdp[i>0][T]              -> TUPLE[i]
+     ).
+
+||TUPLESPACE = <strong>forall</strong> [t:Tuples] TUPLE(t).
+					</pre>
+
+					<p>The <em>LTS</em> for <code>TUPLE</code> value <code>any</code> with <code>N=2</code> is depicted in Figure 11.S. Exceeding the capacity by performing more than two <code>out</code> operations leads to an <code>ERROR</code>.</p>
+
+					<p class="i">An example of a conditional operation on the tuple space would be:</p>
+
+					<pre>
+inp[b:Bool][t:Tuples]
+					</pre>
+
+					<div class="pagebreak pageNumber">253</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-8.png">
+						<figcaption><strong>Figure 11.8</strong> <code>TUPLE</code> <em>LTS</em>.</figcaption>
+					</figure>
+
+					<p>The value of the local variable <code>t</code> is only valid when <code>b</code> is true. Each <code>TUPLE</code> process has in its alphabet the operations on one specific tuple value. The alphabet of <code>TUPLESPACE</code> is defined by the set <code>TupleAlpha</code>:</p>
+
+					<pre>
+<strong>set</strong> TupleAlpha
+  = {{in,out,rd,rdp[Bool],inp[Bool]}.Tuples}
+					</pre>
+
+					<p>A process that shares access to the tuple space must include all the actions of this set in its alphabet.</p>
+
+					<h5>Tuple Space Implementation</h5>
+
+					<p>Linda tuple space can be distributed over many processors connected by a network. However, for demonstration purposes we describe a simple centralized implementation that allows matching of templates only on the tag field of a tuple. The interface to our Java implementation of a tuple space is listed in Program 11.5.</p>
+
+					<pre class="program">
+<strong>public interface</strong> TupleSpace {
+
+  <em>// deposits data in tuple space</em>
+  <strong>public</strong> void out (String tag, Object data);
+
+  <em>// extracts object with tag from tuple space, blocks if not available</em>
+  <strong>public</strong> Object in (String tag)
+        <strong>throws</strong> InterruptedException;
+
+  <em>// reads object with tag from tuple space, blocks if not available</em>
+  <strong>public</strong> Object rd (String tag)
+					</pre>
+
+					<p class="program-caption"><strong>Program 11.5</strong> <code>TupleSpace</code> interface.</p>
+
+					<div class="pagebreak pageNumber">254</div>
+
+					<pre class="program">
+        <strong>throws</strong> InterruptedException;
+  <em>// extracts object if available, return null if not available</em>
+  <strong>public</strong> Object inp (String tag);
+
+  <em>// reads object if available, return null if not available</em>
+  <strong>public</strong> Object rdp (String tag);
+
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 11.5</strong> (<em>Continued</em>).</p>
+
+					<p>We use a hash table of vectors to implement the tuple space (Program 11.6). Although the tuple space is defined to be unordered, for simplicity, we have chosen to store the tuples under a particular tag in FIFO order. New tuples are appended to the end of a vector for a tag and removed from its head. For simplicity, a naive synchronization scheme is used which wakes up all threads whenever a new tuple is added. A more efficient scheme would wake up only those threads waiting for a tuple with the same tag as the new tuple.</p>
+
+				</section>
+
+				<section class="subsection" data-number="6" data-name="Supervisor-Worker Model">
+
+					<h4>11.2.2 Supervisor-Worker Model</h4>
+
+					<p><span class="first-sentence">We model a simple Supervisor-Worker system in which the supervisor initially outputs a set of tasks to the tuple space and then collects results.</span> Each worker repetitively gets a task and computes the result. The algorithms for the supervisor and each worker process are sketched below:</p>
+
+					<pre class="times">
+Supervisor::
+    forall tasks: <strong>out</strong>("task", ... )
+    forall results: <strong>in</strong>(" result", ... )
+    out("stop")
+Worker::
+    while not <strong>rdp</strong>("stop") do
+        <strong>in</strong>("task", ... )
+        compute result
+        <strong>out</strong>("result", ... )
+					</pre>
+
+					<p>To terminate the program, the supervisor outputs a tuple with the tag "stop" when it has collected all the results it requires. Workers run until they read this tuple. The set of tuple values and the maximum number of copies of each value are defined for the model as:</p>
+
+					<pre>
+<strong>const</strong> N      = 2
+<strong>set</strong>   Tuples = {task,result,stop}
+					</pre>
+
+					<div class="pagebreak pageNumber">255</div>
+
+					<pre class="program">
+<strong>class</strong> TupleSpaceImpl <strong>implements</strong> TupleSpace {
+  <strong>private</strong> Hashtable tuples = <strong>new</strong> Hashtable();
+
+  <strong>public synchronized</strong> void out(String tag,Object data){
+    Vector v = (Vector) tuples.get(tag);
+    <strong>if</strong> (v == null) {
+      v = new Vector();
+      tuples.put(tag,v);
+    }
+    v.addElement(data);
+    notifyAll();
+  }
+
+  <strong>private</strong> Object <strong>get</strong>(String tag, boolean remove) {
+    Vector v = (Vector) tuples.get(tag);
+    <strong>if</strong> (v == null) <strong>return</strong> null;
+    <strong>if</strong> (v.size() == 0) <strong>return</strong> null;
+    Object o = v.firstElement();
+    <strong>if</strong> (remove) v.removeElementAt(0);
+    <strong>return</strong> o;
+  }
+
+  <strong>public synchronized</strong> Object in (String tag)
+                  <strong>throws</strong> InterruptedException {
+    Object o;
+    <strong>while</strong> ((o = get(tag,true)) == null) wait();
+    <strong>return</strong> o;
+  }
+
+  <strong>public</strong> Object rd (String tag)
+                  <strong>throws</strong> InterruptedException {
+    Object o;
+    <strong>while</strong> ((o = get(tag,false)) == null) wait();
+    <strong>return</strong> o;
+  }
+
+  <strong>public synchronized</strong> Object inp (String tag) {
+    <strong>return</strong> get(tag,true);
+  }
+
+  <strong>public synchronized</strong> Object rdp (String tag) {
+    <strong>return</strong> get(tag,false);
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 11.6</strong> <code>TupleSpaceImpl</code> class.</p>
+
+					<div class="pagebreak pageNumber">256</div>
+
+					<p>The supervisor outputs <em>N</em> tasks to the tuple space, collects <em>N</em> results and then outputs the "stop" tuple and terminates.</p>
+
+					<pre>
+SUPERVISOR = TASK[1],
+TASK[i:1..N] =
+  (out.task ->
+     <strong>if</strong> i&lt;N <strong>then</strong> TASK[i+1] <strong>else</strong> RESULT[1]),
+RESULT[i:1..N] =
+  (in.result ->
+     <strong>if</strong> i&lt;N <strong>then</strong> RESULT[i+1] <strong>else</strong> FINISH),
+FINISH =
+  (out.stop -> end -> STOP) + TupleAlpha.
+					</pre>
+
+					<p>The worker checks for the "stop" tuple before getting a task and outputting the result. The worker terminates when it reads "stop" successfully.</p>
+
+					<pre>
+WORKER =
+  (rdp[b:Bool].stop->
+    if (!b) <strong>then</strong>
+      (in.task -> out.result -> WORKER)
+    <strong>else</strong>
+      (end -> STOP)
+  )+TupleAlpha.
+					</pre>
+
+					<p>The <em>LTS</em> for both <code>SUPERVISOR</code> and <code>WORKER</code> with <code>N=2</code> is depicted in Figure 11.9.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-9.png">
+						<figcaption><strong>Figure 11.9</strong> <code>SUPERVISOR</code> and <code>WORKER</code> <em>LTS</em>.</figcaption>
+					</figure>
+
+					<p>In the primes sieve example, we arranged that the behavior was cyclic to avoid detecting a deadlock in the case of correct termination. An alternative way of avoiding this situation is to provide a process that can still engage in actions after the</p>
+
+					<div class="pagebreak pageNumber">257</div>
+
+					<p><code>end</code> action has occurred. We use this technique here and define an <code>ATEND</code> process that engages in the action <code>ended</code> after the correct termination action <code>end</code> occurs.</p>
+
+					<pre>
+ATEND = (end->ENDED),
+ENDED = (ended->ENDED).
+					</pre>
+
+					<p>A Supervisor-Worker model with two workers called <code>redWork</code> and <code>blueWork</code>, which conforms to the architecture of Figure 11.7, can now be defined by:</p>
+
+					<pre>
+||SUPERVISOR_WORKER
+    = ( supervisor:SUPERVISOR
+      || {redWork,blueWork}:WORKER
+      || {supervisor,redWork,blueWork}::TUPLESPACE
+      || ATEND
+      )/{end/{supervisor,redWork,blueWork}.end}.
+					</pre>
+
+					<h5>Analysis</h5>
+
+					<p>Safety analysis of this model using <em>LTSA</em> reveals the following deadlock:</p>
+
+					<pre>
+Trace to DEADLOCK:
+   supervisor.out.task
+   supervisor.out.task
+   redWork.rdp.0.stop     <span>– <strong>rdp</strong> returns false</span>
+   redWork.in.task
+   redWork.out.result
+   supervisor.in.result
+   redWork.rdp.0.stop     <span>– <strong>rdp</strong> returns false</span>
+   redWork.in.task
+   redWork.out.result
+   supervisor.in.result
+   redWork.rdp.0.stop     <span>– <strong>rdp</strong> returns false</span>
+   supervisor.out.stop
+   blueWork.rdp.1.stop    <span>– <strong>rdp</strong> returns true</span>
+					</pre>
+
+					<p>This trace is for an execution in which the red worker computes the results for the two tasks put into tuple space by the supervisor. This is quite legitimate behavior for a real system since workers can run at different speeds and take different amounts of time to start. The deadlock occurs because the supervisor only outputs the "stop" tuple <em>after</em> the red worker attempts to read it. When the red worker tries to read, the "stop" tuple has not yet been put into the tuple space and, consequently, the worker does not terminate but blocks waiting for another task. Since the supervisor has finished, no more tuples will be put into the tuple space and consequently, the worker will never terminate.</p>
+
+					<div class="pagebreak pageNumber">258</div>
+
+					<p>This deadlock, which can be repeated for different numbers of tasks and workers, indicates that the termination scheme we have adopted is incorrect. Although the supervisor completes the computation, workers may not terminate. It relies on a worker being able to input tuples until it reads the "stop" tuple. As the model demonstrates, this may not happen. This would be a difficult error to observe in an implementation since the program would produce the correct computational result. However, after an execution, worker processes would be blocked and consequently retain execution resources such as memory and system resources such as control blocks. Only after a number of executions might the user observe a system crash due to many hung processes. Nevertheless, this technique of using a "stop" tuple appears in an example Linda program in a standard textbook on concurrent programming!</p>
+
+					<p class="i">A simple way of implementing termination correctly would be to make a worker wait for either inputting a "task" tuple or reading a "stop" tuple. Unfortunately, while this is easy to model, it cannot easily be implemented since Linda does not have an equivalent to the selective receive described in Chapter 10. Instead, we adopt a scheme in which the supervisor outputs a "task" tuple with a special stop value. When a worker inputs this value, it outputs it again and then terminates. Because a worker outputs the stop task before terminating, each worker will eventually input it and terminate. This termination technique appears in algorithms published by the designers of Linda (Carriero and Gelernter, 1989b). The revised algorithms for supervisor and worker are sketched below:</p>
+
+					<pre class="times">
+<em>Supervisor</em>::
+        forall tasks:-<strong>out</strong>("task", ... )
+        forall results:-<strong>in</strong>("result", ... )
+        <strong>out</strong>("task",<em>stop</em>)
+<em>Worker</em>::
+        while true do
+                <strong>in</strong>("task" , ... )
+                if value is stop then <strong>out</strong>("task",<em>stop</em>); exit
+                compute result
+                <strong>out</strong>("result", ... )
+					</pre>
+
+					<p>The tuple definitions and models for supervisor and worker now become:</p>
+
+					<pre>
+<strong>set</strong> Tuples   = {task,task.stop,result}
+
+SUPERVISOR   = TASK[1],
+TASK[i:1..N] =
+  (out.task ->
+					</pre>
+
+					<div class="pagebreak pageNumber">259</div>
+
+					<pre>
+     <strong>if</strong> i&lt;N <strong>then</strong> TASK[i+1] <strong>else</strong> RESULT[1]),
+RESULT[i:1..N] =
+  (in.result ->
+     <strong>if</strong> i&lt;N <strong>then</strong> RESULT[i+1] <strong>else</strong> FINISH),
+FINISH =
+  (out.task.stop -> end -> STOP)
+  + TupleAlpha.
+
+WORKER =
+  (in.task -> out.result -> WORKER
+  |in.task.stop -> out.task.stop -> end ->STOP
+  ) + TupleAlpha.
+					</pre>
+
+					<p>The revised model does not deadlock and satisfies the progress property:</p>
+
+					<pre>
+<strong>progress</strong> END = {ended}
+					</pre>
+
+					<p>A sample trace from this model, which again has the red worker computing both tasks, is shown in Figure 11.10.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-10.png">
+						<figcaption><strong>Figure 11.10</strong> Trace of Supervisor-Worker model.</figcaption>
+					</figure>
+
+					<p>In the first section of this chapter, the primes sieve application was modeled in some detail. We then abstracted from the application to investigate the concurrent properties of the Filter Pipeline architecture. In this section, we have modeled the</p>
+
+					<div class="pagebreak pageNumber">260</div>
+
+					<p>Supervisor-Worker architecture directly without reference to an application. We were able to discover a problem with termination and provide a general solution that can be used in any application implemented within the framework of the architecture.</p>
+
+				</section>
+
+				<section class="subsection" data-number="7" data-name="Supervisor-Worker Implementation">
+
+					<h4>11.2.3 Supervisor-Worker Implementation</h4>
+
+					<p><span class="first-sentence">To illustrate the implementation and operation of Supervisor-Worker architectures, we develop a program that computes an approximate value of the area under a curve using the <em>rectangle method</em>.</span> More precisely, the program computes an approximate value for the integral:</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/integral.png">
+					</figure>
+
+					<p>The rectangle method involves summing the areas of small rectangles that nearly fit under the curve as shown in Figure 11.11.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-11.png">
+						<figcaption><strong>Figure 11.11</strong> Rectangle method.</figcaption>
+					</figure>
+
+					<p>In the Supervisor-Worker implementation, the supervisor determines how many rectangles to compute and hands the task of computing the area of the rectangles to the workers. The demonstration program has four worker threads each with a different color attribute. When the supervisor inputs a result, it displays the rectangle corresponding to that result with the color of the worker. The display of a completed computation is depicted in Figure 11.12.</p>
+
+					<p class="i">Each worker is made to run at a different speed by performing a delay before outputting the result to the tuple space. The value of this delay is chosen at random when the worker is created. Consequently, each run behaves differently. The display of Figure 11.12 depicts a run in which some workers compute more results than others. During a run, the number of the task that each worker thread is currently computing is displayed. The last task that the worker completed is</p>
+
+					<div class="pagebreak pageNumber">261</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-12.png">
+						<figcaption><strong>Figure 11.12</strong> Supervisor-Worker applet.</figcaption>
+					</figure>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-13.png">
+						<figcaption><strong>Figure 11.13</strong> Supervisor-Worker class diagram.</figcaption>
+					</figure>
+
+					<p>displayed at the end of a run. The class diagram for the demonstration program is shown in Figure 11.13.</p>
+
+					<p class="i">The displays for the supervisor and worker threads are handled, respectively, by the classes <code>SupervisorCanvas</code> and <code>WorkerCanvas</code>. The methods provided by these classes, together with a description of whatthey do, are listed in Program 11.7.</p>
+
+					<div class="pagebreak pageNumber">262</div>
+
+					<pre class="program">
+<strong>class</strong> SupervisorCanvas <strong>extends</strong> Canvas {
+
+  <em>// display rectangle slice</em> <strong>i</strong> <em>with color</em> <strong>c</strong>, <em>add</em> <strong>a</strong> <em>to area field</em>
+  <strong>synchronized</strong> void setSlice(
+              int i,double a,Color c) {...}
+
+  <em>// reset display to clear rectangle slices and draw curve for</em> <strong>f</strong>
+  <strong>synchronized</strong> void reset(Function f) {...}
+
+}
+
+<strong>class</strong> WorkerCanvas <strong>extends</strong> Panel {
+  <em>// display current task number</em> <strong>val</strong>
+  <strong>synchronized</strong> void setTask(int val) {...}
+}
+
+<strong>interface</strong> Function {
+  double fn(double x);
+}
+
+<strong>class</strong> OneMinusXsquared <strong>implements</strong> Function {
+  <strong>public</strong> double fn (double x) {<strong>return</strong> 1-x*x;}
+}
+
+<strong>class</strong> OneMinusXcubed <strong>implements</strong> Function {
+  <strong>public</strong> double fn (double x) {<strong>return</strong> 1-x*x*x;}
+}
+
+<strong>class</strong> XsquaredPlusPoint1 implements Function {
+  public double fn (double x) {<strong>return</strong> x*x+0.1;}
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 11.7</strong> <code>SupervisorCanvas</code>, <code>WorkerCanvas</code> and <code>Function</code> classes.</p>
+
+					<p>The interface for the function <em>f(x)</em> together with three implementations are also included in Program 11.7.</p>
+
+					<p class="i'">A task that is output to the tuple space by the supervisor thread is represented by a single integer value. This value identifies the rectangle for which the worker computes the area. A result requires a more complex data structure since, for display purposes, the result includes the rectangle number and the worker color attribute in addition to the computed area of the rectangle. The definition of the <code>Result</code> and the <code>Supervisor</code> classes is listed in Program 11.8.</p>
+
+					<p class="i">The supervisor thread is a direct translation from the model. It outputs the set of rectangle tasks to the tuple space and then collects the results. Stop is encoded</p>
+
+					<div class="pagebreak pageNumber">263</div>
+
+					<pre class="program">
+<strong>class</strong> Result {
+  int task;
+  Color worker;
+  double area;
+  Result(int s, double a, Color c)
+    {task =s; worker=c; area=a;}
+}
+
+<strong>class</strong> Supervisor <strong>extends</strong> Thread {
+  SupervisorCanvas display;
+  TupleSpace bag;
+  Integer stop = <strong>new</strong> Integer(-1);
+
+  Supervisor(SupervisorCanvas d, TupleSpace b)
+    { display = d; bag = b; }
+
+  <strong>public</strong> void run () {
+    <strong>try</strong> {
+      <em>// output tasks to tuplespace</em>
+      <strong>for</strong> (int i=0; i&lt;SupervisorCanvas.Nslice; ++i)
+        bag.out("task",<strong>new</strong> Integer(i));
+      <em>// collect results</em>
+      <strong>for</strong> (int i=0; i&lt;display.Nslice; ++i) {
+        Result r = (Result)bag.in("result");
+        display.setSlice(r.task,r.area,r.worker);
+      }
+      <em>// output stop tuple</em>
+      bag.out("task",stop);
+    } <strong>catch</strong> (InterruptedException e){}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 11.8</strong> <code>Result</code> and <code>Supervisor</code> classes.</p>
+
+					<p>as a "task" tuple with the value -1, which falls outside the range of rectangle identifiers. The <code>Worker</code> thread class is listed in Program 11.9.</p>
+
+					<p class="i">The choice in the worker model between a task tuple to compute and a stop task is implemented as a test on the value of the task. The worker thread terminates when it receives a negative task value. The worker thread is able to compute the area given only a single integer since this integer indicates which "slice" of the range of <em>x</em> from 0 to 1.0 for which it is to compute the rectangle. The worker is initialized with a function object.</p>
+
+					<p class="i">The structure of supervisor, worker and tuple space is constructed by the <code>go()</code> method of the <code>SupervisorWorker</code> applet class. The code is listed below:</p>
+
+					<div class="pagebreak pageNumber">264</div>
+
+					<pre class="program">
+<strong>class</strong> Worker <strong>extends</strong> Thread {
+  WorkerCanvas display;
+  Function func;
+  TupleSpace bag;
+  int processingTime = (int)(6000*Math.random());
+
+  Worker(WorkerCanvas d, TupleSpace b, Function f)
+    { display = d; bag = b; func = f; }
+
+  <strong>public</strong> void run () {
+    double deltaX = 1.0/SupervisorCanvas.Nslice;
+    <strong>try</strong> {
+      <strong>while</strong>(true){
+        <em>// get new task from tuple space</em>
+        Integer task = (Integer)bag.in("task");
+        int slice = task.intValue();
+        <strong>if</strong> (slice &lt;0) {   <em>// stop if negative</em>
+            bag.out("task",task);
+            break;
+        }
+        display.setTask(slice);
+        sleep(processingTime);
+        double area
+          = deltaX*func.fn(deltaX*slice+deltaX/2);
+        <em>// output result to tuple space</em>
+        bag.out( "result",
+           <strong>new</strong> Result(slice,area,display.worker));
+      }
+    } <strong>catch</strong> (InterruptedException e){}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 11.9</strong> <code>Worker</code> class.</p>
+
+					<pre>
+<strong>private</strong> void go(Function fn) {
+  display.reset(fn);
+  TupleSpace bag = <strong>new</strong> TupleSpaceImpl();
+  redWork = <strong>new</strong> Worker(red,bag,fn);
+  greenWork = <strong>new </strong>Worker(green,bag,fn);
+  yellowWork = <strong>new</strong> Worker(yellow,bag,fn);
+  blueWork = <strong>new</strong> Worker(blue,bag,fn);
+  supervisor = <strong>new</strong> Supervisor(display,bag);
+  redWork.start();
+  greenWork.start();
+					</pre>
+
+					<div class="pagebreak pageNumber">265</div>
+
+					<pre>
+  yellowWork.start();
+  blueWork.start();
+  supervisor.start();
+}
+					</pre>
+
+					<p>where <code>display</code> is an instance of <code>SupervisorCanvas</code> and red, green, yellow and blue are instances of <code>WorkerCanvas</code>.</p>
+
+					<h5>Speedup and Efficiency</h5>
+
+					<p>The <em>speedup</em> of a parallel program is defined to be the time that a sequential program takes to compute a given problem divided by the time that the parallel program takes to compute the same problem on <em>N</em> processors. The <em>efficiency</em> is the speedup divided by the number of processors <em>N</em>. For example, if a problem takes
+					12 seconds to compute sequentially and 4seconds to compute on six processors, then the speedup is 3 and the efficiency 0.5 or 50%.</p>
+
+					<p class="i">Unfortunately, the demonstration Supervisor-Worker program would not exhibit any speedup if executed on a multiprocessor with a Java runtime that scheduled threads on different processors. The most obvious reason for this is that we have introduced delays in the worker threads for display purposes. However, there is a reason that provides a more general lesson.</p>
+
+					<p class="i">The amount of CPU time to compute each task in the example is very small, since each task requires only a few arithmetic operations. The supervisor uses more CPU time putting the task into tuple space and retrieving the result than it would if it computed the task locally. Speedup of greater than unity is only achieved in Supervisor-Worker programs if the tasks require significantly more computation time than the time required for communication with the workers.</p>
+
+					<p class="i">The advantage of the Supervisor-Worker architecture is that it is easy to develop a parallel version of an existing sequential program in which sub-problems are independent. Often the sub-problem solution code from the sequential program can be reused directly in the parallel version. In practice, the architecture has been successfully applied to computation-intensive problems such as image rendering using ray-tracing techniques.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="8" data-name="Announcer-Listener">
+
+				<h3>11.3 Announcer-Listener</h3>
+
+				<p><span class="first-sentence">Announcer-Listener is an example of an event-based architecture.</span> The announcer process announces that some event has occurred and disseminates it to all those listener processes that are interested in the event. The communication pattern is one (announcer) to zero or more (listeners). Listener processes indicate their interest in a particular event by registering for that event. In the architecture diagram of</p>
+
+				<div class="pagebreak pageNumber">266</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure11-14.png">
+					<figcaption><strong>Figure 11.14</strong> Announcer-Listener process architecture.</figcaption>
+				</figure>
+
+				<p>Figure 11.14, we have termed the connector that handles event dissemination an "event manager".</p>
+
+				<p class="i">Listeners can choose to receive only a subset of the events announced by registering a "pattern" with the event manager. Only events that match the pattern are forwarded to the listener. The architecture can be applied recursively so that listeners also announce events to another set of listeners. In this way, an event dissemination "tree" can be constructed.</p>
+
+				<p class="i">An important property of this architecture is that the announcer is insulated from knowledge of how many listeners there are and from which listeners are affected by a particular event. Listeners do not have to be processes; they may simply be objects in which a method is invoked as a result of an event. This mechanism is sometimes called <em>implicit invocation</em> since the announcer does not invoke listener methods explicitly. Listener methods are invoked implicitly as a result of an event announcement.</p>
+
+				<p class="i">The Announcer-Listener architecture is widely used in user interface frameworks, and the Java Abstract Windowing Toolkit (AWT) is no exception. In section 11.3.2, we use the AWT event mechanism in an example program. In AWT, listeners are usually ordinary objects. Events, such as mouse clicks and button presses, cause methods to be invoked on objects. Our example uses events to control the execution of thread objects.</p>
+
+				<section class="subsection" data-number="9" data-name="Announcer-Listener Model">
+
+					<h4>11.3.1 Announcer-Listener Model</h4>
+
+					<p><span class="first-sentence">The model is defined for a fixed set of listeners and a fixed set of event patterns:</span></p>
+
+					<pre>
+<strong>set</strong> Listeners = {a,b,c,d}
+<strong>set</strong> Pattern   = {pat1,pat2}
+					</pre>
+
+					<div class="pagebreak pageNumber">267</div>
+
+					<p>The event manager is modeled by a set of <code>REGISTER</code> processes, each of which controls the registration and event propagation for a single, particular listener.</p>
+
+					<pre>
+REGISTER = IDLE,
+IDLE = (register[p:Pattern] -> MATCH[p]
+       |announce[Pattern]   -> IDLE
+       ),
+
+MATCH[p:Pattern] =
+       (announce[a:Pattern] ->
+           <strong>if</strong> (a==p) <strong>then</strong>
+              (event[a] -> MATCH[p]
+              |deregister -> IDLE)
+           <strong>else</strong>
+              MATCH[p]
+       |deregister -> IDLE
+       ).
+
+||EVENTMANAGER = (Listeners:REGISTER)
+               /{announce/Listeners.announce}.
+					</pre>
+
+					<p>The <code>REGISTER</code> process ensures that the event action for a listener only occurs if the listener has previously registered, has not yet unregistered, and if the event pattern matches the pattern with which the listener registered. Figure 11.15 depicts the <em>LTS</em> for <code>a:REGISTER</code> for listener <code>a</code>.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-15.png">
+						<figcaption><strong>Figure 11.15</strong> <em>LTS</em> for <code>a:REGISTER</code>.</figcaption>
+					</figure>
+
+					<div class="pagebreak pageNumber">268</div>
+
+					<p>The announcer is modeled as repeatedly announcing an event for one of the patterns defined by the <code>Pattern</code> set:</p>
+
+					<pre>
+ANNOUNCER = (announce[Pattern] -> ANNOUNCER).
+					</pre>
+
+					<p>The listener initially registers for events of a particular pattern and then either performs local computation, modeled by the action <code>compute</code>, or receives an event. On receiving an event, the process either continues computing or deregisters and stops.</p>
+
+					<pre>
+LISTENER(P=’pattern) =
+  (register[P] -> LISTENING),
+LISTENING =
+  (compute  -> LISTENING
+  |event[P] -> LISTENING
+  |event[P] -> deregister -> STOP
+  )+{register[Pattern]}.
+					</pre>
+
+					<p><code>ANNOUNCER_LISTENER</code> describes a system with four listeners <code>a</code>, <code>b</code>, <code>c</code>, <code>d</code>, in which <code>a</code> and <code>c</code> register for events with pattern <code>pat1</code> and <code>b</code> and <code>d</code> register for <code>pat2</code>.</p>
+
+					<pre>
+||ANNOUNCER_LISTENER
+           = ( a:LISTENER(’pat1)
+             ||b:LISTENER(’pat2)
+             ||c:LISTENER(’pat1)
+             ||d:LISTENER(’pat2)
+             ||EVENTMANAGER
+             ||ANNOUNCER
+             ||Listeners:SAFE).
+					</pre>
+
+					<h5>Analysis</h5>
+
+					<p>The safety property, <code>SAFE</code>, included in the composite process <code>ANNOUNCER_ LISTENER</code>, asserts that each listener only receives events while it is registered and only those events with the pattern for which it registered. The property is defined below:</p>
+
+					<pre>
+<strong>property</strong>
+  SAFE = (register[p:Pattern]  -> SAFE[p]),
+  SAFE[p:Pattern]= (event[p]   -> SAFE[p]
+                   |deregister -> SAFE
+                   ).
+					</pre>
+
+					<div class="pagebreak pageNumber">269</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-16.png">
+						<figcaption><strong>Figure 11.16</strong> <code>ANNOUNCER_LISTENER</code> trace.</figcaption>
+					</figure>
+
+					<p>Safety analysis reveals that the system has no deadlocks or safety violations. A sample execution trace is shown in Figure 11.16.</p>
+
+					<p class="i">The important progress property for this system is that the announcer should be able to announce events independently of the state of listeners, i.e. whether or not listeners are registered and whether or not listeners have stopped. We can assert this using the following set of progress properties:</p>
+
+					<pre>
+<strong>progress</strong> ANNOUNCE[p:Pattern] = {announce[p]}
+					</pre>
+
+					<p>Progress analysis using <em>LTSA</em> verifies that these properties hold for <code>ANNOUNCER_ LISTENER</code>.</p>
+
+				</section>
+
+				<section class="subsection" data-number="10" data-name="Announcer-Listener Implementation">
+
+					<h4>11.3.2 Announcer-Listener Implementation</h4>
+
+					<p><span class="first-sentence">To illustrate the use of the Announcer-Listener architecture, we implement the simple game depicted in Figure 11.17.</span> The objective of the game is to hit all the moving colored blocks with the minimum number of mouse presses. A moving block is hit by pressing the mouse button when the mouse pointer is on top of the block. When a block is hit, it turns black and stops moving.</p>
+
+					<p class="i">Each block is controlled by a separate thread that causes the block it controls to jump about the display at random. The threads also listen for mouse events that</p>
+
+					<div class="pagebreak pageNumber">270</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-17.png">
+						<figcaption><strong>Figure 11.17</strong> <code>EventDemo</code> applet display.</figcaption>
+					</figure>
+
+					<pre class="program">
+<strong>class</strong> BoxCanvas <strong>extends</strong> Canvas {
+
+  <em>// clear all boxes</em>
+  <strong>synchronized</strong> void reset(){...}
+
+  <em>// draw colored box</em> <strong>id</strong> <em>at position</em> <strong>x,y</strong>
+  <strong>synchronized</strong> void moveBox(int id, int x, int y){...}
+
+  <em>// draw black box</em><strong> id</strong> <em>at position</em> <strong>x,y</strong>
+  <strong>synchronized</strong> void blackBox(int id, int x, int y){...}
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 11.10</strong> <code>BoxCanvas</code> class.</p>
+
+					<p>are announced by the display canvas in which the blocks move. These events are generated by the AWT and the program uses the AWT classes provided for event handling. The class diagram for the program is depicted in Figure 11.18.</p>
+
+					<p class="i">The display for the <code>EventDemo</code> applet is provided by the <code>BoxCanvas</code> class described in outline by Program 11.10.</p>
+
+					<p class="i">The AWT interface <code>MouseListener</code> describes a set of methods that are invoked as a result of mouse actions. To avoid implementing all these methods, since</p>
+
+					<div class="pagebreak pageNumber">271</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure11-18.png">
+						<figcaption><strong>Figure 11.18</strong> <code>EventDemo</code> class diagram.</figcaption>
+					</figure>
+
+					<p>we are only interested in the mouse-pressed event, we use the adapter class
+					<code>MouseAdapter</code> which provides null implementations for all the methods in the
+					<code>MouseListener</code> interface. <code>MyClass</code> extends <code>MouseAdapter</code> and provides an
+					implementation for the <code>mousePressed</code> method. <code>MyClass</code> is an inner class of
+					the <code>BoxMover</code> thread class; consequently, it can directly call private <code>BoxMover</code>
+					methods. The code for <code>BoxMover</code> and <code>MyListener</code> is listed in Program 11.11.</p>
+
+					<p class="i">The <code>run()</code> method of <code>BoxMover</code> repeatedly computes a random position and displays a box at that position. After displaying the box, <code>waitHit()</code> is called. This uses a timed <code>wait()</code> and returns for two reasons: either the wait delay expires and the value <code>false</code> is returned or <code>isHit()</code> computes that a hit has occurred and calls <code>notify()</code> in which case <code>true</code> is returned. Because <code>MyListener</code> is registered as a listener for events generated by the display, whenever the display announces a mouse-pressed event, <code>MyListener.mousePressed()</code> is invoked. This in turn calls <code>isHit()</code> with the mouse coordinates contained in the <code>MouseEvent</code> parameter.</p>
+
+					<p class="i">If we compare the <code>run()</code> method with the <code>LISTENER</code> process from the model, the difference in behavior is the addition of a timeout action which ensures that after a delay, if no mouse event occurs, a new box position is computed and displayed. A model specific to the <code>BoxMover</code> thread is described by:</p>
+
+					<pre>
+BOXMOVER(P=’pattern) =
+  (register[P] -> LISTENING),
+LISTENING =
+  (compute->       <span>// compute and display position</span>
+    (timeout -> LISTENING       <span>// no mouse event</span>
+    |event[P] -> timeout -> LISTENING      <span>// miss</span>
+    |event[P] -> deregister -> STOP         <span>// hit</span>
+    )
+  )+{register[Pattern]}.
+					</pre>
+
+					<div class="pagebreak pageNumber">272</div>
+
+					<pre class="program">
+<strong>import</strong> java.awt.event.*;
+<strong>class</strong> BoxMover <strong>extends</strong> Thread {
+  <strong>private</strong> BoxCanvas display;
+  <strong>private</strong> int id, delay, MaxX, MaxY, x, y;
+  <strong>private</strong> boolean hit=false;
+  <strong>private</strong> MyListener listener = <strong>new</strong> MyListener();
+
+  BoxMover(BoxCanvas d, int id, int delay) {
+    display = d; this.id = id; this.delay=delay;
+    display.addMouseListener(listener); <em>// register</em>
+    MaxX = d.getSize().width; MaxY = d.getSize().height;
+  }
+
+  <strong>private synchronized</strong> void isHit(int mx, int my) {
+    hit = (mx>x &amp;&amp; mx&lt;x+display.BOXSIZE
+        &amp;&amp; my>y &amp;&amp; my&lt;y+display.BOXSIZE);
+    if (hit) notify();
+  }
+
+  <strong>private synchronized</strong> boolean waitHit()
+    <strong>throws</strong> InterruptedException {
+    wait(delay);
+    <strong>return</strong> hit;
+  }
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      <strong>while</strong> (true) {
+          x = (int)(MaxX*Math.random());
+          y = (int)(MaxY*Math.random());
+          display.moveBox(id,x,y);
+          <strong>if</strong> (waitHit()) break;
+      } 
+    } <strong>catch</strong> (InterruptedException e){}
+    display.blackBox(id,x,y);
+    display.removeMouseListener(listener); <em>// deregister</em>
+  }
+
+  <strong>class</strong> MyListener <strong>extends</strong> MouseAdapter {
+    <strong>public</strong> void mousePressed(MouseEvent e) {
+      isHit(e.getX(),e.getY());
+    }
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 11.11</strong> <code>BoxMover</code> and <code>MyListener</code> classes.</p>
+
+					<div class="pagebreak pageNumber">273</div>
+
+					<p>The reader should verify that the safety and progress properties for the <code>ANNOUNCER_LISTENER </code>still hold when <code>BOXMOVER</code> is substituted for <code>LISTENER</code>.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="11" data-name="Summary">
+
+				<h3>Summary</h3>
+
+				<p><span class="first-sentence">In this chapter, we have described three different concurrent architectures: Filter Pipeline, Supervisor-Worker and Announcer-Listener.</span> A model was developed for each architecture and analyzed with respect to general properties such as absence of deadlock and correct termination. Guided by the models, we developed example programs to demonstrate how the components of each architecture interact during execution.</p>
+
+				<p class="i">Each of the architectures uses a different type of connector to coordinate the communication between the components of the architecture. The Filter Pipeline uses pipes, which are essentially communication channels with zero or more buffers. We showed that the behavior of our primes sieve application, organized as a Filter Pipeline, was independent of the buffering provided in pipes. The components of the Supervisor-Worker architecture interact via a Linda <em>tuple space</em>, which is an unordered collection of data tuples. We provided a model of Linda tuple space and used it to investigate termination strategies for Supervisor-Worker systems. The Announcer-Listener components interact by event dissemination. We presented a general model of event dissemination and then used Java AWT events to implement the example program.</p>
+
+				<p class="i">Pipes support <em>one-to-one</em> communication, tuple space supports <em>any-to-any</em> communication and event dissemination is <em>one-to-many</em>. These connectors were chosen as the most natural match with the topology of the architecture to which they were applied. However, it is possible, if not very natural, to use tuple space to implement a set of pipes and, more reasonably, to use rendezvous (section 10.3) instead of tuple space in the Supervisor-Worker architecture. In other words, for each architecture we have described one technique for organizing the communication between participating components. However, many variants of these architectures can be found in the literature, differing in the mechanisms used to support communication, how termination is managed and, of course, in the applications they support. A particular concurrent program may incorporate a combination of the basic architectures we have described here and in the rest of the book. For example, the filter processes in a pipeline may also be the clients of a server process.</p>
+
+			</section>
+
+			<section class="section" data-number="12" data-name="Notes and Further Reading">
+
+				<h3>Notes and Further Reading</h3>
+
+				<p><span class="first-sentence">As mentioned earlier, Filter Pipeline is the basic architecture used in the UNIX operating system to combine programs.</span> The architecture is also used extensively</p>
+
+				<div class="pagebreak pageNumber">274</div>
+
+				<p>in multimedia applications to process streams of video and audio information. An example of this sort of program can be found in Kleiman, Shah and Smaalders (1996). A discussion of the properties of more general pipe and filter networks may be found in Shaw and Garlan's book on <em>Software Architecture</em> (1996).</p>
+
+				<p class="i">The Supervisor-Worker architecture appears in many guises in books and papers on concurrent programming. Andrews (1991) calls the architecture "replicated worker", Burns and Davies (1993) call it "process farm", while Carriero and Gelernter (1989b) characterize the form of parallelism supported by the architecture as "agenda parallelism". A paper by Cheung and Magee (1991) presents a simple way of assessing the likely performance of a sequential algorithm when parallelized using the Supervisor-Worker architecture. The paper also describes a technique for making the architecture fault-tolerant with respect to worker failure. The Supervisor-Worker architecture has been used extensively in exploiting the computational power of clusters of workstations.</p>
+
+				<p class="i">A large literature exists on Linda (Gelernter, 1985; Carriero and Gelernter, 1989a, 1989b) and its derivatives. The proceedings of the "Coordination" series of conferences describe some of the current work on tuple-space-based models for concurrent programming, starting from the early conferences (Ciancarini and Hankin, 1996; Garlan and Le Metayer, 1997) and including more recent events (Nicola, Ferari and Meredith, 2004; Jacquet and Picco, 2005). The Linda tuple space paradigm clearly influenced the work on JavaSpaces&trade; (Freeman, Hupfer and Arnold, 1999).</p>
+
+				<p class="i">Event-based architectures have been used to connect tools in software development environments (Reiss, 1990). As discussed in the chapter, windowing environments are usually event-based, as Smalltalk (Goldberg and Robson, 1983). In a distributed context, event processing forms an important part of network management systems (Sloman, 1994). Shaw and Garlan (1996) discuss some of the general properties of event-based systems.</p>
+
+			</section>
+
+			<section class="section" data-number="13" data-name="Exercises">
+
+				<h3>Exercises</h3>
+
+				<ol id="eleven">
+
+					<li>
+						<span class="first-sentence"><em>N</em> processes are required to synchronize their execution at some point before proceeding.</span> Describe a scheme for implementing this <em>barrier</em> synchronization using Linda tuple space. Model the scheme using <code>TUPLESPACE</code> and generate a trace to show the correct operation of your scheme.
+					</li>
+
+					<li>
+						Describe a scheme for implementing the Supervisor-Worker architecture using
+						rendezvous message-passing communication rather than tuple space.
+
+						<p class="i">(<em>Hint</em>: Make the Supervisor a server and the Workers clients.)</p>
+
+						<p class="i">Model this scheme and show absence of deadlock and successful termination.
+						Modify the Java example program to use <code>Entry</code> rather than <code>TupleSpace</code>.</p>
+					</li>
+
+					<div class="pagebreak pageNumber">275</div>
+
+					<li>
+						A process needs to wait for an event from either announcer <em>A</em> or announcer <em>B</em>, for example events indicating that button A or button B has been pressed, i.e.
+
+						<pre>
+(buttonA -> P[1] | buttonB -> P[2]).
+						</pre>
+
+						Sketch the implementation of a Java thread that can block waiting for either of two
+						events to occur. Assume initially that the Java events are handled by the same listener
+						interface. Now extend the scheme such that events with different listener interfaces
+						can be accommodated.
+					</li>
+
+					<li>
+						Provide a Java class which implements the following interface and has the behavior of <code>EVENTMANAGER</code>:
+
+						<pre>
+<strong>class</strong> Listener {
+  <strong>public</strong> action(int event);
+}
+
+<strong>interface</strong> EventManager {
+  void announce(int event);
+  void register(Listener x);
+  void deregister(Listener x):
+  }
+						</pre>
+
+					</li>
+
+					<li>
+						Each filter in a pipeline examines the stream of symbols it receives for a particular pattern. When one of the filters matches the pattern it is looking for the entire pipeline terminates. Develop a model for this system and show absence of deadlock and correct termination. Outline how your model might be implemented in Java, paying particular attention to termination.
+					</li>
+
+					<li>
+						A <em>token ring</em> is an architecture which is commonly used for allocating some privilege, such as access to a shared resource, to one of a set of processes at a time. The architecture works as follows:
+
+						<p class="i">A token is passed round the ring. Possession of the token indicates that that process has exclusive access to the resource. Each process holds on to the token while using the resource and then passes it on to its successor in the ring, or passes on the token directly if it does not require access.</p>
+
+						<p class="i">Develop a model for this system and show absence of deadlock, exclusive access to the resource and access progress for every process. Is the system "buffer tolerant"? Outline how your model might be implemented in Java.</p>
+					</li>
+
+					<div class="pagebreak pageNumber">276</div>
+
+					<li>
+						Consider a ring of nodes, each of which acts as a simplified replicated database (Roscoe, 1998). Each node can autonomously update its local copy. Updates are circulated round the ring to update other copies. It is possible that two nodes perform local updates at similar times anti propagate their respective updates. This would lead to the situation where nodes receive updates in different orders, leading to inconsistent copies even after all the updates have propagated round the ring. Although we are prepared to tolerate copy inconsistency while updates are circulating, we cannot accept inconsistency that persists. To ensure consistent updates in the presence of node autonomy and concurrency, we require that, when quiescent (no updates are circulating and no node is updating its copy), all copies should have the same value.
+
+						<p class="i">In order to achieve this, we assign a priority to each update according to an (arbitrary) ordering of the originating node. Thus, in the case of clashes due to two simultaneous updates by different nodes, node i has priority over node j if i &lt; j. Simultaneity is recognized by a node receiving an update while still having an outstanding update.</p>
+
+						<p class="i">Develop a model for this system and show absence of deadlock and consistent values when quiescent.</p>
+
+						<p class="i">(<em>Hint</em>: In order to keep the problem simple, let each node deal with only a single value. Updates are passed round the ring in the form: [j][x] where j=originator and x=update value. Nodes should be connected by channels which can be modeled as follows.)</p>
+
+						<pre>
+<strong>const</strong> N = 3               <span>// number of nodes</span>
+<strong>range</strong> Nodes = 0..N-1
+<strong>const</strong> Max = 2             <span>// update values</span>
+<strong>range</strong> Value = 0..Max-1
+CHANNEL =
+(in[j:Nodes][x:Value]->out[j][x]->CHANNEL).
+						</pre>
+
+					</li>
+
+				</ol>
+
+			</section>
+
+		</div>
+
+	</div>
+
+</body>
+</html>

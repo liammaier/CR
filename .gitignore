@@ -1,0 +1,10 @@
+.settings/*
+bin
+bin/*
+bin/**
+war/WEB-INF/appengine-generated/local_db.bin
+war/WEB-INF/appengine-generated/datastore-indexes-auto.xml
+.DS_Store
+.class
+war/WEB-INF/classes/
+war/WEB-INF/appengine-web.xml

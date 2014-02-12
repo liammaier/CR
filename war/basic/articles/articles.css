@@ -1,0 +1,64 @@
+/* Stylesheet for resource page, a page that shows all of the chapters for a resource */
+
+#logoutBtn {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+}
+
+.content {
+	padding: 8px;
+	background-color: #DDDDDD;
+	position: relative;
+	min-height: 70px;
+	margin-bottom: 15px;
+}
+
+#articleContainer {
+	padding: 20px;
+}
+
+.contentpic {
+	width: 74px;
+	height: 74px;
+	float: left;
+	padding-right: 20px;
+	padding-left: 5px;
+}
+
+h2 {
+	font-size: 20px;
+	font-weight: normal;
+}
+
+.titlepic {
+	width: 116px;
+	height: 116px;
+	padding-right: 15px;
+}
+
+.inline {
+	display: inline-block;
+}
+
+h1.title {
+	font-size: 44px;
+	letter-spacing: -1px;
+}
+
+h1.subtitle {
+	font-size: 34px;
+	padding-left: 10px;
+}
+
+.goBtn {
+	position: absolute;
+	top: 25%;
+	right: 20px;
+}
+
+#backBtn {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+}

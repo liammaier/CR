@@ -1,0 +1,353 @@
+<html lang='en'>
+<head>
+	<title>Introducing Regular Expressions</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="regexp">
+
+		<div class="container">
+
+			<h3>CHAPTER 10</h3>
+			<div class="border"></div>
+
+			<section class="intro" data-number="0" data-name="Chapter 10 Introduction">
+
+				<h1>The End of the Beginning</h1>
+
+				<blockquote>“Unix was not designed to stop you from doing stupid things, because that would also
+				stop you from doing clever things.” —Doug Gwyn</blockquote>
+
+				<p>Congratulations for making it this far. You’re not a regular expression novice anymore.
+				You have been introduced to the most commonly used regular expression syntax. And
+				it will open a lot of possibilities up to you in your work as a programmer.</p>
+
+				<p>Learning regular expressions has saved me a lot of time. Let me give you an example.</p>
+
+				<p>I use a lot of XSLT at work, and often I have to analyze the tags that exist in a group of
+				XML files.</p>
+
+				<p>I showed you part of this in the last chapter, but here is a long one-liner that takes a list
+				of tag names from <em>lorem.dita</em> and converts it into a simple XSLT stylesheet:</p>
+
+				<p class="indented"><code>
+					grep -Eo '&lt;[_a-zA-Z][^&gt;]*&gt;' lorem.dita | sort | uniq | sed '1 i\
+					&lt;xml:stylsheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;\
+				</code></p>
+
+				<p class="indented"><code>
+					; s/^&lt;/\<br/>
+					&lt;xsl:template match="/;s/ id=\".*\"//;s/&gt;$/"&gt;\<br/>
+					&nbsp;&nbsp;&lt;xsl:apply-templates\/&gt;\<br/>
+					&lt;\/xsl:template&gt;/;$ a\<br/>
+					\<br/>
+					&lt;/xsl:stylesheet&gt;\<br/>
+					'
+				</code></p>
+
+				<p>I know this script may appear a bit acrobatic, but after you work with this stuff for a
+				long time, you start thinking like this. I am not even going to explain what I’ve done
+				here, because I am sure you can figure it out on your own now.</p>
+
+				<p>Here is what the output looks like:</p>
+
+				<p class="indented"><code>&lt;xml:stylsheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;</code></p>
+
+				<p class="indented"><code>
+					&lt;xsl:template match="body"&gt;<br/>
+					&nbsp;&nbsp;&lt;xsl:apply-templates/&gt;<br/>
+					&lt;/xsl:template&gt;
+				</code></p>
+
+				<p class="indented"><code>
+					&lt;xsl:template match="li"&gt;
+				</code></p>
+
+				<div class="pagebreak right"><span class="pageNumber">101</span></div>
+
+				<p class="indented"><code>
+					&nbsp;&nbsp;&lt;xsl:apply-templates/&gt;<br/>
+					&lt;/xsl:template&gt;
+				</code></p>
+
+				<p class="indented"><code>
+					&lt;xsl:template match="p"&gt;<br/>
+					&nbsp;&nbsp;&lt;xsl:apply-templates/&gt;<br/>
+					&lt;/xsl:template&gt;
+				</code></p>
+
+				<p class="indented"><code>
+					&lt;xsl:template match="title"&gt;<br/>
+					&nbsp;&nbsp;&lt;xsl:apply-templates/&gt;<br/>
+					&lt;/xsl:template&gt;
+				</code></p>
+
+				<p class="indented"><code>
+					&lt;xsl:template match="topic"&gt;<br/>
+					&nbsp;&nbsp;&lt;xsl:apply-templates/&gt;<br/>
+					&lt;/xsl:template&gt;
+				</code></p>
+
+				<p class="indented"><code>
+					&lt;xsl:template match="ul"&gt;<br/>
+					&nbsp;&nbsp;&lt;xsl:apply-templates/&gt;<br/>
+					&lt;/xsl:template&gt;
+				</code></p>
+
+				<p class="indented"><code>
+					&lt;/xsl:stylesheet&gt;
+				</code></p>
+
+				<p>That’s only a start. Of course, this simple stylesheet will need a lot of editing before it
+				can do anything useful, but this is the kind of thing that can save you a lot of keystrokes.</p>
+
+				<p>I’ll admit, it would be easier if I put these <em>sed</em> commands in a file. As a matter of fact, I
+				did. You’ll find <em>xslt.sed</em> in the sample archive. This is the file:</p>
+
+				<p class="indented"><code>
+					#!/usr/bin/sed
+				</code></p>
+
+				<p class="indented"><code>
+					1 i\<br/>
+					&lt;xml:stylsheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;\
+				</code></p>
+
+				<p class="indented"><code>
+					s/^&lt;/\<br/>
+					&lt;xsl:template match="/;s/ id=\".*\"//;s/&gt;$/"&gt;\<br/>
+					&nbsp;&nbsp;&lt;xsl:apply-templates\/&gt;\<br/>
+					&lt;\/xsl:template&gt;/;$ a\<br/>
+					\<br/>
+					&lt;/xsl:stylesheet&gt;\
+				</code></p>
+
+				<p>And here is how to run it:</p>
+
+				<p class="indented"><code>grep -Eo '&lt;[_a-zA-Z][^&gt;]*&gt;' lorem.dita | sort | uniq | sed -f xslt.sed</code></p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Learning More">
+
+				<h2>Learning More</h2>
+
+				<p>Even though you have a good strong grip on regex now, there is still lots to learn. I have
+				a couple of suggestions of where to go next.</p>
+
+				<p>I pass these recommendations along out of experience and observation, not from any
+				sense of obligation or to be “salesy.” I won’t get any kickbacks for mentioning them. I
+				talk about them because these resources will actually benefit you.</p>
+
+				<div class="pagebreak  left"><span class="pageNumber">102</span> | Chapter 10: The End of the Beginning</div>
+
+				<p>Jeffrey E. F. Friedl’s <span class="url">Mastering Regular Expressions, Third Edition</span> is the source many
+				programmers look to for a definitive treatment of the regular expression. Both expansive
+				and well-written, if you are going to do any significant work with regex, you need
+				to have this book on your shelf or in your e-reader. Period.</p>
+
+				<p>Jan Goyvaerts and Steven Levithan’s <span class="url">Regular Expressions Cookbook</span> is another great
+				piece of work, especially if you are comparing different implementations. I’d get this
+				one, too.</p>
+
+				<p>The <span class="url">Regular Expression Pocket Reference: Regular Expressions for Perl, Ruby, PHP,
+				Python, C, Java and .NET</span> by Tony Stubblebine is a 128-page guide which, though it is
+				several years old, still remains popular.</p>
+
+				<p>Andrew Watt’s book <em>Beginning Regular Expressions</em> (Wrox, 2005) is highly rated. I
+				have found Bruce Barnett’s online <em>sed</em> tutorial particularly useful (see <span class="url">http://www.gry
+				moire.com/Unix/Sed.html</span>). He demonstrates a number of <em>sed</em>’s less understood features,
+				features I have not explained here.</p>
+
+			</section>
+
+			<section class="section" data-number="2" data-name="Notable Tools, Implementations, and Libraries">
+
+				<h2>Notable Tools, Implementations, and Libraries</h2>
+
+				<p>I’ve mentioned a number of tools, implementations, and libraries in this book. I’ll recap
+				those here and mention several others.</p>
+
+				<section class="subsection" data-number="3" data-name="Perl">
+
+					<h4>Perl</h4>
+
+					<p>Perl is a popular, general-purpose programming language. A lot of people prefer
+					Perl for text processing with regular expressions over other languages. You likely already
+					have it, but for information on how to install Perl on your system, go to <span class="url">http://
+					www.perl.org/get.html</span>. Read about Perl’s regular expressions at <span class="url">http://perldoc.perl.org/
+					perlre.html</span>. Don’t get me wrong. There are plenty of other languages that do a great
+					job with regex, but it pays to have Perl in your toolbox. To learn more, I’d get a copy
+					of the latest edition of <strong>Learning Perl</strong>, by Randal Schwartz, brian d foy, and Tom Phoenix,
+					also published by O’Reilly.</p>
+
+				</section>
+
+				<section class="subsection" data-number="4" data-name="PCRE">
+
+					<h4>PCRE</h4>
+
+					<p>Perl Compatible Regular Expressions or PCRE (see <span class="url">http://www.pcre.org</span>) is a regular
+					expression library written in C (both 8-bit and 16-bit). This library mainly consists of
+					functions that may be called within any C framework or from any other language that
+					can use C libraries. It is compatible with Perl 5 regular expressions, as its name suggests,
+					and includes some features from other regex implementations. The Notepad++ editor
+					uses the PCRE library.</p>
+
+					<p><em>pcregrep</em> is an 8-bit, <em>grep</em>-like tool that enables you to use the features of the PCRE
+					library on the command line. You used it in <strong>Chapter 3</strong>. See <span class="url">http://www.pcre.org</span> for</p>
+
+					<div class="pagebreak right">Notable Tools, Implementations, and Libraries | <span class="pageNumber">103</span></div>
+
+					<p>download information (from <span class="url">ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/</span>).
+					You can get <em>pcregrep</em> for the Mac through Macports (<span class="url">http://www.macports.org</span>) by running
+					the command <code>sudo port install pcre</code> (Xcode is a prerequisite; see <span class="url">https://devel
+					oper.apple.com/technologies/tools/</span>, where a login is required). To install it on the Windows
+					platform (binaries), go to <span class="url">http://gnuwin32.sourceforge.net/packages/pcre.htm</span>.</p>
+
+				</section>
+
+				<section class="subsectin" data-number="5" data-name="Ruby (Oniguruma)">
+
+					<h4>Ruby (Oniguruma)</h4>
+
+					<p>Oniguruma is a regular expression library that is standard with Ruby 1.9; see <span class="url">http://
+					oniguruma.rubyforge.org/</span>. It is written in C and was written specifically to support
+					Ruby. You can try out Ruby’s regular expression using Rubular, an online app that
+					supports both 1.8.7 and 1.9.2 (see <span class="url">http://www.rubular.com</span> and <strong>Figure 10-1</strong>). TextMate,
+					by the way, uses the Oniguruma library.</p>
+
+					<figure>
+						<img src="/contents/regularexpressions/images/figure10-1.png">
+						<figcaption>Figure 10-1. Phone number regex in Rubular</figcaption>
+					</figure>
+
+				</section>
+
+				<section class="subsection" data-number="6" data-name="Python">
+
+					<h4>Python</h4>
+
+					<p>Python is a general-purpose programming language that supports regular expressions
+					(see <span class="url">http://www.python.org</span>). It was first created by Guido van Rossum in 1991. You
+					can read about Python 3’s regular expression syntax here: <span class="url">http://docs.python.org/py3k/
+					library/re.html?highlight=regular%20expressions</span>.</p>
+
+					<div class="pagebreak left"><span class="pageNumber">104</span> | Chapter 10: The End of the Beginning</div>
+
+				</section>
+
+				<section class="subsection" data-number="7" data-name="RE2">
+
+					<h4>RE2</h4>
+
+					<p>RE2 is a non-backtracking C++ regular expression library (see <span class="url">http://code.google.com/
+					p/re2</span>). While RE2 is quite fast, it does not do backtracking or backreferences. It is
+					available as a CPAN package for Perl and can fall back on Perl’s native library if backreferences
+					are needed. For instructions on making API calls, see <span class="url">http://code.google.com/
+					p/re2/wiki/CplusplusAPI</span>. For an interesting discussion on RE2, see “Regular Expression
+					Matching in the Wild” at <span class="url">http://swtch.com/~rsc/regexp/regexp3.html</span>.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="8" data-name="Matching a North American Phone Number">
+
+				<h2>Matching a North American Phone Number</h2>
+
+				<p>You remember the North American phone number example from the first chapter?
+				You’ve come a long way since then.</p>
+
+				<p>Here is a more robust regular expression for matching phone numbers than the one we
+				used there. It is adapted from Goyvaerts and Levithan’s example on page 235 of their
+				<em>Regular Expressions Cookbook</em> (first edition).</p>
+
+				<p class="indented"><code>^\(?(?:\d{3})\)?[-.]?(?:\d{3})[-.]?(?:\d{4})$</code></p>
+
+				<p>Play with it with the tool of your choice (see it in Reggy in <strong>Figure 10-2</strong>). By now, you
+				should be able to pick this regex apart with hardly any hand-holding. I’m proud of you
+				for that. But I’ll go over it for good measure.</p>
+
+				<ul>
+
+					<li><code>^</code> is the zero-width assertion for the beginning of a line or subject.</li>
+
+					<li><code>\(?</code> is a literal left parenthesis, but it is optional (?).</li>
+
+					<li><code>(?:\d{3})</code> is a non-capturing group matching three consecutive digits.</li>
+
+					<li><code>\)?</code> is an optional right parenthesis.</li>
+
+					<li><code>[-.]?</code> allows for an optional hyphen or period (dot).</li>
+
+					<li><code>(?:\d{3})</code> is another non-capturing group matching three more consecutive digits.</li>
+
+					<li><code>[-.]?</code> allows for an optional hyphen or dot again.</li>
+
+					<li><code>(?:\d{4})</code> is yet another non-capturing group matching exactly four consecutive
+					digits.</li>
+
+					<li><code>$</code> matches the end of a line or subject.</li>
+
+				</ul>
+
+				<p>This expression could be even more refined, but I leave that to you because you can
+				now do it on your own.</p>
+
+			</section>
+
+			<section class="section" data-number="9" data-name="Matching an Email Address">
+
+				<h2>Matching an Email Address</h2>
+
+				<p>Lastly, I’ll throw one more regular expression at you, an email address:</p>
+
+				<p class="indented"><code>^([\w-.!#$%&amp;'*+-/=?^_`{|}~]+)@((?:\w+\.)+)(?:[a-zA-Z]{2,4})$</code></p>
+
+				<div class="pagebreak right">Matching an Email Address | <span class="pageNumber">105</span></div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure10-2.png">
+					<figcaption>Figure 10-2. Phone number regex in Reggy</figcaption>
+				</figure>
+
+				<p>This is an adaptation of one provided by Grant Skinner with RegExr. I’d like to challenge
+				you to do your best to explain what each character means in the context of a
+				regular expression, and to see if you can improve on it. I am sure you can.</p>
+
+				<p>Thank you for your time. I’ve enjoyed spending it with you. You should now have a
+				good grasp of the fundamental concepts of regular expressions. You are no longer a
+				member of the beginners’ club. I hope you’ve made friends with regular expressions
+				and learned something worthwhile along the way.</p>
+
+			</section>
+
+			<section class="section" data-number="10" data-name="What You Learned in Chapter 10">
+
+				<h2>What You Learned in Chapter 10</h2>
+
+				<ul>
+
+					<li>How to extract a list of XML elements from a document and convert the list into
+					an XSLT stylesheet.</li>
+
+					<li>Where to find additional resources for learning about regular expressions.</li>
+
+					<li>What are some notable regex tools, implementations, and libraries.</li>
+
+					<li>A slightly more robust pattern for matching a North American phone number.</li>
+
+				</ul>
+
+				<div class="pagebreak left"><span class="pageNumber">106</span> | Chapter 10: The End of the Beginning</div>
+
+			</section>
+
+		</div> <!--container-->
+
+	</div> <!--regexp-->
+</body>
+</html>

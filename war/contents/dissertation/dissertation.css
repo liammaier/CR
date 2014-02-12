@@ -1,0 +1,233 @@
+.dissertation.container {
+	font-family: "Times New Roman";
+	max-width: 600px;
+	width: 550px;
+	background-color: white;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 7em;
+	margin-bottom: 10em;
+}
+
+/* FUNCTIONAL */
+
+.dissertation .clear {
+	clear: both;
+}
+
+.dissertation .left {
+	text-align: left;
+}
+
+.dissertation .center {
+	text-align: center;
+}
+
+.dissertation div.pagebreak {
+	border-bottom: 2px dotted black;
+	width: 100%;
+	text-align: center;
+	color: grey;
+	margin-top: 3em;
+	margin-bottom: 5em;
+}
+
+.dissertation span.hidden {
+	visibility: hidden;
+}
+
+/* COMMON */
+
+.dissertation h1 {
+	font-size: 100%;
+	font-weight: bold;
+	text-align: center;
+}
+
+.dissertation h2 {
+	font-size: 100%;
+	font-weight: bold;
+	font-style: normal;
+}
+
+.dissertation h3 {
+	font-size: 100%;
+	font-weight: bold;
+	font-style: italic;
+}
+
+.dissertation p {
+	text-indent: 1em;
+	line-height: 200%;
+	margin-top: 0;
+	margin-bottom: .5em;
+}
+
+.dissertation .noIndent {
+	text-indent: 0;
+}
+
+.dissertation span.superscript {
+	vertical-align: super;
+	font-size: 75%;
+}
+
+.dissertation span.subscript {
+	vertical-align: sub;
+	font-size: 75%;
+}
+
+.dissertation .caption {
+	font-size: 80%;
+	margin-top: 2em;
+	margin-top: 3em;
+}
+
+.dissertation span.captionLine {
+	border-top: 1px solid black;
+	padding-top: 1em;
+}
+
+.dissertation p.quote {
+	margin-left: 3.5em;
+}
+
+.dissertation p.reference {
+	margin-left: 3em;
+	text-indent: -3em;
+	line-height: 1.5;
+	margin-bottom: 1em;
+}
+
+/* FIGURES */
+
+.dissertation figure {
+	margin-top: 5em;
+	margin-bottom: 2em;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.dissertation figure img {
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 100%;
+}
+
+.dissertation figure p {
+	text-indent: none;
+}
+
+/* LISTS */
+
+.dissertation ul {
+	line-height: 200%;
+}
+
+.dissertation ol {
+	line-height: 200%;
+}
+
+.dissertation ul.appendixList {
+	margin-left: 0;
+	list-style-type: none;
+	font-weight: bold;
+}
+
+.dissertation ul.appendixList ul li {
+	list-style-type: none;
+	font-weight: normal;
+	font-style: italic;
+}
+
+/* TABLES */
+
+.dissertation .bottomBorder {
+	border-bottom: 1px solid black;
+}
+
+.dissertation .topBorder {
+	border-top: 1px solid black;
+}
+
+.dissertation table.containerTable.bottomBorder {
+	border-bottom: 1px solid black;
+}
+
+.dissertation table.containerTable tbody tr.bottomBorder {
+	border-bottom: 1px solid black;
+}
+
+.dissertation table.containerTable.topBorder {
+	border-top: 1px solid black;
+}
+
+.dissertation table.containerTable.cohesiveCells {
+	border-collapse: collapse;
+}
+
+.dissertation table.containerTable.spreadCells tbody tr td {
+	padding:5px;
+}
+
+.dissertation table.containerTable {
+	border: none;
+	border-collapse: separate;
+	border-spacing: 3px 0;
+	text-align: center;
+	width: 100%;
+}
+
+.dissertation table.containerTable thead tr th.left {
+	text-align: left;
+}
+
+.dissertation table.containerTable thead tr th {
+	font-weight: normal;
+	text-align: center;
+	font-size: 100%;
+}
+
+.dissertation table.containerTable tbody tr td {
+	vertical-align: top;
+}
+
+.dissertation table.appendixTable {
+	border: 1px solid black;
+	border-collapse: collapse;
+	text-align: left;
+	margin-top: 5em;
+}
+
+.dissertation table.appendixTable td {
+	border: 1px solid black;
+	padding: 5px;
+	vertical-align: top;
+}
+
+.dissertation table.appendixTable th {
+	border: 1px solid black;
+	vertical-align: top;
+	font-weight: normal;
+}
+
+.dissertation table.appendixTable thead tr th:first-child {
+	width: 5%;
+}
+
+.dissertation table.appendixTable thead tr th:nth-child(2) {
+	width: 60%;
+}
+
+.dissertation table.appendixTable tbody tr td:first-child {
+	width: 5%;
+}
+
+.dissertation table.appendixTable tbody tr td:nth-child(2) {
+	width: 60%;
+}
+
+.dissertation table.appendixTable ul {
+	list-style-type: none;
+	line-height: 1.3;
+}

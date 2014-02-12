@@ -1,0 +1,225 @@
+#logoutBtn {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+}
+
+.titlepic {
+	width: 116px;
+	height: 116px;
+}
+
+.date {
+	font-size: 16px;
+}
+
+#toprightDate {
+	position: absolute;
+	top: 0px;
+	right: 5px;
+}
+
+.titlepicsmall {
+	width: 84px;
+	height: 84px;
+}
+
+.resourcepic {
+	width: 132px;
+	height: 132px;
+	margin-right: 15px;
+}
+
+.dropdownresourcepic {
+	width: 48px;
+	height: 48px;
+}
+
+#backBtn {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+}
+
+.resource {
+	width: 98%;
+}
+
+#addResourceBtnGroup {
+	position: absolute;
+	top: 0px;
+}
+
+#resourcesSection {
+	padding: 10px;
+}
+
+.largebtnimage {
+	width: 17px;
+	height: 17px;
+	opacity: 0.5;
+}
+
+.dropdown-el {
+	height: 50px;
+}
+
+.resourceTitle {
+	line-height: 115%;
+	height: 50px;
+	font-weight: bold;
+	font-size: 24px;
+}
+
+.desc {
+	max-width: 35%;
+	line-height: 130%;
+	height: 60px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.dropdown-desc {
+	width: 90%;
+	font-size: 12px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.bar {
+	padding: 20px;
+	background-color: #DDDDDD;
+	position: relative;
+	min-height: 90px;
+	margin-bottom: 30px;
+}
+
+hr {
+	color: #DDDDDD;
+}
+
+#scheduleBar {
+	position: relative;
+}
+
+
+
+.dropdownTitle {
+	line-height: 125%;
+	font-size: 18px;	
+	width: 90%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.floatleft {
+	float: left;
+}
+
+.inaccessible {
+	opacity: 0.3;
+}
+
+.padded {
+	padding: 10px;
+}
+
+.resourceBtn {
+	text-align: right;
+	margin-right: 30px;
+}
+
+.removeResourceBtn {
+	position: absolute;
+	color: #EE7777;
+	opacity: 0.8;
+	top: 5px;
+	right: 15px;
+}
+
+.getaccessBtn {
+	position: absolute;
+	bottom: 10px;
+	right: 30px;
+}
+
+.dataSection {
+	position: absolute; 
+	top: 20px; 
+	right: 25px;
+	width: 410px;
+	line-height: 150%;
+	font-size: 16px;
+}
+
+.last-chapter-div {
+	
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.last-read-div {
+	
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.inline {
+	display: inline-block;
+}
+
+h1.title {
+	font-size: 44px;
+	letter-spacing: -1px;
+}
+
+h1.subtitle {
+	font-size: 34px;
+	padding-left: 10px;
+}
+
+h2.articleTitle {
+	line-height: 115%;
+	font-size: 26px;
+}
+
+#redGreenDesc {
+	display: inline-block;
+	margin-left: 50px;
+	font-size: 15px;
+}
+
+#calendarDiv {
+	padding: 0px 40px 0px 40px;
+}
+
+.bottom-right {
+	position: absolute;
+	bottom: 15px;
+	right: 15px;
+}
+
+/* .late {
+	color: #b94a48;
+  	background-color: #f2dede;
+} */
+
+.reminderText {
+	color: #468847;
+  	/* background-color: #dff0d8; */
+}
+
+.x-close {
+	font-weight: normal;
+	position: absolute;
+	color: #CCCCCC;
+	cursor: pointer;
+	top: 10px;
+	right: 14px;
+}

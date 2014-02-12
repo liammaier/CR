@@ -1,0 +1,481 @@
+div.mindtools.container {
+	width: 80%;
+ 	margin-left: auto;
+ 	margin-right: auto;
+ 	zoom: 1;
+ 	margin-top: 40px;
+ 	background-color: white;
+	font-family: Georgia;
+ 	font-size: 20px;
+ 	line-height: 1.5em;
+}
+
+.mindtools h1, .mindtools h2, .mindtools h3, .mindtools h4 {
+	color: #0F0068;
+}
+
+.mindtools h1 {
+	font-size: 40px;
+	text-align:left;
+	padding-bottom: 30px;
+}
+
+.mindtools h2 {
+	font-weight:normal;
+	counter-reset:subsection;
+	counter-increment:section;
+	padding-bottom: 30px;
+}
+
+.mindtools h2:before {
+	content:counter(section) ". ";
+	padding-right: 50px;
+}
+
+.mindtools h3 {
+	counter-increment:subsection;
+	font-weight:normal;
+	font-size:30px;
+	padding:0px;
+	margin:0px;
+	padding-top:50px;
+}
+
+.mindtools h3:before {
+	content:counter(section) "." counter(subsection) "	";
+	padding-right: 35px;
+}
+
+.mindtools h5 {
+	font-size:22px;
+}
+
+.mindtools a {
+	text-decoration: underline;
+}
+
+.mindtools .left {
+	text-align: left;
+}
+
+.mindtools .right {
+	text-align: right;
+}
+
+.mindtools ul li {
+  color: black;
+  line-height: 1.5em;
+  margin-left: 2em;
+}
+
+.mindtools ul.bulletless {
+	list-style:none;
+}
+
+.mindtools ul.bulletless li {
+	list-style:none;
+}
+
+.mindtools ol {
+	list-style-position: inside;
+	padding-left:0px;
+}
+
+.mindtools ol ol {
+	list-style-position: outside;
+	padding-left: 60px;
+}
+
+.mindtools ol ol li {
+	font-weight:normal;
+	list-style-type:lower-alpha;
+}
+
+.mindtools ol.bold {
+}
+
+.mindtools ol.bold ol li {
+	font-weight: normal;
+}
+
+.mindtools ol.bold li {
+	font-weight:bold;
+}
+
+.mindtools ol.indent-outside {
+	list-style-position:outside;
+	padding-left:60px;
+}
+
+.mindtools ol.indent-outside ul li {
+	color: black;
+	list-style: disc;
+}
+
+.mindtools ol.indent-outside ul.bulletless li{
+	list-style:none;
+}
+
+.mindtools li.invisibleNumber {
+	list-style-type: none;
+}
+
+
+.mindtools ul.noBullets {
+	list-style-type: none;
+}
+
+.mindtools li.noBullets {
+	list-style-type: none;
+}
+
+.mindtools .pagebreak {
+	border-top: 3px solid #AAAAAA;
+	color: #AAAAAA;
+	padding-top: 10px;
+
+	margin: 50px 0;
+
+	width: 100%;
+}
+
+
+/*GREY BACKGROUND*/
+.mindtools div.grey-background {
+	background-color: #DDDDDD;
+	padding-left:15px;
+}
+
+/*YELLOW BACKGROUND*/
+.mindtools div.yellow-background {
+	background-color: #FEFFCE;
+	padding-left: 15px;
+}
+
+.mindtools .yellow {
+	background-color: #FEFFCE;
+}
+
+/*HEADER CAPTION*/
+.mindtools div.header-caption {
+	padding:0px;
+	padding-left:81px;
+	font-weight:bold;
+	color:grey;
+}
+
+
+.mindtools div.grey-header {
+	font-weight:bold;
+	color:grey;
+	font-size: 24px;
+}
+
+
+
+/*FIGURES*/
+
+.mindtools figure {
+	margin-bottom: 20px;
+	text-align: left;
+}
+
+.mindtools figcaption {
+	text-align: left;
+	font-size:.8em;
+	color: black;
+	font-weight: normal;
+}
+
+
+
+
+/*TABLES*/
+.mindtools table {
+	border: 1px solid black;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.mindtools table th{
+	background-color: #E6E6E6;
+	border: 1px solid black;
+}
+
+.mindtools table td {
+	border: 1px solid black;
+}
+
+.mindtools table.striped {
+	background-color: #E6E6E6;
+	border-collapse: collapse;
+	width: 100%;
+	text-align:center;
+	border:0;
+}
+
+.mindtools table.striped td, table.striped th {
+	border: 1px solid black;
+	border-top: 0;
+	border-bottom: 0;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.mindtools table.striped tr td:first-child,
+.mindtools table.striped tr th:first-child {
+	border-left: 0;
+	width: 50%;
+	text-align:left;
+}
+
+.mindtools table.striped tr td:last-child,
+.mindtools table.striped tr th:last-child {
+	border-right: 0;
+}
+
+
+
+.mindtools table.striped tbody tr:nth-child(2n) td {
+    background-color: #FEFFCE;
+}
+
+.mindtools table.striped tbody tr:nth-child(2n+1) td {
+	background-color: white;
+}
+
+
+
+
+
+.mindtools table.striped tr td.score-total,
+.mindtools table.striped-color-flip tr td.score-total {
+	text-align: right;
+}
+
+.mindtools table.striped tr td.score-total-box,
+.mindtools table.striped-color-flip tr td.score-total-box {
+	border: 1px solid black;
+}
+
+
+
+
+
+.mindtools table.striped-color-flip {
+	background-color: #E6E6E6;
+	border-collapse: collapse;
+	width: 100%;
+	text-align:center;
+}
+
+.mindtools table.striped-color-flip td, 
+.mindtools table.striped-color-flip th {
+	border: 1px solid black;
+	border-top: 0;
+	border-bottom: 0;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.mindtools table.striped-color-flip tr td:first-child,
+.mindtools table.striped-color-flip tr th:first-child {
+	border: 0;
+	width: 50%;
+	text-align:left;
+}
+
+.mindtools table.striped-color-flip tr td:last-child,
+.mindtools table.striped-color-flip tr th:last-child {
+	border-right: 0;
+}
+
+.mindtools table.striped-color-flip tbody tr:nth-child(2n+2) td {
+    background-color: #FEFFCE;
+}
+
+.mindtools table.striped-color-flip tbody tr:nth-child(2n+1) td {
+	background-color: white;
+}
+
+
+.mindtools table.score-interpretation {
+	background-color: #E6E6E6;
+	border-collapse: collapse;
+	border: 0px;
+	width: 100%;
+	text-align:left;
+}
+
+.mindtools table.score-interpretation td,
+.mindtools table.score-interpretation th {
+	border: 1px solid black;
+	border-top: 0;
+	border-bottom: 0;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.mindtools table.score-interpretation tr td:first-child,
+.mindtools table.score-interpretation tr th:first-child {
+	border: 0px;
+	width: 10%;
+}
+
+.mindtools table.score-interpretation tr td:last-child,
+.mindtools table.score-interpretation tr th:last-child {
+	border-right: 0;
+}
+
+.mindtools table.score-interpretation tbody tr:nth-child(2n) td {
+    background-color: white;
+}
+
+.mindtools table.score-interpretation tbody tr:nth-child(2n+1) td {
+	background-color: #FEFFCE;
+}
+
+.mindtools table.side-by-side {
+	border-collapse: collapse;
+	width: 70%;
+	margin-left: auto;
+	margin-right: auto;
+	border:1px solid black;
+}
+
+.mindtools table.side-by-side th {
+	background-color: #E6E6E6;
+	font-weight:bold;
+	border:1px solid black;
+	width:35%;
+}
+
+.mindtools table.side-by-side td {
+	border-right:1px solid black;
+	border-left:1px solid black;
+	vertical-align:text-top;
+	width:35%;
+}
+
+.mindtools table.steps {
+	width:100%;
+	border: 0;
+}
+
+.mindtools table.steps tr td {
+	text-align:left;
+	border:0;
+	padding-bottom:10px;
+	padding-top:10px
+}
+
+.mindtools table.steps tr td:first-child {
+	font-weight:bold;
+	width: 15%;
+	vertical-align:text-top;
+}
+
+.mindtools table.decision-tree {
+	width:70%;
+	margin-left:0;
+	border-collapse:collapse;
+	border:0;
+}
+
+.mindtools table.decision-tree tr td {
+	border:0;
+	text-align:right;
+}
+
+.mindtools table.decision-tree tr:last-child td:last-child {
+	font-weight:bold;
+}
+
+.mindtools table.decision-tree tr td:first-child {
+	width:80%;
+	border:0px;
+	border-right:1px solid black;
+	text-align:left;
+}
+
+.mindtools table.decision-tree tbody tr:nth-child(2n) td {
+    background-color: white;
+}
+
+.mindtools table.decision-tree tbody tr:nth-child(2n+1) td {
+	background-color: #FEFFCE;
+}
+
+.mindtools table.paired-comparison {
+	border: none;
+	empty-cells: show;
+	border-spacing: 3px;
+	background-color: #EBEBEB;
+}
+
+.mindtools table.paired-comparison td, .mindtools table.paired-comparison th {
+	border: 10px solid white;
+}
+
+.mindtools table.paired-comparison th {
+	font-weight: normal;
+	background-color: #FEFFCE;
+}
+
+.mindtools table.paired-comparison tr td:first-child {
+	background-color: #FEFFCE;
+}
+
+
+.mindtools table.grid-analysis {
+	border-top: none;
+	border-bottom: none;
+	text-align: center;
+	border-right: none;
+	border-left: none;
+}
+
+.mindtools table.grid-analysis th {
+	background-color: #EBEBEB;
+	border-right: 1px solid black;
+	border-left: 1px solid black;
+}
+
+.mindtools table.grid-analysis tr th:first-child, .mindtools table.grid-analysis tr td:first-child {
+	text-align: left;
+}
+
+.mindtools table.grid-analysis tr:nth-child(2) th {
+	font-weight: normal;
+}
+
+.mindtools table.grid-analysis td, .mindtools table.grid-analysis th {
+	border-top: none;
+	border-bottom: none;
+	padding: 7px;
+}
+
+.mindtools table.grid-analysis thead tr:first-child {
+	font-weight: bold;
+}
+
+.mindtools table.grid-analysis tbody tr:nth-child(2n+1) {
+	background-color: white;
+}
+
+.mindtools table.grid-analysis tbody tr:nth-child(2n) {
+	background-color: #FEFFCE;
+}
+
+.mindtools table.grid-analysis tr th:first-child, .mindtools table.grid-analysis tr td:first-child {
+	border-left: none;
+}
+
+.mindtools table.grid-analysis tr th:last-child, .mindtools table.grid-analysis tr td:last-child {
+	border-right: none;
+}
+
+
+
+
+

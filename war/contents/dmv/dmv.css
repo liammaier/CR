@@ -1,0 +1,206 @@
+.dmv #container {
+	margin: auto;
+	width: 600px;
+	font-family: Times New Roman, serif;
+	font-size: 18px;
+}
+
+.dmv h1 {
+	font-size: 22px;
+}
+
+.dmv h3 {
+	color: #3333FF;
+	font-size: 25px;
+	margin-bottom: 5px;
+}
+.dmv .red-border {
+	border-top: 3px solid red;
+	width: 100%;
+}
+
+.dmv h2 {
+	font-size: 1.5em;
+	margin-top: 1.33em;
+	margin-bottom: 1.33em;
+	margin-left: 0;
+	margin-right: 0;
+	font-weight: bold;
+	line-height: 20px;
+}
+
+.dmv .tallerHeader {
+	line-height: 36px;
+}
+
+.dmv h2 span {  
+    background: #fff;  
+    padding: 0 20px 0 0;  
+    position: relative;  
+    z-index: 5;  
+} 
+
+.dmv h2+* {  
+    border-top: solid 1px black;  
+    padding-top: 40px;  
+    margin-top: -40px;  
+}
+
+.dmv h4 {
+	font-size: 23px;
+	margin-top: 1.33em;
+	margin-bottom: 1.33em;
+	margin-left: 0;
+	margin-right:0;
+} 
+
+.dmv h4 span {
+	background: #fff;  
+    padding: 0 20px 0 0;  
+    position: relative;  
+    z-index: 5;
+}
+
+.dmv h5 {
+	font-size: 20px;
+	font-style: italic;
+	font-weight: bold;
+	margin: 10px 0 10px 0;
+}
+
+.dmv h6 {
+	font-size: 23px;
+	color: white;
+	background-color: #3333FF;
+	padding: 5px;
+	margin-bottom: 0;
+	text-align: center;
+}
+
+.dmv h4+* {
+    border-top: solid 1px black;  
+    padding-top: 40px;  
+    margin-top: -40px;  
+}
+
+.dmv .blue {
+	background-color: #CCCCFF;
+	padding: 10px 10px 5px 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.dmv p {
+	text-indent: 25px;
+	margin-bottom: 0;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.dmv img {
+	max-width: none;
+
+}
+.dmv figure {
+	float: left;
+}
+
+.dmv .not-indented {
+	text-indent: 0;
+}
+
+.dmv .pagebreak {
+	border-bottom: 3px solid #AAAAAA;
+	width: 600px;
+	margin-top: 75px;
+	margin-bottom: 75px;
+	text-align: right;
+	padding: 15px;
+	color: #222222;
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+}
+
+.dmv .italic {
+	font-style: italic;
+}
+
+.dmv em {
+	color: #3333FF;
+}
+
+.dmv .floatright {
+	float: right;
+}
+
+.dmv .floatleft {
+	float: left;
+	margin-right: 10px;
+	position: static;
+	padding-right: 0px;
+}
+
+.dmv table {
+	border: none;
+	border-collapse: separate;
+	border-spacing: 2px;
+}
+
+.dmv .safetyBeltTable {
+	vertical-align: middle;
+}
+
+.dmv .tablePAlign {
+	margin-bottom: 1.5em
+}
+
+.dmv td {
+	border: none;
+	vertical-align: top;
+}
+
+.dmv .leftAlign {
+	text-align: left;
+}
+
+.dmv .centered {
+	text-align: center;
+}
+
+.dmv .centered-img {
+	display: block;
+	margin: 10px auto 10px auto;
+}
+
+.dmv .url {
+	font-style: italic;
+	color: #3333FF;
+}
+
+.dmv li .pagebreak, .dmv ul .pagebreak, .dmv ol .pagebreak {
+	margin-left: -40px;
+}
+
+.dmv .small-white {
+	margin-bottom: 300px;
+}
+
+.dmv .big-white {
+	margin-bottom: 800px;
+}
+
+.dmv ol ol {
+	list-style-type: upper-alpha;
+}
+
+.dmv .none {
+	list-style-type: none;
+}
+
+.dmv ol li {
+	margin-bottom: 10px;
+}
+
+.dmv ol ol li {
+	margin-bottom: 0;
+}

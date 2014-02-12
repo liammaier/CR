@@ -1,0 +1,732 @@
+<html lang='en'>
+<head>
+	<title>Introducing Regular Expressions</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="regexp">
+
+		<div class="container">
+
+			<h3>CHAPTER 6</h3>
+			<div class="border"></div>
+
+			<section class="intro" data-number="0" data-name="Chapter 6 Introduction">
+
+				<h1>Matching Unicode and Other <br/>
+					Characters</h1>
+
+				<p><span class="first-sentence">You will have occasion to match characters or ranges of characters that are outside the
+				scope of ASCII.</span> ASCII, or the American Standard Code for Information Interchange,
+				defines an English character set—the letters A through Z in upper- and lowercase, plus
+				control and other characters. It’s been around for a long time: The 128-character Latinbased
+				set was standardized in 1968. That was back before there was such a thing as a
+				personal computer, before VisiCalc, before the mouse, before the Web, but I still look
+				up ASCII charts online regularly.</p>
+
+				<p>I remember when I started my career many years ago, I worked with an engineer who
+				kept an ASCII code chart in his wallet. Just in case. The ASCII Code Chart: Don’t leave
+				home without it.</p>
+
+				<p>So I won’t gainsay the importance of ASCII, but now it is dated, especially in light of
+				the Unicode standard (<span class="url">http://www.unicode.org</span>), which currently represents over
+				100,000 characters. Unicode, however, does not leave ASCII in the dust; it incorporates
+				ASCII into its Basic Latin code table (see <span class="url">http://www.unicode.org/charts/PDF/U0000
+				.pdf</span>).</p>
+
+				<p>In this chapter, you will step out of the province of ASCII into the not-so-new world
+				of Unicode.</p>
+
+				<p>The first text is <em>voltaire.txt</em> from the code archive, a quote from Voltaire (1694–1778),
+				the French Enlightenment philosopher.</p>
+
+				<blockquote>Qu’est-ce que la tol&#233;rance? c’est l’apanage de l’humanit&#233;. Nous sommes tous p&#233;tris de
+				faiblesses et d’erreurs; pardonnons-nous r&#233;ciproquement nos sottises, c’est la premi&#233;re
+				loi de la nature.</blockquote>
+
+				<p>Here is an English translation:</p>
+
+				<blockquote>What is tolerance? It is the consequence of humanity. We are all formed of frailty and
+				error; let us pardon reciprocally each other’s folly—that is the first law of nature.</blockquote>
+
+				<div class="pagebreak pageNumber right">61</div>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Matching a Unicode Character">
+
+				<h2>Matching a Unicode Character</h2>
+
+				<p><span class="first-sentence">There are a variety of ways you can specify a Unicode character, also known as a code
+				point.</span> (For the purposes of this book, a Unicode character is one that is outside of the
+				range of ASCII, though that is not strictly accurate.)</p>
+
+				<p>Start out by placing the Voltaire quote in Regexpal (<span class="url">http://www.regexpal.com</span>), and then
+				entering this regular expression:</p>
+
+				<p class="indented"><code>\u00e9</code></p>
+
+				<p>The <code>\u</code> is followed by a hexadecimal value 00e9 (this is case insensitive—that is, 00E9
+				works, too). The value 00e9 is equivalent to the decimal value 233, well out of the ASCII
+				range (0–127).</p>
+
+				<p>Notice that the letter <em>&#233;</em> (small letter e with an acute accent) is highlighted in Regexpal
+				(see <strong>Figure 6-1</strong>). That’s because <em>&#233;</em> is the code point U+00E9 in Unicode, which was
+				matched by <code>\u00e9</code>.</p>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure6-1.png">
+					<figcaption>Figure 6-1. Matching U+00E9 in Regexpal</figcaption>
+				</figure>
+
+				<p>Regexpal uses the JavaScript implementation of regular expressions. JavaScript also
+				allows you to use this syntax:</p>
+
+				<div class="pagebreak left"><span class="pageNumber">62</span> | Chapter 6: Matching Unicode and Other Characters</div>
+
+				<p class="indented"><code>\xe9</code></p>
+
+				<p>Try this in Regexpal and see how it matches the same character as <code>\u00e9</code>.</p>
+
+				<p>Let’s try it with a different regex engine. Open <span class="url">http://regexhero.net/tester/</span> in a browser.
+				Regex Hero is written in .NET and has a little different syntax. Drop the contents of
+				the file <em>basho.txt</em> into the text area labeled Target String. This contains a famous haiku
+				written by the Japanese poet Matsuo Basho (who, coincidentally, died just one week
+				before Voltaire was born).</p>
+
+				<p>Here is the poem in Japanese:</p>
+
+				
+				<img class="floatLeft2" src="/contents/regularexpressions/images/basho.png">
+
+				<p>And here is a translation in English:</p>
+
+				<p class="indented"><code>
+					At the ancient pond<br/>
+					a frog plunges into<br/>
+					the sound of water<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-Basho (1644-1694)
+				</code></p>
+
+				<p>To match part of the Japanese text, in the text area marked Regular Expression, type
+				the following:</p>
+
+				<p class="indented"><code>\u6c60</code></p>
+
+				<p>This is the code point for the Japanese (Chinese) character for <em>pond</em>. It will be highlighted
+				below (see <strong>Figure 6-2</strong>).</p>
+
+				<p>While you are here, try matching the em dash (—) with:</p>
+
+				<p class="indented"><code>\u2014</code></p>
+
+				<p>Or the en dash (–) with:</p>
+
+				<p class="indented"><code>\u2013</code></p>
+
+				<p>Now look at these characters in an editor.</p>
+
+				<section class="subsection" data-number="2" data-name="Using vim">
+
+					<h4>Using <em>vim</em></h4>
+
+					<p><span class="first-sentence">If you have <em>vim</em> on your system, you can open <em>basho.txt</em> with it, as shown:</span></p>
+
+					<p class="indented"><code>vim basho.txt</code></p>
+
+					<p>Now, starting with a slash (\), enter a search with this line:</p>
+
+					<p class="indented"><code>/\%u6c60</code></p>
+
+					<p>followed by Enter or Return. The cursor moves to the beginning of the match, as you
+					can see in <strong>Figure 6-3</strong>. <strong>Table 6-1</strong> shows you your options. You can use <em>x</em> or <em>X</em> following
+					the <code>\%</code> to match values in the range 0–255 (0–FF), <em>u</em> to match up to four hexadecimal
+					numbers in the range 256–65,535 (100–FFFF), or <em>U</em> to match up to eight characters in</p>
+
+					<div class="pagebreak right">Matching a Unicode Character | <span class="pageNumber">63</span></div>
+
+					<figure>
+						<img src="/contents/regularexpressions/images/figure6-2.png">
+						<figcaption>Figure 6-2. Matching U+6c60 in Regex Hero</figcaption>
+					</figure>
+
+					<p>the range 65,536–2,147,483,647 (10000–7FFFFFFF). That takes in a lot of code—a lot
+					more than currently exist in Unicode.</p>
+
+					<table>
+						<caption>Table 6-1. Matching Unicode in Vim</caption>
+
+						<tr>
+							<th>First Character</th>
+							<th>Maximum Characters</th>
+						</tr>
+
+						<tr>
+							<td>x or X</td>
+							<td>2</td>
+						</tr>
+
+						<tr>
+							<td>u</td>
+							<td>4</td>
+						</tr>
+
+						<tr>
+							<td>U</td>
+							<td>8</td>
+						</tr>
+
+					</table>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="3" data-name="Matching Characters with Octal Numbers">
+
+				<h2>Matching Characters with Octal Numbers</h2>
+
+				<p><span class="first-sentence">You can also match characters using an octal (base 8) number, which uses the digits 0
+				to 7.</span> In regex, this is done with three digits, preceded by a slash (\).</p>
+
+				<p>For example, the following octal number:</p>
+
+				<div class="pagebreak left"><span class="pageNumber">64</span> | Chapter 6: Matching Unicode and Other Characters</div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure6-3.png">
+					<figcaption>Figure 6-3. Matching U+6c60 in Vim</figcaption>
+				</figure>
+
+				<p class="indented"><code>\351</code></p>
+
+				<p>is the same as:</p>
+
+				<p class="indented"><code>\u00e9</code></p>
+
+				<p>Experiment with it in Regexpal with the Voltaire text. <code>\351</code> matches <em>é</em>, with a little less
+				typing.</p>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="Matching Unicode Character Properties">
+
+				<h2>Matching Unicode Character Properties</h2>
+
+				<p><span class="first-sentence">In some implementations, such as Perl, you can match on Unicode character properties.</span>
+				The properties include characteristics like whether the character is a letter, number, or
+				punctuation mark.</p>
+
+				<p>I’ll now introduce you to <em>ack</em>, a command-line tool written in Perl that acts a lot like
+				<em>grep</em> (see <span class="url">http://betterthangrep.com</span>). It won’t come on your system; you have to download
+				and install it yourself (see <strong>“Technical Notes” on page 71</strong>).</p>
+
+				<p>We’ll use <em>ack</em> on an excerpt from Friederich Schiller’s “An die Freude,” composed in
+				1785 (German, if you can’t tell):</p>
+
+				<p class="indented"><code>An die Freude.</code></p>
+
+				<div class="pagebreak right">Matching Unicode Character Properties | <span class="pageNumber">65</span></div>
+
+				<p class="indented"><code>
+					Freude, sch&#246;ner G&#246;tterfunken,<br/>
+					Tochter aus Elisium,<br/>
+					Wir betreten feuertrunken<br/>
+					Himmlische, dein Heiligthum.<br/>
+					Deine Zauber binden wieder,<br/>
+					was der Mode Schwerd getheilt;<br/>
+					Bettler werden F&#252;rstenbr&#252;der,<br/>
+					wo dein sanfter Fl&#252;gel weilt.
+				</code></p>
+
+				<p class="indented"><code>
+					Seid umschlungen, Millionen!<br/>
+					Diesen Ku&#223; der ganzen Welt!<br/>
+					Br&#252;der, &#252;berm Sternenzelt<br/>
+					mu&#223; ein lieber Vater wohnen.
+				</code></p>
+
+				<p>There are a few interesting characters in this excerpt, beyond ASCII’s small realm. We’ll
+				look at the text of this poem through properties. (If you would like a translation of this
+				poem fragment, you can drop it into <strong>Google Translate</strong>.</p>
+
+				<p>Using <em>ack</em> on a command line, you can specify that you want to see all the characters
+				whose property is Letter (L):</p>
+
+				<p class="indented"><code>ack '\pL' schiller.txt</code></p>
+
+				<p>This will show you all the letters highlighted. For lowercase letters, use <em>Ll</em>, surrounded
+				by braces:</p>
+
+				<p class="indented"><code>ack '\p{Ll}' schiller.txt</code></p>
+
+				<p>You must add the braces. For uppercase, it’s <em>Lu</em>:</p>
+
+				<p class="indented"><code>ack '\p{Lu}' schiller.txt</code></p>
+
+				<p>To specify characters that do <em>not</em> match a property, we use uppercase <em>P</em>:</p>
+
+				<p class="indented"><code>ack '\PL' schiller.txt</code></p>
+
+				<p>This highlights characters that are not letters.</p>
+
+				<p>The following finds those that are not lowercase letters:</p>
+
+				<p class="indented"><code>ack '\P{Ll}' schiller.txt</code></p>
+
+				<p>And this highlights the ones that are not uppercase:</p>
+
+				<p class="indented"><code>ack '\P{Lu}' schiller.txt</code></p>
+
+				<p>You can also do this in yet another browser-based regex tester, <span class="url">http://regex.larsolavtor
+				vik.com</span>. <strong>Figure 6-4</strong> shows the Schiller text with its lowercase letters highlighted using
+				the lowercase property (<code>\p{Ll}</code>).</p>
+
+				<p><strong>Table 6-2</strong> lists character property names for use with <code>\p{property}</code> or <code>\P{property}</code> (see
+				pcresyntax(3) at <span class="url">http://www.pcre.org/pcre.txt</span>). You can also match human languages
+				with properties; see <strong>Table A-8</strong>.</p>
+
+				<div class="pagebreak left"><span class="pageNumber">66</span> | Chapter 6: Matching Unicode and Other Characters</div>
+
+				<figure>
+					<img src="/contents/regularexpressions/images/figure6-4.png">
+					<figcaption>Figure 6-4. Characters with the lowercase letter property</figcaption>
+				</figure>
+
+				<table class="no-border">
+
+					<caption>Table 6-2. Character properties</caption>
+
+					<tr>
+						<th>Property</th>
+						<th>Description</th>
+					</tr>
+
+					<tr>
+						<td>C</td>
+						<td>Other</td>
+					</tr>
+
+					<tr>
+						<td>Cc</td>
+						<td>Control</td>
+					</tr>
+
+					<tr>
+						<td>Cf</td>
+						<td>Format</td>
+					</tr>
+
+					<tr>
+						<td>Cn</td>
+						<td>Unassigned</td>
+					</tr>
+
+					<tr>
+						<td>Co</td>
+						<td>Private use</td>
+					</tr>
+
+					<tr>
+						<td>Cs</td>
+						<td>Surrogate</td>
+					</tr>
+
+					<tr>
+						<td>L</td>
+						<td>Letter</td>
+					</tr>
+
+					<tr>
+						<td>Ll</td>
+						<td>Lowercase letter</td>
+					</tr>
+
+					<tr>
+						<td>Lm</td>
+						<td>Modifier letter</td>
+					</tr>
+
+					<tr>
+						<td>Lo</td>
+						<td>Other letter</td>
+					</tr>
+
+					<tr>
+						<td>Lt</td>
+						<td>Title case letter</td>
+					</tr>
+
+					<tr>
+						<td>Lu</td>
+						<td>Uppercase letter</td>
+					</tr>
+
+					<tr>
+						<td>L&amp;</td>
+						<td>Ll, Lu, or Lt</td>
+					</tr>
+
+					<tr>
+						<td>M</td>
+						<td>Mark</td>
+					</tr>
+
+				</table>
+
+				<div class="pagebreak right">Matching Unicode Character Properties | <span class="pageNumber">67</span></div>
+
+				<table>
+
+					<tr>
+						<td>Mc</td>
+						<td>Spacing mark</td>
+					</tr>
+
+					<tr>
+						<td>Me</td>
+						<td>Enclosing mark</td>
+					</tr>
+
+					<tr>
+						<td>Mn</td>
+						<td>Non-spacing mark</td>
+					</tr>
+
+					<tr>
+						<td>N</td>
+						<td>Number</td>
+					</tr>
+
+					<tr>
+						<td>Nd</td>
+						<td>Decimal number</td>
+					</tr>
+
+					<tr>
+						<td>Nl</td>
+						<td>Letter number</td>
+					</tr>
+
+					<tr>
+						<td>No</td>
+						<td>Other number</td>
+					</tr>
+
+					<tr>
+						<td>P</td>
+						<td>Punctuation</td>
+					</tr>
+
+					<tr>
+						<td>Pc</td>
+						<td>Connector punctuation</td>
+					</tr>
+
+					<tr>
+						<td>Pd</td>
+						<td>Dash puncutation</td>
+					</tr>
+
+					<tr>
+						<td>Pe</td>
+						<td>Close punctuation</td>
+					</tr>
+
+					<tr>
+						<td>Pf</td>
+						<td>Final punctuation</td>
+					</tr>
+
+					<tr>
+						<td>Pi</td>
+						<td>Initial punctuation</td>
+					</tr>
+
+					<tr>
+						<td>Po</td>
+						<td>Other punctuation</td>
+					</tr>
+
+					<tr>
+						<td>Ps</td>
+						<td>Open punctuation</td>
+					</tr>
+
+					<tr>
+						<td>S</td>
+						<td>Symbol</td>
+					</tr>
+
+					<tr>
+						<td>Sc</td>
+						<td>Currency symbol</td>
+					</tr>
+
+					<tr>
+						<td>Sk</td>
+						<td>Modifier symbol</td>
+					</tr>
+
+					<tr>
+						<td>Sm</td>
+						<td>Mathematical symbol</td>
+					</tr>
+
+					<tr>
+						<td>So</td>
+						<td>Other symbol</td>
+					</tr>
+
+					<tr>
+						<td>Z</td>
+						<td>Separator</td>
+					</tr>
+
+					<tr>
+						<td>Zl</td>
+						<td>Line separator</td>
+					</tr>
+
+					<tr>
+						<td>Zp</td>
+						<td>Paragraph separator</td>
+					</tr>
+
+					<tr>
+						<td>Zs</td>
+						<td>Space separator</td>
+					</tr>
+
+				</table>
+
+			</section>
+
+			<section class="section" data-number="5" data-name="Matching Control Characters">
+
+				<h2>Matching Control Characters</h2>
+
+				<p><span class="first-sentence">How do you match control characters?</span> It’s not all that common that you will search
+				for control characters in text, but it’s a good thing to know. In the example repository
+				or archive, you’ll find the file <em>ascii.txt</em>, which is a 128-line file that contains all the ASCII
+				characters in it, each on separate line (hence the 128 lines). When you perform a search
+				on the file, it will usually return a single line if it finds a match. This file is good for
+				testing and general fun.</p>
+
+				<div class="pagebreak left"><span class="pageNumber">68</span> | Chapter 6: Matching Unicode and Other Characters</div>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>If you search for strings or control characters in <em>ascii.txt</em> with <em>grep</em> or
+					<em>ack</em>, they may interpret the file as a binary file. If so, when you run a
+					script on it, either tool may simply report “Binary file ascii.txt matches”
+					when it finds a match. That’s all.</p>
+				</div>
+
+				<p>In regular expressions, you can specify a control character like this:</p>
+
+				<p class="indented"><code>\cx</code></p>
+
+				<p>where <em>x</em> is the control character you want to match.</p>
+
+				<p>Let’s say, for example, you wanted to find a null character in a file. You can use Perl to
+				do that with the following command:</p>
+
+				<p class="indented"><code>perl -n -e 'print if /\c@/' ascii.txt</code></p>
+
+				<p>Provided that you’ve got Perl on your system and it’s running properly, you will get
+				this result:</p>
+
+				<p class="indented"><code>0. Null</code></p>
+
+				<p>The reason why is that there is a null character on that line, even though you can’t see
+				the character in the result.</p>
+
+				<div class="pawprints">
+					<img src="/contents/regularexpressions/images/pawprints.png">
+					<p>If you open <em>ascii.txt</em> with an editor other than <em>vim</em>, it will likely remove
+					the control characters from the file, so I suggest you don’t do it.</p>
+				</div>
+
+				<p>You can also use <code>\0</code> to find a null character. Try this, too:</p>
+
+				<p class="indented"><code>perl -n -e 'print if /\0/' ascii.txt</code></p>
+
+				<p>Pressing on, you can find the bell (BEL) character using:</p>
+
+				<p class="indented"><code>perl -n -e 'print if /\cG/' ascii.txt</code></p>
+
+				<p>It will return the line:</p>
+
+				<p class="indented"><code>7. Bell</code></p>
+
+				<p>Or you can use the shorthand:</p>
+
+				<p class="indented"><code>perl -n -e 'print if /\a/' ascii.txt</code></p>
+
+				<p>To find the escape character, use:</p>
+
+				<p class="indented"><code>perl -n -e 'print if /\c[/' ascii.txt</code></p>
+
+				<p>which gives you:</p>
+
+				<p class="indented"><code>27. Escape</code></p>
+
+				<p>Or do it with a shorthand:</p>
+
+				<p class="indented"><code>perl -n -e 'print if /\e/' ascii.txt</code></p>
+
+				<div class="pagebreak right">Matching Control Characters | <span class="pageNumber">69</span></div>
+
+				<p>How about a backspace character? Try:</p>
+
+				<p class="indented"><code>perl -n -e 'print if /\cH/' ascii.txt</code></p>
+
+				<p>which spits back:</p>
+
+				<p class="indented"><code>8. Backspace</code></p>
+
+				<p>You can also find a backspace using a bracketed expression:</p>
+
+				<p class="indented"><code>perl -n -e 'print if /[\b]/' ascii.txt</code></p>
+
+				<p>Without the brackets, how would <code>\b</code> be interpreted? That’s right, as a word boundary,
+				as you learned in <strong>Chapter 2</strong>. The brackets change the way the <code>\b</code> is understood by the
+				processor. In this case, Perl sees it as a backspace character.</p>
+
+				<p><strong>Table 6-3</strong> lists the ways we matched characters in this chapter.</p>
+
+				<table>
+
+					<caption>Table 6-3. Matching Unicode and other characters</caption>
+
+					<tr>
+						<th>Code</th>
+						<th>Description</th>
+					</tr>
+
+					<tr>
+						<td>\u<em>xxxx</em></td>
+						<td>Unicode (four places)</td>
+					</tr>
+
+					<tr>
+						<td>\<em>xxx</em></td>
+						<td>Unicode (two places)</td>
+					</tr>
+
+					<tr>
+						<td>\x{<em>xxxx</em>}</td>
+						<td>Unicode (four places)</td>
+					</tr>
+
+					<tr>
+						<td>\x{<em>xx</em>}</td>
+						<td>Unicode (two places)</td>
+					</tr>
+
+					<tr>
+						<td>\000</td>
+						<td>Octal (base 8)</td>
+					</tr>
+
+					<tr>
+						<td>\c<em>x</em></td>
+						<td>Control character</td>
+					</tr>
+
+					<tr>
+						<td>\0</td>
+						<td>Null</td>
+					</tr>
+
+					<tr>
+						<td>\a</td>
+						<td>Bell</td>
+					</tr>
+
+					<tr>
+						<td>\e</td>
+						<td>Escape</td>
+					</tr>
+
+					<tr>
+						<td>[\b]</td>
+						<td>Backspace</td>
+					</tr>
+
+				</table>
+
+				<p>That wraps things up for this chapter. In the next, you’ll learn more about quantifiers.</p>
+
+			</section>
+
+			<section class="section" data-number="6" data-name="What You Learned in Chapter 6">
+
+				<h2>What You Learned in Chapter 6</h2>
+
+				<ul>
+
+					<li><span class="first-sentence">How to match any Unicode character with <code>\u<em>xxxx</em></code> or <code>\<em>xxx</em></code></span></li>
+
+					<li>How to match any Unicode character inside of <em>vim</em> using <code>\%<em>xxx</em></code>, <code>\%<em>Xxx</em></code>, <code>\%u<em>xxxx</em></code>, or
+					<code>\%U<em>xxxx</em></code></li>
+
+					<li>How to match characters in the range 0–255 using octal format with <code>\000</code></li>
+
+					<li>How to use Unicode character properties with <code>\p{x}</code></li>
+
+					<li>How to match control characters with <code>\e</code> or <code>\cH</code></li>
+
+					<li>More on how to use Perl on the command line (more Perl one-liners)</li>
+
+				</ul>
+
+				<div class="pagebreak left"><span class="pageNumber">70</span> | Chapter 6: Matching Unicode and Other Characters</div>
+
+			</section>
+
+			<section class="section" data-number="7" data-name="Technical Notes">
+
+				<h2>Technical Notes</h2>
+
+				<ul>
+
+					<li><span class="first-sentence">I entered control characters in <em>ascii.txt</em> using <em>vim</em> (<span class="url">http://www.vim.org</span>)</span>. In <em>vim</em>, you
+					can use Ctrl+V followed by the appropriate control sequence for the character,
+					such as Ctrl+C for the end-of-text character. I also used Ctrl+V followed by <em>x</em> and
+					the two-digit hexadecimal code for the character. You can also use digraphs to
+					enter control codes; in <em>vim</em> enter <code>:digraph</code> to see the possible codes. To enter a
+					digraph, use Ctrl+K while in Insert mode, followed by a two-character digraph (for
+					example, <em>NU</em> for null).</li>
+
+					<li>RegexHero (<span class="url">http://regexhero.net/tester</span>) is a .NET regex implementation in a
+					browser written by Steve Wortham. This one is for pay, but you can test it out for
+					free, and if you like it, the prices are reasonable (you can buy it at a standard or a
+					professional level).</li>
+
+					<li><em>vim</em> (<span class="url">http://www.vim.org</span>) is an evolution of the <em>vi</em> editor that was created by Bill
+					Joy in 1976. The <em>vim</em> editor was developed primarily by Bram Moolenaar. It seems
+					archaic to the uninitiated, but as I’ve mentioned, it is incredibly powerful.</li>
+
+					<li>The <em>ack</em> tool (<span class="url">http://betterthangrep.com</span>) is written in Perl. It acts like <em>grep</em> and has
+					many of its command line options, but it outperforms <em>grep</em> in many ways. For
+					example, it uses Perl regular expressions instead of basic regular expressions like
+					<em>grep</em> (without <em>-E</em>). For installation instructions, see <span class="url">http://betterthangrep.com/in
+					stall/</span>. I used the specific instructions under “Install the ack executable.” I didn’t
+					use <em>curl</em> but just downloaded <em>ack</em> with the link provided and then copied the script
+					into <em>/usr/bin</em> on both my Mac and a PC running Cygwin (<span class="url">http://www.cygwin.com</span>)
+					in Windows 7.</li>
+
+				</ul>
+
+			</section>
+
+
+		</div> <!--/container-->
+
+	</div> <!--/regexp-->
+</body>
+</html>

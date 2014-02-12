@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h1>4</h1>
+				<h2>Shared Objects and Mutual Exclusion</h2>
+				<div class="border"></div>
+
+				<p><span class="first-sentence">In the last chapter, we discussed the execution of multiple processes on one or more processors, modeling concurrent execution by interleaving and executing multiple concurrent threads in a Java program.</span> We explained how process interaction is modeled using shared atomic actions, but not how real processes or threads interact. In this chapter, we turn to the issues involved in constructing concurrent programs in which threads interact to communicate and cooperate.</p>
+
+				<p class="i">The simplest way for two or more threads in a Java program to interact is via an object whose methods can be invoked by the set of threads. This <em>shared</em> object's state can of course be observed and modified by its methods. Consequently, two threads can communicate by one thread writing the state of the shared object and the other thread reading that state. Similarly, a set of threads may cooperate to update some information encapsulated in a shared object. Unfortunately, as we will explain, this simple scheme of interaction does not work.</p>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Interference">
+
+				<h3>4.1 Interference</h3>
+
+				<p><span class="first-sentence">We have seen that the execution of the instructions from a set of threads can be interleaved in an arbitrary fashion.</span> This interleaving can result in incorrect updates to the state of a shared object. The phenomenon is known as <em>interference</em>. The problem of interference, and how to deal with it, is the main topic of this chapter.</p>
+
+				<section class="subsection" data-number="2" data-name="Ornamental Garden Problem">
+
+					<h4>4.1.1 Ornamental Garden Problem</h4>
+
+					<p><span class="first-sentence">To focus on the issues of thread interaction, we use an example known as the problem of the Ornamental Garden, due to Alan Burns and Geoff Davies (1993).</span></p>
+
+					<div class="pagebreak pageNumber">64</div>
+
+					<p>The problem is stated as follows. A large ornamental garden is open to members of the public who can enter through either of two turnstiles as depicted in Figure 4.l. The management wants to determine how many people there are in the garden at any one time. They require a computer system to provide this information.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure4-1.png">
+						<figcaption><strong>Figure 4.1</strong> Ornamental Garden.</figcaption>
+					</figure>
+
+					<p>To simplify the problem further, we consider a garden that people are allowed to enter but never leave! The concurrent program to implement the population count required by the management of the ornamental garden consists of two concurrent threads and a shared counter object. Each thread controls a turnstile and increments the shared counter when a person passes through the turnstile. The class diagram for the program is depicted in Figure 4.2.</p>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure4-2.png">
+						<figcaption><strong>Figure 4.2</strong> Ornamental Garden class diagram.</figcaption>
+					</figure>
+
+					<p>The <code>Counter</code> object and <code>Turnstile</code> threads are created by the <code>go()</code> method of the <code>Garden</code> applet shown below in which <code>eastD</code>, <code>westD</code> and <code>counterD</code> are objects of the same <code>NumberCanvas</code> class that we used in Chapter 2.</p>
+
+					<div class="pagebreak pageNumber">65</div>
+
+					<pre>
+<strong>private</strong> void go() {
+  counter = <strong>new</strong> Counter(counterD);
+  west = <strong>new</strong> Turnstile(westD, counter);
+  east = <strong>new</strong> Turnstile(eastD, counter);
+  west.start();
+  east.start();
+}
+					</pre>
+
+					<p>The <code>Turnstile</code> thread shown in Program 4.1 simulates the periodic arrival of a visitor to the garden by sleeping for half a second and then invoking the <code>increment()</code> method of the counter. After the arrival of <code>Garden.MAX</code> visitors, the <code>run()</code> method exits and consequently, the thread terminates.</p>
+
+					<pre class="program">
+<strong>class</strong> Turnstile <strong>extends</strong> Thread {
+  NumberCanvas display;
+  Counter people;
+
+  Turnstile(NumberCanvas n, Counter c)
+    { display = n; people = c; }
+
+  <strong>public </strong>void run() {
+    <strong>try</strong>{
+      display.setvalue(0);
+      <strong>for</strong> (int i=1;i&lt;=Garden.MAX;i++){
+        Thread.sleep(500); <em>//0.5 second between arrivals</em>
+        display.setvalue(i);
+        people.increment();
+      }
+    } <strong>catch</strong> (InterruptedException e) {}
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 4.1 </strong><code>Turnstile</code> class.</p>
+
+					<p>The remaining class <code>Counter</code> is more complex than is strictly necessary. The additional complexity is to ensure that the program demonstrates the effects of interference independently of any particular implementation of Java. To ensure that the program demonstrates the desired effect, Program 4.2 ensures that arbitrary interleaving occurs.</p>
+
+					<div class="pagebreak pageNumber">66</div>
+
+					<pre class="program">
+<strong>class</strong> Counter {
+  int value=0;
+  NumberCanvas display;
+
+  Counter(NumberCanvas n) {
+    display=n;
+    display.setvalue(value);
+  }
+
+  void increment() {
+    int temp = value;<em>    //read value</em>
+    Simulate.HWinterrupt();
+    value=temp+1;   <em>     //write value</em>
+    display.setvalue (value);
+  }
+}
+					</pre>
+
+					<p class="program-caption"><strong>Program 4.2 </strong><code>Counter</code> class.</p>
+
+					<p>It does this by using the class <code>Simulate</code> which provides the method <code>HWinterrupt()</code>. The method, when called, sometimes causes a thread switch by calling <code>Thread.yield()</code> and sometimes omits the call leaving the current thread running. The idea is to simulate a hardware interrupt which can occur at arbitrary times between reading and writing to the shared <code>Counter</code> when performing an increment. Thus thread switches can occur at arbitrary times as discussed at the beginning of the last chapter. The <code>Simulate</code> class is defined by the following code:</p>
+
+					<pre>
+<strong>class</strong> Simulate {
+  <strong>public static</strong> void HWinterrupt() {
+    <strong>if</strong> (Math.random() &lt; 0.5) Thread.yield();
+  }
+}
+					</pre>
+
+					<p>The problem with the Ornamental Garden program is illustrated by the screen shot of the running applet in Figure 4.3. When the <strong>Go</strong> button is pressed, the <code>Garden.go()</code> method is invoked to create a <code>Counter</code> object and the two <code>Turnstile</code> threads. Each thread then increments the counter exactly <code>Garden.MAX</code> times and then terminates. The value of the constant <code>Garden.MAX</code> has been set to 20, consequently, when both <code>Turnstile</code> threads terminate, the counter display should register that 40 people have entered the garden. In fact, as can be seen from Figure 4.3, the counter registers only 31. Where have the missing people</p>
+
+					<div class="pagebreak pageNumber">67</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure4-3.png">
+						<figcaption><strong>Figure 4.3</strong> <code>Garden</code> display.</figcaption>
+					</figure>
+
+					<p>gone? Why have nine increments to the counter been lost? To investigate why, we develop a model of the Ornamental Garden problem.</p>
+
+				</section>
+
+				<section class="subsection" data-number="3" data-name="Ornamental Garden Model">
+
+					<h4>4.1.2 Ornamental Garden Model</h4>
+
+					<p><span class="first-sentence">In the remainder of the book, we generally model each object or set of objects as an <em>FSP</em> process.</span> However, to find out why the Ornamental Garden program operates incorrectly, we must model it at the level of store accesses. Consequently, the model includes a <code>VAR</code> process that describes the read and write accesses to a store
+					location. This store location is the <code>value</code> variable encapsulated by the <code>people</code> instance of the <code>Counter</code> class (Program 4.2). The complete model is described in Figure 4.4. The reader may be surprised that there is no explicit mention of an increment action. Instead, increment is modeled using <code>read</code> and <code>write</code> actions by the definition <code>INCREMENT</code> inside <code>TURNSTILE</code>. Each thread object, <code>east</code> and <code>west</code>, has its own copy of the <code>read</code> and <code>write</code> actions that make up the increment operation or procedure. This models what happens in the actual Java program since methods are re-entrant and thus the instructions which constitute a method may be interleaved on behalf of the threads executing the method concurrently. In other words, method activations are not atomic actions. The <em>LTS</em> for the <code>TURNSTILE</code> is given in Figure 4.5.</p>
+
+					<p class="i">The alphabet of the process <code>VAR</code> has been declared explicitly as the <strong>set</strong> in Figure 4.4. We have not used set constants before. A set constant can be used wherever we previously declared sets of action labels explicitly. Sets are simply a way of abbreviating model descriptions. <code>VarAlpha</code> is declared as follows:</p>
+
+					<pre>
+<strong>set</strong> VarAlpha = {value.{read[T], write[T]}}
+					</pre>
+
+					<div class="pagebreak pageNumber">68</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure4-4.png">
+						<figcaption><strong>Figure 4.4 </strong>Ornamental Garden model.</figcaption>
+					</figure>
+
+					<p>The alphabet for the <code>TURNSTILE</code> process is extended with this set using the alphabet extension construct +{...}. This is to ensure that there are no unintended free actions. For example, if a <code>VAR</code> write of a particular value is not shared with another process then it can occur autonomously. A <code>TURNSTILE</code> process never engages in the action <code>value.write[0]</code> since it always increments the value it reads. However, since this action is included in the alphabet extension of <code>TURNSTILE</code>, although it is not used in the process definition, it is prevented from occurring autonomously. The <code>TURNSTILE</code> process is slightly different from its Java implementation in that it does not run for a fixed number of arrivals but may end at any point. However, it cannot end in the middle of updating the shared variable <code>value</code>. The <code>end</code> action is only accepted as an alternative to an</p>
+
+					<div class="pagebreak pageNumber">69</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure4-5.png">
+						<figcaption><strong>Figure 4.5 </strong><em>LTS</em> for <code>TURNSTILE.</code></figcaption>
+					</figure>
+
+					<p><code>arrive</code> action. Furthermore, <code>TURNSTILE</code> is defined as recursive so that analysis (discussed below) will not report spurious deadlocks as would be the case if we had used <code>STOP</code> after the action <code>end</code>. Note that the shared variable <code>VAR</code> is not only shared by the turnstiles <code>east</code> and <code>west</code>, but also by <code>display</code> which is used for checking purposes.</p>
+
+					<p class="i">Having developed a model of the Ornamental Garden program, in some detail, what can we do with it? Well, we can animate the model using the <em>LTSA</em> tool to produce action traces for particular input scenarios. For example, the trace in Figure 4.6 illustrates the case where there is an east arrival and a west arrival and then end occurs.</p>
+
+					<p class="i">The trace is correct in that after two arrivals the counter has a value of two. However, we might try many input scenarios before finding out what is wrong with the program. To automate the search for the error, we combine a <code>TEST</code> process with the existing model that signals when an erroneous action trace occurs. The process is defined below:</p>
+
+					<div class="pagebreak pageNumber">70</div>
+
+					<figure>
+						<img src="/contents/concurrency/images/figure4-6.png">
+						<figcaption><strong>Figure 4.6</strong> An Animator trace for the Ornamental Garden.</figcaption>
+					</figure>
+
+					<pre>
+TEST = TEST[0]
+TEST[v:T] = 
+	(<strong>when</strong> (v&lt;N){east.arrive, west.arrive} -> TEST[v+1]
+	|end -> CHECK[v]
+	),
+CHECK[v:T] = 
+	(display.value.read[u:T] ->
+		(<strong>when</strong> (u==v) right -> TEST[v]
+		|<strong>when</strong> (u!=v) wrong -> ERROR
+		)
+	)+{display.VarAlpha}.
+    				</pre>
+
+					<p>The process counts the total number of <code>east.arrive</code> and <code>west.arrive</code> actions. When an end action occurs, and consequently the shared variable updates are complete, it checks that the value stored is the same as the total number of arrival events. If not, an error is declared by moving into the <code>ERROR</code> state. <code>ERROR</code> (like <code>STOP</code>) is a predefined <em>FSP</em> local process (or state). It is always numbered -1 in the equivalent <em>LTS</em>. Again, alphabet extension is used to ensure that no actions prefixed by display can occur autonomously.</p>
+
+					<p class="i">The <code>TEST</code> process is combined with the existing model as follows:</p>
+
+					<pre>
+||TESTGARDEN = (GARDEN || TEST).
+					</pre>
+
+					<p>We can now request the <em>LTSA</em> analysis tool to perform an exhaustive search to see if the <code>ERROR</code> state in <code>TEST</code> can be reached and if so to produce an example trace. The trace produced is:</p>
+
+					<div class="pagebreak pageNumber">71</div>
+
+					<pre>
+Trace to property violation in TEST:
+	go
+	east.arrive
+	east.value.read.0
+	west.arrive
+	west.value.read.0
+	east.value.write.1
+	west.value.write.1
+	end
+	display.value.read.1
+	wrong
+
+					</pre>
+
+					<p>This trace clearly indicates the problem with the original Java program. Increments are lost because the shared variable is not updated atomically. Thus both east and west turnstiles read the value 0 and write 1. If the east increment finished before the west increment started or vice versa, then the result would be two (as in the previous trace).</p>
+
+					<div class="definition">Destructive update, caused by the arbitrary interleaving of <code>read</code> and <code>write</code> actions, is termed <em>interference</em>.</div>
+
+					<p>In real concurrent programs, interference bugs are extremely difficult to locate. They occur infrequently, perhaps due to some specific combination of device interrupts and application I/O requests. They may not be found even after extensive testing. We had to include a simulated interrupt in the example program to demonstrate the error. Without the simulated interrupt, the program is still incorrect, although the erroneous behavior may not manifest itself on all systems.</p>
+
+					<p>The general solution to the problem of interference is to give methods that access a shared object <em>mutually exclusive</em> access to that object. This ensures that an update is not interrupted by concurrent updates. As we see in the following sections, methods with mutually exclusive access can be modeled as atomic actions.</p>
+
+				</section>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="Mutual Exclusion in Java">
+
+				<h3>4.2 Mutual Exclusion in Java</h3>
+
+				<div class="definition">Concurrent activations of a method in Java can be made mutually exclusive by prefixing the method with the keyword <strong>synchronized</strong>.</div>
+
+				<div class="pagebreak pageNumber">72</div>
+
+				<p><span class="first-sentence">The <code>Counter</code> class from the Ornamental Garden program can be corrected by deriving a <code>SynchronizedCounter</code> class from <code>Counter</code> and making the increment method in the subclass <strong>synchronized</strong> as shown in Program 4.3.</span></p>
+
+				<pre class="program">
+<strong>class</strong> SynchronizedCounter <strong>extends</strong> Counter {
+
+  SynchronizedCounter(Numbercanvas n)
+    {super(n);}
+
+  <strong>synchronized</strong> void increment() {
+      super.increment();
+  }
+}
+				</pre>
+
+				<p class="program-caption"><strong>Program 4.3</strong> Corrected <code>Counter</code> class.</p>
+
+				<p>Java associates a lock with every object. The Java compiler inserts code to acquire the lock before executing the body of a synchronized method and code to release the lock before the method returns. Concurrent threads are blocked until the lock is released. Since only one thread at a time may hold the lock, only one thread may be executing the synchronized method. If this is the only method, as in the example, mutual exclusion to the shared object is ensured. If an object has more than one method, to ensure mutually exclusive access to the state of the object, all the methods should be synchronized.</p>
+
+				<p class="i">Access to an object may also be made mutually exclusive by using the synchronized statement:</p>
+
+				<pre>
+<strong>synchronized</strong> (<span>object</span>) { <span>statements</span> }
+				</pre>
+
+				<p>This acquires the referenced object's lock before executing the bracketed statement block and releases it on exiting the block. For example, an alternative (but less elegant) way to correct the example would be to modify the <code>Turnstile.run()</code> method to use:</p>
+
+				<pre>
+<strong>synchronized</strong>(people) {people.increment();}
+				</pre>
+
+				<p>This is less elegant as the user of the shared object has the responsibility for imposing the lock, rather than embedding it in the shared object itself. Since not all users of the object may act responsibly, it may also be less secure against interference.</p>
+
+				<div class="pagebreak pageNumber">73</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure4-7.png">
+					<figcaption><strong>Figure 4.7</strong> Corrected <code>Garden</code> display.</figcaption>
+				</figure>
+
+				<p class="i">The output from the corrected Ornamental Garden program is depicted in Figure 4.7. The only change is to use the class defined in Program 4.3 rather than the original <code>Counter</code> class. This change is made by clicking the <strong>Fix It</strong> check box before pressing <strong>Go</strong>.</p>
+
+				<p class="i">Once a thread has acquired the lock on an object by executing a synchronized method, that method may itself call another synchronized method from the same object (directly or indirectly) without having to wait to acquire the lock again. The lock counts how many times it has been acquired by the same thread and does not allow another thread to access the object until there has been an equivalent number of releases. This locking strategy is sometimes termed <em>recursive</em> locking since it permits recursive synchronized methods. For example:</p>
+
+				<pre>
+<strong>public synchronized</strong> void increment(int n) {
+	<strong>if</strong> (n&gt;0) {
+		++value;
+		increment(n-1);
+	} <strong>else return</strong>;
+}
+				</pre>
+
+				<p>This is a rather unlikely recursive version of a method which increments <code>value</code> by <code>n</code>. If locking in Java was not recursive, it would cause a calling thread to be blocked forever, waiting to acquire a lock which it already holds!</p>
+
+			</section>
+
+			<section class="section" data-number="5" data-name="Modeling Mutual Exclusion">
+
+				<h3>4.3 Modeling Mutual Exclusion</h3>
+
+				<p><span class="first-sentence">The simplest way to correct the model of the Ornamental Garden program listed in Figure 4.4 is to add locking in exactly the same way as it was added to the</span></p>
+
+				<div class="pagebreak pageNumber">74</div>
+
+				<p>Java program. For simplicity, we ignore the detail that Java locks are recursive since whether or not the lock is recursive has no impact on this problem. A (non-recursive) lock can be modeled by the process:</p>
+
+				<pre>
+LOCK = (acquire->release->LOCK).
+				</pre>
+
+				<p>The composition <code>LOCKVAR</code> associates a lock with a variable. It is substituted for <code>VAR</code> in the definition of <code>GARDEN</code>.</p>
+
+				<pre>
+||LOCKVAR = (LOCK || VAR).
+				</pre>
+
+				<p>The alphabet <code>VarAlpha</code> is modified as follows to include the additional locking actions:</p>
+
+				<pre>
+set VarAlpha = {value.{read[T], write[T],
+                       acquire, release}}
+                </pre>
+
+				<p>Finally, the definition of <code>TURNSTILE</code> must be modified to acquire the lock before accessing the variable and to release it afterwards:</p>
+
+				<pre>
+TURNSTILE = (go    -> RUN),
+RUN       = (arrive-> INCREMENT
+            |end   -> TURNSTILE),
+INCREMENT = (value.acquire
+             -> value.read[x:T]->value.write[x+1]
+             -> value.release->RUN
+             )+VarAlpha.
+             	</pre>
+
+				<p>We can check this model in exactly the same way as before using <code>TEST</code>. An exhaustive search does not find any errors. Consequently, we have mechanically verified that this new version of the model satisfies the property that the count value is equal to the total number of arrivals when stop is pressed. A sample execution trace of the new model is shown below:</p>
+
+				<pre>
+go
+east.arrive
+east.value.acquire
+east.value.read.0
+east.value.write.1
+east.value.release
+west.arrive
+west.value.acquire
+west.value.read.1
+west.value.write.2
+				</pre>
+
+				<div class="pagebreak pageNumber">75</div>
+
+				<pre>
+west.value.release
+end
+display.value.read.2
+right
+				</pre>
+
+				<p>Now that we have shown that we can make shared actions indivisible or atomic using locks, we can abstract the details of variables and locks and model shared objects directly in terms of their synchronized methods. We can perform abstraction mechanically by hiding actions. For example, we can describe the behavior of the <code>SynchronizedCounter</code> class (over a finite integer range) by:</p>
+
+				<pre>
+<strong>const</strong> N = 4
+<strong>range</strong> T = 0..N
+
+VAR = VAR[0]
+VAR[u:T] = ( read[u]->VAR[u]
+           | write[v:T]->VAR[v]).
+
+LOCK = (acquire->release->LOCK).
+
+INCREMENT = (acquire->read[x:T]
+			-> (<strong>when</strong> (x&lt;N) write[x+1]
+			    ->release->increment->INCREMENT
+			   )
+            )+{read[T], write[T]}.
+
+||COUNTER = (INCREMENT||LOCK||VAR)@{increment}.
+				</pre>
+
+				<p>The definition of <code>INCREMENT</code> has been slightly modified from that used previously. The <strong>when</strong> clause ensures that the <code>increment</code> action can only occur when the value stored is less than <code>N</code>. In other words, <code>increment</code> is not allowed to overflow the range <code>T</code>. The alphabet declaration <code>@{increment}</code> means that <code>read, write, acquire</code> and <code>release</code> become internal actions (<code>tau</code>) of <code>COUNTER</code>. The <em>LTS</em> which results from minimizing <code>COUNTER</code> is depicted in Figure 4.8.</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure4-8.png">
+					<figcaption><strong>Figure 4.8</strong> Minimized <em>LTS</em> for <code>COUNTER</code>.</figcaption>
+				</figure>
+
+				<div class="pagebreak pageNumber">76</div>
+
+				<p>We can describe a single process that generates exactly the same <em>LTS</em>:</p>
+
+				<pre>
+COUNTER = COUNTER[0],
+COUNTER[v:T] = (<strong>when</strong> (v&lt;N) increment->COUNTER[v+1]).
+				</pre>
+
+				<p>This is a much more abstract and consequently simpler model of the shared <code>Counter</code> object with its synchronized <code>increment</code> method. We have demonstrated above (by <em>LTSA</em> minimization) that it has exactly the same observable behavior as the more complex definition. A display action to read the value of the counter can be added as shown below:</p>
+
+				<pre>
+DISPLAY_COUNTER = COUNTER[0],
+COUNTER[v:T] = (when (v&lt;N) increment->COUNTER[v+1]
+               |display[v] -> COUNTER[v]).
+               </pre>
+
+				<p>The <em>LTS</em> which results from minimizing <code>DISPLAY_COUNTER</code> is depicted in Figure 4.9.</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure4-9.png">
+					<figcaption><strong>Figure 4.9</strong> Minimized <em>LTS</em> for <code>DISPLAY_COUNTER</code></figcaption>
+				</figure>
+
+				<p>To implement this action in the Java class, we would simply add the synchronized method:</p>
+
+				<pre>
+<strong>public synchronized</strong> int display() {
+	<strong>return</strong> value;
+}
+				</pre>
+
+				<p>In the following chapters, we usually model shared objects at this level of
+				.
+				abstraction, ignoring the details of locks and mutual exclusion (as provided by the use of synchronized methods in Java). Each shared object is modeled as an <em>FSP</em> process, in addition to modeling each Java thread as an <em>FSP</em> process. The model of a program does not distinguish active entities (threads) from passive entities (shared objects). They are both modeled as finite state machines. This uniform treatment facilitates analysis.</p>
+
+				<div class="pagebreak pageNumber">77</div>
+
+			</section>
+
+			<section class="section" data-number="6" data-name="Summary">
+
+				<h3>Summary</h3>
+
+				<p><span class="first-sentence">In this chapter, we have discussed thread interaction via shared objects.</span> The Ornamental Garden example served to demonstrate that uncontrolled interleaving of method instructions leads to destructive update of the state of the shared object. This is termed <em>interference</em>. Interference can be avoided by giving each concurrent method activation mutually exclusive access to the shared state. In Java, this is achieved by making such methods <strong>synchronized</strong>. Synchronized methods acquire a lock associated with the object before accessing the object state and release the lock after access. Since only one thread at a time can acquire the lock, synchronized methods obtain mutually exclusive access to the object state.</p>
+
+				<p class="i">Interference bugs in real concurrent programs are notoriously difficult to find. They can be found by analyzing program models as we demonstrated. However, this requires detailed modeling at the level of store accesses to variables. Such models quickly become too large to analyze. The answer is to ensure systematically that all the methods of objects shared between threads are synchronized. They can then be treated as atomic actions for modeling purposes.</p>
+
+			</section>
+
+			<section class="section" data-number="7" data-name="Notes and Further Reading">
+
+				<h3>Notes and Further Reading</h3>
+
+				<p><span class="first-sentence">We have dealt with the problem of access to shared objects encapsulating variables.</span> However, access to any resource must be made mutually exclusive if the resource cannot be concurrently shared. These resources are sometimes termed serially reusable since they can be used by many processes at different times but not shared by many processes at the same time. For example, a printer can only produce the output from one print job at a time. The solution of using locks to ensure mutual exclusion is a general one that can be applied to controlling access to a printer in the same way as to shared variables.</p>
+
+				<p class="i">A solution to the mutual exclusion problem was first proposed by Dijkstra (1965). All operating systems and concurrent programming textbooks deal with mutual exclusion. Usually, great emphasis is placed on the concept of a <em>critical section</em>. A critical section is simply the section of code belonging to a thread or process which accesses the shared variables. To ensure correct behavior, this critical section must be given mutually exclusive access by acquiring a lock before the critical section and releasing it afterwards. We have not used the term critical section since, in an object-oriented language such as Java, shared variables are encapsulated in objects and accessed via methods. In other words, synchronized methods are critical sections. The synchronized statement is another way of</p>
+
+				<div class="pagebreak pageNumber">78</div>
+
+				<p>making a section of code a critical section in Java. However, it is usually the case in well-designed concurrent object-oriented programs that critical sections are methods.</p>
+
+			</section>
+
+			<section class="section" data-number="8" data-name="Exercises">
+
+				<h3>Exercises</h3>
+
+				<ol id="four">
+
+					<li><span class="first-sentence">Modify the uncorrected version of the Ornamental Garden program such that <code>Turnstile</code> threads can sleep for different times.</span> Is it possible to choose these sleep times such that interference does not occur?</li>
+
+					<li>Given the following declarations:
+						<pre>
+<strong>const</strong> N = 3
+<strong>range</strong> P = 1..2 <span>//thread identities</span>
+<strong>range</strong> C = 0..N <span>//counter range for lock</span>
+						</pre>
+						Model a Java recursive lock as the <em>FSP</em> process <code>RECURSIVE_LOCK</code> with the alphabet
+						<code>{acquire[p:P], release[p:P]}</code>. The action <code>acquire[p]</code> acquires the lock
+						for thread <code>p</code>.</li>
+
+					<li>A central computer connected to remote terminals via communication links is used to automate seat reservations for a concert hall. A booking clerk can display the current state of reservations on the terminal screen. To book a seat, a client chooses a free seat and the clerk enters the number of the chosen seat at the terminal and issues a ticket. A system is required which avoids double-booking of the same seat while allowing clients free choice of the available seats. Construct a model of the system and demonstrate that your model does not permit double-bookings. (<em>Hint</em>: It is only necessary to model a few terminals and a few seats. Remember, a seat can appear to be free although it is booked or being booked by another clerk.)</li>
+
+					<li>Write a Java program that implements the seat reservation system of exercise 4.3.</li>
+
+				</ol>
+
+			</section>
+
+		</div> <!--container-->
+
+	</div> <!--concurrency-->
+
+</body>
+</html>
+

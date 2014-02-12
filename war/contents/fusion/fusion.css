@@ -1,0 +1,213 @@
+.fusion.container {
+	max-width: 800px;
+	margin-left: 2em;
+	font-family: "calibri";
+}
+
+.fusion div.clear {
+	clear: both;
+}
+
+.fusion .left {
+	text-align: left;
+}
+
+.fusion .floatleft {
+	float: left;
+}
+
+.fusion .right {
+	text-align: right;
+}
+
+.fusion .floatright {
+	float: right;
+}
+
+.fusion .center {
+	text-align: center;
+}
+
+.fusion .verticallycentered {
+	vertical-align: text-bottom;
+}
+
+.fusion img {
+	margin: 4px;
+}
+
+.fusion img.centeredimage {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.fusion .imageflushwithtop {
+	vertical-align: top;
+}
+
+.fusion .invisiblebullet {
+	list-style-type: none;
+}
+
+.fusion .pagebreak {
+  border-bottom: 3px solid #AAAAAA;
+  color: black;
+  padding-top: 10px;
+  margin: 50px 0;
+  width: 100%;
+}
+
+.fusion .pagebreak p:nth-child(1) {
+	float: left;
+}
+
+.fusion .pagebreak p:nth-child(2) {
+	text-align: right;
+}
+
+.fusion div.box {
+	border: 2px solid #CCCCCC;
+	box-shadow: 3px 3px 3px #D6D6D6;
+	border-radius: 15px;
+	padding: 3px;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.fusion div.box table.boxtable {
+	border-collapse: collapse;
+	border: none;
+	width: 95%;
+	margin: 3px;
+}
+
+.fusion div.box table.boxtable th {
+	border-bottom: 1px solid black;
+	min-width: 6em;
+}
+
+.fusion div.box table.boxtable tr {
+	border-top: 1px solid black;
+}
+
+.fusion div.box table.boxtable thead > tr {
+	border-top: none;
+}
+
+.fusion div.box table.boxtable tr:last-child {
+	border-bottom: none;
+}
+
+.fusion div.box table.boxtable td {
+	text-align: center;
+}
+
+.fusion div.box table.boxtable td.left {
+	text-align: left;
+}
+
+.fusion div.box table.imagetable td {
+	width: 15%;
+}
+
+.fusion div.shadedbox {
+	border: 2px solid #CCCCCC;
+	box-shadow: 3px 3px 3px #D6D6D6;
+	border-radius: 15px;
+	padding: 3px;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	background-color: #D6D6D6;
+}
+
+.fusion div.shadedbox th {
+	text-align: left;
+	width: 33%;
+}
+
+.fusion div.shadedbox p {
+	padding: 0;
+	margin: 4px 4px 4px 4px;
+}
+
+.fusion div.shadedbox div.floatingbox {
+	display: inline-block;
+	border: 1px solid black;
+	box-shadow: 3px 3px 3px black;
+	border-radius: 5px;
+	float: left;
+	margin-right: 1em;
+	position: relative;
+	left:-13px;
+	top:-13px;
+	background-color: #ABABAB;
+}
+
+.fusion div.shadedbox div.floatingbox h3 {
+	font-size: 100%;
+	margin: 5px 15px 0px 15px;
+}
+
+.fusion div.shadedbox table.shadedboxtable {
+	border-collapse: collapse;
+	border: none;
+	width: 100%;
+	margin: 4px;
+}
+
+.fusion div.shadedbox li {
+	margin-left: -1em;
+}
+
+.fusion ul li {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.fusion ul.groupresponsebullet {
+	list-style-image:url('/contents/fusion/images/groupresponsesmall.png');
+}
+
+.fusion ul.groupresponsebulletwithmargin {
+	list-style-image:url('/contents/fusion/images/groupresponsesmall.png');
+	margin-left: 2.5em;
+}
+
+.fusion ul.monitorforunderstandingbullet {
+	list-style-image:url('/contents/fusion/images/monitorforunderstandingsmall.png');
+}
+
+.fusion ul.possibleerrorbullet {
+	list-style-image:url('/contents/fusion/images/possibleerrorsmall.png');
+}
+
+.fusion ul.mathtalkbullet {
+	list-style-image:url('/contents/fusion/images/mathtalksmall.png');
+}
+
+.fusion ul.mathtalkbullet p {
+	vertical-align: top;
+}
+
+.fusion table.responsetable {
+	border-collapse: collapse;
+	border: 1px solid black;
+}
+
+.fusion table.responsetable th {
+	font-weight: normal;
+	border: 1px solid black;
+	width: 30%;
+}
+
+.fusion table.responsetable td {
+	border: 1px solid black;
+	vertical-align: top;
+	padding: 5px;
+	width: 50%;
+}
+
+.fusion .responsetableheaderverticalalignment {
+	vertical-align: 8px;
+}

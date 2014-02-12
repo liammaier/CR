@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Concurrency: State Models &amp; Java Programs</title>
+	<meta charset='utf-8'>
+</head>
+
+<body>
+
+	<div class="concurrency">
+
+		<div class="container">
+
+			<section class="section" data-number="0" data-name="Introduction">
+
+				<h1>9</h1>
+				<h2>Dynamic Systems</h2>
+				<div class="border"></div>
+
+				<p><span class="first-sentence">In the programs we have described so far, threads are created during initialization
+				and they run until program termination.</span> The organization of threads, and the
+				monitors through which they interact in these programs, has been static during
+				program execution. This chapter examines systems in which thread creation
+				and termination occur dynamically during program execution. The number of
+				active threads thus varies as execution progresses. This sort of behavior occurs in
+				operating systems where processes are created dynamically in response to user
+				commands. For example, when a user clicks on the word processor icon, a process
+				is created to run the word processor program; when the user exits the word
+				processor program, the process terminates.</p>
+
+				<p class="i">To illustrate some of the issues involved in modeling and programming dynamic
+				systems, we consider the problem of resource allocation in which dynamically
+				created threads need variable amounts of a resource to proceed. To make the
+				problem less abstract, we simulate a golf club with players simulated by threads
+				and golf balls representing the resources they require.</p>
+
+				<p class="i">A specific problem addressed in this chapter is the relevance of finite state
+				models to dynamic systems. Briefly stated, the problem is that the models we
+				construct must be static with a fixed number of processes to permit analysis, while
+				a dynamic system has a variable number of processes. To see how this is handled,
+				we proceed by developing the program first and then developing a model. We
+				examine how much of the behavior of the dynamic system is captured in the static
+				model and whether this static model is helpful in analyzing the behavior of the
+				dynamic system.</p>
+
+				<p class="i">Finally, the chapter looks at the use of the Java <code>join()</code> method, which permits
+				a thread to wait for the termination of another thread, which it has usually created
+				dynamically.</p>
+
+				<div class="pagebreak pageNumber">184</div>
+
+			</section>
+
+			<section class="section" data-number="1" data-name="Golf Club Program">
+
+				<h3>9.1 Golf Club Program</h3>
+
+				<p><span class="first-sentence">A golf club has a limited number of golf balls available for hire.</span> Players can hire
+				golf balls for their game from the club and return them to the club after use. Expert
+				players, who tend not to lose any of their golf balls, only hire one or two. Novice
+				players hire more balls, so that they have spares during the game in case of loss.
+				However, they are required to buy replacements for lost balls so that they return
+				the same number that they originally hired. To simulate the golf club as a Java
+				program, we create a new thread for each player arriving at the golf club and use
+				a monitor to control the hiring of golf balls to players. The display for the program
+				is shown in Figure 9.1.</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure9-1.png">
+					<figcaption><strong>Figure 9.1</strong> Golf Club applet display.</figcaption>
+				</figure>
+
+				<p>New players, with their golf ball requirements indicated in parentheses, are created
+				by clicking the buttons at the bottom of the display. Each newly created player is
+				given a name consisting of a letter, allocated consecutively in alphabetic order, and
+				the number of golf balls the player requires. A newly created player appears briefly
+				in the "new" window and then appears in the "wait golf balls" window if there
+				are not enough golf balls available for the player to start playing. When the player
+				acquires golf balls and starts playing, its identity appears in the "playing" window.
+				When finished playing, the player's identity appears briefly in the "end" window.
+				The "SimpleAllocator" window displays the state of the monitor controlling golf
+				ball allocation. The maximum number of golf balls available is set to five.</p>
+
+				<p class="i">Figure 9.1 depicts the situation in which there are currently no golf balls available
+				for hire since all five are in use by players <strong>c2</strong>, <strong>f1</strong>, <strong>e1</strong> and <strong>g1</strong>. The novice player</p>
+
+				<div class="pagebreak pageNumber">185</div>
+
+				<p><strong>d4</strong> who requires four golf balls to start playing is thus waiting. Note that the expert
+				players <strong>e1</strong>, <strong>f1</strong> and <strong>g1</strong> were created after <strong>d4</strong>. They have started playing before <strong>d4</strong>
+				since at the time they requested golf balls, there were enough to satisfy their requirements
+				but not enough to satisfy <strong>d4</strong>. In fact, if we keep creating new expert golfers
+				that only require one or two golf balls, then the novice <strong>d4</strong> will continue waiting. A
+				continuous stream of expert players arriving at the golf club can cause novices to
+				wait forever. In other words, the program has a liveness problem in which novice
+				players may experience <em>starvation</em>. Before examining this problem in more detail
+				using a model, we describe the program that drives the display of Figure 9.1. The
+				classes involved are depicted in the UML class diagram of Figure 9.2.</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure9-2.png">
+					<figcaption><strong>Figure 9.2</strong> Golf Club class diagram.</figcaption>
+				</figure>
+
+				<p>We are going to develop a number of implementations of the golf ball allocator.
+				To allow us to substitute these implementations without modifying the rest of the
+				program, we define the Java interface <code>Allocator</code> as listed in Program 9.1. The
+				<code>DisplayAllocator</code> class implements this interface and delegates calls to <code>get</code>
+				and <code>put</code> golf balls to <code>SimpleAllocator</code> which actually implements the allocation
+				monitor. In addition, <code>DisplayAllocator</code> displays the state of the monitor using
+				the <code>StringCanvas</code> class we have used in previous chapters. The code for the
+				<code>SimpleAllocator</code> monitor is also listed in Program 9.1.</p>
+
+				<p class="i">From Program 9.1, it can be seen that a call to get <em>n</em> golf balls will block a calling
+				thread until enough balls become available. When a thread returns golf balls, all</p>
+
+				<div class="pagebreak pageNumber">186</div>
+
+				<pre class="program">
+<strong>public interface</strong> Allocator {
+  <em>//get n golf balls</em>
+  <strong>public</strong> void get(int n) <strong>throws</strong> InterruptedException;
+  <em>//put back n golf balls</em>
+  <strong>public</strong> void put(int n);
+}
+
+<strong>public class</strong> SimpleAllocator <strong>implements</strong> Allocator {
+  <strong>private</strong> int available;
+
+  <strong>public</strong> SimpleAllocator(int n)
+    { available = n; }
+
+  <strong>synchronized public</strong> void get(int n)
+        <strong>throws</strong> InterruptedException {
+    <strong>while</strong> (n&gt;available) wait();
+    available -= n;
+  }
+
+  <strong>synchronized public</strong> void put(int n) {
+    available += n;
+    notifyAll();
+  }
+}
+				</pre>
+
+				<p class="program-caption"><strong>Program 9.1</strong> <code>Allocator</code> interface and <code>SimpleAllocator</code> class.</p>
+
+				<p>blocked threads are awakened so that they can see if there are now sufficient for
+				them to proceed. Notice that this allows a thread trying to get a large number of
+				golf balls to remain blocked while a thread requiring fewer can proceed.</p>
+
+				<p class="i">The <code>PlayerArrival</code> class creates new <code>Player</code> threads in response to button
+				presses. Each newly created thread is passed a reference to the applet class <code>GolfClub.</code>
+				The thread needs this reference since it calls the golf ball allocator monitor
+				indirectly via the <code>GolfClub</code> methods <code>getGolfBalls()</code> and <code>relGolfBalls()</code>.
+				The program has been organized this way to avoid passing all the display objects to
+				every newly created thread. The code for the <code>Player</code> class is listed in Program 9.2.</p>
+
+				<p class="i">Notice that, in contrast to the threads we have defined in previous chapters,
+				the <code>run()</code> method of the <code>Player</code> class does not involve a loop. After it has been
+				started, the player gets the golf balls it requires by calling <code>getGolfBalls()</code>,
+				sleeps for a period of time to simulate playing and then releases the golf balls
+				using <code>relGolfBalls()</code>. The <code>run()</code> method then terminates. Rather than listing
+				the entire code for the class <code>GolfClub</code>, since it is rather lengthy, we have listed
+				below the two methods used by <code>Player</code>:</p>
+
+				<div class="pagebreak pageNumber">187</div>
+
+				<pre class="program">
+<strong>class</strong> Player <strong>extends</strong> Thread {
+  <strong>private</strong> GolfClub gc;
+  <strong>private</strong> String name;
+  <strong>private</strong> int nballs;
+
+  Player(GolfClub g, int n, String s) {
+    gc = g; name = s; nballs = n;
+  }
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      gc.getGolfBalls(nballs, name);
+      Thread.sleep(gc.playTime);
+      gc.relGolfBalls(nballs, name);
+    } <strong>catch</strong> (InterruptedException e) {}
+  }
+}
+				</pre>
+
+				<p class="program-caption"><strong>Program 9.2</strong> <code>Player</code> class.</p>
+
+				<pre>
+void getGolfBalls(int n, String name)
+         <strong>throws</strong> InterruptedException {
+  String s = name+n;
+  starting.enter(s);
+  Thread.sleep(500);
+  starting.leave(s);
+  waiting.enter(s);
+  alloc.get(n);
+  waiting.leave(s);
+  playing.enter(s);
+}
+
+
+void relGolfBalls(int n, String name)
+         <strong>throws</strong> InterruptedException {
+  String s = name+n;
+  alloc.put(n);
+  playing.leave(s);
+  ending.enter(s);
+  Thread.sleep(500);
+  ending.leave(s);
+}
+				</pre>
+
+				<div class="pagebreak pageNumber">188</div>
+
+				<p>These methods access the allocator monitor using <code>alloc</code> which references the
+				<code>DisplayAllocator</code> object which in turn calls <code>SimpleAllocator</code> as previously
+				explained. The references <code>starting</code>, <code>waiting</code>, <code>playing</code> and <code>ending</code> refer to
+				instances of the <code>SlotCanvas</code> class. This is the first time we have used this display class. An outline of the methods it provides is listed in Program 9.3.</p>
+
+				<pre class="program">
+<strong>public class</strong> SlotCanvas <strong>extends</strong> Canvas {
+  ...
+  <em>//create display with</em> slots <em>boxes</em>
+  <strong>public</strong> SlotCanvas
+    (String title, Color c, int slots) {...}
+
+  <em>//enter the string</em> name <em>in an empty box</em>
+  <strong>public synchronized</strong> void enter(String name){...}
+
+  <em>//clear the box containing</em> name
+  <strong>public synchronized</strong> void 1eave(String name} {...}
+  ...
+}
+				</pre>
+
+				<p class="program-caption"><strong>Program 9.3</strong> <code>SlotCanvas</code> class.</p>
+
+				<p class="i">This completes the description of the golf club program. As discussed previously,
+				it has the problem that novices can wait forever to play while they are
+				continuously overtaken by expert players. In the next section, we investigate a
+				solution to this liveness problem by modeling the golf club.</p>
+
+			</section>
+
+			<section class="section" data-number="2" data-name="Golf Club Model">
+
+				<h3>9.2 Golf Club Model</h3>
+
+				<p><span class="first-sentence">In modeling the golf club program, we need only be concerned with the player
+				threads and the allocator monitor that embody the concurrent behavior of the
+				golf club.</span> We can abstract away from the details of how the program's display
+				interface is constructed. We first model the allocator monitor and then examine
+				the problem of modeling dynamically created threads. The model for the allocator
+				is listed below:</p>
+
+				<pre>
+<strong>const</strong> N=5    <span>//maximum #golf balls</span>
+<strong>range</strong> B=0..N <span>//available range</span>
+
+ALLOCATOR = BALL[N],
+BALL[b:B] = (<strong>when</strong> (b>O) get[i:1..b]->BALL[b-i]
+            | put [j:1..N]         ->BALL[b+j]
+            ).
+            	</pre>
+
+            	<div class="pagebreak pageNumber">189</div>
+
+            	<figure>
+            		<img src="/contents/concurrency/images/figure9-3.png">
+            		<figcaption><strong>Figure 9.3</strong> <code>ALLOCATOR</code> <em>LTS</em> for <em>N</em> = 2.</figcaption>
+            	</figure>
+
+            	<p>The <code>ALLOCATOR</code> process initially has <em>N</em> golf balls to allocate. In the state with <em>b</em>
+            	golf balls, the process accepts requests for 1..<em>b</em>. In other words, the process blocks
+            	requests to get more than <em>b</em> golf balls. The process moves into an <code>ERROR</code> state if
+            	more golf balls are put back than were previously requested (i.e. <em>b+j > N</em>). The
+            	behavior of <code>ALLOCATOR</code> can be clearly seen in Figure 9.3 where <em>N</em> = 2 to reduce
+            	the complexity of the diagram.</p>
+
+            	<p class="i">How do we model the potentially infinite stream of dynamically created player
+            	threads? The straightforward answer is that we cannot since this would involve
+            	an infinite state space. However, while we cannot model infinite state spaces,
+            	we can model infinite behaviors that are repetitive. In the golf club example, we
+            	do not need to model the fact that each player thread is distinct. Instead, we
+            	model a fixed population of golfers who continuously repeat the actions involved
+            	in playing golf -a situation not too far removed from real life! Effectively, our
+            	model constrains the maximum number of golfers who are concurrently trying
+            	to play golf. The maximum number of active player threads in the program is
+            	only constrained by the available storage. Our model generates an infinite stream
+            	of requests from a fixed set of golfers while the program generates a stream of
+            	requests with each request originating from a new player.</p>
+
+            	<p class="i">A player is modeled by a process that initially decides the number of golf balls
+            	it needs to play golf. Subsequently, the process continuously attempts to get and
+            	then put back that number of golf balls. The model for a player process is:</p>
+
+            	<pre>
+<strong>range</strong> R=1..N <span>//request range</span>
+
+PLAYER      = (need[b:R]->PLAYER[b]),
+PLAYER[b:R] = (get[b]->put[b]->PLAYER[b]).
+				</pre>
+
+				<div class="pagebreak pageNumber">190</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure9-4.png">
+					<figcaption><strong>Figure 9.4</strong> <code>PLAYER</code> <em>LTS</em> for <em>N</em> = 2.</figcaption>
+				</figure>
+
+				<p>The behavior of <code>PLAYER</code> can be seen in Figure 9.4 where we have again set <em>N</em> = 2 to reduce the complexity of the diagram.</p>
+
+				<p class="i">We now need to distinguish between expert players and novices. The difference is, of course, that novices require more golf balls than experts. We define an additional process to constrain the numbers of golf balls requested by both novices and experts. We use named label sets to declare the names of players. Sets of labels were first used explicitly in Chapter 4. <em>FSP</em> also allows named sets to be declared as below:</p>
+
+				<pre>
+<strong>set</strong> Experts = {alice, bob, chris}
+<strong>set</strong> Novices = {dave, eve}
+<strong>set</strong> Players = {Experts , Novices}
+				</pre>
+
+				<p><em>FSP</em> does not support sets of sets, simply sets of labels. Consequently, the set named <code>Players</code> is the union of the sets <code>Experts</code> and <code>Novices</code>. With these declarations, we can define the constraint that distinguishes experts from novices as:</p>
+
+				<pre>
+HANDICAP =
+ ({Novices.{need[3..N]}, Experts.need[1..2]}
+            -> HANDICAP) 
+ +{Players.need[R]}.
+ 				</pre>
+
+ 				<p>The alphabet of the process <code>HANDICAP</code> consists of all the <code>need</code> actions that can be
+ 				performed by all players. However, it only engages in actions in which experts
+ 				need one or two golf balls and novices need between three and <em>N</em> golf balls. When
+ 				composed with the <code>PLAYER</code> processes, <code>HANDICAP</code> inhibits these processes from
+ 				performing any other <code>need</code> actions. The composition of players, allocator and
+ 				constraint is described in Figure 9.5.</p>
+
+ 				<p class="i">Analysis of the <code>GOLFCLUB</code> model of Figure 9.5 reveals no safety violations. The
+ 				system is well-behaved in the sense that players return the same number of golf
+ 				balls they get and consequently the allocator cannot get into the <code>ERROR</code> state.
+ 				The problem with this system is not safety but liveness. The following progress</p>
+
+ 				<div class="pagebreak pageNumber">191</div>
+
+ 				<figure>
+ 					<img src="/contents/concurrency/images/figure9-5.png">
+ 					<figcaption><strong>Figure 9.5</strong> <code>GOLFCLUB</code> composition.</figcaption>
+ 				</figure>
+
+ 				<p>properties assert for experts and novices that they make progress with respect to
+ 				getting golf balls.</p>
+
+ 				<pre>
+<strong>progress</strong> NOVICE = {Novices.get[R]}
+<strong>progress</strong> EXPERT = {Experts.get[R]}
+				</pre>
+
+				<p>Notice that we have not specified any particular number of golf balls. Getting any
+				number satisfies the property. Similarly, we have not specified a specific novice
+				or expert. Consequently, if any novice regularly gets any number of golf balls, the
+				property <code>NOVICE</code> is satisfied and similarly for experts. A progress check against
+				these properties reveals no violations. To reveal the problem that occurred in
+				the program, we must set up adverse scheduling conditions using the technique
+				described in Chapter 7. We make the <code>put</code> action, which releases golf balls, low
+				priority:</p>
+
+				<pre>
+||ProgressCheck = GOLFCLUB &gt;&gt;{Players.put[R]}.
+				</pre>
+
+				<p>Progress analysis of this system detects a violation of the progress property
+				<code>NOVICE</code>. One of the violating traces produced by the analyzer is listed below:</p>
+
+				<pre>
+Progress violation: NOVICE
+Path to terminal set of states:
+     alice.need.1
+     alice.get.1
+     bob.need.1
+     bob.get.1
+     chris.need.1
+     chris.get.1
+     dave.need.4
+     eve.need.4
+				</pre>
+
+				<div class="pagebreak pageNumber">192</div>
+
+				<pre>
+Actions in terminal set:
+{alice.get.1, alice.put.1, bob.get.1,
+bob.put.1, chris.get.1, chris.put.1}
+				</pre>
+
+				<p>This is the situation in which each of the expert players <code>alice</code>, <code>bob</code> and <code>chris</code>
+				needs a single ball and the novices <code>dave</code> and <code>eve</code> need four. The terminal set
+				indicates an infinite execution, in which the experts repeatedly <code>get</code> and <code>put</code> the
+				golf balls they need. However, novices do not get access because the situation
+				does not occur in which two experts <code>put</code> their golf balls without an intermediate
+				<code>get</code>. Consequently, the allocator never has four golf balls to give to a novice. As
+				in the Java program, experts continuously overtake novices and consequently, the
+				novices make no progress.</p>
+
+			</section>
+
+			<section class="section" data-number="3" data-name="Fair Allocation">
+
+				<h3>9.3 Fair Allocation</h3>
+
+				<p><span class="first-sentence">Having successfully detected the liveness problem in the model, the next step is
+				to look at ways of solving the problem and to check that they work correctly in
+				the model.</span> We can then change the program to reflect the updated model. In the
+				model, we could simply increase the number of golf balls with which the allocator
+				is initialized. Since we have a fixed population of golfers, we can easily increase
+				the number such that there is no contention. This would not be a general solution
+				since it would always be possible for expert players to arrive at a faster rate and,
+				as a result, novices would starve. Instead, we arrange it such that players wait in
+				an orderly line for golf balls such that experts cannot overtake novices.</p>
+
+				<p class="i">Rather than make players line up in first-in-first-out (FIFO) order, we use a
+				. ticketing scheme. New tickets are generated in ascending numerical order. Players
+				take a new ticket from a dispenser when they arrive at the golf club and they
+				are subsequently served with golf balls in ticket order. In the model, we do not
+				require an infinite number of tickets since, as long as we have at least as many
+				tickets as players, we can restart the numbering sequence when the last ticket has
+				been handed out.</p>
+
+				<p class="i">The ticket dispenser is modeled by the following process:</p>
+
+				<pre>
+<strong>const</strong> TM = 5    <span>// maximum ticket</span>
+<strong>range</strong> T = 1..TM <span>// ticket values</span>
+
+TICKET    = NEXT[1],
+NEXT[t:T] = (ticket[t]->NEXT[t%TM+1]).
+				</pre>
+
+				<p>We must modify the <code>PLAYER</code> process to get tickets and modify the <code>ALLOCATOR</code> to
+				only accept requests in ticket order. The modified processes are shown below.</p>
+
+				<div class="pagebreak pageNumber">193</div>
+
+				<pre>
+PLAYER     = (need[b:R]->PLAYER[b]),
+PLAYER[b:R]= (ticket[t:T]
+              ->get[b][t]->put[b]->PLAYER[b]).
+
+ALLOCATOR      = BALL[N][1],
+BALL[b:B][t:T] =
+  (<strong>when</strong> (b>0) get[i:1..b][t]->BALL[b-i][t%TM+1]
+  |put[j:1..N]              ->BALL[b+j][t]
+  ).
+				</pre>
+
+				<p>The revised <code>PLAYER</code> process requests a ticket and uses it when requesting golf
+				balls i.e. <code>get[b][t]</code>. The revised <code>ALLOCATOR</code> accepts <code>get</code> actions in ticket order
+				starting with ticket number 1. The ticket scheme increases the size of the model
+				considerably. To compensate for the increase, we modify the <code>HANDICAP</code> constraint
+				such that expert players always request a single golf ball and novices request four:</p>
+
+				<pre>
+HANDICAP =
+     ({Novices.{need[4]}, Experts.need[1]}
+           -> HANDICAP)
+     +{Players.need[R]}.
+				</pre>
+
+				<p>The golf club system is now modeled as follows:</p>
+
+				<pre>
+||GOLFCLUB = (Players:PLAYER
+              ||Players::(ALLOCATOR||TICKET)
+              ||HANDICAP
+              ).
+				</pre>
+
+				<p>To analyze progress for this system, the progress properties must be slightly
+				revised to take into account the addition of the ticket value in the <code>get</code> action.</p>
+
+				<pre>
+<strong>progress</strong> NOVICE = {Novices.get[R][T]}
+<strong>progress</strong> EXPERT = {Experts.get[R][T]}
+				</pre>
+
+				<p>Using <code>ProgressCheck</code>, as defined before, no progress violations are detected.
+				The next section discusses the implementation of the revised allocator.</p>
+
+			</section>
+
+			<section class="section" data-number="4" data-name="Revised Golf Ball Allocator">
+
+				<h3>9.4 Revised Golf Ball Allocator</h3>
+
+				<p><span class="first-sentence">Fortunately, we can encapsulate the ticketing scheme described in the previous
+				section in a revised implementation of the allocator monitor.</span> Other than using
+				this revised implementation in place of <code>SimpleAllocator</code>, no other changes are
+				required to the program. The new implementation, called <code>FairAllocator</code>, is
+				listed in Program 9.4.</p>
+
+				<div class="pagebreak pageNumber">194</div>
+
+				<pre class="program">
+<strong>public class</strong> FairAllocator <strong>implements</strong> Allocator {
+  <strong>private</strong> int available;
+  <strong>private</strong> long turn = 0; <em>//next ticket to be dispensed</em>
+  <strong>private</strong> long next = 0; <em>//next ticket to be served</em>
+
+  <strong>public</strong> FairAllocator(int n) { available = n; }
+
+  <strong>synchronized public</strong> void get(int n)
+        <strong>throws</strong> InterruptedException {
+    long myturn = turn; ++turn;
+    <strong>while</strong> (n&gt;available || myturn != next) wait();
+    ++next; available -= n;
+    notifyAll();
+  }
+
+  <strong>synchronized public</strong> void put(int n) {
+    available += n;
+    notifyAll();
+  }
+}
+				</pre>
+
+				<p class="program-caption"><strong>Program 9.4</strong> <code>FairAllocator</code> class.</p>
+
+				<p>We have added two instance variables to implement the ticketing scheme: <code>next</code>
+				records the value of the next ticket to be served, and <code>turn</code> records the value of
+				the next ticket to be dispensed. A thread gets a ticket by recording it in the local
+				variable <code>myturn</code>. Remember that each time a thread calls the method <code>get</code>, a new
+				activation record is created. Consequently, a new copy of <code>myturn</code> is also created
+				which is only used by the calling thread. A thread is now blocked until there are
+				sufficient golf balls and its ticket is the next one to be served. To keep the code
+				simple, we have not dealt with resetting the ticket when the maximum ticket value
+				is reached. However, by using 64-bit ticket values, we have ensured that, with a
+				player arrival rate of one per second, the program will run for 300 billion years
+				before ticket overflow becomes a problem!</p>
+
+				<p class="i">Figure 9.6 shows a screen dump of the revised golf club applet. The changed
+				behavior can clearly be seen. Although two golf balls are available, players <strong>g1</strong> and
+				<strong>h1</strong> are waiting because they cannot overtake <strong>f4</strong> due to the FIFO ordering enforced
+				by the ticketing scheme.</p>
+
+			</section>
+
+			<section class="section" data-number="5" data-name="Bounded Overtaking">
+
+				<h3>9.5 Bounded Overtaking</h3>
+
+				<p><span class="first-sentence">The ticketing scheme ensures that starvation does not occur.</span> However, it does not
+				use the available golf ball resources efficiently. Expert players are kept waiting by</p>
+
+				<div class="pagebreak pageNumber">195</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure9-6.png">
+					<figcaption><strong>Figure 9.6</strong> Golf Club applet with fair allocation.</figcaption>
+				</figure>
+
+				<p>novices even though the golf balls they require are available. A modified scheme
+				allows experts to overtake novices but denies starvation by setting an upper bound
+				on the number of times a novice can be overtaken. Once that bound is reached,
+				the novice can no longer be overtaken by an expert and must receive his/her
+				allocation next.</p>
+
+				<p class="i">The allocator algorithm for bounded overtaking was implemented but not
+				modeled in the first edition of this book. One of our insightful readers pointed out
+				that adverse scheduling by the Java Virtual Machine could result in the bound
+				being violated. The lesson is clear: models are essential in helping to eliminate
+				errors. Below is a new algorithm which has been carefully modeled to support
+				analysis.</p>
+
+				<p class="i">In the algorithm, we need to keep track of those players who have overtaken
+				others. This can be modeled as a set, as shown below. Elements of the set are of
+				type T and can be added, removed and checked for set membership. The set is
+				modeled as the parallel composition of elements which preserve the property that
+				an element is only added if it is not already a member of the set, and only removed
+				if it is a member.</p>
+
+				<pre>
+<strong>const</strong> False = 0
+<strong>const</strong> True  = 1
+<strong>range</strong> Bool  = 0..1
+
+ELEMENT (Id=0) = IN[False],
+IN[b:Bool]   = ( add[Id]         -> IN[True]
+               | remove[Id]      -> IN[False]
+				</pre>
+
+				<div class="pagebreak pageNumber">196</div>
+
+				<pre>
+               | contains[Id][b] -> IN[b]
+               ).
+
+<strong>property</strong>
+  ONEADD(Id=0) = (add[Id]->remove[Id]->ONEADD).
+
+||SET = (<strong>forall</strong>[i:T] (ELEMENT(i) || ONEADD(i))).
+	        	</pre>
+
+	        	<p>We model bounded overtaking using tickets as in the fair FIFO allocator, where
+	        	ticket numbers are used to indicate the order in which players make their requests.
+	        	The allocator records which ticket number is <code>next</code>. Overtaking occurs when we
+	        	allocate balls to a player whose <code>turn</code> - indicated by his/her ticket number - is
+	        	subsequent to a waiting player with the <code>next</code> ticket. The overtaking player is
+	        	added to the overtaking set, and a count <code>ot</code> is incremented to indicate the number
+	        	of times <code>next</code> has been overtaken. When the count equals the bound, we allow
+	        	allocation to the <code>next</code> player only. When allocation is made to the <code>next</code> player,
+	        	we need to update <code>next</code> to indicate the next (waiting) player. We skip the ticket
+	        	numbers of those overtaking players who have already received their allocation,
+	        	remove each of these intervening players from the overtaking set and decrement
+	        	the overtaking count accordingly. This is achieved in the local process, <code>WHILE</code>, in
+	        	the <code>ALLOCATOR</code> given below. Note that the maximum ticket value must not be less
+	        	than the sum of the number of players and the bound so as to avoid ambiguity
+	        	when the sequence of ticket numbers restarts.
+	        	</p>
+
+	        	<pre>
+<strong>const</strong> N  = 5      <span>// maximum #golf balls</span>
+<strong>const</strong> Bd = 2      <span>// bound on overtaking</span>
+<strong>range</strong> B  = 0..N   <span>// available range</span>
+
+<strong>const</strong> TM = 5 + Bd <span>// maximum ticket</span>
+<strong>range</strong> T  = 1..TM  <span>// ticket values</span>
+
+TICKET    = TURN[1],
+TURN[t:T] = (ticket[t]->TURN[t%TM+1]).
+
+ALLOCATOR = BALL[N][1][0],
+BALL[b:B][next:T][ot:0..Bd]
+     (<strong>when</strong> (b&gt;0 &amp;&amp; ot&lt;Bd) get[i:1..b][turn:T] ->
+          <strong>if</strong> (turn!=next) <strong>then</strong>
+             (add[turn] -> BALL[b-i][next][ot+1])
+            	</pre>
+
+            	<div class="pagebreak pageNumber">197</div>
+
+            	<pre>
+          <strong>else</strong>
+              WHILE[b-i][next%TM+1][ot]
+    |<strong>when</strong> (b>0 &amp;&amp; ot==Bd) get[i:1..b][next] ->
+            WHILE[b-i][next%TM+1][ot]
+    |put [j:1..N] -> BALL[b+j][next][ot]
+    ),
+WHILE[b:B][next:T][ot:0..Bd] =
+     (contains[next][yes:Bool] ->
+          <strong>if</strong> (yes) <strong>then</strong>
+          (remove[next] ->
+               WHILE[b][next%TM+1][ot-1]
+          <strong>else</strong>
+               BALL[b][next][ot]
+     )+{add[T], remove[T]}.
+     			</pre>
+
+     			<p>The golf club system is now modeled as follows:</p>
+
+     			<pre>
+||GOLFCLUB = (Players: PLAYER
+            || ALLOCATOR||TICKET||SET
+            || HANDICAP
+            )/ {Players.get/get,
+               Players.put/put,
+               Players.ticket/ticket}.
+				</pre>
+
+				<p>Using <code>ProgressCheck</code>, as defined before, no progress violations are detected
+				for this bounded overtaking golf club. Using animation, we can step through to
+				produce a trace which illustrates the bounded allocation algorithm:</p>
+
+				<pre>
+eve.need.4        <span>Novices Eve and Dave</span>
+dave.need.4
+chris.need.1      <span>Experts Alice, Bob and Chris</span>
+alice.need.1
+bob.need.1
+alice.ticket.1
+alice.get.1.1     <span>Alice gets 1 ball, ticket 1</span>
+contains.2.0      <span>Ticket 2 is next</span>
+bob.ticket.2
+bob.get.1.2       <span>Two allocated, three available</span>
+contains.3.0      <span>Ticket 3 is next</span>
+dave.ticket.3     <span><strong>Dave needs four balls: waits</strong></span>
+chris.ticket.4
+chris.get.1.4     <span><strong>Chris overtakes</strong></span>
+				</pre>
+
+				<div class="pagebreak pageNumber">198</div>
+
+				<pre>
+add.4
+eve.ticket.5      <span><strong>Eve needs four balls: waits</strong></span>
+alice.put.1
+alice.ticket.6
+alice.get.1.6     <span><strong>Alice overtakes</strong></span>
+add.6
+bob.put.1
+bob.ticket.7
+bob.get.1.7       <span><strong>Bob overtakes: bound reached</strong></span>
+add.7
+chris.put.1
+chris.ticket.8    <span>Chris waits: three available</span>
+alice.put.1
+alice.ticket. 1   <span>Alice waits: four available</span>
+dave.get.4.3      <span><strong>Dave gets four balls</strong></span>
+contains.4.1      <span>remove intervening overtaker</span>
+remove.4
+contains.5.0      <span>Ticket 5 (Eve) is next</span>
+dave.put.4
+dave.ticket.2
+alice.get.1.1     <span><strong>Alice overtakes: bound reached</strong></span>
+add.1
+bob.put.1
+bob.ticket.3
+eve.get.4.5       <span><strong>Eve gets four balls</strong></span>
+contains.6.1      <span>remove intervening overtakers</span>
+remove.6
+contains.7.1
+remove.7
+contains.8.0      <span>Ticket 8 (Chris) is next</span>
+. . .
+				</pre>
+
+				<p>We can easily add a safety property <code>BALLS</code> to check that players return the same
+				number of balls as allocated. This is shown below.</p>
+
+				<pre>
+<strong>property</strong>
+   BALLS = BALLS[N],
+   BALLS[b:0..N] =
+     (<strong>when</strong> b>0
+          Players.get[i:1..b][turn:T] -> BALLS[b-i]
+     |Players.put[j:1..N] -> BALLS[b+j]
+     ).
+				</pre>
+
+				<p>Can we also specify the bounded nature of this allocator as a safety property?
+				This requires more ingenuity in which we check, for each player, that he/she is</p>
+
+				<div class="pagebreak pageNumber">199</div>
+
+				<p>not overtaken more than bound times. Overtaking is indicated by an allocation to
+				another player whose ticket <code>t</code> lies between the <code>turn</code> of the player and the <code>latest</code>
+				ticket issued.</p>
+
+				<pre>
+<strong>property</strong>
+   BOUND (P='alice) =
+     ({Players {[P]}}.ticket[T] -> BOUND
+     |[P].ticket[t:T] -> WAITING[t][t][0]
+     |[Players].get[R][T]       -> BOUND
+    ),
+   WAITING[turn:T][latest:T][overtaken:0..Bd] =
+     ([P].get[b:R][turn] -> BOUND
+     | {Players\{[P]}}.get[b:R][t:T] ->
+         if ((t&gt;turn &amp;&amp; (t&lt;=latest || latest&lt;turn))
+          || (t&lt;turn &amp;&amp; (t&lt;=latest &amp;&amp; latest&lt;turn)))
+           <strong>then</strong> WAITING[turn][latest][overtaken+1]
+           <strong>else</strong> WAITING[turn][latest][overtaken]
+     |Players.ticket[last:T] ->
+                WAITING[turn][last][overtaken]
+     ).
+				</pre>
+
+				<p>The golf club system is now modeled as below, where the property is checked for
+				all players. This is a large model of over 4 million states and 10 million transitions.
+				No safety (or progress) violations are found for <code>CHECKGOLFCLUB</code>.</p>
+
+				<pre>
+||CHECKGOLFCLUB = (GOLFCLUB
+                  || BALLS
+                  || forall [p:Players] BOUND(p)
+                  ).
+				</pre>
+
+				<p>However, if we check for an overtaken bound <code>of 2</code> in the property <code>BOUND</code> and
+				leave the allocator with <code>Bd</code> set to <code>3</code>, then we quickly get the violation below
+				in which Alice is overtaken three times, twice by Bob and once by Chris. This
+				confirms that the property <code>BOUND</code> does indeed detect violations in the overtaking
+				bound.</p>
+
+				<pre>
+Trace to property violation in BOUND(alice):
+     alice.need.1
+     alice.ticket.1
+     bob.need.1
+				</pre>
+
+				<div class="pagebreak pageNumber">200</div>
+
+				<pre>
+     bob.ticket.2
+     bob.get.1.2
+     chris.need.1
+     chris.ticket.3
+     add.2
+     bob.put.1
+     bob.ticket.4
+     bob.get.1.4
+     add.4
+     chris.get.1.3
+				</pre>
+
+			</section>
+
+			<section class="section" data-number="6" data-name="Bounded Overtaking Golf Ball Allocator">
+
+				<h3>9.6 Bounded Overtaking Golf Ball Allocator</h3>
+
+				<p><span class="first-sentence">Bounded overtaking is implemented in the allocator of Program 9.5.</span> The program
+				follows the algorithm used in our model. Each thread waits if there are insufficient
+				balls available or if the bound has been reached and the player is not next. Overtaking
+				players are added to the <code>overtakers</code> set and removed as necessary when
+				<code>next</code> is updated; the count of those <code>overtaken</code> is incremented and decremented
+				on addition and removal respectively.</p>
+
+				<p class="i">The operation of the bounded overtaking allocator can be seen in the applet
+				display shown in Figure 9.7. This captures the situation in which player <strong>f4</strong> has
+				been overtaken by players <strong>g1</strong>, <strong>h1</strong> and <strong>i1</strong>. Since the overtaking bound, which has
+				been set to three, has been exceeded, players <strong>j1</strong> and <strong>k1</strong> are blocked although there
+				are two golf balls available. They will remain blocked until <strong>f4</strong> has been served.</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure9-7.png">
+					<figcaption><strong>Figure 9.7</strong> Golf Club with bounded overtaking allocator (bound = 3).</figcaption>
+				</figure>
+
+				<div class="pagebreak pageNumber">201</div>
+
+				<pre class="program">
+<strong>public class</strong> BoundedOvertakingAllocator
+                   implements Allocator{
+  <strong>private</strong> int TM;
+    <em>//must be maximum active threads + bound</em>
+  <strong>private</strong> int available;
+  <strong>private</strong> int bound;
+  <strong>private</strong> int turn = 1;
+  <strong>private</strong> int next = 1;
+  <strong>private</strong> int overtaken =0;
+  <strong>private</strong> BitSet overtakers;
+
+  <strong>public</strong> BoundedOvertakingAllocator(int n, int b)
+    { available = n; bound = b; TM = 10000+b;
+      overtakers = new BitSet(TM+1);}
+
+  <strong>synchronized public</strong> void get(int n)
+        <strong>throws</strong> InterruptedException{
+    int myturn = turn; turn = turn%TM + 1;
+    <strong>while</strong> (n&gt;available ||
+          (myturn!=next &amp;&amp; overtaken>=bound)) {
+      wait();
+    }
+      <strong>if</strong> (myturn!=next) {
+          overtakers.set(myturn); ++overtaken;
+      }
+      <strong>else</strong> {
+          next = next%TM + 1;
+          <strong>while</strong> (overtakers.get(next)) {
+               overtakers.clear(next);
+               --overtaken;
+               next = next%TM + 1;
+          }
+      }
+    available -= n;
+    notifyAll();
+  }
+
+  <strong>synchronized public</strong> void put(int n) {
+    available += n;
+    notifyAll();
+  }
+}
+				</pre>
+
+				<p class="program-caption"><strong>Program 9.5</strong> <code>BoundedOvertakingAllocator</code> class.</p>
+
+				<div class="pagebreak pageNumber">202</div>
+
+			</section>
+
+			<section class="section" data-number="7" data-name="Master-Slave Program">
+
+				<h3>9.7 Master-Slave Program</h3>
+
+				<p><span class="first-sentence">In the golf club example, when a player thread finished playing and returned its
+				golf balls, it simply terminated.</span> In some concurrent programming situations, we
+				may want to determine a result that is computed by a dynamically created thread.
+				Usually, a <em>slave</em> thread is created to perform some input/output (I/O) activity
+				while the <em>master</em> thread that created it continues with some other activity. At some
+				point, the master must synchronize with the slave to retrieve the result of the
+				I/O activity. This <em>master-slave</em> arrangement is frequently used to allow the master
+				thread to continue executing while the slave waits for a remote communication to
+				complete. When the remote communication completes, the slave thread terminates
+				and the master must obtain the result of the remote communication. We could use
+				a monitor to allow the slave to signal when it is about to terminate. Alternatively,
+				the master could continuously test the status of the slave thread using the
+				<code>isAlive()</code> method. This method returns false when the thread to which it is
+				applied terminates. However, this busy wait would consume CPU cycles that could
+				be put to better use by another thread. To avoid this busy wait, the Java <code>Thread</code>
+				class provides a method to allow one thread to await the termination of another:</p>
+
+				<div class="definition"><code><strong>public final</strong> void join() <strong>throws</strong> InterruptedException</code><br/>
+				Waits for this thread to die, e.g. by returning from <code>run()</code> or as a result
+				of <code>stop()</code>.</div>
+
+				<p>Figure 9.8 is the display of an applet that demonstrates the operation of <code>join()</code>.
+				The upper display shows the master executing concurrently with the slave. The
+				slave was created at the point the master's segment changed color. The bottom
+				display shows the point at which the slave has terminated and the master
+				has obtained the result of its computation. In the demonstration, the result is
+				the amount the slave rotates its display before terminating. The amount of slave
+				rotation can be adjusted by the slider control positioned below its rotating segment.
+				The amount that the master rotates before waiting for the slave to terminate is
+				adjusted using the other slider.</p>
+
+				<p class="i">By adjusting the sliders, it is possible to arrange for the master to wait for the
+				slave to terminate or for the slave to terminate before the master gets the result.
+				The code for both <code>Master</code> and <code>Slave</code> threads is depicted in Program 9.6.</p>
+
+				<p class="i">The <code>Slave</code> thread is created and started using the <code>start()</code> method provided
+				by <code>ThreadPanel</code>. This returns a reference to the new thread. The result is obtained
+				from the <code>Slave</code> thread by calling the <code>result()</code> method after the <code>Slave</code> thread
+				has terminated. Note that <code>result()</code> need not be <code><strong>synchronized</strong></code> since, as long as</p>
+
+				<div class="pagebreak pageNumber">203</div>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure9-8.png">
+					<figcaption><strong>Figure 9.8</strong> <code>join()</code> demonstration applet.</figcaption>
+				</figure>
+
+				<p>it is only called after termination, there can be no interference between <code>Master</code>
+				and <code>Slave</code> threads.</p>
+
+			</section>
+
+			<section class="section" data-number="8" data-name="Master-Slave Model">
+
+				<h3>9.8 Master-Slave Model</h3>
+
+				<p><span class="first-sentence">We can construct a satisfactory model of the master-slave program by observing
+				that, although it creates a sequence of new slave processes, only a single slave
+				thread is active at any one time.</span> Consequently, we use a single slave process,
+				which after it terminates, immediately becomes available to be started again:</p>
+
+				<pre>
+SLAVE = (start->rotate->join->SLAVE).
+				</pre>
+
+				<div class="pagebreak pageNumber">204</div>
+
+				<pre class="program">
+<strong>class</strong> Master <strong>implements</strong> Runnable {
+  ThreadPanel slaveDisplay;
+  SlotCanvas resultDisplaY;
+
+  Master(ThreadPanel tp, SlotCanvas sc)
+  {slaveDisplay=tp; resultDisplay:sc;}
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      String res=null;
+      <strong>while</strong>(true) {
+        <strong>while</strong> (!ThreadPaneLrotate());
+        if (res!=null) resultDisplay.leave(res);
+        <em>// create new slave thread</em>
+        Slave s = new Slave();
+        Thread st = slaveDisplay.start(s, false);
+        <em>// continue execution</em>
+        <strong>while</strong> (ThreadPanel.rotate());
+        <em>// wait for slave termination</em>
+        st.join();
+        <em>// get and display result from slave</em>
+        res = String.valueOf(s.result());
+        resultDisplay.enter(res);
+      }
+    } <strong>catch</strong> (InterruptedException e) {}
+  }
+} 
+
+<strong>class</strong> Slave <strong>implements</strong> Runnable {
+  int rotations = 0;
+
+  <strong>public</strong> void run() {
+    <strong>try</strong> {
+      <strong>while</strong> (!ThreadPanel.rotate()) ++rotations;
+    } <strong>catch</strong> (InterruptedException e){}
+  }
+
+  int result(){
+    <strong>return</strong> rotations;
+  }
+}
+				</pre>
+
+				<p class="program-caption"><strong>Program 9.6</strong> <code>Master</code> and <code>Slave</code> classes.</p>
+
+				<div class="pagebreak pageNumber">205</div>
+
+				<p>The master thread is modeled by the following process:</p>
+
+				<pre>
+MASTER = (slave.start->rotate
+         ->slave.join->rotate->MASTER).
+				</pre>
+
+				<p>The master-slave program can now be modeled as the composition:</p>
+
+				<pre>
+||MASTER_SLAVE = (MASTER || slave:SLAVE).
+				</pre>
+
+				<p>The behavior of this model is depicted in the <em>LTS</em> of Figure 9.9.</p>
+
+				<figure>
+					<img src="/contents/concurrency/images/figure9-9.png">
+					<figcaption><strong>Figure 9.9</strong> <code>MASTER_SLAVE</code> <em>LTS</em>.</figcaption>
+				</figure>
+
+				<p>From the LTS, it can be seen that the slave rotation action, <code>slave.rotate</code>, and the
+				master rotation action, <code>rotate</code>, are concurrent since they can occur in any order.
+				However, after the <code>slave.join</code> action only the master rotation action can take
+				place, as in the applet. The model can easily be generalized to a system in which
+				two or more slave processes are active concurrently.</p>
+
+			</section>
+
+			<section class="section" data-number="9" data-name="Summary">
+
+				<h3>Summary</h3>
+
+				<p><span class="first-sentence">In this chapter, we have looked at programs in which threads both start and
+				terminate dynamically during program execution.</span> We have shown that it is
+				possible to construct satisfactory finite state models for this sort of program
+				by using a static population of processes with cyclic behavior. The model fixes
+				the maximum number of concurrently active processes while concurrent thread
+				</p>
+
+				<div class="pagebreak pageNumber">206</div>
+
+				<p>activation in the program is only limited by available storage. We regard a model
+				as satisfactory if it exhibits the same behavior as the program it is modeling with
+				respect to safety and liveness properties. We were able to use the golf club model
+				to investigate and correct a liveness problem and subsequently to implement that
+				correction in the program.</p>
+
+				<p class="i">The main example concerned a resource allocator that managed a pool of
+				identical reusable resources. Threads competed for access to these resources. In
+				our example, the resources were golf balls. In computing systems, this form of
+				allocation is required for resources such as memory pages and message buffers.</p>
+
+				<p class="i">The results of this chapter show that the models we constructed in previous
+				chapters for resource access also apply to programs in which threads are created
+				dynamically. For example, the Readers-Writers program of Chapter 7 had a fixed
+				number of Reader and Writer threads with cyclic behavior. However, the monitor
+				that controlled read/write access would work equally well in a program with a
+				dynamically varying number of Reader and Writer threads.</p>
+
+				<p class="i">Finally, this chapter demonstrated the use of the Java <code>join()</code> method which
+				allows one thread to await the termination of another. The example was a
+				master-slave arrangement in which the master thread obtained the result of the
+				slave computation.</p>
+
+			</section>
+
+			<section class="section" data-number="10" data-name="Notes and Further Reading">
+
+				<h3>Notes and Further Reading</h3>
+
+				<p><span class="first-sentence">One of the first proposals for thread creation was the <strong>fork <em>L</em></strong> command, which
+				transfers control to the statement labeled <em>L</em> and also allows control to pass to the
+				statement after <strong>fork</strong>.</span> In this way, two concurrently executing threads of control
+				are created. A <strong>join</strong> command was provided to allow the two threads to rejoin
+				execution. The first thread to reach join blocks until the second thread also executes
+				the command. Only a single thread executes after the join. Unstructured use of
+				fork and join leads to extremely complex multi-threaded programs. The UNIX
+				operating system has a version of the fork command with no label. The fork
+				operating system call creates a complete copy of the calling process and starts it
+				executing. The fork call returns a result, which lets a process determine whether it
+				is the <em>parent</em> or <em>child</em>.</p>
+
+				<p class="i">To resolve the problems caused by unstructured use of fork and join, Dijkstra
+				(1965) proposed what later became the <strong>cobegin..coend</strong> construct:</p><br/>
+
+				<p class="i"><strong>cobegin</strong> <em>P; Q</em> <strong>coend</strong></p><br/>
+
+				<p><em>P</em> and <em>Q</em> are executed concurrently as separate threads until both have terminated.
+				The construct can easily be generalized to more than two threads. It was proposed
+				for use in block-structured languages such as Algol. In these languages, the main</p>
+
+				<div class="pagebreak pageNumber">207</div>
+
+				<p>structuring tools are procedures and procedure activations rather than classes and
+				objects. Storage for procedure activations is managed as a stack in these languages
+				and the addition of threads created using the <strong>cobegin..coend</strong> construct requires a
+				tree of stacks, sometimes called a "cactus" stack.</p>
+
+				<p class="i">The Java thread model does not enforce this degree of structure on thread
+				execution. A thread can continue executing after the thread that created it has
+				terminated. This is more appropriate in an object-oriented language where we are
+				generally less concerned with the lifetime of objects. Storage is managed by a heap
+				structure. Objects exist until they are garbage collected and threads exist until they
+				terminate, at which point their storage can also be garbage collected. Java provides
+				the <code>ThreadGroup</code> class to manage collections of threads and to enforce security
+				policies by dynamically restricting access to <code>Thread</code> operations. For example, a
+				thread may only <code>stop()</code> another thread if both are in the same group. By default,
+				each thread is created in the same <code>ThreadGroup</code> as its creator. We have been
+				able to ignore <code>ThreadGroups</code> in the examples since all threads are created in the
+				default group provided by browsers for applet execution.</p>
+
+				<p class="i">In this chapter, we have dealt with programs where dynamic thread creation
+				and termination can be modeled by a fixed set of cyclic processes. The more
+				general problem is to model programs in which the configuration of threads and
+				monitors evolves as execution proceeds. For this sort of program, using <em>FSP</em>, each
+				configuration must be enumerated. The program can then be modeled as the
+				composition of its possible configurations. To address the problem of describing
+				concurrent systems in which configuration changes dynamically, Robin Milner
+				introduced the &pi;-calculus (Milner, Parrow and Walker, 1992). This permits an
+				elegant and concise description of dynamic systems. However, in general, these
+				&pi;-calculus descriptions are not amenable to the form of state exploration analysis
+				that we use for <em>FSP</em> descriptions.</p>
+
+				<p class="i">The idea of bounded delays to provide a class of resource allocation strategies
+				is due to Dijkstra (1972a). These strategies can be characterized as satisfying a set
+				of safe scheduling rules for resource allocation to a <em>fixed</em> pool of <em>m</em> processes from
+				a pool of <em>n</em> reusable resources:</p>
+
+				<ol class="regular">
+
+					<li>No process should wait for resources unless some other process is using
+					resources.</li>
+
+					<li>If process <em>i</em> has requested resources, not more than <em>k</em> other processes can be
+					given their requested resources before satisfying process <em>i</em> (for some bound
+					<em>k</em> >= <em>m</em> - 2).</li>
+
+					<li>The number of resources in the pool plus the sum of the number allocated to
+					processes equals <em>n</em>.</li>
+
+				</ol>
+
+				<div class="pagebreak pageNumber">208</div>
+
+				<p>The first two rules avoid resource starvation for an individual process and the
+				third rule preserves resource integrity. Allocation from a pool of reusable resources
+				was used as an exercise in rigorous program design at Imperial College in the
+				late 1970s. Students were required to design, verify and implement a resource
+				allocator in SIMULA (Birtwistle, Dahl, Myhrhaug, <em>et al.</em>, 1973). The rules were used
+				by Cunningham and Kramer (1978) as an invariant to guide the development and
+				verification of the program. Rule two was subsequently modified as follows to
+				permit simpler implementations and to cater for dynamic systems where there is
+				no bound on the number of processes (Kramer and Cunningham, 1979):</p>
+
+				<ol class="regular" id="weird">
+					<li>If process i has requested resources, not more than k' subsequently arriving
+					requests can be serviced before i (for some bound k' :::: 0).</li>
+				</ol>
+
+				<p>The golf club problem and the particular formulation described in this book
+				evolved from that experience.</p>
+
+				<p class="i">We are grateful to Alexander H&ouml;her for his insight into potential problems with
+				the implementation given in the first edition of this book.</p>
+
+			</section>
+
+			<section class="section" data-number="11" data-name="Exercises">
+
+				<h3>Exercises</h3>
+
+				<ol id="nine">
+
+					<li><span class="first-sentence">The cheese counter in a supermarket is continuously mobbed by hungry customers.</span>
+					There are two sorts of customer: bold customers who push their way to the front of the
+					mob and demand service; and meek customers who wait patiently for service. Request
+					for service is denoted by the action <code>getcheese</code> and service completion is signaled by
+					the action <code>cheese</code>. Assuming that there is always cheese available, model the system
+					for a fixed population of two bold customers and two meek customers. Show that meek
+					customers may never be served when their requests to get cheese have lower priority
+					than those of bold customers.</li>
+
+					<li>To restore order, the management installs a ticket machine that issues tickets to
+					customers. Tickets are numbered in the range 1..<em>MT</em>. When ticket <em>MT</em> has been issued,
+					the next ticket to be issued is ticket number 1, i.e. the management install a new ticket
+					roll. The cheese counter has a display that indicates the ticket number of the customer
+					currently being served. The customer with the ticket with the same number as the
+					counter display then goes to the counter and is served. When the service is finished,
+					the number is incremented (modulo <em>MT</em>). Model this system and show that, even when
+					their requests have low priority, meek customers are now served.</li>
+
+					<li>Translate the model of the cheese counter from exercise 9.2 into a Java program. Each
+					customer should be implemented by a dynamically created thread that obtains a ticket,
+					is served cheese and then terminates.</li>
+
+					<li>Extend the master-slave model of section 9.8 to cater for two slave processes. Now
+					generalize this model to describe systems with <em>N</em> slave processes.</li>
+
+					<li>Modify the demonstration applet of section 9.7 to create two slave processes.</li>
+
+				</ol>
+
+			</section>
+
+		</div>
+
+	</div>
+
+</body>
+</html>
